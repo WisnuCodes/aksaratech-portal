@@ -1,0 +1,746 @@
+:root {
+  --font-heading: 'Space Grotesk', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Brand Colors - Prussian Blue & Kuning Neo-Brutalism */
+  --prussian-blue: #1D63FF;
+  --prussian-blue-dark: #0E46C7;
+  --prussian-blue-light: #EBF2FF;
+  --prussian-blue-tonal: rgba(29, 99, 255, 0.08);
+
+  --kuning: #FFCE32;
+  --kuning-hover: #F0BD20;
+  --kuning-dark: #D4A30B;
+  --kuning-light: #FFF9E6;
+  --kuning-tonal: rgba(255, 206, 50, 0.2);
+
+  /* Light Theme Surfaces & Backgrounds */
+  --bg-darkest: #F8FAFC;
+  --bg-primary: #FFFFFF;
+  --bg-surface: #FFFFFF;
+  --bg-surface-elevated: #F1F5F9;
+  --bg-card: #FFFFFF;
+  --bg-subtle: #F1F5F9;
+  --bg-tint-blue: #F0F5FF;
+
+  /* Neo-Brutalist Ink Borders & Shadows */
+  --ink: #0F172A;
+  --border-color: #0F172A;
+  --border-subtle: #E2E8F0;
+  --border-strong: #0F172A;
+  --border-width: 2px;
+  
+  --shadow-neo: 4px 4px 0px #0F172A;
+  --shadow-neo-blue: 4px 4px 0px #1D63FF;
+  --shadow-neo-yellow: 4px 4px 0px #FFCE32;
+  --shadow-neo-sm: 2px 2px 0px #0F172A;
+  --shadow-neo-sm-yellow: 2px 2px 0px #FFCE32;
+  --shadow-neo-sm-blue: 2px 2px 0px #1D63FF;
+
+  /* Status Colors */
+  --emerald: #10b981;
+  --emerald-dark: #059669;
+  --rose: #f43f5e;
+  --amber: #f59e0b;
+
+  /* Typography */
+  --text-main: #0F172A;
+  --text-secondary: #475569;
+  --text-muted: #64748B;
+  --text-light: #0F172A;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-full: 9999px;
+
+  --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Base Reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-family: var(--font-body);
+  background-color: var(--bg-darkest);
+  color: var(--text-main);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  min-height: 100vh;
+  overflow-x: hidden;
+  background-color: #F8FAFC;
+  /* Crisp Architectural Technical Dot Grid in Light Mode */
+  background-image: 
+    radial-gradient(#CBD5E1 1px, transparent 1px);
+  background-size: 24px 24px;
+  color: var(--text-main);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  color: #0F172A;
+  line-height: 1.22;
+  letter-spacing: -0.03em;
+  font-weight: 800;
+  text-wrap: balance;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Utility Containers */
+.container {
+  width: 100%;
+  max-width: 1360px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: clamp(20px, 3.5vw, 48px);
+  padding-right: clamp(20px, 3.5vw, 48px);
+}
+
+.nav-link {
+  white-space: nowrap;
+}
+
+.section-padding {
+  padding-top: 84px;
+  padding-bottom: 84px;
+}
+
+/* Section Header */
+.section-header {
+  text-align: center;
+  max-width: 780px;
+  margin: 0 auto 52px auto;
+}
+
+.section-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: var(--kuning);
+  border: 2px solid #0F172A;
+  color: #0F172A;
+  box-shadow: 3px 3px 0px #0F172A;
+  margin-bottom: 18px;
+}
+
+.section-title {
+  font-size: clamp(2.1rem, 4vw, 3rem);
+  font-weight: 900;
+  margin-bottom: 16px;
+  letter-spacing: -0.03em;
+  color: #0F172A;
+}
+
+.section-desc {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  font-weight: 500;
+}
+
+/* Neo-Brutalist Card Base (Crisp White + Ink Border + Hard Drop Shadow) */
+.glass-card, .neo-card {
+  background: #FFFFFF;
+  border: 2px solid #0F172A;
+  border-radius: var(--radius-md);
+  box-shadow: 4px 4px 0px #0F172A;
+  transition: var(--transition-fast);
+}
+
+.glass-card:hover, .neo-card:hover {
+  box-shadow: 6px 6px 0px var(--prussian-blue);
+  transform: translate(-2px, -2px);
+}
+
+/* Neo-Brutalist Buttons (Light Mode) */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 24px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+  user-select: none;
+  border: 2px solid #0F172A;
+}
+
+/* 1. Prussian Blue Contained (Primary) */
+.btn-primary {
+  background: var(--prussian-blue);
+  color: #FFFFFF;
+  box-shadow: 4px 4px 0px var(--kuning);
+}
+
+.btn-primary:hover {
+  background: var(--prussian-blue-dark);
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px var(--kuning);
+  color: #FFFFFF;
+}
+
+.btn-primary:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0px 0px 0px var(--kuning);
+}
+
+/* 2. Kuning Accent Button */
+.btn-amber, .btn-kuning {
+  background: var(--kuning);
+  color: #0F172A;
+  box-shadow: 4px 4px 0px var(--prussian-blue);
+}
+
+.btn-amber:hover, .btn-kuning:hover {
+  background: var(--kuning-hover);
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px var(--prussian-blue);
+  color: #0F172A;
+}
+
+.btn-amber:active, .btn-kuning:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0px 0px 0px var(--prussian-blue);
+}
+
+/* 3. Outlined / Secondary Button */
+.btn-secondary {
+  background: #FFFFFF;
+  color: #0F172A;
+  box-shadow: 4px 4px 0px #CBD5E1;
+}
+
+.btn-secondary:hover {
+  background: #F1F5F9;
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px #0F172A;
+  color: #0F172A;
+}
+
+.btn-secondary:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0px 0px 0px #0F172A;
+}
+
+/* 4. WhatsApp Official Button */
+.btn-wa {
+  background: var(--emerald);
+  color: #FFFFFF;
+  box-shadow: 4px 4px 0px #0F172A;
+}
+
+.btn-wa:hover {
+  background: var(--emerald-dark);
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px #0F172A;
+  color: #FFFFFF;
+}
+
+.btn-wa:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0px 0px 0px #0F172A;
+}
+
+.btn-sm {
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  box-shadow: 3px 3px 0px #0F172A;
+}
+
+.btn-sm.btn-primary {
+  box-shadow: 3px 3px 0px var(--kuning);
+}
+
+.btn-sm.btn-primary:hover {
+  transform: translate(1.5px, 1.5px);
+  box-shadow: 1.5px 1.5px 0px var(--kuning);
+}
+
+.btn-sm.btn-wa {
+  box-shadow: 3px 3px 0px #0F172A;
+}
+
+.btn-sm.btn-wa:hover {
+  transform: translate(1.5px, 1.5px);
+  box-shadow: 1.5px 1.5px 0px #0F172A;
+}
+
+/* Typography Highlights */
+.text-kuning {
+  color: #D97706; /* High contrast amber-yellow for light backgrounds */
+}
+
+.text-blue {
+  color: var(--prussian-blue);
+}
+
+.text-gradient {
+  color: var(--prussian-blue);
+  background: none;
+  -webkit-text-fill-color: initial;
+}
+
+.text-gradient-amber {
+  color: #D97706;
+  background: none;
+  -webkit-text-fill-color: initial;
+}
+
+.highlight-badge {
+  background: var(--kuning);
+  color: #0F172A;
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1.5px solid #0F172A;
+  display: inline-block;
+  box-shadow: 2px 2px 0px #0F172A;
+}
+
+/* Neo-Brutalist Form Controls (Light Theme) */
+.form-group {
+  margin-bottom: 22px;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #0F172A;
+  margin-bottom: 8px;
+  letter-spacing: 0.01em;
+}
+
+.form-label span.req {
+  color: var(--rose);
+}
+
+.form-input, .form-select, .form-textarea {
+  width: 100%;
+  padding: 13px 16px;
+  background: #FFFFFF;
+  border: 2px solid #0F172A;
+  border-radius: var(--radius-sm);
+  color: #0F172A;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: var(--transition-fast);
+  box-shadow: 3px 3px 0px #CBD5E1;
+}
+
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  outline: none;
+  border-color: var(--prussian-blue);
+  box-shadow: 4px 4px 0px var(--kuning);
+  background: #FFFFFF;
+}
+
+.form-input::placeholder, .form-textarea::placeholder {
+  color: #94A3B8;
+  font-weight: 400;
+}
+
+/* Radio & Checkbox Selection Cards */
+.selection-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.select-card {
+  padding: 20px;
+  border-radius: var(--radius-sm);
+  border: 2px solid #0F172A;
+  background: #FFFFFF;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 3px 3px 0px #CBD5E1;
+}
+
+.select-card:hover {
+  border-color: var(--prussian-blue);
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0px var(--prussian-blue);
+}
+
+.select-card.active {
+  border-color: #0F172A;
+  background: #FFFDF0;
+  box-shadow: 4px 4px 0px var(--kuning);
+}
+
+/* Neo-Brutalist Category Tags & Pills */
+.category-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: #F1F5F9;
+  border: 1.5px solid #0F172A;
+  color: #0F172A;
+  box-shadow: 1.5px 1.5px 0px #0F172A;
+  white-space: nowrap;
+}
+
+.category-pill .package-num {
+  color: var(--prussian-blue);
+  font-weight: 900;
+}
+
+.category-pill .divider {
+  color: #94A3B8;
+  font-weight: 400;
+}
+
+.category-pill .cat-name {
+  color: #475569;
+}
+
+/* Neo-Brutalist Badges / Chips */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  border: 1.5px solid #0F172A;
+  box-shadow: 1.5px 1.5px 0px #0F172A;
+  white-space: nowrap;
+}
+
+.badge-amber, .badge-kuning {
+  background: var(--kuning);
+  color: #0F172A;
+  border: 1.5px solid #0F172A;
+  box-shadow: 1.5px 1.5px 0px #0F172A;
+}
+
+.badge-cyan, .badge-blue {
+  background: #EFF6FF;
+  color: var(--prussian-blue);
+  border: 1.5px solid #0F172A;
+  box-shadow: 1.5px 1.5px 0px #0F172A;
+}
+
+.badge-emerald {
+  background: #ECFDF5;
+  color: #065F46;
+  border: 1.5px solid #0F172A;
+  box-shadow: 1.5px 1.5px 0px #0F172A;
+}
+
+.badge-neutral {
+  background: #F8FAFC;
+  color: #0F172A;
+  border: 1.5px solid #0F172A;
+  box-shadow: 1.5px 1.5px 0px #0F172A;
+}
+
+/* Print Styles */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #111827 !important;
+    font-size: 11pt;
+  }
+  
+  .no-print, header, footer, .section-padding, .btn, .nav-container {
+    display: none !important;
+  }
+  
+  .print-only {
+    display: block !important;
+  }
+  
+  .document-paper {
+    background: #ffffff !important;
+    color: #111827 !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+  }
+}
+
+/* ==========================================
+   RESPONSIVE MOBILE-FIRST OVERHAUL
+   ========================================== */
+
+/* --- Tablet (max-width: 1024px) --- */
+@media (max-width: 1024px) {
+  .container {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .section-padding {
+    padding-top: 64px;
+    padding-bottom: 64px;
+  }
+
+  .section-title {
+    font-size: 2rem;
+  }
+
+  .section-desc {
+    font-size: 0.95rem;
+  }
+
+  .selection-grid {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 14px;
+  }
+}
+
+/* --- Mobile Large (max-width: 768px) --- */
+@media (max-width: 768px) {
+  body {
+    background-size: 20px 20px;
+  }
+
+  .container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .section-padding {
+    padding-top: 48px;
+    padding-bottom: 48px;
+  }
+
+  .section-header {
+    margin-bottom: 36px;
+  }
+
+  .section-title {
+    font-size: 1.75rem;
+    letter-spacing: -0.02em;
+  }
+
+  .section-desc {
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+
+  .section-badge {
+    font-size: 0.72rem;
+    padding: 5px 12px;
+    gap: 6px;
+    box-shadow: 2px 2px 0px #0F172A;
+  }
+
+  /* Neo Cards */
+  .neo-card {
+    box-shadow: 3px 3px 0px #0F172A !important;
+  }
+
+  /* Selection Grid (Package Picker in Order Form) */
+  .selection-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .select-card {
+    padding: 16px;
+    box-shadow: 2px 2px 0px #CBD5E1;
+  }
+
+  .select-card:hover {
+    transform: none;
+    box-shadow: 3px 3px 0px var(--prussian-blue);
+  }
+
+  .select-card.active {
+    box-shadow: 3px 3px 0px var(--kuning);
+  }
+
+  /* Category Pills & Badges */
+  .category-pill {
+    font-size: 0.68rem;
+    padding: 3px 8px;
+    gap: 4px;
+  }
+
+  .badge {
+    font-size: 0.68rem;
+    padding: 3px 8px;
+    gap: 4px;
+    box-shadow: 1px 1px 0px #0F172A;
+  }
+
+  /* Form Controls */
+  .form-input, .form-select, .form-textarea {
+    padding: 11px 14px;
+    font-size: 0.9rem;
+    box-shadow: 2px 2px 0px #CBD5E1;
+  }
+
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    box-shadow: 3px 3px 0px var(--kuning);
+  }
+
+  .form-label {
+    font-size: 0.88rem;
+    margin-bottom: 6px;
+  }
+
+  .form-group {
+    margin-bottom: 18px;
+  }
+
+  /* Buttons */
+  .btn {
+    font-size: 0.88rem;
+    padding: 11px 20px;
+  }
+
+  .btn-sm {
+    font-size: 0.8rem;
+    padding: 8px 14px;
+  }
+
+  /* Highlight badge */
+  .highlight-badge {
+    font-size: 0.85rem;
+    padding: 1px 6px;
+  }
+
+  /* Text gradient */
+  .text-gradient, .text-gradient-amber {
+    font-size: inherit;
+  }
+}
+
+/* --- Mobile Small (max-width: 480px) --- */
+@media (max-width: 480px) {
+  body {
+    background-size: 16px 16px;
+  }
+
+  .container {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .section-padding {
+    padding-top: 40px;
+    padding-bottom: 40px;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+  }
+
+  .section-desc {
+    font-size: 0.85rem;
+  }
+
+  .section-badge {
+    font-size: 0.68rem;
+    padding: 4px 10px;
+  }
+
+  .section-header {
+    margin-bottom: 28px;
+  }
+
+  .neo-card {
+    border-radius: var(--radius-sm) !important;
+    box-shadow: 2px 2px 0px #0F172A !important;
+  }
+
+  .select-card {
+    padding: 14px;
+  }
+
+  .category-pill {
+    font-size: 0.64rem;
+    padding: 2px 6px;
+  }
+
+  .badge {
+    font-size: 0.64rem;
+    padding: 2px 6px;
+  }
+
+  .form-input, .form-select, .form-textarea {
+    padding: 10px 12px;
+    font-size: 0.88rem;
+  }
+
+  .btn {
+    font-size: 0.85rem;
+    padding: 10px 18px;
+  }
+
+  .btn.btn-block,
+  .btn.w-full {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .btn-sm {
+    font-size: 0.78rem;
+    padding: 7px 12px;
+    width: auto;
+  }
+}
+
+/* --- Mobile Tiny (max-width: 360px) --- */
+@media (max-width: 360px) {
+  .container {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .section-title {
+    font-size: 1.35rem;
+  }
+
+  .section-desc {
+    font-size: 0.82rem;
+  }
+}
