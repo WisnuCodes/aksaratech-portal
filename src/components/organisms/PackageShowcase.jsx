@@ -7,12 +7,12 @@ import Button from '../atoms/Button';
 
 export default function PackageShowcase({ onSelectPackage }) {
   const navigate = useNavigate();
-  const [expandedId, setExpandedId] = useState(null);
+  const [expandedIds, setExpandedIds] = useState({});
   const [activeSlide, setActiveSlide] = useState(0);
   const trackRef = useRef(null);
 
   const toggleExpand = (id) => {
-    setExpandedId(prev => (prev === id ? null : id));
+    setExpandedIds(prev => ({ ...prev, [id]: !prev[id] }));
   };
 
   const handleSelect = (pkgId) => {
@@ -109,7 +109,7 @@ export default function PackageShowcase({ onSelectPackage }) {
           className="package-display-track"
         >
           {PACKAGES.map((pkg, idx) => {
-            const isExpanded = expandedId === pkg.id;
+            const isExpanded = !!expandedIds[pkg.id];
             const isFeatured = pkg.number === 5; // Tugas akhir / Skripsi
             const isCurrent = activeSlide === idx;
             const featureList = pkg.features || pkg.sections || [];
@@ -595,11 +595,18 @@ export default function PackageShowcase({ onSelectPackage }) {
             max-width: 360px;
             scroll-snap-align: start;
             align-self: flex-start !important;
-            height: auto !important;
+            height: fit-content !important;
+            min-height: unset !important;
+            max-height: unset !important;
+          }
+
+          .package-card-item > * {
+            flex-shrink: 0 !important;
           }
 
           .package-details-box {
-            flex: none !important;
+            flex: 0 0 auto !important;
+            flex-grow: 0 !important;
           }
 
           /* Mobile Pagination Dots Track */
