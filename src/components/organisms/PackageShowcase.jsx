@@ -574,9 +574,10 @@ export default function PackageShowcase({ onSelectPackage }) {
             box-shadow: 1px 1px 0px #CBD5E1;
           }
 
-          /* Swipe Track on Mobile */
+          /* Swipe Track on Mobile with Independent Card Heights */
           .package-display-track {
             display: flex;
+            align-items: flex-start !important;
             gap: 16px;
             overflow-x: auto;
             scroll-snap-type: x mandatory;
@@ -593,6 +594,12 @@ export default function PackageShowcase({ onSelectPackage }) {
             flex: 0 0 86%;
             max-width: 360px;
             scroll-snap-align: start;
+            align-self: flex-start !important;
+            height: auto !important;
+          }
+
+          .package-details-box {
+            flex: none !important;
           }
 
           /* Mobile Pagination Dots Track */
