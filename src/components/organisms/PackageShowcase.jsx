@@ -149,7 +149,11 @@ export default function PackageShowcase({ onSelectPackage }) {
                 <div className="package-price-box">
                   <div className="price-label">Tarif Transparan:</div>
                   <div className="price-value">
-                    {formatRupiah(pkg.minPrice)} – {formatRupiah(pkg.maxPrice)}
+                    {pkg.minPrice === pkg.maxPrice ? (
+                      <span>{formatRupiah(pkg.minPrice)} <span style={{ fontSize: '0.82rem', color: '#059669', fontWeight: '800' }}>(Tarif Tetap)</span></span>
+                    ) : (
+                      <>{formatRupiah(pkg.minPrice)} – {formatRupiah(pkg.maxPrice)}</>
+                    )}
                   </div>
                   <div className="timeline-row">
                     <Clock size={14} style={{ color: '#D97706' }} />

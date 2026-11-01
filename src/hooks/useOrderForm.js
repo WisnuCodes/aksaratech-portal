@@ -127,11 +127,12 @@ export function useOrderForm(initialPackageId = null) {
       if (!activeClientId || activeClientId.trim().length < 2) {
         newErrors.clientName = 'ID Klien / ID Inquiry wajib terisi secara otomatis.';
       }
-      const cleanPhone = (formData.clientPhone || '').replace(/[\s-]/g, '');
-      if (!cleanPhone || cleanPhone.length < 8) {
-        newErrors.clientPhone = 'Nomor WhatsApp aktif wajib diisi (contoh: 081234567890).';
-      } else if (!/^(\+62|62|08|8)[0-9]{6,13}$/.test(cleanPhone)) {
-        newErrors.clientPhone = 'Format nomor WhatsApp tidak valid. Gunakan format standar Indonesia (08xxx / 62xxx).';
+      const rawPhone = (formData.clientPhone || '').replace(/[\s-]/g, '');
+      const digitsOnly = rawPhone.replace(/^(?:\+62|62|0)/, '');
+      if (!digitsOnly || digitsOnly.length < 8 || digitsOnly.length > 13) {
+        newErrors.clientPhone = 'Nomor WhatsApp aktif wajib diisi (8–13 digit nomor seluler).';
+      } else if (!/^8[0-9]{7,12}$/.test(digitsOnly)) {
+        newErrors.clientPhone = 'Nomor WhatsApp tidak valid. Masukkan nomor seluler Indonesia yang aktif.';
       }
       if (!formData.projectTitle || formData.projectTitle.trim().length < 2) {
         newErrors.projectTitle = 'Nama proyek website wajib diisi (min. 2 karakter).';

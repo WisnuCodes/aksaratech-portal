@@ -67,6 +67,16 @@ export function createWhatsAppPayload(formData, selectedPackage, selectedAddons)
     featuresText = formData.functionalFeatures.map(f => `  • ${f}`).join("\n");
   }
 
+  const rawPhone = (formData.clientPhone || '').replace(/[\s-]/g, '');
+  const digitsOnly = rawPhone.replace(/^(?:\+62|62|0)/, '');
+  const displayPhone = digitsOnly ? `+62 ${digitsOnly}` : "-";
+
+  const packagePriceText = selectedPackage 
+    ? (selectedPackage.minPrice === selectedPackage.maxPrice 
+        ? `${formatRupiah(selectedPackage.minPrice)} (Tarif Tetap)` 
+        : `${formatRupiah(selectedPackage.minPrice)} – ${formatRupiah(selectedPackage.maxPrice)}`)
+    : "-";
+
   const message = 
 `*PENGESAHAN BRIEF & PERMINTAAN KEBUTUHAN WEBSITE*
 *AKSARA TECH – Enterprise Digital Solutions*
@@ -76,7 +86,7 @@ export function createWhatsAppPayload(formData, selectedPackage, selectedAddons)
 
 *I. DATA KLIEN & ENTITAS:*
 • ID Klien / Pengajuan: ${formData.clientName || formData.inquiryId || "-"}
-• WhatsApp: ${formData.clientPhone || "-"}
+• WhatsApp: ${displayPhone}
 • Email: ${formData.clientEmail || "-"}
 • Nama Proyek: ${formData.projectTitle || "-"}
 • Kategori Proyek: ${formData.projectCategory || "-"}
@@ -85,7 +95,7 @@ export function createWhatsAppPayload(formData, selectedPackage, selectedAddons)
 • Paket: ${selectedPackage ? selectedPackage.name : "-"}
 • Karakteristik: ${selectedPackage ? selectedPackage.systemType : "-"}
 • Estimasi Waktu: ${selectedPackage ? `${selectedPackage.minDays} – ${selectedPackage.maxDays} Hari Kerja` : "-"}
-• Kisaran Tarif Referensi: ${selectedPackage ? `${formatRupiah(selectedPackage.minPrice)} – ${formatRupiah(selectedPackage.maxPrice)}` : "-"}
+• Kisaran Tarif Referensi: ${packagePriceText}
 • Garansi Sistem: Include Garansi Bug & Error 1 Minggu (7 Hari Kalender)
 
 *III. SPESIFIKASI FITUR TERPILIH:*

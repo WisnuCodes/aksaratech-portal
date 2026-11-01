@@ -180,9 +180,18 @@ export default function PackagesPage({ onSelectPackage }) {
                 <div style={{ padding: '18px 24px', background: '#F8FAFC', borderBottom: '2px solid #0F172A' }}>
                   <div style={{ fontSize: '0.75rem', color: '#64748B', marginBottom: '4px', fontWeight: '700' }}>Tarif Referensi Resmi:</div>
                   <div style={{ fontSize: '1.45rem', fontWeight: '900', color: '#0F172A', letterSpacing: '-0.02em', display: 'flex', alignItems: 'baseline', gap: '6px' }}>
-                    <span style={{ color: 'var(--prussian-blue)' }}>{formatRupiah(pkg.minPrice)}</span>
-                    <span style={{ fontSize: '0.95rem', color: '#94A3B8', fontWeight: '400' }}>–</span>
-                    <span style={{ color: 'var(--prussian-blue)' }}>{formatRupiah(pkg.maxPrice)}</span>
+                    {pkg.minPrice === pkg.maxPrice ? (
+                      <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+                        <span style={{ color: 'var(--prussian-blue)' }}>{formatRupiah(pkg.minPrice)}</span>
+                        <span style={{ fontSize: '0.82rem', background: '#ECFDF5', color: '#065F46', padding: '2px 8px', borderRadius: '4px', border: '1px solid #10B981', fontWeight: '800' }}>Tarif Tetap</span>
+                      </div>
+                    ) : (
+                      <>
+                        <span style={{ color: 'var(--prussian-blue)' }}>{formatRupiah(pkg.minPrice)}</span>
+                        <span style={{ fontSize: '0.95rem', color: '#94A3B8', fontWeight: '400' }}>–</span>
+                        <span style={{ color: 'var(--prussian-blue)' }}>{formatRupiah(pkg.maxPrice)}</span>
+                      </>
+                    )}
                   </div>
 
                   <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginTop: '12px', fontSize: '0.82rem', color: '#0F172A', fontWeight: '700' }}>

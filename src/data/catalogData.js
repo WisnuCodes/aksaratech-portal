@@ -147,7 +147,7 @@ export const PACKAGES = [
     minDays: 1,
     maxDays: 3,
     systemType: "Dinamis Interaktif dengan Database MySQL / PostgreSQL (CRUD Sederhana & Form Validasi)",
-    pages: "1 - 3 Halaman Modul Tugas / Praktikum",
+    pages: "3 - 5 Halaman (Fleksibel Sesuai Kebutuhan Tugas)",
     sections: ["Modul Fungsional Tugas", "Formulir & Validasi Input", "CRUD Database Sederhana", "Komentar Penjelas Kode"],
     features: ["Pilihan Stack Bebas (PHP Native/Laravel/CI/React/Node)", "Clean Code & Komentar Penjelas per Fungsi", "CRUD & Pengolahan Data Interaktif", "100% Responsif & Siap Run"],
     deliverables: ["Full Master Source Code (.zip)", "Skema Database (.sql)", "Catatan Ringkas Struktur Folder & Panduan Run Singkat"],

@@ -82,7 +82,9 @@ export default function OrderBriefForm({ preselectedPackageId, hideHeader = fals
               <div className="order-est-box">
                 <div className="order-est-label">Estimasi Biaya Referensi</div>
                 <div className="order-est-value">
-                  {formatRupiah(calculations.minPrice)} – {formatRupiah(calculations.maxPrice)}
+                  {calculations.minPrice === calculations.maxPrice
+                    ? `${formatRupiah(calculations.minPrice)} (Tarif Tetap)`
+                    : `${formatRupiah(calculations.minPrice)} – ${formatRupiah(calculations.maxPrice)}`}
                 </div>
               </div>
               <button
@@ -127,12 +129,21 @@ export default function OrderBriefForm({ preselectedPackageId, hideHeader = fals
                   <Input
                     label="Nomor WhatsApp Aktif"
                     required
+                    prefix="+62"
                     type="tel"
-                    placeholder="Contoh: 085600386692"
+                    placeholder="812-3456-7890"
                     value={formData.clientPhone}
-                    onChange={(e) => updateField('clientPhone', e.target.value)}
+                    onChange={(e) => {
+                      let val = e.target.value.replace(/[^\d\s-]/g, '');
+                      if (val.startsWith('0')) {
+                        val = val.substring(1);
+                      } else if (val.startsWith('62')) {
+                        val = val.substring(2);
+                      }
+                      updateField('clientPhone', val);
+                    }}
                     error={errors.clientPhone}
-                    helperText="Saluran komunikasi utama untuk validasi dan penawaran resmi."
+                    helperText="Standar nomor Indonesia (+62). Masukkan nomor setelah kode negara."
                   />
                 </div>
 
@@ -219,7 +230,9 @@ export default function OrderBriefForm({ preselectedPackageId, hideHeader = fals
 
                         <div style={{ marginTop: 'auto', paddingTop: '12px', borderTop: '1.5px solid #E2E8F0' }}>
                           <div style={{ fontWeight: '900', fontSize: '1.18rem', color: 'var(--prussian-blue)' }}>
-                            {formatRupiah(pkg.minPrice)} – {formatRupiah(pkg.maxPrice)}
+                            {pkg.minPrice === pkg.maxPrice
+                              ? `${formatRupiah(pkg.minPrice)} (Tarif Tetap)`
+                              : `${formatRupiah(pkg.minPrice)} – ${formatRupiah(pkg.maxPrice)}`}
                           </div>
                           <div style={{ fontSize: '0.8rem', color: '#475569', display: 'flex', alignItems: 'center', gap: '6px', marginTop: '6px', fontWeight: '700' }}>
                             <Clock size={14} style={{ color: '#D97706' }} /> {pkg.minDays}–{pkg.maxDays} Hari Kerja &bull; Max 3x Revisi
@@ -248,7 +261,7 @@ export default function OrderBriefForm({ preselectedPackageId, hideHeader = fals
                 <div className="form-group">
                   <label className="form-label">Kategori Penggunaan <span className="req">*</span></label>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-                    {['UMKM & Bisnis', 'Korporat / Agensi', 'Toko Online / Retail', 'Tugas Akhir / Skripsi', 'Organisasi / Portofolio'].map((cat) => {
+                    {['UMKM & Bisnis', 'Korporat / Agensi', 'Toko Online / Retail', 'Tugas Kuliah', 'Organisasi / Portofolio'].map((cat) => {
                       const isSel = formData.projectCategory === cat;
                       return (
                         <button
@@ -752,7 +765,9 @@ export default function OrderBriefForm({ preselectedPackageId, hideHeader = fals
                     <div>
                       <div style={{ fontSize: '0.78rem', color: '#64748B', fontWeight: '700' }}>ID Klien / Pengajuan</div>
                       <div style={{ fontWeight: '800', color: '#0F172A' }}>{formData.clientName || formData.inquiryId || '-'}</div>
-                      <div style={{ fontSize: '0.84rem', color: '#475569' }}>{formData.clientPhone}</div>
+                      <div style={{ fontSize: '0.84rem', color: '#475569', fontWeight: '700' }}>
+                        {formData.clientPhone ? (formData.clientPhone.startsWith('+62') ? formData.clientPhone : `+62 ${formData.clientPhone}`) : '-'}
+                      </div>
                     </div>
                     <div>
                       <div style={{ fontSize: '0.78rem', color: '#64748B', fontWeight: '700' }}>Nama Proyek</div>
@@ -861,10 +876,12 @@ export default function OrderBriefForm({ preselectedPackageId, hideHeader = fals
                     <div>
                       <div style={{ fontSize: '0.82rem', color: '#64748B', fontWeight: '700' }}>Estimasi Tarif Referensi:</div>
                       <div style={{ fontSize: '1.45rem', fontWeight: '900', color: 'var(--prussian-blue)' }}>
-                        {formatRupiah(calculations.minPrice)} – {formatRupiah(calculations.maxPrice)}
+                        {calculations.minPrice === calculations.maxPrice
+                          ? `${formatRupiah(calculations.minPrice)} (Tarif Tetap)`
+                          : `${formatRupiah(calculations.minPrice)} – ${formatRupiah(calculations.maxPrice)}`}
                       </div>
                       <div style={{ fontSize: '0.8rem', color: '#475569', fontWeight: '600' }}>
-                        Uang Muka (DP 50%): {formatRupiah(calculations.dpMin)} – {formatRupiah(calculations.dpMax)}
+                        Uang Muka (DP 50%): {calculations.dpMin === calculations.dpMax ? formatRupiah(calculations.dpMin) : `${formatRupiah(calculations.dpMin)} – ${formatRupiah(calculations.dpMax)}`}
                       </div>
                     </div>
                     <div style={{ fontSize: '0.82rem', color: '#0F172A', background: 'var(--kuning)', border: '1.5px solid #0F172A', padding: '6px 14px', borderRadius: '4px', fontWeight: '800', boxShadow: '2px 2px 0px #0F172A' }}>

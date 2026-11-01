@@ -12,6 +12,7 @@ export default function Input({
   onChange,
   className = '',
   style = {},
+  prefix,
   ...props
 }) {
   return (
@@ -21,21 +22,64 @@ export default function Input({
           {label} {required && <span className="req">*</span>}
         </label>
       )}
-      <input
-        id={id}
-        type={type}
-        placeholder={placeholder}
-        value={value}
-        onChange={onChange}
-        className="form-input"
-        aria-invalid={!!error}
-        data-has-error={!!error}
-        style={{
-          borderColor: error ? 'var(--rose, #F43F5E)' : undefined,
-          boxShadow: error ? '0 0 0 3px rgba(244, 63, 94, 0.25)' : undefined
-        }}
-        {...props}
-      />
+      {prefix ? (
+        <div style={{
+          display: 'flex',
+          alignItems: 'stretch',
+          width: '100%',
+        }}>
+          <div style={{
+            background: '#F1F5F9',
+            border: '2px solid #0F172A',
+            borderRight: 'none',
+            borderRadius: '6px 0 0 6px',
+            padding: '10px 14px',
+            fontSize: '0.95rem',
+            fontWeight: '900',
+            color: 'var(--prussian-blue)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+            userSelect: 'none',
+            flexShrink: 0
+          }}>
+            {prefix}
+          </div>
+          <input
+            id={id}
+            type={type}
+            placeholder={placeholder}
+            value={value}
+            onChange={onChange}
+            className="form-input"
+            aria-invalid={!!error}
+            data-has-error={!!error}
+            style={{
+              borderRadius: '0 6px 6px 0',
+              flex: 1,
+              borderColor: error ? 'var(--rose, #F43F5E)' : undefined,
+              boxShadow: error ? '0 0 0 3px rgba(244, 63, 94, 0.25)' : undefined
+            }}
+            {...props}
+          />
+        </div>
+      ) : (
+        <input
+          id={id}
+          type={type}
+          placeholder={placeholder}
+          value={value}
+          onChange={onChange}
+          className="form-input"
+          aria-invalid={!!error}
+          data-has-error={!!error}
+          style={{
+            borderColor: error ? 'var(--rose, #F43F5E)' : undefined,
+            boxShadow: error ? '0 0 0 3px rgba(244, 63, 94, 0.25)' : undefined
+          }}
+          {...props}
+        />
+      )}
       {error ? (
         <p style={{ color: 'var(--rose, #F43F5E)', fontSize: '0.8rem', marginTop: '6px', fontWeight: '600' }}>
           {error}
