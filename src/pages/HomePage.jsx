@@ -72,7 +72,7 @@ export default function HomePage({ onSelectPackage }) {
             </h2>
 
             <p style={{ fontSize: '1.05rem', color: '#334155', maxWidth: '720px', margin: '0 auto 36px auto', lineHeight: '1.7', fontWeight: '500' }}>
-              Dapatkan draf Surat Penawaran resmi, spesifikasi arsitektur yang terukur, dan kepastian tarif transparan (plafon maksimal Rp 650.000) dengan fasilitas kuota revisi maksimal 3 kali mutlak.
+              Dapatkan draf Surat Penawaran resmi, spesifikasi arsitektur yang terukur, kepastian tarif transparan (plafon maksimal Rp 500.000), fasilitas kuota revisi maksimal 3 kali mutlak, serta garansi bug kode 1 minggu.
             </p>
 
             <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '16px' }}>
@@ -92,7 +92,7 @@ export default function HomePage({ onSelectPackage }) {
               </a>
               <Link to="/paket" className="btn btn-secondary" style={{ padding: '14px 28px', fontSize: '1rem' }}>
                 <FileText size={18} style={{ color: 'var(--prussian-blue)' }} />
-                <span>Bandingkan 5 Paket Layanan</span>
+                <span>Bandingkan 6 Klasifikasi Paket</span>
               </Link>
             </div>
           </div>

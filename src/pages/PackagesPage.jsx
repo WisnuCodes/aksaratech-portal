@@ -28,12 +28,76 @@ export default function PackagesPage({ onSelectPackage }) {
   const comparisonRows = [
     { label: 'Tipe Sistem', key: 'systemType' },
     { label: 'Estimasi Pengerjaan', render: (p) => `${p.minDays}–${p.maxDays} Hari Kerja` },
-    { label: 'Rentang Tarif Resmi', render: (p) => `${formatRupiah(p.minPrice)} – ${formatRupiah(p.maxPrice)}` },
+    { 
+      label: 'Rentang Tarif Resmi', 
+      render: (p) => p.minPrice === p.maxPrice 
+        ? `${formatRupiah(p.minPrice)} (Flat)` 
+        : `${formatRupiah(p.minPrice)} – ${formatRupiah(p.maxPrice)}` 
+    },
     { label: 'Jumlah Halaman', render: (p) => p.pages },
-    { label: 'Database MySQL & CRUD', render: (p) => p.number >= 2 ? <CheckCircle2 size={18} style={{ color: '#059669', margin: '0 auto' }} /> : <XCircle size={18} style={{ color: '#94A3B8', margin: '0 auto' }} /> },
-    { label: 'Sistem Autentikasi / Login', render: (p) => p.number === 5 ? <CheckCircle2 size={18} style={{ color: '#059669', margin: '0 auto' }} /> : <span style={{ fontSize: '0.8rem', color: '#64748B', fontWeight: '600' }}>Opsional via Add-on</span> },
-    { label: 'Dokumen Rekayasa SRS & SDD', render: (p) => p.includeDocs ? <CheckCircle2 size={18} style={{ color: '#059669', margin: '0 auto' }} /> : <span style={{ fontSize: '0.8rem', color: '#64748B', fontWeight: '600' }}>Add-on</span> },
-    { label: 'Pemodelan Diagram UML', render: (p) => p.number === 5 || p.number === 4 || p.number === 2 ? <CheckCircle2 size={18} style={{ color: '#059669', margin: '0 auto' }} /> : <span style={{ fontSize: '0.8rem', color: '#64748B', fontWeight: '600' }}>Add-on</span> },
+    { 
+      label: 'Database Relasional & CRUD', 
+      render: (p) => [2, 4, 5, 6].includes(p.number) ? (
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+          <CheckCircle2 size={18} style={{ color: '#059669' }} />
+          <span style={{ fontSize: '0.8rem', color: '#065F46', fontWeight: '800' }}>
+            {p.number === 6 ? 'MySQL/Postgres' : 'MySQL & CRUD'}
+          </span>
+        </div>
+      ) : (
+        <span style={{ fontSize: '0.8rem', color: '#64748B', fontWeight: '600' }}>Opsional via Add-on</span>
+      )
+    },
+    { 
+      label: 'Sistem Autentikasi / Login', 
+      render: (p) => p.number === 5 ? (
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+          <CheckCircle2 size={18} style={{ color: '#059669' }} />
+          <span style={{ fontSize: '0.8rem', color: '#065F46', fontWeight: '800' }}>Multi-Role</span>
+        </div>
+      ) : (
+        <span style={{ fontSize: '0.8rem', color: '#64748B', fontWeight: '600' }}>Opsional via Add-on</span>
+      )
+    },
+    { 
+      label: 'Dokumen Rekayasa SRS & SDD', 
+      render: (p) => p.includeDocs ? (
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+          <CheckCircle2 size={18} style={{ color: '#059669' }} />
+          <span style={{ fontSize: '0.8rem', color: '#065F46', fontWeight: '800' }}>Termasuk</span>
+        </div>
+      ) : (
+        <span style={{ fontSize: '0.8rem', color: '#64748B', fontWeight: '600' }}>Add-on</span>
+      )
+    },
+    { 
+      label: 'Pemodelan Diagram UML', 
+      render: (p) => [2, 4, 5].includes(p.number) ? (
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+          <CheckCircle2 size={18} style={{ color: '#059669' }} />
+          <span style={{ fontSize: '0.8rem', color: '#065F46', fontWeight: '800' }}>Termasuk</span>
+        </div>
+      ) : (
+        <span style={{ fontSize: '0.8rem', color: '#64748B', fontWeight: '600' }}>Add-on</span>
+      )
+    },
+    { 
+      label: 'Garansi Bug & Error Kode', 
+      render: () => (
+        <span style={{ 
+          color: '#065F46', 
+          background: '#ECFDF5', 
+          padding: '3px 8px', 
+          borderRadius: '4px', 
+          border: '1.5px solid #10B981', 
+          fontWeight: '800', 
+          fontSize: '0.82rem',
+          display: 'inline-block' 
+        }}>
+          1 Minggu (7 Hari)
+        </span>
+      ) 
+    },
     { label: 'Kuota Revisi Maksimal', render: () => <span style={{ color: '#0F172A', background: 'var(--kuning)', padding: '2px 8px', borderRadius: '4px', border: '1.5px solid #0F172A', fontWeight: '800' }}>3x Mutlak</span> },
     { label: 'Skema Pembayaran', render: () => <span style={{ fontSize: '0.82rem', fontWeight: '800', color: '#0F172A' }}>DP 50% / Pelunasan 50%</span> }
   ];
@@ -45,9 +109,9 @@ export default function PackagesPage({ onSelectPackage }) {
         breadcrumbs={[{ label: 'Katalog Paket & Layanan' }]}
         badge="Katalog Resmi Aksara Tech"
         badgeIcon={Package}
-        title="Spesifikasi & Tarif 5 Paket"
-        highlightText="Layanan Enterprise"
-        description="Seluruh paket dibangun dengan arsitektur teruji, fasilitas kuota revisi maksimal 3 kali mutlak, estimasi 3–10 hari kerja, dan plafon tarif transparan tanpa biaya tersembunyi."
+        title="Spesifikasi & Tarif 6 Paket"
+        highlightText="Layanan Enterprise & Akademik"
+        description="Seluruh paket dibangun dengan arsitektur teruji, fasilitas kuota revisi maksimal 3 kali mutlak, estimasi 1–10 hari kerja, dan plafon tarif transparan tanpa biaya tersembunyi (maks Rp 500.000)."
         action={
           <Link to="/pesan" className="btn btn-primary">
             <span>Isi Lembar Kebutuhan</span>
@@ -157,6 +221,23 @@ export default function PackagesPage({ onSelectPackage }) {
                   }}>
                     {pkg.docsSummary}
                   </div>
+
+                  <div style={{
+                    marginTop: '8px',
+                    background: '#F0FDF4',
+                    border: '1.5px solid #86EFAC',
+                    borderRadius: '6px',
+                    padding: '6px 12px',
+                    fontSize: '0.78rem',
+                    color: '#166534',
+                    fontWeight: '800',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px'
+                  }}>
+                    <Shield size={13} style={{ color: '#16A34A', flexShrink: 0 }} />
+                    <span>Include Garansi Kode 1 Minggu (7 Hari)</span>
+                  </div>
                 </div>
 
                 <div style={{ padding: '16px 24px', borderTop: '2px solid #0F172A', marginTop: 'auto', background: '#F8FAFC' }}>
@@ -199,7 +280,7 @@ export default function PackagesPage({ onSelectPackage }) {
                     {PACKAGES.map(p => (
                       <th key={p.id} style={{ padding: '16px 14px', color: '#0F172A', fontWeight: '800' }}>
                         <div>Paket {p.number}</div>
-                        <div style={{ fontSize: '0.78rem', color: 'var(--prussian-blue)', fontWeight: '800' }}>{p.name.split(' ')[0]}</div>
+                        <div style={{ fontSize: '0.78rem', color: 'var(--prussian-blue)', fontWeight: '800' }}>{p.shortName || p.name.split(' ')[0]}</div>
                       </th>
                     ))}
                   </tr>

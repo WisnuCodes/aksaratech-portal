@@ -80,7 +80,7 @@ export default function TermsPrivacyPage() {
               <ul style={{ paddingLeft: '24px', marginTop: '8px' }}>
                 <li>Batasan 3 kali berlaku merata baik untuk perubahan minor maupun mayor.</li>
                 <li>Poin-poin revisi wajib dirangkum tertulis dalam satu daftar poin terstruktur (<em>revision list</em>) per pengajuan.</li>
-                <li>Permintaan penyesuaian setelah kuota ke-3 habis otomatis dialihkan ke Add-on berbayar (Rp 50.000 – Rp 150.000) dan memerlukan kesepakatan tertulis baru.</li>
+                <li>Permintaan penyesuaian setelah kuota ke-3 habis otomatis dialihkan ke Add-on berbayar (Rp 50.000 – Rp 75.000) dan memerlukan kesepakatan tertulis baru.</li>
               </ul>
             </div>
 
@@ -108,10 +108,26 @@ export default function TermsPrivacyPage() {
             </div>
 
             {/* Section 6 */}
+            <div style={{ marginBottom: '36px' }}>
+              <h2 style={{ fontSize: '1.3rem', fontWeight: '900', color: '#0F172A', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <ShieldCheck size={20} style={{ color: '#059669' }} />
+                6. Garansi Pemeliharaan Kode 1 Minggu (7 Hari Kalender)
+              </h2>
+              <p>
+                Setiap serah terima proyek resmi disertai dengan <strong>Masa Garansi Bug &amp; Error Kode selama 1 Minggu (7 hari kalender)</strong> terhitung sejak penyerahan master berkas akhir:
+              </p>
+              <ul style={{ paddingLeft: '24px', marginTop: '8px' }}>
+                <li>Garansi mencakup penanganan bug logika pemrograman, galat sintaks kode, atau ketidaksesuaian fungsional terhadap lembar brief teknis awal.</li>
+                <li>Garansi tidak mencakup penambahan fitur baru di luar kesepakatan awal (fitur baru dialihkan ke Add-on resmi).</li>
+                <li>Garansi gugur apabila source code telah dimodifikasi secara mandiri oleh pihak ketiga atau terjadinya kendala server hosting eksternal milik klien.</li>
+              </ul>
+            </div>
+
+            {/* Section 7 */}
             <div>
               <h2 style={{ fontSize: '1.3rem', fontWeight: '900', color: '#0F172A', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <FileText size={20} style={{ color: 'var(--prussian-blue)' }} />
-                6. Penyerahan Hak Master Berkas Akhir
+                7. Penyerahan Hak Master Berkas Akhir
               </h2>
               <p>
                 Setelah pelunasan 100% diterima, Aksara Tech menyerahkan master berkas digital berupa arsip Source Code (.zip), Skema Database (.sql), serta Dokumen Rekayasa Sistem berstandar IEEE (SRS &amp; SDD) dan Diagram UML Lengkap sesuai spesifikasi paket yang disepakati. Seluruh hak penggunaan kode program diserahkan sepenuhnya kepada pihak Klien.

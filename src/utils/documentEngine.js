@@ -75,7 +75,7 @@ export function createWhatsAppPayload(formData, selectedPackage, selectedAddons)
 *Tanggal:* ${new Date().toLocaleDateString("id-ID", { day: 'numeric', month: 'long', year: 'numeric' })}
 
 *I. DATA KLIEN & ENTITAS:*
-• Nama Klien/Instansi: ${formData.clientName || "-"}
+• ID Klien / Pengajuan: ${formData.clientName || formData.inquiryId || "-"}
 • WhatsApp: ${formData.clientPhone || "-"}
 • Email: ${formData.clientEmail || "-"}
 • Nama Proyek: ${formData.projectTitle || "-"}
@@ -86,6 +86,7 @@ export function createWhatsAppPayload(formData, selectedPackage, selectedAddons)
 • Karakteristik: ${selectedPackage ? selectedPackage.systemType : "-"}
 • Estimasi Waktu: ${selectedPackage ? `${selectedPackage.minDays} – ${selectedPackage.maxDays} Hari Kerja` : "-"}
 • Kisaran Tarif Referensi: ${selectedPackage ? `${formatRupiah(selectedPackage.minPrice)} – ${formatRupiah(selectedPackage.maxPrice)}` : "-"}
+• Garansi Sistem: Include Garansi Bug & Error 1 Minggu (7 Hari Kalender)
 
 *III. SPESIFIKASI FITUR TERPILIH:*
 ${featuresText}

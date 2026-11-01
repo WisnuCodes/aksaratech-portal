@@ -114,12 +114,14 @@ export default function OrderBriefForm({ preselectedPackageId, hideHeader = fals
 
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '16px' }}>
                   <Input
-                    label="Nama Klien / Nama Instansi"
+                    label="ID Klien / ID Inquiry Resmi (Otomatis)"
                     required
-                    placeholder="Contoh: Bpk. Hendra Gunawan / PT Sinergi"
-                    value={formData.clientName}
+                    readOnly
+                    value={formData.clientName || formData.inquiryId}
                     onChange={(e) => updateField('clientName', e.target.value)}
                     error={errors.clientName}
+                    helperText="ID unik otomatis diterbitkan oleh sistem untuk pelacakan brief & penawaran resmi."
+                    style={{ background: '#F1F5F9', fontWeight: '800', color: 'var(--prussian-blue)', cursor: 'not-allowed' }}
                   />
 
                   <Input
@@ -748,8 +750,8 @@ export default function OrderBriefForm({ preselectedPackageId, hideHeader = fals
                 }}>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px', marginBottom: '20px' }}>
                     <div>
-                      <div style={{ fontSize: '0.78rem', color: '#64748B', fontWeight: '700' }}>Klien / Instansi</div>
-                      <div style={{ fontWeight: '800', color: '#0F172A' }}>{formData.clientName || '-'}</div>
+                      <div style={{ fontSize: '0.78rem', color: '#64748B', fontWeight: '700' }}>ID Klien / Pengajuan</div>
+                      <div style={{ fontWeight: '800', color: '#0F172A' }}>{formData.clientName || formData.inquiryId || '-'}</div>
                       <div style={{ fontSize: '0.84rem', color: '#475569' }}>{formData.clientPhone}</div>
                     </div>
                     <div>

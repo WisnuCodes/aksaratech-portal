@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PACKAGES } from '../../data/catalogData';
 import { formatRupiah } from '../../utils/documentEngine';
-import { Clock, FileCode2, Layers, CheckCircle2, ChevronDown, ChevronUp, Star, ArrowRight, Package, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
+import { Clock, FileCode2, Layers, CheckCircle2, ChevronDown, ChevronUp, Star, ArrowRight, Package, ChevronLeft, ChevronRight, Sparkles, ShieldCheck } from 'lucide-react';
 import Button from '../atoms/Button';
 
 export default function PackageShowcase({ onSelectPackage }) {
@@ -64,10 +64,10 @@ export default function PackageShowcase({ onSelectPackage }) {
               <Package size={14} /> Katalog Paket Resmi
             </div>
             <h2 className="section-title" style={{ marginBottom: '8px' }}>
-              5 Paket Layanan <span style={{ color: 'var(--prussian-blue)' }}>Enterprise</span>
+              6 Klasifikasi Paket <span style={{ color: 'var(--prussian-blue)' }}>Layanan Resmi</span>
             </h2>
             <p className="section-desc" style={{ maxWidth: '640px', margin: 0 }}>
-              Dilengkapi kuota revisi 3x mutlak, estimasi 3–10 hari kerja, dan tarif transparan dengan plafon resmi maksimal Rp 650.000.
+              Dilengkapi kuota revisi 3x mutlak, garansi bug 1 minggu, estimasi 1–10 hari kerja, dan tarif transparan dengan plafon resmi maksimal Rp 500.000.
             </p>
           </div>
 
@@ -203,6 +203,24 @@ export default function PackageShowcase({ onSelectPackage }) {
                       {/* SRS / SDD document badge */}
                       <div className={`docs-badge ${pkg.includeDocs ? 'docs-included' : 'docs-addon'}`}>
                         {pkg.docsSummary}
+                      </div>
+
+                      {/* 1-Week Warranty Badge */}
+                      <div style={{
+                        marginTop: '8px',
+                        background: '#F0FDF4',
+                        border: '1.5px solid #86EFAC',
+                        borderRadius: '6px',
+                        padding: '6px 10px',
+                        fontSize: '0.78rem',
+                        color: '#166534',
+                        fontWeight: '800',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px'
+                      }}>
+                        <ShieldCheck size={13} style={{ color: '#16A34A', flexShrink: 0 }} />
+                        <span>Include Garansi Bug Kode 1 Minggu (7 Hari)</span>
                       </div>
                     </div>
                   )}
@@ -478,16 +496,6 @@ export default function PackageShowcase({ onSelectPackage }) {
           .package-card-item {
             width: 100% !important;
             flex: none !important;
-          }
-
-          /* Card 4 (E-Commerce) sits in row 2, col 1 */
-          .package-card-item:nth-child(4) {
-            grid-column: 1 / 2;
-          }
-
-          /* Card 5 (Skripsi/Tugas Akhir) sits in row 2, col 2 with equal width to Card 4 */
-          .package-card-item:nth-child(5) {
-            grid-column: 2 / 3;
           }
 
           .package-card-item:hover {

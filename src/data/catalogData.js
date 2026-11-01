@@ -8,8 +8,10 @@ export const BUSINESS_INFO = {
   waNumber: "6285600386692",
   revisionMax: 3,
   dpPercent: 50,
-  maxPackagePrice: 650000,
+  maxPackagePrice: 500000,
   maintenanceDailyPrice: 50000,
+  warrantyPeriod: "1 Minggu (7 Hari)",
+  warrantyDescription: "Garansi Bug & Error Kode selama 1 Minggu (7 Hari Kalender) Pasca Serah Terima",
 };
 
 export const PACKAGES = [
@@ -17,6 +19,7 @@ export const PACKAGES = [
     id: "landing-page",
     number: 1,
     name: "Landing Page Korporat",
+    shortName: "Landing Page",
     category: "High-Conversion Campaign",
     description: "1 Halaman web komersial eksklusif berstandar enterprise dengan tata letak responsif optimal, dirancang untuk konversi kampanye promosi bisnis.",
     minPrice: 120000,
@@ -31,6 +34,7 @@ export const PACKAGES = [
     includeDocs: false,
     docsSummary: "Tanpa Dokumen Rekayasa (Opsional via Add-on)",
     includeRevision: "Fasilitas kuota revisi MAKSIMAL 3 KALI secara mutlak (minor/mayor)",
+    warranty: "Garansi Bug & Error Kode 1 Minggu (7 Hari)",
     badge: "Paling Cepat Selesai",
     recommendedFor: "Peluncuran produk baru, kampanye promosi, portofolio profesional tunggal."
   },
@@ -38,10 +42,11 @@ export const PACKAGES = [
     id: "umkm-katalog",
     number: 2,
     name: "Website UMKM & Katalog Produk Digital",
+    shortName: "UMKM & Katalog",
     category: "Sistem Dinamis Database",
     description: "3 hingga 5 Halaman web terstruktur elegan dilengkapi etalase produk interaktif, pencarian real-time, manajemen katalog produk, dan tombol checkout order WhatsApp.",
     minPrice: 200000,
-    maxPrice: 380000,
+    maxPrice: 300000,
     minDays: 4,
     maxDays: 7,
     systemType: "Dinamis dengan Database MySQL (CRUD & Manajemen Katalog)",
@@ -52,6 +57,7 @@ export const PACKAGES = [
     includeDocs: true,
     docsSummary: "Termasuk Dokumen: Ringkasan SRS, ERD Database, & Use Case Diagram",
     includeRevision: "Fasilitas kuota revisi MAKSIMAL 3 KALI secara mutlak (minor/mayor)",
+    warranty: "Garansi Bug & Error Kode 1 Minggu (7 Hari)",
     badge: "Paling Populer UMKM",
     recommendedFor: "Usaha dagang, toko ritel, katalog jasa, dan UMKM yang butuh etalase digital."
   },
@@ -59,10 +65,11 @@ export const PACKAGES = [
     id: "company-profile",
     number: 3,
     name: "Company Profile Korporat",
+    shortName: "Company Profile",
     category: "Standard Enterprise",
     description: "5 hingga 8 Halaman korporat berkelas eksekutif dengan arsitektur sistem modern, navigasi mendalam profil perusahaan, visi-misi, serta formulir pesan interaktif.",
     minPrice: 280000,
-    maxPrice: 480000,
+    maxPrice: 400000,
     minDays: 5,
     maxDays: 8,
     systemType: "Semi-Dinamis (Informasi korporat & form pesan interaktif)",
@@ -73,6 +80,7 @@ export const PACKAGES = [
     includeDocs: false,
     docsSummary: "Panduan Operasional (SRS/SDD opsional via Add-on)",
     includeRevision: "Fasilitas kuota revisi MAKSIMAL 3 KALI secara mutlak (minor/mayor)",
+    warranty: "Garansi Bug & Error Kode 1 Minggu (7 Hari)",
     badge: "Standar Eksekutif",
     recommendedFor: "Perusahaan skala menengah, agensi, kantor konsultan, dan organisasi profesional."
   },
@@ -80,10 +88,11 @@ export const PACKAGES = [
     id: "e-commerce",
     number: 4,
     name: "E-Commerce / Toko Daring",
+    shortName: "E-Commerce Store",
     category: "Standard Store",
     description: "Sistem keranjang belanja online interaktif dengan manajemen katalog produk komprehensif, multi-kategori, dan alur checkout otomatis terhubung ke WhatsApp bisnis.",
     minPrice: 350000,
-    maxPrice: 580000,
+    maxPrice: 450000,
     minDays: 6,
     maxDays: 9,
     systemType: "Dinamis Kompleks dengan Database MySQL (Produk, Keranjang, Transaksi)",
@@ -94,17 +103,19 @@ export const PACKAGES = [
     includeDocs: true,
     docsSummary: "Termasuk Dokumen: Dokumen SRS Fungsional, ERD Database, & Sequence Diagram",
     includeRevision: "Fasilitas kuota revisi MAKSIMAL 3 KALI secara mutlak (minor/mayor)",
+    warranty: "Garansi Bug & Error Kode 1 Minggu (7 Hari)",
     badge: "Solusi Penjualan",
     recommendedFor: "Brand retail, toko pakaian, kuliner, dan pedagang daring yang ingin order WhatsApp instan."
   },
   {
     id: "skripsi-akademik",
     number: 5,
-    name: "Tugas Akhir / Skripsi / Modul Akademik",
+    name: "Tugas Kuliah / Project Mahasiswa / Modul Akademik",
+    shortName: "Modul Skripsi",
     category: "Mahasiswa & Akademisi",
-    description: "Perancangan & pengembangan sistem berbasis web sesuai bab skripsi/tugas akhir, dibangun dengan arsitektur modern (MVC/PHP Native/TypeScript) lengkap dengan dokumen IEEE SRS/SDD & diagram UML.",
+    description: "Perancangan & pengembangan sistem berbasis web sesuai bab, rancangan sistem, & tugas kuliah, dibangun dengan arsitektur modern (MVC Framework / PHP Native / TypeScript) lengkap dokumen SRS & SDD IEEE dan diagram UML.",
     minPrice: 350000,
-    maxPrice: 650000,
+    maxPrice: 500000,
     minDays: 5,
     maxDays: 10,
     systemType: "Full Dinamis dengan Arsitektur Database Kompleks & Multi-Role",
@@ -120,8 +131,32 @@ export const PACKAGES = [
     includeDocs: true,
     docsSummary: "TERMASUK LENGKAP: Dokumen SRS & SDD (Standar IEEE) + UML Diagrams Lengkap",
     includeRevision: "Fasilitas kuota revisi MAKSIMAL 3 KALI secara mutlak (minor/mayor)",
-    badge: "Paling Lengkap & Terjangkau",
+    warranty: "Garansi Bug & Error Kode 1 Minggu (7 Hari)",
+    badge: "Paling Lengkap & Siap Sidang",
     recommendedFor: "Mahasiswa Teknik Informatika, Sistem Informasi, Manajemen Informatika yang butuh sistem siap sidang."
+  },
+  {
+    id: "tugas-kuliah-harian",
+    number: 6,
+    name: "Tugas Kuliah Sederhana (Modul Tugas Harian)",
+    shortName: "Tugas Harian",
+    category: "Praktikum & Modul Harian",
+    description: "Pembuatan modul tugas harian, praktikum, atau mini-project kuliah (Front-End / Back-End / Full-Stack Sederhana) dengan clean code & komentar penjelas di setiap fungsi untuk memudahkan saat ditanya dosen.",
+    minPrice: 100000,
+    maxPrice: 100000,
+    minDays: 1,
+    maxDays: 3,
+    systemType: "Dinamis Interaktif dengan Database MySQL / PostgreSQL (CRUD Sederhana & Form Validasi)",
+    pages: "1 - 3 Halaman Modul Tugas / Praktikum",
+    sections: ["Modul Fungsional Tugas", "Formulir & Validasi Input", "CRUD Database Sederhana", "Komentar Penjelas Kode"],
+    features: ["Pilihan Stack Bebas (PHP Native/Laravel/CI/React/Node)", "Clean Code & Komentar Penjelas per Fungsi", "CRUD & Pengolahan Data Interaktif", "100% Responsif & Siap Run"],
+    deliverables: ["Full Master Source Code (.zip)", "Skema Database (.sql)", "Catatan Ringkas Struktur Folder & Panduan Run Singkat"],
+    includeDocs: false,
+    docsSummary: "Termasuk Panduan Singkat Alur Kodingan & Komentar Kode Fungsi",
+    includeRevision: "Fasilitas kuota revisi MAKSIMAL 3 KALI secara mutlak (minor/mayor)",
+    warranty: "Garansi Bug & Error Kode 1 Minggu (7 Hari)",
+    badge: "Paling Cepat & Hemat",
+    recommendedFor: "Mahasiswa yang butuh tugas harian, praktikum koding, atau mini-project kuliah cepat selesai."
   }
 ];
 
@@ -130,10 +165,10 @@ export const ADDONS = [
     id: "addon-srs-sdd",
     number: 1,
     name: "Pembuatan Dokumen SRS & SDD Tambahan",
-    description: "Penyusunan dokumen rekayasa perangkat lunak Software Requirements Specification (SRS) & Software Design Document (SDD) berstandar IEEE terperinci.",
-    priceDisplay: "Rp 100.000 – Rp 150.000",
-    minPrice: 100000,
-    maxPrice: 150000,
+    description: "Penyusunan dokumen rekayasa perangkat lunak Software Requirements Specification (SRS) & Software Design Document (SDD) terperinci.",
+    priceDisplay: "Rp 50.000 – Rp 75.000",
+    minPrice: 50000,
+    maxPrice: 75000,
     complexity: "Menengah / Standar",
     type: "Document"
   },
@@ -141,10 +176,10 @@ export const ADDONS = [
     id: "addon-uml",
     number: 2,
     name: "Pembuatan UML & Diagram Sistem Lengkap",
-    description: "Pemodelan lengkap: Class Diagram, ERD Database, Use Case, Activity Diagram, & Sequence Diagram sesuai sistem yang dirancang.",
-    priceDisplay: "Rp 100.000 – Rp 150.000",
-    minPrice: 100000,
-    maxPrice: 150000,
+    description: "Pemodelan lengkap: Class Diagram, ERD Database, Use Case, Activity, & Sequence Diagram sesuai sistem.",
+    priceDisplay: "Rp 50.000 – Rp 75.000",
+    minPrice: 50000,
+    maxPrice: 75000,
     complexity: "Menengah / Standar",
     type: "Document"
   },
@@ -153,7 +188,7 @@ export const ADDONS = [
     number: 3,
     name: "Penambahan Halaman Baru",
     description: "Pembuatan halaman web tambahan di luar paket standar utama berdasarkan permintaan khusus Klien.",
-    priceDisplay: "Rp 50.000 / halaman",
+    priceDisplay: "Rp 50.000 / hal",
     minPrice: 50000,
     maxPrice: 50000,
     complexity: "Sederhana / Mudah",
@@ -163,10 +198,10 @@ export const ADDONS = [
     id: "addon-seo",
     number: 4,
     name: "Optimasi SEO On-Page Lanjutan",
-    description: "Pengaturan meta tags korporat, OpenGraph social card, sitemap XML, robots.txt, serta heading semantic terstruktur.",
-    priceDisplay: "Rp 75.000 – Rp 100.000",
+    description: "Pengaturan meta tags korporat, OpenGraph social card, sitemap XML, robots.txt, serta heading.",
+    priceDisplay: "Rp 75.000",
     minPrice: 75000,
-    maxPrice: 100000,
+    maxPrice: 75000,
     complexity: "Sederhana / Mudah",
     type: "Feature"
   },
@@ -175,9 +210,9 @@ export const ADDONS = [
     number: 5,
     name: "Fitur Multi-Bahasa (Localization)",
     description: "Penerjemahan dan konfigurasi antarmuka website ke dalam Bahasa Inggris atau bahasa asing lain.",
-    priceDisplay: "Rp 100.000 – Rp 150.000",
-    minPrice: 100000,
-    maxPrice: 150000,
+    priceDisplay: "Rp 50.000 – Rp 75.000",
+    minPrice: 50000,
+    maxPrice: 75000,
     complexity: "Menengah / Sedang",
     type: "Feature"
   },
@@ -185,10 +220,10 @@ export const ADDONS = [
     id: "addon-mysql-crud",
     number: 6,
     name: "Integrasi Database MySQL & CRUD",
-    description: "Perancangan dan pemodelan basis data relasional, tabel data, serta fitur CRUD lengkap pada sistem.",
-    priceDisplay: "Rp 100.000 – Rp 150.000",
-    minPrice: 100000,
-    maxPrice: 150000,
+    description: "Perancangan dan pemodelan basis data relasional, tabel data, serta fitur CRUD pada sistem.",
+    priceDisplay: "Rp 50.000 – Rp 75.000",
+    minPrice: 50000,
+    maxPrice: 75000,
     complexity: "Menengah / Sedang",
     type: "Feature"
   },
@@ -196,10 +231,10 @@ export const ADDONS = [
     id: "addon-custom-module",
     number: 7,
     name: "Custom Request Modul Khusus",
-    description: "Pengembangan modul fitur kustom spesifik di luar paket standar berdasarkan kebutuhan operasional sistem.",
-    priceDisplay: "Rp 100.000 – Rp 150.000",
-    minPrice: 100000,
-    maxPrice: 150000,
+    description: "Pengembangan modul fitur kustom spesifik di luar paket standar berdasarkan kebutuhan operasional.",
+    priceDisplay: "Rp 50.000 – Rp 75.000",
+    minPrice: 50000,
+    maxPrice: 75000,
     complexity: "Menengah / Custom",
     type: "Feature"
   },
@@ -207,10 +242,10 @@ export const ADDONS = [
     id: "addon-auth-multi-role",
     number: 8,
     name: "Sistem Autentikasi Login & Multi-Role",
-    description: "Penambahan fitur login/register aman & manajemen hak akses multi-level role (Admin, User, Manager, Supervisor).",
-    priceDisplay: "Rp 100.000 – Rp 150.000",
-    minPrice: 100000,
-    maxPrice: 150000,
+    description: "Penambahan fitur login/register & manajemen multi-level role (Admin, User, Manager, Supervisor).",
+    priceDisplay: "Rp 50.000 – Rp 75.000",
+    minPrice: 50000,
+    maxPrice: 75000,
     complexity: "Kompleks / Rumit",
     type: "Feature"
   },
@@ -219,9 +254,9 @@ export const ADDONS = [
     number: 9,
     name: "Integrasi Payment Gateway Otomatis",
     description: "Penghubungan sistem pembayaran otomatis (Midtrans, Xendit, atau QRIS Instant) sesuai modul API.",
-    priceDisplay: "Rp 100.000 – Rp 150.000",
-    minPrice: 100000,
-    maxPrice: 150000,
+    priceDisplay: "Rp 50.000 – Rp 75.000",
+    minPrice: 50000,
+    maxPrice: 75000,
     complexity: "Sangat Rumit",
     type: "Feature"
   },
@@ -229,11 +264,11 @@ export const ADDONS = [
     id: "addon-maintenance-daily",
     number: 10,
     name: "Software Maintenance & Code Enhancement (Harian)",
-    description: "Layanan pemeliharaan sistem harian: perbaikan bug/error logika koding, pembaruan skrip/library, refactoring kode, dan optimasi performa software.",
-    priceDisplay: "Rp 50.000 / hari kerja",
+    description: "Layanan pemeliharaan sistem harian, perbaikan bug/error kode, pembaruan skrip, dan code enhancement.",
+    priceDisplay: "Rp 50.000 / hari",
     minPrice: 50000,
     maxPrice: 50000,
-    complexity: "Tarif Harian Terjangkau",
+    complexity: "Tarif Harian",
     type: "Maintenance"
   }
 ];
@@ -266,7 +301,7 @@ export const WORKFLOW_STEPS = [
   {
     step: 1,
     title: "Meninjau Katalog Layanan & Plafon Tarif",
-    desc: "Customer mempelajari paket deliverables, spesifikasi fungsional, estimasi durasi (3–10 hari kerja), dan plafon tarif resmi (maks Rp 650.000) tanpa biaya tersembunyi."
+    desc: "Customer mempelajari paket deliverables, spesifikasi fungsional, estimasi durasi (1–10 hari kerja), dan plafon tarif resmi (maks Rp 500.000) tanpa biaya tersembunyi."
   },
   {
     step: 2,
@@ -299,11 +334,15 @@ export const FAQS = [
   },
   {
     q: "Bagaimana ketentuan kuota revisi di Aksara Tech?",
-    a: "Setiap paket mendapatkan kuota revisi MAKSIMAL 3 KALI secara mutlak setelah preview pertama. Batasan ini berlaku menyeluruh tanpa membedakan minor maupun mayor. Jika kuota 3 kali habis, penyesuaian berikutnya diperlakukan sebagai Add-on berbayar (Rp 50rb – Rp 150rb)."
+    a: "Setiap paket mendapatkan kuota revisi MAKSIMAL 3 KALI secara mutlak setelah preview pertama. Batasan ini berlaku menyeluruh tanpa membedakan minor maupun mayor. Jika kuota 3 kali habis, penyesuaian berikutnya diperlakukan sebagai Add-on berbayar (Rp 50rb – Rp 75rb)."
+  },
+  {
+    q: "Apakah ada garansi setelah proyek selesai diserahkan?",
+    a: "YA, SELURUH PAKET BERGARANSI 1 MINGGU (7 HARI). Kami memberikan garansi pemeliharaan perbaikan bug kode dan error fungsi secara gratis selama 7 hari kalender pasca penyerahan master berkas final (.zip, .sql) agar Anda tenang dan sistem berjalan lancar sesuai brief awal."
   },
   {
     q: "Berapa lama estimasi pengerjaan proyek?",
-    a: "Estimasi waktu pengerjaan berkisar antara 3 hingga 10 hari kerja, tergantung paket yang dipilih (Landing Page: 3–5 hari, UMKM: 4–7 hari, Compro: 5–8 hari, E-Commerce: 6–9 hari, Skripsi/Akademik: 5–10 hari)."
+    a: "Estimasi waktu pengerjaan berkisar antara 1 hingga 10 hari kerja, tergantung paket yang dipilih (Tugas Kuliah Harian: 1–3 hari, Landing Page: 3–5 hari, UMKM: 4–7 hari, Compro: 5–8 hari, E-Commerce: 6–9 hari, Skripsi/Akademik: 5–10 hari)."
   },
   {
     q: "Bagaimana skema pembayaran di Aksara Tech?",
@@ -389,8 +428,8 @@ export const TESTIMONIALS = [
 ];
 
 export const TRUST_METRICS = [
-  { value: "3 – 10 Hari", label: "Disiplin Timeline Pengerjaan", detail: "Jadwal terukur per paket" },
+  { value: "1 – 10 Hari", label: "Disiplin Timeline Pengerjaan", detail: "Jadwal terukur per paket" },
   { value: "Maks 3x", label: "Kuota Revisi Mutlak", detail: "Terstruktur tanpa ambigu" },
-  { value: "Rp 650.000", label: "Plafon Maksimal Resmi", detail: "Tarif transparan & adil" },
+  { value: "Rp 500.000", label: "Plafon Maksimal Resmi", detail: "Tarif transparan & adil" },
   { value: "100%", label: "Jaminan Kerahasiaan", detail: "Data cleansing policy pasca lunas" }
 ];

@@ -46,12 +46,21 @@ export function useOrderForm(initialPackageId = null) {
     }
   }, [initialPackageId, setFormData]);
 
-  // Ensure inquiry ID is generated
+  // Ensure inquiry ID and client ID are generated
   useEffect(() => {
-    if (!formData.inquiryId) {
-      setFormData(prev => ({ ...prev, inquiryId: generateInquiryId() }));
-    }
-  }, [formData.inquiryId, setFormData]);
+    setFormData(prev => {
+      const activeId = prev.inquiryId || generateInquiryId();
+      const activeName = prev.clientName && prev.clientName.trim().length > 0 ? prev.clientName : activeId;
+      if (prev.inquiryId !== activeId || prev.clientName !== activeName) {
+        return {
+          ...prev,
+          inquiryId: activeId,
+          clientName: activeName
+        };
+      }
+      return prev;
+    });
+  }, [setFormData]);
 
   // Active selected package object
   const selectedPackage = useMemo(() => {
@@ -114,8 +123,9 @@ export function useOrderForm(initialPackageId = null) {
     const newErrors = {};
 
     if (stepNumber === 1) {
-      if (!formData.clientName || formData.clientName.trim().length < 2) {
-        newErrors.clientName = 'Nama lengkap / nama instansi wajib diisi (min. 2 karakter).';
+      const activeClientId = formData.clientName || formData.inquiryId;
+      if (!activeClientId || activeClientId.trim().length < 2) {
+        newErrors.clientName = 'ID Klien / ID Inquiry wajib terisi secara otomatis.';
       }
       const cleanPhone = (formData.clientPhone || '').replace(/[\s-]/g, '');
       if (!cleanPhone || cleanPhone.length < 8) {

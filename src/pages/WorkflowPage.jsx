@@ -13,9 +13,9 @@ export default function WorkflowPage() {
       title: "Penjelajahan Paket & Plafon Tarif",
       timeline: "Tahap Awal",
       badge: "Transparansi Biaya",
-      desc: "Calon Klien memilih satu dari lima kategori paket utama (Rp 120rb – Rp 650rb) dengan estimasi pengerjaan disiplin 3–10 hari kerja tanpa risiko lonjakan biaya di tengah jalan.",
+      desc: "Calon Klien memilih satu dari enam klasifikasi paket resmi (Rp 100rb – Rp 500rb) dengan estimasi pengerjaan disiplin 1–10 hari kerja tanpa risiko lonjakan biaya di tengah jalan.",
       checklist: [
-        "Meninjau batas atas tarif resmi (maksimal Rp 650.000)",
+        "Meninjau batas atas tarif resmi (maksimal Rp 500.000)",
         "Memeriksa kelengkapan deliverables sesuai kebutuhan",
         "Membaca ketentuan batasan eksklusi server"
       ]
@@ -27,9 +27,9 @@ export default function WorkflowPage() {
       badge: "Formulir Cerdas Web",
       desc: "Mengisi formulir spesifikasi teknis (database MySQL, modul CRUD, dokumen SRS/SDD IEEE, diagram UML, preferensi visual) melalui sistem formulir website.",
       checklist: [
-        "Pengisian identitas klien & kontak WhatsApp aktif",
+        "Pemberian ID Klien / Inquiry otomatis (INQ-AT-YYYYMMDD-XXXX)",
+        "Pengisian nomor WhatsApp aktif untuk koordinasi resmi",
         "Pemilihan modul fitur dan add-on spesifik",
-        "Pemberian ID Permintaan Sementara (INQ-AT-YYYYMMDD-XXXX)",
         "Persetujuan awal dan pengiriman brief via WhatsApp 085600386692"
       ]
     },
@@ -49,15 +49,16 @@ export default function WorkflowPage() {
     {
       num: "04",
       title: "Pengerjaan, Kuota 3x Revisi & Serah Terima",
-      timeline: "3–10 Hari Kerja",
+      timeline: "1–10 Hari Kerja",
       badge: "Disiplin & Terpercaya",
-      desc: "Penulisan kode dimulai pasca verifikasi DP. Diberikan Pratinjau Pertama (Preview 1) untuk pengujian sistem bersama. Fasilitas kuota MAKSIMAL 3 KALI REVISI mutlak disediakan secara terstruktur.",
+      desc: "Penulisan kode dimulai pasca verifikasi DP. Diberikan Pratinjau Pertama (Preview 1) untuk pengujian sistem bersama. Fasilitas kuota MAKSIMAL 3 KALI REVISI mutlak serta garansi bug 1 minggu disediakan secara resmi.",
       checklist: [
         "Koding fungsional, pembuatan skema database (.sql), dan dokumen IEEE",
         "Penyerahan Preview 1 dan pencatatan lembar kendali revisi",
         "Maksimal 3 kali siklus revisi terpadu",
         "Penerbitan Invoice Pelunasan [INV-AT-2026-____]",
-        "Serah terima master berkas (.zip, .sql, PDF) & eksekusi Data Cleansing Policy"
+        "Serah terima master berkas (.zip, .sql, PDF) & eksekusi Data Cleansing Policy",
+        "Aktivasi garansi bug kode selama 1 minggu (7 hari kalender)"
       ]
     }
   ];

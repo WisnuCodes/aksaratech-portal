@@ -88,7 +88,7 @@ export default function HeroSection() {
           </Link>
           <Link to="/paket" className="btn btn-secondary hero-btn hero-btn-sub">
             <Code2 size={18} style={{ color: 'var(--prussian-blue)' }} />
-            <span>Katalog 5 Paket &amp; Tarif Resmi</span>
+            <span>Katalog 6 Paket &amp; Tarif Resmi</span>
           </Link>
         </div>
 
@@ -101,12 +101,17 @@ export default function HeroSection() {
           <span className="trust-divider" aria-hidden="true">•</span>
           <div className="trust-item">
             <CheckCircle2 size={14} className="trust-icon" />
+            <span>Garansi Bug 1 Minggu</span>
+          </div>
+          <span className="trust-divider" aria-hidden="true">•</span>
+          <div className="trust-item">
+            <CheckCircle2 size={14} className="trust-icon" />
             <span>Master Source Code Penuh</span>
           </div>
           <span className="trust-divider" aria-hidden="true">•</span>
           <div className="trust-item">
             <CheckCircle2 size={14} className="trust-icon" />
-            <span>Tarif Transparan Mulai Rp 120.000</span>
+            <span>Tarif Transparan Mulai Rp 100.000</span>
           </div>
         </div>
 
