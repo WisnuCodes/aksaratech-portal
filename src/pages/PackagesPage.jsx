@@ -50,14 +50,25 @@ export default function PackagesPage({ onSelectPackage }) {
     },
     { 
       label: 'Sistem Autentikasi / Login', 
-      render: (p) => p.number === 5 ? (
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
-          <CheckCircle2 size={18} style={{ color: '#059669' }} />
-          <span style={{ fontSize: '0.8rem', color: '#065F46', fontWeight: '800' }}>Multi-Role</span>
-        </div>
-      ) : (
-        <span style={{ fontSize: '0.8rem', color: '#64748B', fontWeight: '600' }}>Opsional via Add-on</span>
-      )
+      render: (p) => {
+        if (p.number === 5) {
+          return (
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+              <CheckCircle2 size={18} style={{ color: '#059669' }} />
+              <span style={{ fontSize: '0.8rem', color: '#065F46', fontWeight: '800' }}>Multi-Role (Kompleks)</span>
+            </div>
+          );
+        }
+        if (p.number === 6) {
+          return (
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+              <CheckCircle2 size={18} style={{ color: '#059669' }} />
+              <span style={{ fontSize: '0.8rem', color: '#065F46', fontWeight: '800' }}>Bisa Multi-Role</span>
+            </div>
+          );
+        }
+        return <span style={{ fontSize: '0.8rem', color: '#64748B', fontWeight: '600' }}>Opsional via Add-on</span>;
+      }
     },
     { 
       label: 'Dokumen Rekayasa SRS & SDD', 
