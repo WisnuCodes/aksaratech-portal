@@ -8,7 +8,18 @@ import { BUSINESS_INFO } from '../../data/catalogData';
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
+
+  // Scroll listener for sticky navbar elevation
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 15);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Close mobile menu on route change
   useEffect(() => {
@@ -33,18 +44,6 @@ export default function Navbar() {
     }
     return () => { document.body.style.overflow = ''; };
   }, [mobileMenuOpen]);
-
-  const desktopNavLinkStyle = ({ isActive }) => ({
-    fontSize: '0.92rem',
-    fontWeight: isActive ? '800' : '600',
-    color: isActive ? '#1D63FF' : '#334155',
-    whiteSpace: 'nowrap',
-    transition: 'all 0.15s ease',
-    padding: '8px 14px',
-    borderRadius: '6px',
-    backgroundColor: isActive ? 'rgba(29, 99, 255, 0.08)' : 'transparent',
-    border: isActive ? '1px solid rgba(29, 99, 255, 0.25)' : '1px solid transparent'
-  });
 
   const mobileNavItems = [
     { 
@@ -80,17 +79,19 @@ export default function Navbar() {
   ];
 
   return (
-    <header className="nav-container">
+    <header className={`nav-container ${isScrolled ? 'is-scrolled' : ''}`}>
       <div className="nav-bar-inner">
         
         {/* Brand Logo */}
         <Link to="/" className="brand-link" aria-label="Aksara Tech Beranda">
-          <div className="brand-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 3L3.5 21H8.2L10.2 16.5H13.8L15.8 21H20.5L12 3Z" fill="#FFFFFF" />
-              <path d="M12 8L10.6 13.5H13.4L12 8Z" fill="#1D63FF" />
-              <rect x="10.2" y="14" width="3.6" height="2" rx="0.5" fill="#FFCE32" />
-            </svg>
+          <div className="brand-icon-box">
+            <img 
+              src="/brand-icon.png" 
+              alt="Aksara Tech Logo" 
+              className="brand-logo-mark"
+              width="60"
+              height="34"
+            />
           </div>
           <div className="brand-info">
             <div className="brand-title-wrap">
@@ -105,24 +106,37 @@ export default function Navbar() {
 
         {/* Desktop Nav Links (Hidden on Mobile) */}
         <nav className="desktop-nav">
-          <NavLink to="/paket" style={desktopNavLinkStyle} className="nav-item-link">
+          <NavLink 
+            to="/paket" 
+            className={({ isActive }) => `desktop-nav-link ${isActive ? 'is-active' : ''}`}
+          >
             Paket &amp; Harga
           </NavLink>
-          <NavLink to="/eksklusi-server" style={desktopNavLinkStyle} className="nav-item-link">
-            <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <Shield size={15} style={{ color: '#D97706' }} /> Eksklusi Server
-            </span>
+          <NavLink 
+            to="/eksklusi-server" 
+            className={({ isActive }) => `desktop-nav-link ${isActive ? 'is-active' : ''}`}
+          >
+            <Shield size={14} className="nav-link-icon shield-icon" />
+            <span>Eksklusi Server</span>
           </NavLink>
-          <NavLink to="/alur-sop" style={desktopNavLinkStyle} className="nav-item-link">
+          <NavLink 
+            to="/alur-sop" 
+            className={({ isActive }) => `desktop-nav-link ${isActive ? 'is-active' : ''}`}
+          >
             Alur SOP
           </NavLink>
-          <NavLink to="/faq" style={desktopNavLinkStyle} className="nav-item-link">
+          <NavLink 
+            to="/faq" 
+            className={({ isActive }) => `desktop-nav-link ${isActive ? 'is-active' : ''}`}
+          >
             FAQ
           </NavLink>
-          <NavLink to="/ketentuan" style={desktopNavLinkStyle} className="nav-item-link">
-            <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-              <FileText size={15} /> Ketentuan &amp; Privasi
-            </span>
+          <NavLink 
+            to="/ketentuan" 
+            className={({ isActive }) => `desktop-nav-link ${isActive ? 'is-active' : ''}`}
+          >
+            <FileText size={14} className="nav-link-icon doc-icon" />
+            <span>Ketentuan &amp; Privasi</span>
           </NavLink>
         </nav>
 
@@ -256,10 +270,24 @@ export default function Navbar() {
         .nav-container {
           position: sticky;
           top: 0;
-          z-index: 100;
+          left: 0;
+          right: 0;
+          z-index: 1000;
           background: #FFFFFF;
           border-bottom: 2px solid #0F172A;
           width: 100%;
+          transition: background-color 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+        }
+
+        .nav-container.is-scrolled {
+          background: rgba(255, 255, 255, 0.96);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.08);
+        }
+
+        .nav-bar-inner {
+          transition: height 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .brand-link {
@@ -270,23 +298,26 @@ export default function Navbar() {
           text-decoration: none;
         }
 
-        .brand-icon {
-          width: 38px;
-          height: 38px;
-          border-radius: 8px;
-          background: var(--prussian-blue);
-          border: 1.5px solid #0F172A;
+        .brand-icon-box {
           display: flex;
           align-items: center;
           justify-content: center;
-          box-shadow: 2px 2px 0px #0F172A;
           flex-shrink: 0;
+          transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .brand-logo-mark {
+          height: 34px;
+          width: auto;
+          max-width: 65px;
+          object-fit: contain;
+          display: block;
+          filter: drop-shadow(1.5px 1.5px 0px rgba(15, 23, 42, 0.25));
           transition: transform 0.15s ease;
         }
 
-        .brand-link:hover .brand-icon {
-          transform: translate(-1px, -1px);
-          box-shadow: 3px 3px 0px #0F172A;
+        .brand-link:hover .brand-icon-box {
+          transform: translateY(-1px) scale(1.04);
         }
 
         .brand-title-wrap {
@@ -320,6 +351,71 @@ export default function Navbar() {
           margin-top: 3px;
         }
 
+        /* Desktop Nav Link Items - Clean, Professional Typography */
+        .desktop-nav {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          margin: 0 16px;
+        }
+
+        .desktop-nav-link {
+          position: relative;
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 0.88rem;
+          font-weight: 600;
+          color: #475569;
+          text-decoration: none;
+          padding: 8px 12px;
+          border-radius: 6px;
+          white-space: nowrap;
+          transition: all 0.15s ease;
+        }
+
+        .desktop-nav-link .nav-link-icon {
+          flex-shrink: 0;
+          transition: color 0.15s ease;
+        }
+
+        .desktop-nav-link .shield-icon {
+          color: #D97706;
+        }
+
+        .desktop-nav-link .doc-icon {
+          color: #64748B;
+        }
+
+        /* Refined, professional hover state - NOT AI-looking pill */
+        .desktop-nav-link:hover {
+          color: #0F172A;
+          background: #F1F5F9;
+        }
+
+        .desktop-nav-link:hover .nav-link-icon {
+          color: #0F172A;
+        }
+
+        /* Confident, grounded active state */
+        .desktop-nav-link.is-active {
+          color: #0F172A;
+          font-weight: 800;
+          background: #F8FAFC;
+        }
+
+        /* Subtle crisp accent indicator line for active page */
+        .desktop-nav-link.is-active::after {
+          content: '';
+          position: absolute;
+          bottom: 2px;
+          left: 12px;
+          right: 12px;
+          height: 2px;
+          background: var(--prussian-blue);
+          border-radius: 9999px;
+        }
+
         .wa-btn-desktop {
           display: inline-flex;
           align-items: center;
@@ -351,32 +447,58 @@ export default function Navbar() {
             height: 74px;
           }
 
+          .nav-container.is-scrolled .nav-bar-inner {
+            height: 66px;
+          }
+
           .desktop-nav {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin: 0 24px;
+            gap: 6px;
+            margin: 0 16px;
           }
 
           .nav-actions {
             display: flex;
             align-items: center;
-            gap: 16px !important; /* Generous gap: NO MEPET! */
+            gap: 14px !important;
             flex-shrink: 0;
           }
 
           #order-btn-desktop {
             display: inline-flex !important;
-            padding: 10px 22px !important;
+            padding: 9px 20px !important;
             font-size: 0.88rem !important;
             box-shadow: 3px 3px 0px var(--kuning) !important;
+            transition: all 0.15s ease !important;
+          }
+
+          #order-btn-desktop:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 4px 4px 0px var(--kuning) !important;
+          }
+
+          #order-btn-desktop:active {
+            transform: translate(1px, 1px);
+            box-shadow: 1px 1px 0px var(--kuning) !important;
           }
 
           .wa-btn-desktop {
             display: inline-flex !important;
-            padding: 10px 18px !important;
+            padding: 9px 16px !important;
             font-size: 0.88rem !important;
             box-shadow: 3px 3px 0px #0F172A !important;
+            transition: all 0.15s ease !important;
+          }
+
+          .wa-btn-desktop:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 4px 4px 0px #0F172A !important;
+          }
+
+          .wa-btn-desktop:active {
+            transform: translate(1px, 1px);
+            box-shadow: 1px 1px 0px #0F172A !important;
           }
 
           /* Hide Mobile-Only Elements on Desktop */
@@ -397,7 +519,11 @@ export default function Navbar() {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            height: 64px;
+            height: 60px;
+          }
+
+          .nav-container.is-scrolled .nav-bar-inner {
+            height: 60px;
           }
 
           /* Hide Desktop-Only Elements on Mobile */
@@ -408,8 +534,17 @@ export default function Navbar() {
             display: none !important;
           }
 
+          .brand-link {
+            gap: 8px;
+          }
+
+          .brand-logo-mark {
+            height: 28px;
+            max-width: 52px;
+          }
+
           .brand-title-wrap {
-            font-size: 1.15rem;
+            font-size: 1.12rem;
           }
 
           .nav-actions {
