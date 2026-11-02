@@ -292,3 +292,4 @@ Proses persetujuan merek di DJKI mengikuti tahapan formal berdasarkan UU No. 20 
 
 ---
 *Dokumen ini merupakan pedoman resmi operasional internal Aksara Tech Enterprise Solutions. Simpan file ini di direktori proyek Anda sebagai acuan eksekusi mandiri.*
+

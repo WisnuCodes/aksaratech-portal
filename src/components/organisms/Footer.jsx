@@ -1,6 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Shield, MessageCircle, FileText, Lock, ArrowUp, ExternalLink } from 'lucide-react';
+import { 
+  ShieldCheck, 
+  MessageCircle, 
+  FileText, 
+  Lock, 
+  ArrowUp, 
+  ExternalLink,
+  ChevronRight,
+  Clock,
+  Sparkles,
+  Layers,
+  FileCheck
+} from 'lucide-react';
 import { BUSINESS_INFO } from '../../data/catalogData';
 
 export default function Footer() {
@@ -9,199 +21,359 @@ export default function Footer() {
   };
 
   return (
-    <footer className="footer-container" style={{
-      background: '#F1F5F9',
+    <footer className="footer-corporate" style={{
+      background: '#F8FAFC',
       borderTop: '2px solid #0F172A',
-      paddingTop: '64px',
-      paddingBottom: '32px',
+      paddingTop: '56px',
+      paddingBottom: '28px',
       position: 'relative'
     }}>
       <style>{`
-        .footer-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-          gap: 40px;
-          margin-bottom: 56px;
+        .footer-corporate {
+          font-family: var(--font-body);
         }
 
-        @media (max-width: 768px) {
-          .footer-container {
+        .footer-grid-corporate {
+          display: grid;
+          grid-template-columns: 1.4fr 1fr 1fr 1.1fr;
+          gap: 40px;
+          margin-bottom: 48px;
+        }
+
+        .footer-logo-img {
+          height: 38px;
+          width: auto;
+          max-width: 230px;
+          object-fit: contain;
+          display: block;
+        }
+
+        .footer-link-item {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          color: #475569;
+          font-size: 0.88rem;
+          font-weight: 600;
+          text-decoration: none;
+          transition: all 0.15s ease;
+          padding: 3px 0;
+        }
+
+        .footer-link-item:hover {
+          color: var(--prussian-blue);
+          transform: translateX(3px);
+        }
+
+        .footer-heading {
+          font-family: var(--font-heading);
+          font-size: 0.82rem;
+          font-weight: 900;
+          color: #0F172A;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+          margin-bottom: 18px;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .footer-heading::after {
+          content: '';
+          flex: 1;
+          height: 1.5px;
+          background: #E2E8F0;
+        }
+
+        @media (max-width: 1024px) {
+          .footer-grid-corporate {
+            grid-template-columns: 1fr 1fr;
+            gap: 36px;
+          }
+        }
+
+        @media (max-width: 640px) {
+          .footer-corporate {
             padding-top: 40px !important;
             padding-bottom: 24px !important;
           }
 
-          .footer-grid {
+          .footer-grid-corporate {
             grid-template-columns: 1fr;
-            gap: 28px;
+            gap: 32px;
+            margin-bottom: 36px;
           }
 
-          .footer-bottom {
+          .footer-logo-img {
+            height: 34px;
+            max-width: 200px;
+          }
+
+          .footer-bottom-corporate {
             flex-direction: column !important;
-            align-items: center !important;
+            align-items: stretch !important;
             text-align: center;
+            gap: 16px !important;
+          }
+
+          .footer-bottom-links {
+            justify-content: center !important;
+            flex-wrap: wrap;
           }
 
           .footer-bottom-actions {
             justify-content: center !important;
-          }
-
-          .footer-exclusion-box {
-            padding: 12px !important;
+            width: 100%;
           }
         }
       `}</style>
 
       <div className="container">
-        <div className="footer-grid">
-          {/* Brand Info */}
+        <div className="footer-grid-corporate">
+          
+          {/* Kolom 1: Brand Authority & Kontak Resmi */}
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
-              <div style={{
-                width: '40px',
-                height: '40px',
-                borderRadius: '8px',
-                background: 'var(--prussian-blue)',
-                border: '2px solid #0F172A',
-                boxShadow: '3px 3px 0px var(--kuning)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontWeight: '900',
-                color: '#FFFFFF',
-                flexShrink: 0
-              }}>
-                A
-              </div>
-              <div style={{ fontWeight: '900', fontSize: '1.25rem', letterSpacing: '-0.02em' }}>
-                <span style={{ color: '#0F172A' }}>AKSARA</span>{' '}
-                <span style={{
-                  background: 'var(--kuning)',
-                  color: '#0F172A',
-                  padding: '2px 6px',
-                  borderRadius: '4px',
-                  border: '1.5px solid #0F172A',
-                  fontSize: '1rem',
-                  fontWeight: '900'
-                }}>TECH</span>
-              </div>
-            </div>
+            <Link to="/" style={{ display: 'inline-block', marginBottom: '14px' }} aria-label="Aksara Tech Beranda">
+              <img 
+                src="/brand-logo.png" 
+                alt="Aksara Tech Enterprise Solutions" 
+                className="footer-logo-img"
+                width="230"
+                height="38"
+                loading="lazy"
+                decoding="async"
+              />
+            </Link>
 
-            <p style={{ fontSize: '0.88rem', color: '#475569', lineHeight: '1.6', marginBottom: '20px', overflowWrap: 'break-word', wordBreak: 'break-word' }}>
-              Penyedia layanan rekayasa perangkat lunak mandiri, perancangan basis data relasional MySQL, dan penyusunan dokumen rekayasa perangkat lunak standar rekayasa formal (SRS &amp; SDD) dan diagram UML.
+            <p style={{
+              fontSize: '0.88rem',
+              color: '#475569',
+              lineHeight: '1.65',
+              marginBottom: '18px',
+              fontWeight: '500'
+            }}>
+              Penyedia solusi rekayasa perangkat lunak mandiri, arsitektur basis data relasional, dan perancangan dokumen formal sistem berstandar akademik dan korporat.
             </p>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.88rem', color: '#0F172A', fontWeight: '700' }}>
-              <MessageCircle size={18} style={{ color: '#059669', flexShrink: 0 }} />
-              <span>WhatsApp Resmi: <strong style={{ color: 'var(--prussian-blue)' }}>{BUSINESS_INFO.phoneDisplay}</strong></span>
-            </div>
-          </div>
-
-          {/* Quick Links */}
-          <div>
-            <h4 style={{ fontSize: '0.95rem', fontWeight: '900', color: '#0F172A', marginBottom: '18px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-              Layanan &amp; Paket
-            </h4>
-            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '0.9rem', color: '#475569', fontWeight: '600' }}>
-              <li><Link to="/paket" style={{ transition: 'all 0.15s ease' }}>6 Paket Utama (Rp 100rb – Rp 500rb)</Link></li>
-              <li><Link to="/eksklusi-server" style={{ transition: 'all 0.15s ease', color: '#D97706', fontWeight: '800' }}>Kebijakan Eksklusi Server</Link></li>
-              <li><Link to="/alur-sop" style={{ transition: 'all 0.15s ease' }}>SOP 4 Tahap &amp; Kuota Revisi 3x</Link></li>
-              <li><Link to="/pesan" style={{ transition: 'all 0.15s ease' }}>Formulir Brief Proyek</Link></li>
-              <li><Link to="/faq" style={{ transition: 'all 0.15s ease' }}>Pusat Tanya Jawab (FAQ)</Link></li>
-                          </ul>
-          </div>
-
-          {/* Governance & Legal */}
-          <div>
-            <h4 style={{ fontSize: '0.95rem', fontWeight: '900', color: '#0F172A', marginBottom: '18px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-              Legalitas &amp; Tata Kelola
-            </h4>
-            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '0.9rem', color: '#475569', fontWeight: '600' }}>
-              <li>
-                <Link to="/ketentuan" style={{ color: '#475569', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <FileText size={15} /> Ketentuan Layanan &amp; SOP
-                </Link>
-              </li>
-              <li>
-                <Link to="/ketentuan" style={{ color: '#475569', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <Lock size={15} /> Jaminan Kerahasiaan 100%
-                </Link>
-              </li>
-              <li>
-                <Link to="/ketentuan" style={{ color: '#475569', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <Shield size={15} /> Data Cleansing Policy
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Exclusion Notice Box */}
-          <div>
-            <div className="footer-exclusion-box" style={{
-              background: '#FFFBEB',
-              border: '2px solid #0F172A',
-              boxShadow: '3px 3px 0px #0F172A',
-              borderRadius: '6px',
-              padding: '16px',
-              fontSize: '0.84rem',
-              color: '#334155',
-              lineHeight: '1.5'
+            {/* Status Operasional Tim */}
+            <div style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '7px',
+              background: '#FFFFFF',
+              border: '1.5px solid #0F172A',
+              padding: '5px 12px',
+              borderRadius: 'var(--radius-full)',
+              boxShadow: '1.5px 1.5px 0px #0F172A',
+              fontSize: '0.76rem',
+              fontWeight: '800',
+              color: '#0F172A',
+              marginBottom: '16px'
             }}>
-              <div style={{ fontWeight: '900', color: '#D97706', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <Shield size={16} /> Penegasan Resmi:
-              </div>
-              Aksara Tech murni melayani rekayasa software. Kami tidak melayani pembelian domain, sewa hosting, atau pemeliharaan server pihak ketiga.
+              <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#10B981', display: 'inline-block' }} />
+              <span>Tim Teknis Siaga: 08.00 – 22.00 WIB</span>
             </div>
-          </div>
-        </div>
 
-        {/* Bottom Strip */}
-        <div className="footer-bottom" style={{
-          borderTop: '2px solid #CBD5E1',
-          paddingTop: '24px',
-          display: 'flex',
-          flexWrap: 'wrap',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: '16px',
-          fontSize: '0.86rem',
-          color: '#64748B'
-        }}>
-          <div>
-            &copy; {new Date().getFullYear()} <strong style={{ color: '#0F172A' }}>{BUSINESS_INFO.name}</strong>. Seluruh hak cipta dilindungi undang-undang.
-          </div>
-
-          <div className="footer-bottom-actions" style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+            {/* Direct Official WhatsApp Channel */}
             <a
-              href={`https://wa.me/${BUSINESS_INFO.waNumber}`}
+              href={`https://wa.me/${BUSINESS_INFO.waNumber}?text=Halo%20Aksara%20Tech,%20saya%20ingin%20berkonsultasi%20layanan%20rekayasa%20website.`}
               target="_blank"
               rel="noopener noreferrer"
-              style={{ color: '#059669', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: '800' }}
+              className="btn btn-wa btn-sm"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                textDecoration: 'none',
+                width: 'auto'
+              }}
             >
-              <span>WhatsApp Resmi (085600386692)</span>
-              <ExternalLink size={14} />
+              <MessageCircle size={15} />
+              <span>WhatsApp: {BUSINESS_INFO.phoneDisplay}</span>
             </a>
+          </div>
+
+          {/* Kolom 2: Layanan & Klasifikasi Paket */}
+          <div>
+            <h4 className="footer-heading">
+              <span>Solusi &amp; Paket</span>
+            </h4>
+            <nav aria-label="Navigasi Layanan Footer" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <Link to="/paket" className="footer-link-item">
+                <ChevronRight size={13} style={{ color: 'var(--prussian-blue)' }} />
+                <span>6 Klasifikasi Paket Resmi</span>
+              </Link>
+              <Link to="/paket" className="footer-link-item">
+                <ChevronRight size={13} style={{ color: '#94A3B8' }} />
+                <span>Landing Page Korporat</span>
+              </Link>
+              <Link to="/paket" className="footer-link-item">
+                <ChevronRight size={13} style={{ color: '#94A3B8' }} />
+                <span>Website UMKM &amp; Katalog</span>
+              </Link>
+              <Link to="/paket" className="footer-link-item">
+                <ChevronRight size={13} style={{ color: '#94A3B8' }} />
+                <span>Company Profile Korporat</span>
+              </Link>
+              <Link to="/paket" className="footer-link-item">
+                <ChevronRight size={13} style={{ color: '#94A3B8' }} />
+                <span>Toko Daring / E-Commerce</span>
+              </Link>
+              <Link to="/paket" className="footer-link-item">
+                <ChevronRight size={13} style={{ color: '#94A3B8' }} />
+                <span>Modul Akademik &amp; Tugas Kuliah</span>
+              </Link>
+              <Link to="/pesan" className="footer-link-item" style={{ color: 'var(--prussian-blue)', fontWeight: '800' }}>
+                <ChevronRight size={13} />
+                <span>Isi Lembar Brief Proyek</span>
+              </Link>
+            </nav>
+          </div>
+
+          {/* Kolom 3: Tata Kelola, Dokumen & FAQ */}
+          <div>
+            <h4 className="footer-heading">
+              <span>Tata Kelola &amp; SOP</span>
+            </h4>
+            <nav aria-label="Navigasi Tata Kelola Footer" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <Link to="/eksklusi-server" className="footer-link-item" style={{ color: '#D97706', fontWeight: '800' }}>
+                <ShieldCheck size={14} />
+                <span>Batasan Eksklusi Server</span>
+              </Link>
+              <Link to="/alur-sop" className="footer-link-item">
+                <Clock size={14} style={{ color: '#64748B' }} />
+                <span>Alur SOP 4 Tahap Disiplin</span>
+              </Link>
+              <Link to="/alur-sop" className="footer-link-item">
+                <FileCheck size={14} style={{ color: '#64748B' }} />
+                <span>Ketentuan Revisi Max 3x</span>
+              </Link>
+              <Link to="/faq" className="footer-link-item">
+                <Layers size={14} style={{ color: '#64748B' }} />
+                <span>Pusat Tanya Jawab (FAQ)</span>
+              </Link>
+              <Link to="/ketentuan" className="footer-link-item">
+                <FileText size={14} style={{ color: '#64748B' }} />
+                <span>Perjanjian Kontrak Layanan</span>
+              </Link>
+              <Link to="/ketentuan" className="footer-link-item">
+                <Lock size={14} style={{ color: '#64748B' }} />
+                <span>100% Confidentiality Policy</span>
+              </Link>
+            </nav>
+          </div>
+
+          {/* Kolom 4: Penegasan Standar & Jaminan Mutu */}
+          <div>
+            <div style={{
+              background: '#FFFFFF',
+              border: '2px solid #0F172A',
+              boxShadow: '3px 3px 0px #0F172A',
+              borderRadius: 'var(--radius-md)',
+              padding: '18px 16px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '12px'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div style={{
+                  width: '28px',
+                  height: '28px',
+                  borderRadius: '6px',
+                  background: '#FFFBEB',
+                  border: '1.5px solid #0F172A',
+                  color: '#D97706',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0
+                }}>
+                  <ShieldCheck size={16} />
+                </div>
+                <span style={{ fontSize: '0.8rem', fontWeight: '900', color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                  Penegasan Ruang Lingkup
+                </span>
+              </div>
+
+              <p style={{ fontSize: '0.82rem', color: '#475569', lineHeight: '1.6', margin: 0, fontWeight: '500' }}>
+                Aksara Tech murni melayani rekayasa software (*source code &amp; database*). Urusan sewa hosting dan domain publik adalah hak akses milik klien.
+              </p>
+
+              <div style={{ borderTop: '1px dashed #E2E8F0', paddingTop: '10px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.78rem', color: '#059669', fontWeight: '800' }}>
+                  <Sparkles size={13} />
+                  <span>Garansi Pemeliharaan Bug 7 Hari</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.78rem', color: 'var(--prussian-blue)', fontWeight: '800' }}>
+                  <Sparkles size={13} />
+                  <span>Fasilitas Kuota Revisi Max 3 Kali</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        {/* Baris Bawah: Hak Cipta, Tautan Legal & Back To Top */}
+        <div 
+          className="footer-bottom-corporate" 
+          style={{
+            borderTop: '2px solid #E2E8F0',
+            paddingTop: '24px',
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '16px',
+            fontSize: '0.84rem',
+            color: '#64748B'
+          }}
+        >
+          <div>
+            &copy; {new Date().getFullYear()} <strong style={{ color: '#0F172A' }}>{BUSINESS_INFO.name}</strong>. Hak Cipta Terpelihara.
+          </div>
+
+          <div className="footer-bottom-links" style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <Link to="/ketentuan" style={{ color: '#64748B', textDecoration: 'none', fontWeight: '600', fontSize: '0.82rem' }}>
+              Ketentuan Layanan
+            </Link>
+            <span style={{ color: '#CBD5E1' }}>•</span>
+            <Link to="/ketentuan" style={{ color: '#64748B', textDecoration: 'none', fontWeight: '600', fontSize: '0.82rem' }}>
+              Kebijakan Privasi
+            </Link>
+            <span style={{ color: '#CBD5E1' }}>•</span>
+            <Link to="/eksklusi-server" style={{ color: '#64748B', textDecoration: 'none', fontWeight: '600', fontSize: '0.82rem' }}>
+              Eksklusi Server
+            </Link>
+          </div>
+
+          <div className="footer-bottom-actions" style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
             <button
+              type="button"
               onClick={scrollToTop}
+              aria-label="Kembali ke atas halaman"
               style={{
                 background: '#FFFFFF',
                 border: '2px solid #0F172A',
                 boxShadow: '2px 2px 0px #0F172A',
-                borderRadius: '6px',
+                borderRadius: 'var(--radius-sm)',
                 padding: '6px 14px',
                 color: '#0F172A',
                 cursor: 'pointer',
-                display: 'flex',
+                display: 'inline-flex',
                 alignItems: 'center',
-                gap: '4px',
+                gap: '6px',
                 fontSize: '0.82rem',
-                fontWeight: '800'
+                fontWeight: '800',
+                transition: 'all 0.15s ease'
               }}
             >
-              <span>Atas</span>
+              <span>Ke Atas</span>
               <ArrowUp size={14} />
             </button>
           </div>
         </div>
+
       </div>
     </footer>
   );
