@@ -329,32 +329,74 @@ export const SERVER_EXCLUSIONS = [
 
 export const FAQS = [
   {
+    id: "faq-hosting",
+    category: "Infrastruktur",
+    badge: "Hosting & Server",
     q: "Apakah biaya pembuatan website sudah termasuk hosting dan domain?",
-    a: "SAMA SEKALI TIDAK. Aksara Tech berfokus murni pada Software Engineering (rekayasa perangkat lunak, source code, database, dan dokumen rekayasa). Urusan sewa hosting, pembelian domain, dan penanganan server publik merupakan hak akses dan tanggung jawab penuh pihak Klien."
+    a: "SAMA SEKALI TIDAK. Aksara Tech berfokus murni pada Software Engineering (rekayasa perangkat lunak, source code, database, dan dokumen rekayasa). Urusan sewa hosting, pembelian domain, dan penanganan server publik merupakan hak akses dan tanggung jawab penuh pihak Klien.",
+    highlight: "SAMA SEKALI TIDAK TERMASUK HOSTING & DOMAIN",
+    takeaway: "Aksara Tech fokus pada rekayasa kode sumber & arsitektur sistem. Klien memiliki kontrol penuh atas akun hosting dan domain pribadi.",
+    takeawayType: "warning"
   },
   {
+    id: "faq-revisi",
+    category: "Ketentuan",
+    badge: "Kuota Revisi",
     q: "Bagaimana ketentuan kuota revisi di Aksara Tech?",
-    a: "Setiap paket mendapatkan kuota revisi MAKSIMAL 3 KALI secara mutlak setelah preview pertama. Batasan ini berlaku menyeluruh tanpa membedakan minor maupun mayor. Jika kuota 3 kali habis, penyesuaian berikutnya diperlakukan sebagai Add-on berbayar (Rp 50rb – Rp 75rb)."
+    a: "Setiap paket mendapatkan kuota revisi MAKSIMAL 3 KALI secara mutlak setelah preview pertama. Batasan ini berlaku menyeluruh tanpa membedakan minor maupun mayor. Jika kuota 3 kali habis, penyesuaian berikutnya diperlakukan sebagai Add-on berbayar (Rp 50rb – Rp 75rb).",
+    highlight: "MAKSIMAL 3 KALI REVISI MUTLAK",
+    takeaway: "Berlaku mutlak untuk seluruh jenis revisi tanpa pembedaan minor/mayor. Penyesuaian setelah kuota habis dihitung sebagai add-on.",
+    takeawayType: "warning"
   },
   {
+    id: "faq-garansi",
+    category: "Garansi",
+    badge: "Jaminan Kualitas",
     q: "Apakah ada garansi setelah proyek selesai diserahkan?",
-    a: "YA, SELURUH PAKET BERGARANSI 1 MINGGU (7 HARI). Kami memberikan garansi pemeliharaan perbaikan bug kode dan error fungsi secara gratis selama 7 hari kalender pasca penyerahan master berkas final (.zip, .sql) agar Anda tenang dan sistem berjalan lancar sesuai brief awal."
+    a: "YA, SELURUH PAKET BERGARANSI 1 MINGGU (7 HARI). Kami memberikan garansi pemeliharaan perbaikan bug kode dan error fungsi secara gratis selama 7 hari kalender pasca penyerahan master berkas final (.zip, .sql) agar Anda tenang dan sistem berjalan lancar sesuai brief awal.",
+    highlight: "GARANSI 7 HARI KALENDER GRATIS",
+    takeaway: "Perbaikan bug kode dan eror fungsional dijamin bebas biaya selama 7 hari kalender pasca serah terima berkas final.",
+    takeawayType: "success"
   },
   {
+    id: "faq-waktu",
+    category: "Timeline",
+    badge: "Estimasi Waktu",
     q: "Berapa lama estimasi pengerjaan proyek?",
-    a: "Estimasi waktu pengerjaan berkisar antara 1 hingga 10 hari kerja, tergantung paket yang dipilih (Tugas Kuliah Harian: 1–3 hari, Landing Page: 3–5 hari, UMKM: 4–7 hari, Compro: 5–8 hari, E-Commerce: 6–9 hari, Skripsi/Akademik: 5–10 hari)."
+    a: "Estimasi waktu pengerjaan berkisar antara 1 hingga 10 hari kerja, tergantung paket yang dipilih (Tugas Kuliah Harian: 1–3 hari, Landing Page: 3–5 hari, UMKM: 4–7 hari, Compro: 5–8 hari, E-Commerce: 6–9 hari, Skripsi/Akademik: 5–10 hari).",
+    highlight: "1 HINGGA 10 HARI KERJA",
+    takeaway: "Timeline transparan dan terpantau dengan tahapan terukur: Kick-off, Development, Preview, dan Final Delivery.",
+    takeawayType: "primary"
   },
   {
+    id: "faq-pembayaran",
+    category: "Pembayaran",
+    badge: "Skema DP & Termin",
     q: "Bagaimana skema pembayaran di Aksara Tech?",
-    a: "Pembayaran dibagi 2 termin: Uang Muka (DP) minimum 50% di awal sebelum penulisan kode dimulai (bersifat non-refundable bila pembatalan sepihak setelah koding jalan), dan pelunasan 50% diselesaikan sebelum penyerahan master berkas final (.zip, .sql, PDF)."
+    a: "Pembayaran dibagi 2 termin: Uang Muka (DP) minimum 50% di awal sebelum penulisan kode dimulai (bersifat non-refundable bila pembatalan sepihak setelah koding jalan), dan pelunasan 50% diselesaikan sebelum penyerahan master berkas final (.zip, .sql, PDF).",
+    highlight: "TERMIN 50% DP & 50% PELUNASAN",
+    takeaway: "Uang Muka 50% untuk memulai koding, pelunasan 50% dilakukan setelah preview disetujui sebelum pengiriman berkas final.",
+    takeawayType: "primary"
   },
   {
+    id: "faq-keamanan",
+    category: "Keamanan",
+    badge: "Kerahasiaan Data",
     q: "Apakah data dan kode sumber proyek saya dijamin aman?",
-    a: "Ya, 100% Confidentiality. Kami menjamin kerahasiaan penuh atas identitas, materi proyek, dan kode sumber Anda. Sesuai Data Cleansing Policy kami, seluruh berkas pendukung dan kredensial pengujian di sistem internal kami akan dibersihkan secara berkala pasca proyek dinyatakan lunas dan serah terima tuntas."
+    a: "Ya, 100% Confidentiality. Kami menjamin kerahasiaan penuh atas identitas, materi proyek, dan kode sumber Anda. Sesuai Data Cleansing Policy kami, seluruh berkas pendukung dan kredensial pengujian di sistem internal kami akan dibersihkan secara berkala pasca proyek dinyatakan lunas dan serah terima tuntas.",
+    highlight: "100% CONFIDENTIAL & DATA CLEANSING",
+    takeaway: "Kerahasiaan identitas dan integritas kode terjamin mutlak. Berkas pengujian dibersihkan berkala pasca serah terima.",
+    takeawayType: "success"
   },
   {
+    id: "faq-deliverables",
+    category: "Deliverables",
+    badge: "Serah Terima Berkas",
     q: "Apa saja berkas yang akan saya terima saat proyek selesai?",
-    a: "Anda akan menerima master berkas arsip Source Code (.zip), Skema Database (.sql), serta Dokumen Rekayasa Sistem (SRS & SDD PDF Terstruktur dan Diagram UML Lengkap) sesuai paket yang disepakati."
+    a: "Anda akan menerima master berkas arsip Source Code (.zip), Skema Database (.sql), serta Dokumen Rekayasa Sistem (SRS & SDD PDF Terstruktur dan Diagram UML Lengkap) sesuai paket yang disepakati.",
+    highlight: "MASTER .ZIP + .SQL + DOKUMEN REKAYASA",
+    takeaway: "Source code lengkap, skema database teruji, dan berkas dokumentasi formal berstandar rekayasa perangkat lunak.",
+    takeawayType: "primary"
   }
 ];
 

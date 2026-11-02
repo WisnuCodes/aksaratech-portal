@@ -43,3 +43,4 @@ export function sanitizePhone(phone) {
   // Only permit valid digits and optional leading plus sign
   return phone.replace(/[^0-9+]/g, '').trim();
 }
+
