@@ -10,6 +10,8 @@ import OrderBriefPage from './pages/OrderBriefPage';
 import FAQPage from './pages/FAQPage';
 import TermsPrivacyPage from './pages/TermsPrivacyPage';
 import ErrorPage from './pages/ErrorPage';
+import ErrorBoundary from './components/common/ErrorBoundary';
+import { SYSTEM_CONFIG } from './constants/systemConfig';
 import './App.css';
 
 // Scroll to top on route change
@@ -31,7 +33,12 @@ function AppContent() {
     setSelectedPackageId(packageId);
   };
 
-  // Define valid non-error portal routes
+  // 1. Real-time Maintenance Mode check (HTTP 503)
+  if (SYSTEM_CONFIG.MAINTENANCE_MODE) {
+    return <ErrorPage defaultCode={503} />;
+  }
+
+  // 2. Define valid non-error portal routes
   const validMainRoutes = [
     '/',
     '/paket',
@@ -82,10 +89,12 @@ function AppContent() {
 
 function App() {
   return (
-    <BrowserRouter>
-      <ScrollToTop />
-      <AppContent />
-    </BrowserRouter>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <ScrollToTop />
+        <AppContent />
+      </BrowserRouter>
+    </ErrorBoundary>
   );
 }
 

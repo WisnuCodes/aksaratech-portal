@@ -41,7 +41,7 @@ const errorTheme = createTheme({
   }
 });
 
-export default function ErrorPage({ defaultCode = 404 }) {
+export default function ErrorPage({ defaultCode = 404, customError = null, onReset = null }) {
   const location = useLocation();
   const navigate = useNavigate();
   const { code: routeParamCode } = useParams();
@@ -49,6 +49,7 @@ export default function ErrorPage({ defaultCode = 404 }) {
   // Determine active error code purely based on real-time runtime condition
   const queryParams = new URLSearchParams(location.search);
   const queryCode = queryParams.get('code');
+  const retryAfter = queryParams.get('retryAfter');
   const activeCode = parseInt(routeParamCode || queryCode || defaultCode, 10) || 404;
 
   const [isReloading, setIsReloading] = useState(false);
@@ -111,7 +112,7 @@ export default function ErrorPage({ defaultCode = 404 }) {
     setIsReloading(true);
     setTimeout(() => {
       setIsReloading(false);
-      window.location.reload();
+      if (onReset) onReset(); else window.location.reload();
     }, 600);
   };
 
@@ -390,7 +391,7 @@ Halo Tim Aksara Tech, saya mengalami kendala teknis pada sistem web dengan rinci
                 m: 0
               }}
             >
-              {errorData.technicalDetail}
+              {customError ? `Runtime Exception: ${customError.message || customError.toString()}` : errorData.technicalDetail}
             </Typography>
 
             {/* Real-time Telemetry Mini Grid */}

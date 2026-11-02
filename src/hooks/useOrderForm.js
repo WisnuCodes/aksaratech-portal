@@ -1,3 +1,4 @@
+import { recordActionAttempt } from '../utils/rateLimiter';
 import { useState, useMemo, useEffect } from 'react';
 import { PACKAGES, ADDONS } from '../data/catalogData';
 import { generateInquiryId, createWhatsAppPayload } from '../utils/documentEngine';
@@ -208,9 +209,22 @@ export function useOrderForm(initialPackageId = null) {
     setIsSubmitted(false);
   };
 
-  // Submit and launch WhatsApp
+    // Submit and launch WhatsApp
   const submitToWhatsApp = () => {
     if (!validateStep(7)) return;
+
+    // 1. Real-time Offline network check (HTTP 503)
+    if (typeof navigator !== 'undefined' && !navigator.onLine) {
+      window.location.href = '/error/503?reason=offline';
+      return;
+    }
+
+    // 2. Real-time Rate Limiter Anti-Spam (HTTP 429)
+    const rateCheck = recordActionAttempt('order_submission');
+    if (!rateCheck.allowed) {
+      window.location.href = `/error/429?retryAfter=${rateCheck.retryAfterSeconds}`;
+      return;
+    }
 
     const waUrl = createWhatsAppPayload(formData, selectedPackage, selectedAddons);
     setIsSubmitted(true);
