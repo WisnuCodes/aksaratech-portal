@@ -2,7 +2,7 @@
 
 export const APP_METADATA = {
   name: "AKSARA TECH",
-  tagline: "Enterprise Digital Solutions & Software Engineering",
+  tagline: "Digital Solutions & Software Engineering",
   version: "1.0.0",
   officialWhatsApp: "085600386692",
   internationalWhatsApp: "+6285600386692",

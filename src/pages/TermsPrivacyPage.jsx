@@ -37,7 +37,7 @@ export default function TermsPrivacyPage() {
       content: (
         <div>
           <p style={{ marginBottom: '12px' }}>
-            <strong>AKSARA TECH</strong> adalah penyedia jasa rekayasa perangkat lunak mandiri (<em>Enterprise Digital Solutions &amp; Software Engineering</em>) yang beroperasi secara transparan dan terstandar.
+            <strong>AKSARA TECH</strong> adalah penyedia jasa rekayasa perangkat lunak mandiri (<em>Digital Solutions &amp; Software Engineering</em>) yang beroperasi secara transparan dan terstandar.
           </p>
           <div style={{
             background: '#F0F5FF',

@@ -79,7 +79,7 @@ export function createWhatsAppPayload(formData, selectedPackage, selectedAddons)
 
   const message = 
 `*PENGESAHAN BRIEF & PERMINTAAN KEBUTUHAN WEBSITE*
-*AKSARA TECH – Enterprise Digital Solutions*
+*AKSARA TECH – Digital Solutions*
 ----------------------------------------
 *ID Permintaan:* ${inquiryId}
 *Tanggal:* ${new Date().toLocaleDateString("id-ID", { day: 'numeric', month: 'long', year: 'numeric' })}

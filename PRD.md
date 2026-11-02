@@ -1,5 +1,5 @@
 # PRODUCT REQUIREMENTS DOCUMENT (PRD)
-## AKSARA TECH — Enterprise Digital Solutions & Software Engineering
+## AKSARA TECH — Digital Solutions & Software Engineering
 **Document Identifier:** `PRD-AT-2026-001`  
 **Classification:** Single Source of Truth (SSOT) — Master Product Specification  
 
@@ -13,7 +13,7 @@
 | **Document Version** | v1.0.0 (Comprehensive Baseline Specification) |
 | **Document Status** | Approved for Discovery & Planning Baseline |
 | **Lead Product Manager** | Senior Product Manager & Business Analyst Team |
-| **Official Business Entity** | AKSARA TECH — Enterprise Digital Solutions & Software Engineering |
+| **Official Business Entity** | AKSARA TECH — Digital Solutions & Software Engineering |
 | **Official Corporate Support** | WhatsApp: `085600386692` |
 | **File Location** | `scratch/aksara-tech/PRD.md` |
 | **Target Completion Baseline** | Enterprise Standard Multi-Phase Rollout |

@@ -1,7 +1,7 @@
 // Master Catalog Data & Business Rules for Aksara Tech
 export const BUSINESS_INFO = {
   name: "AKSARA TECH",
-  tagline: "Enterprise Digital Solutions & Software Engineering",
+  tagline: "Digital Solutions & Software Engineering",
   phone: "085600386692",
   phoneDisplay: "0856-0038-6692",
   phoneInternational: "+6285600386692",

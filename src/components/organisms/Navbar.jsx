@@ -137,7 +137,7 @@ export default function Navbar() {
               <span className="brand-title-tech">TECH</span>
             </div>
             <div className="brand-subtitle">
-              Enterprise Digital Solutions
+              Digital Solutions
             </div>
           </div>
         </Link>

@@ -34,7 +34,7 @@ const errorTheme = createTheme({
     h3: { fontFamily: "'Space Grotesk', sans-serif" },
   },
   palette: {
-    primary: { main: '#1D63FF', dark: '#003153' },
+    primary: { main: '#1D63FF', dark: '#0E46C7' },
     error: { main: '#DC2626' },
     warning: { main: '#D97706' },
     success: { main: '#059669' }
@@ -49,7 +49,6 @@ export default function ErrorPage({ defaultCode = 404, customError = null, onRes
   // Determine active error code purely based on real-time runtime condition
   const queryParams = new URLSearchParams(location.search);
   const queryCode = queryParams.get('code');
-  const retryAfter = queryParams.get('retryAfter');
   const activeCode = parseInt(routeParamCode || queryCode || defaultCode, 10) || 404;
 
   const [isReloading, setIsReloading] = useState(false);
@@ -58,9 +57,9 @@ export default function ErrorPage({ defaultCode = 404, customError = null, onRes
   // Real-time dynamic telemetry states
   const [currentTime, setCurrentTime] = useState(new Date());
   const [isOnline, setIsOnline] = useState(typeof navigator !== 'undefined' ? navigator.onLine : true);
-  const [latencyMs, setLatencyMs] = useState(26);
+  const [latencyMs, setLatencyMs] = useState(24);
 
-  // 1. Real-time Clock Timer (Ticks every second)
+  // 1. Real-time Clock Timer
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
     return () => clearInterval(timer);
@@ -75,7 +74,7 @@ export default function ErrorPage({ defaultCode = 404, customError = null, onRes
     window.addEventListener('offline', handleOffline);
 
     const latencyTimer = setInterval(() => {
-      setLatencyMs(Math.floor(20 + Math.random() * 16));
+      setLatencyMs(Math.floor(18 + Math.random() * 14));
     }, 4500);
 
     return () => {
@@ -144,8 +143,8 @@ export default function ErrorPage({ defaultCode = 404, customError = null, onRes
 ---------------------------------------
 • *Incident ID:* ${incidentId}
 • *Target URL:* ${location.pathname}
-• *Waktu Kejadian:* ${currentTime.toLocaleTimeString('id-ID')} WIB
-• *Koneksi Jaringan:* ${isOnline ? 'Online' : 'Offline'} (${latencyMs}ms)
+• *Waktu:* ${currentTime.toLocaleTimeString('id-ID')} WIB
+• *Koneksi:* ${isOnline ? 'Online' : 'Offline'} (${latencyMs}ms)
 • *Kategori:* ${errorData.category}
 • *Deskripsi:* ${errorData.shortDesc}
 
@@ -162,13 +161,11 @@ Halo Tim Aksara Tech, saya mengalami kendala teknis pada sistem web dengan rinci
   return (
     <ThemeProvider theme={errorTheme}>
       <Box
-        component="main"
         sx={{
-          height: '100dvh',
-          maxHeight: '100dvh',
+          height: '100dvh', // Strictly 100 dynamic viewport height
           width: '100vw',
           overflow: 'hidden', // Strictly NO outer page scroll
-          bgcolor: '#F1F5F9',
+          bgcolor: '#F8FAFC',
           backgroundImage: 'radial-gradient(#CBD5E1 1px, transparent 1px)',
           backgroundSize: '20px 20px',
           display: 'flex',
@@ -194,78 +191,66 @@ Halo Tim Aksara Tech, saya mengalami kendala teknis pada sistem web dengan rinci
           />
         )}
 
-        {/* COMPACT AUTHENTIC EXECUTIVE INCIDENT CARD */}
+        {/* COMPACT & ELEGANT ENTERPRISE INCIDENT CONSOLE */}
         <Paper
           elevation={0}
           sx={{
             width: '100%',
-            maxWidth: '680px',
-            maxHeight: 'calc(100dvh - 32px)',
+            maxWidth: '660px',
+            maxHeight: 'calc(100dvh - 28px)',
             bgcolor: '#FFFFFF',
-            border: '2.5px solid #0F172A',
-            borderRadius: '16px',
-            boxShadow: '6px 6px 0px #0F172A',
+            border: '2px solid #0F172A',
+            borderRadius: '14px',
+            boxShadow: '5px 5px 0px #0F172A',
             display: 'flex',
             flexDirection: 'column',
             overflow: 'hidden',
             boxSizing: 'border-box'
           }}
         >
-          {/* 1. COMPACT TOP HEADER STRIP */}
+          {/* 1. PROFESSIONAL TOP HEADER STRIP (Clean Full Brand Logo Image) */}
           <Box
             sx={{
               px: { xs: 1.8, sm: 2.4 },
-              py: 1.1,
-              bgcolor: '#F8FAFC',
+              py: 1.2,
+              bgcolor: '#FFFFFF',
               borderBottom: '2px solid #0F172A',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              gap: 1,
+              gap: 1.5,
               flexShrink: 0
             }}
           >
-            {/* Brand Logo & Name */}
-            <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none' }}>
+            {/* Official Full Brand Logo (Icon + Text Combined Seamlessly) */}
+            <Link to="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }} title="Kembali ke Beranda Aksara Tech">
               <img
-                src="/brand-icon.png"
-                alt="Aksara Tech"
-                width="38"
-                height="22"
+                src="/brand-logo.png"
+                alt="Aksara Tech Enterprise Solutions"
                 style={{
-                  borderRadius: 5,
-                  border: '1.2px solid #0F172A',
-                  boxShadow: '1px 1px 0px #0F172A'
+                  height: '26px',
+                  width: 'auto',
+                  maxWidth: '175px',
+                  objectFit: 'contain',
+                  display: 'block'
                 }}
               />
-              <Typography
-                sx={{
-                  fontFamily: "'Space Grotesk', sans-serif",
-                  fontWeight: 900,
-                  fontSize: { xs: '0.92rem', sm: '1.02rem' },
-                  color: '#0F172A',
-                  letterSpacing: '-0.02em',
-                  lineHeight: 1
-                }}
-              >
-                AKSARA <span style={{ color: '#1D63FF' }}>TECH</span>
-              </Typography>
             </Link>
 
-            {/* Live Telemetry & Network Pill */}
+            {/* Live Telemetry & Network Latency Pill */}
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <Box
                 sx={{
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: 0.6,
-                  bgcolor: '#ECFDF5',
-                  color: '#065F46',
-                  border: '1px solid #10B981',
-                  borderRadius: '5px',
-                  px: 0.8,
-                  py: 0.25,
-                  fontSize: '0.68rem',
+                  bgcolor: '#F0FDF4',
+                  color: '#166534',
+                  border: '1px solid #86EFAC',
+                  borderRadius: '9999px',
+                  px: 1,
+                  py: 0.3,
+                  fontSize: '0.7rem',
                   fontWeight: 800,
                   fontFamily: 'var(--font-mono)'
                 }}
@@ -276,150 +261,129 @@ Halo Tim Aksara Tech, saya mengalami kendala teknis pada sistem web dengan rinci
                     height: 6,
                     borderRadius: '50%',
                     bgcolor: '#10B981',
-                    boxShadow: '0 0 5px #10B981',
+                    boxShadow: '0 0 4px #10B981',
                     animation: 'pulseDot 1.5s infinite ease-in-out'
                   }}
                 />
-                LIVE &bull; {currentTime.toLocaleTimeString('id-ID')} WIB
-              </Box>
-
-              <Tooltip title={isOnline ? 'Jaringan online stabil' : 'Koneksi perangkat terputus'}>
-                <Chip
-                  icon={isOnline ? <WifiRoundedIcon sx={{ fontSize: '13px !important' }} /> : <WifiOffRoundedIcon sx={{ fontSize: '13px !important' }} />}
-                  label={isOnline ? `${latencyMs}ms` : 'Offline'}
-                  size="small"
-                  sx={{
-                    height: 24,
-                    fontWeight: 800,
-                    fontSize: '0.68rem',
-                    bgcolor: isOnline ? '#F0FDF4' : '#FEF2F2',
-                    color: isOnline ? '#166534' : '#991B1B',
-                    border: `1px solid ${isOnline ? '#86EFAC' : '#FCA5A5'}`,
-                    borderRadius: '5px',
-                    '& .MuiChip-icon': { color: 'inherit' }
-                  }}
-                />
-              </Tooltip>
-            </Box>
-          </Box>
-
-          {/* 2. CARD CONTENT (Fits comfortably on screen) */}
-          <Box
-            sx={{
-              p: { xs: 2.2, sm: 3 },
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 2,
-              overflowY: 'auto'
-            }}
-          >
-            {/* Status Code, Name & RFC Badge */}
-            <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 1.5, flexWrap: 'wrap' }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                <Box
-                  sx={{
-                    bgcolor: accentLight,
-                    border: '2px solid #0F172A',
-                    borderRadius: '10px',
-                    boxShadow: '2.5px 2.5px 0px #0F172A',
-                    px: { xs: 1.8, sm: 2.2 },
-                    py: 0.6,
-                    textAlign: 'center'
-                  }}
-                >
-                  <Typography
-                    sx={{
-                      fontFamily: 'var(--font-heading)',
-                      fontSize: { xs: '2.4rem', sm: '2.8rem' },
-                      fontWeight: 900,
-                      lineHeight: 1,
-                      letterSpacing: '-0.04em',
-                      color: accentColor
-                    }}
-                  >
-                    {errorData.code}
-                  </Typography>
-                </Box>
-
-                <Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8, mb: 0.3 }}>
-                    {is5xx ? (
-                      <ErrorOutlineRoundedIcon sx={{ color: '#DC2626', fontSize: 20 }} />
-                    ) : (
-                      <WarningAmberRoundedIcon sx={{ color: '#D97706', fontSize: 20 }} />
-                    )}
-                    <Typography
-                      variant="h1"
-                      sx={{
-                        fontFamily: 'var(--font-heading)',
-                        fontSize: { xs: '1.25rem', sm: '1.45rem' },
-                        fontWeight: 900,
-                        color: '#0F172A',
-                        lineHeight: 1.2
-                      }}
-                    >
-                      {errorData.name}
-                    </Typography>
-                  </Box>
-                  <Typography sx={{ fontSize: '0.84rem', fontWeight: 700, color: '#334155', lineHeight: 1.35 }}>
-                    {errorData.shortDesc}
-                  </Typography>
-                </Box>
+                LIVE &bull; {latencyMs}ms
               </Box>
 
               <Chip
                 label={errorData.rfcSpec}
                 size="small"
                 sx={{
+                  display: { xs: 'none', sm: 'inline-flex' },
                   fontFamily: 'var(--font-mono)',
                   fontWeight: 700,
-                  fontSize: '0.68rem',
+                  fontSize: '0.66rem',
                   bgcolor: '#F1F5F9',
                   color: '#475569',
                   border: '1px solid #CBD5E1',
-                  borderRadius: '5px'
+                  borderRadius: '5px',
+                  height: 22
                 }}
               />
             </Box>
+          </Box>
 
-            {/* Technical Detail */}
+          {/* 2. CARD CONTENT (Comfortable, Zero Outer Scroll, High Contrast) */}
+          <Box
+            sx={{
+              p: { xs: 2, sm: 2.8 },
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 1.8,
+              overflowY: 'auto'
+            }}
+          >
+            {/* Status Code & Error Identity Display */}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <Box
+                sx={{
+                  bgcolor: accentLight,
+                  border: '2px solid #0F172A',
+                  borderRadius: '10px',
+                  boxShadow: '3px 3px 0px #0F172A',
+                  px: { xs: 1.6, sm: 2.2 },
+                  py: 0.6,
+                  textAlign: 'center',
+                  flexShrink: 0
+                }}
+              >
+                <Typography
+                  sx={{
+                    fontFamily: 'var(--font-heading)',
+                    fontSize: { xs: '2.4rem', sm: '2.9rem' },
+                    fontWeight: 900,
+                    lineHeight: 1,
+                    letterSpacing: '-0.04em',
+                    color: accentColor
+                  }}
+                >
+                  {errorData.code}
+                </Typography>
+              </Box>
+
+              <Box sx={{ flex: 1, minWidth: 0 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8, mb: 0.4 }}>
+                  <Typography
+                    variant="h1"
+                    sx={{
+                      fontFamily: 'var(--font-heading)',
+                      fontSize: { xs: '1.2rem', sm: '1.4rem' },
+                      fontWeight: 900,
+                      color: '#0F172A',
+                      lineHeight: 1.25
+                    }}
+                  >
+                    {errorData.name}
+                  </Typography>
+                </Box>
+                <Typography sx={{ fontSize: '0.86rem', fontWeight: 700, color: '#475569', lineHeight: 1.35 }}>
+                  {errorData.shortDesc}
+                </Typography>
+              </Box>
+            </Box>
+
+            {/* Technical Detail / Runtime Message */}
             <Typography
               sx={{
-                fontSize: '0.82rem',
-                color: '#64748B',
-                lineHeight: 1.55,
-                m: 0
+                fontSize: '0.84rem',
+                color: '#475569',
+                lineHeight: 1.6,
+                m: 0,
+                fontWeight: 500
               }}
             >
-              {customError ? `Runtime Exception: ${customError.message || customError.toString()}` : errorData.technicalDetail}
+              {customError ? `Pesan Exception: ${customError.message || customError.toString()}` : errorData.technicalDetail}
             </Typography>
 
             {/* Real-time Telemetry Mini Grid */}
             <Box
               sx={{
                 bgcolor: '#F8FAFC',
-                border: '1.5px solid #CBD5E1',
+                border: '1.5px solid #0F172A',
                 borderRadius: '8px',
-                p: { xs: 1.2, sm: 1.5 },
+                p: { xs: 1.2, sm: 1.4 },
                 display: 'grid',
-                gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' },
+                gridTemplateColumns: { xs: '1fr', sm: '1.2fr 0.8fr' },
                 gap: 1
               }}
             >
               <Box>
-                <Typography sx={{ fontFamily: 'var(--font-mono)', fontSize: '0.66rem', color: '#64748B', fontWeight: 800 }}>
-                  TARGET ENDPOINT:
+                <Typography sx={{ fontFamily: 'var(--font-mono)', fontSize: '0.64rem', color: '#64748B', fontWeight: 800 }}>
+                  TARGET RUTE:
                 </Typography>
-                <Typography sx={{ fontFamily: 'var(--font-mono)', fontSize: '0.74rem', color: '#0F172A', fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                <Typography sx={{ fontFamily: 'var(--font-mono)', fontSize: '0.74rem', color: '#0F172A', fontWeight: 800, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {location.pathname || '/'}
                 </Typography>
               </Box>
 
               <Box>
-                <Typography sx={{ fontFamily: 'var(--font-mono)', fontSize: '0.66rem', color: '#64748B', fontWeight: 800 }}>
-                  INCIDENT ID:
+                <Typography sx={{ fontFamily: 'var(--font-mono)', fontSize: '0.64rem', color: '#64748B', fontWeight: 800 }}>
+                  ID INSIDEN:
                 </Typography>
-                <Typography sx={{ fontFamily: 'var(--font-mono)', fontSize: '0.74rem', color: '#0F172A', fontWeight: 700 }}>
+                <Typography sx={{ fontFamily: 'var(--font-mono)', fontSize: '0.74rem', color: '#0F172A', fontWeight: 800 }}>
                   {incidentId}
                 </Typography>
               </Box>
@@ -430,7 +394,7 @@ Halo Tim Aksara Tech, saya mengalami kendala teknis pada sistem web dengan rinci
               sx={{
                 p: 1.2,
                 bgcolor: is5xx ? '#FEF2F2' : '#EFF6FF',
-                border: `1.2px solid ${is5xx ? '#FCA5A5' : '#93C5FD'}`,
+                border: `1.5px solid ${is5xx ? '#FCA5A5' : '#93C5FD'}`,
                 borderRadius: '8px',
                 display: 'flex',
                 alignItems: 'center',
@@ -442,14 +406,14 @@ Halo Tim Aksara Tech, saya mengalami kendala teknis pada sistem web dengan rinci
               ) : (
                 <CheckCircleOutlineRoundedIcon sx={{ color: '#1D63FF', fontSize: 18, flexShrink: 0 }} />
               )}
-              <Typography sx={{ fontSize: '0.76rem', color: is5xx ? '#991B1B' : '#1E40AF', lineHeight: 1.45, fontWeight: 600 }}>
+              <Typography sx={{ fontSize: '0.78rem', color: is5xx ? '#991B1B' : '#1E40AF', lineHeight: 1.45, fontWeight: 600 }}>
                 {is5xx ? (
                   <>
-                    Kendala berada di infrastruktur server hosting. Sesuai <strong>Kebijakan Aksara Tech</strong>, kode sumber telah modular dan siap verifikasi.
+                    Kendala berada di infrastruktur server hosting. Kode sumber aplikasi Anda telah tersusun modular dan aman.
                   </>
                 ) : (
                   <>
-                    Silakan periksa kembali alamat tautan atau gunakan navigasi resmi di bawah untuk kembali ke sistem.
+                    Rute URL yang dituju tidak ditemukan atau belum aktif. Silakan kembali ke Beranda atau pilih layanan resmi kami.
                   </>
                 )}
               </Typography>
@@ -463,8 +427,8 @@ Halo Tim Aksara Tech, saya mengalami kendala teknis pada sistem web dengan rinci
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 gap: 1,
-                pt: 1,
-                borderTop: '1.5px solid #F1F5F9'
+                pt: 1.2,
+                borderTop: '1.5px solid #E2E8F0'
               }}
             >
               <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
@@ -507,7 +471,7 @@ Halo Tim Aksara Tech, saya mengalami kendala teknis pada sistem web dengan rinci
                     fontWeight: 800,
                     fontSize: '0.82rem',
                     textTransform: 'none',
-                    px: 1.6,
+                    px: 1.5,
                     py: 0.7,
                     borderRadius: '6px',
                     border: '1.5px solid #0F172A',
@@ -578,37 +542,36 @@ Halo Tim Aksara Tech, saya mengalami kendala teknis pada sistem web dengan rinci
           </Box>
         </Paper>
 
-        {/* Copy Toast Feedback */}
-        <Snackbar
-          open={copiedToast}
-          autoHideDuration={2500}
-          onClose={() => setCopiedToast(false)}
-          message="Log diagnostik insiden berhasil disalin ke clipboard!"
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-          sx={{
-            '& .MuiSnackbarContent-root': {
-              bgcolor: '#0F172A',
-              color: '#FFFFFF',
-              fontFamily: 'var(--font-heading)',
-              fontWeight: 800,
-              fontSize: '0.8rem',
-              border: '1.5px solid #FFCE32',
-              boxShadow: '3px 3px 0px #0F172A',
-              borderRadius: '6px'
-            }
-          }}
-        />
-
+        {/* Global Keyframes for Animations */}
         <style>{`
           @keyframes pulseDot {
             0%, 100% { opacity: 1; transform: scale(1); }
             50% { opacity: 0.4; transform: scale(0.85); }
           }
           @keyframes spin {
-            from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
           }
         `}</style>
+
+        {/* Toast Notification for Clipboard Copy */}
+        <Snackbar
+          open={copiedToast}
+          autoHideDuration={2500}
+          onClose={() => setCopiedToast(false)}
+          message="Log diagnostik insiden berhasil disalin ke clipboard."
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+          ContentProps={{
+            sx: {
+              bgcolor: '#0F172A',
+              color: '#FFFFFF',
+              fontWeight: 700,
+              fontSize: '0.84rem',
+              border: '1.5px solid #1D63FF',
+              boxShadow: '3px 3px 0px #1D63FF',
+              borderRadius: '8px'
+            }
+          }}
+        />
       </Box>
     </ThemeProvider>
   );
