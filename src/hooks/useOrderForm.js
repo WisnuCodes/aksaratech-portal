@@ -1,3 +1,4 @@
+import { sanitizeText, sanitizeUrl, sanitizePhone } from '../utils/securitySanitizer';
 import { recordActionAttempt } from '../utils/rateLimiter';
 import { useState, useMemo, useEffect } from 'react';
 import { PACKAGES, ADDONS } from '../data/catalogData';
@@ -226,7 +227,20 @@ export function useOrderForm(initialPackageId = null) {
       return;
     }
 
-    const waUrl = createWhatsAppPayload(formData, selectedPackage, selectedAddons);
+        // 3. Sanitize inputs against XSS and SQL injection patterns
+    const sanitizedData = {
+      ...formData,
+      clientName: sanitizeText(formData.clientName),
+      clientPhone: sanitizePhone(formData.clientPhone),
+      projectTitle: sanitizeText(formData.projectTitle),
+      projectGoal: sanitizeText(formData.projectGoal),
+      customFeatures: sanitizeText(formData.customFeatures),
+      customModuleRequest: sanitizeText(formData.customModuleRequest),
+      specialNotes: sanitizeText(formData.specialNotes),
+      assetDriveUrl: sanitizeUrl(formData.assetDriveUrl)
+    };
+
+    const waUrl = createWhatsAppPayload(sanitizedData, selectedPackage, selectedAddons);
     setIsSubmitted(true);
 
     // Open WhatsApp in new tab
