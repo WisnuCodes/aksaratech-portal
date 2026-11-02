@@ -664,7 +664,7 @@ export default function HeroSection() {
         }
 
         /* Prefers reduced motion */
-        @media (prefers-reduced-motion: reduce) {
+        @media (prefers-reduced-motion: reduce), (max-width: 768px) {
           .screen-cursor,
           .steam,
           .float-check,

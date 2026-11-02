@@ -1,5 +1,7 @@
-import React from 'react';
-import ErrorPage from '../../pages/ErrorPage';
+import React, { lazy, Suspense } from 'react';
+
+// Lazy load ErrorPage so it does not block the initial application load
+const ErrorPage = lazy(() => import('../../pages/ErrorPage'));
 
 export class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -31,11 +33,20 @@ export class ErrorBoundary extends React.Component {
     if (this.state.hasError) {
       // Automatically render the HTTP 500 Internal Server Error screen
       return (
-        <ErrorPage 
-          defaultCode={500} 
-          customError={this.state.error}
-          onReset={this.handleReset}
-        />
+        <Suspense fallback={
+          <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0F172A', color: '#FFFFFF', padding: '24px' }}>
+            <div style={{ textAlign: 'center' }}>
+              <h2 style={{ fontSize: '1.4rem', fontWeight: '800', marginBottom: '8px' }}>Mengisolasi Insiden Sistem (HTTP 500)</h2>
+              <p style={{ color: '#94A3B8', fontSize: '0.9rem' }}>Memuat modul diagnostik teknis Aksara Tech...</p>
+            </div>
+          </div>
+        }>
+          <ErrorPage 
+            defaultCode={500} 
+            customError={this.state.error}
+            onReset={this.handleReset}
+          />
+        </Suspense>
       );
     }
 
@@ -44,4 +55,3 @@ export class ErrorBoundary extends React.Component {
 }
 
 export default ErrorBoundary;
-

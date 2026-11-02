@@ -1,0 +1,21 @@
+{
+  "short_name": "Aksara Tech",
+  "name": "Aksara Tech Enterprise Solutions",
+  "description": "Enterprise Digital Solutions, Software Engineering, & System Modeling",
+  "icons": [
+    {
+      "src": "/brand-icon.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/brand-icon.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#F8FAFC",
+  "theme_color": "#1D63FF",
+  "display": "standalone"
+}

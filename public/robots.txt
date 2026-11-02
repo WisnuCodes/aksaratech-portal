@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /error/
+Disallow: /404
+Disallow: /500
+Disallow: /503
+
+Sitemap: https://aksaratech.com/sitemap.xml
