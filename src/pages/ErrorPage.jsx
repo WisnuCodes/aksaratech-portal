@@ -235,7 +235,7 @@ Halo Tim Aksara Tech, saya mengalami kendala teknis pada sistem web dengan rinci
       <Box 
         component="section" 
         sx={{
-          minHeight: '85vh',
+          minHeight: '100vh',
           bgcolor: '#F8FAFC',
           py: { xs: 4, sm: 6, md: 8 },
           position: 'relative',
@@ -258,6 +258,70 @@ Halo Tim Aksara Tech, saya mengalami kendala teknis pada sistem web dengan rinci
         )}
 
         <Container maxWidth="lg">
+          
+          {/* Top Brand Bar (Standalone Error View) */}
+          <Box 
+            sx={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'space-between', 
+              mb: 3,
+              pb: 2,
+              borderBottom: '1.5px solid #E2E8F0'
+            }}
+          >
+            <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
+              <img 
+                src="/brand-icon.png" 
+                alt="Aksara Tech" 
+                width="46" 
+                height="26" 
+                style={{ 
+                  borderRadius: 6, 
+                  border: '1.5px solid #0F172A',
+                  boxShadow: '1.5px 1.5px 0px #0F172A'
+                }} 
+              />
+              <Typography 
+                sx={{ 
+                  fontFamily: "'Space Grotesk', sans-serif", 
+                  fontWeight: 900, 
+                  fontSize: '1.15rem', 
+                  color: '#0F172A',
+                  letterSpacing: '-0.02em'
+                }}
+              >
+                AKSARA <span style={{ color: '#1D63FF' }}>TECH</span>
+              </Typography>
+            </Link>
+
+            <Button
+              component={Link}
+              to="/"
+              size="small"
+              startIcon={<HomeRoundedIcon sx={{ fontSize: 16 }} />}
+              sx={{
+                textTransform: 'none',
+                fontWeight: 800,
+                fontSize: '0.8rem',
+                fontFamily: 'var(--font-heading)',
+                color: '#0F172A',
+                border: '1.5px solid #0F172A',
+                borderRadius: '6px',
+                bgcolor: '#FFFFFF',
+                px: 1.5,
+                py: 0.5,
+                boxShadow: '2px 2px 0px #0F172A',
+                '&:hover': {
+                  bgcolor: '#F1F5F9',
+                  transform: 'translate(-1px, -1px)',
+                  boxShadow: '3px 3px 0px #0F172A'
+                }
+              }}
+            >
+              Kembali ke Beranda
+            </Button>
+          </Box>
           
           {/* TOP BAR: Real-time Live Telemetry Strip */}
           <Paper
@@ -1146,36 +1210,7 @@ Halo Tim Aksara Tech, saya mengalami kendala teknis pada sistem web dengan rinci
 
           </Paper>
 
-          {/* Quick Links Section under Card */}
-          <Box
-            sx={{
-              mt: 4,
-              textAlign: 'center',
-              display: 'flex',
-              flexWrap: 'wrap',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 2
-            }}
-          >
-            <Typography sx={{ fontSize: '0.82rem', color: '#64748B', fontWeight: 600 }}>
-              Halaman resmi yang dapat dikunjungi:
-            </Typography>
-            <Link to="/paket" style={{ fontSize: '0.82rem', color: '#1D63FF', fontWeight: 700, textDecoration: 'none' }}>
-              Katalog 6 Paket &amp; Harga &rarr;
-            </Link>
-            <Link to="/eksklusi-server" style={{ fontSize: '0.82rem', color: '#1D63FF', fontWeight: 700, textDecoration: 'none' }}>
-              Batasan Eksklusi Server &rarr;
-            </Link>
-            <Link to="/alur-sop" style={{ fontSize: '0.82rem', color: '#1D63FF', fontWeight: 700, textDecoration: 'none' }}>
-              Alur SOP &amp; Kuota 3x Revisi &rarr;
-            </Link>
-            <Link to="/faq" style={{ fontSize: '0.82rem', color: '#1D63FF', fontWeight: 700, textDecoration: 'none' }}>
-              FAQ Teknis &rarr;
-            </Link>
-          </Box>
-
-        </Container>
+          </Container>
 
         {/* Copy Toast Feedback */}
         <Snackbar

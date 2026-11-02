@@ -107,8 +107,7 @@ export default function Footer() {
               <li><Link to="/alur-sop" style={{ transition: 'all 0.15s ease' }}>SOP 4 Tahap &amp; Kuota Revisi 3x</Link></li>
               <li><Link to="/pesan" style={{ transition: 'all 0.15s ease' }}>Formulir Brief Proyek</Link></li>
               <li><Link to="/faq" style={{ transition: 'all 0.15s ease' }}>Pusat Tanya Jawab (FAQ)</Link></li>
-              <li><Link to="/error" style={{ transition: 'all 0.15s ease', color: '#64748B' }}>Konsol Diagnostik HTTP (4xx &amp; 5xx)</Link></li>
-            </ul>
+                          </ul>
           </div>
 
           {/* Governance & Legal */}
