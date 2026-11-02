@@ -19,7 +19,7 @@ export default function WorkflowSOP() {
       num: "02",
       title: "Pengisian Brief Kebutuhan Terstruktur",
       badge: "Formulir Cerdas Web",
-      desc: "Mengisi spesifikasi teknis (database MySQL, modul CRUD, dokumen SRS/SDD IEEE, diagram UML, preferensi visual) melalui sistem formulir terstruktur website.",
+      desc: "Mengisi spesifikasi teknis (database MySQL, modul CRUD, dokumen SRS/SDD formal, diagram UML, preferensi visual) melalui sistem formulir terstruktur website.",
       icon: FileCheck,
       color: '#D97706'
     },

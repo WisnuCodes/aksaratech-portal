@@ -9,6 +9,7 @@ import WorkflowPage from './pages/WorkflowPage';
 import OrderBriefPage from './pages/OrderBriefPage';
 import FAQPage from './pages/FAQPage';
 import TermsPrivacyPage from './pages/TermsPrivacyPage';
+import ErrorPage from './pages/ErrorPage';
 import './App.css';
 
 // Scroll to top on route change
@@ -46,7 +47,12 @@ function App() {
             <Route path="/pesan" element={<OrderBriefPage preselectedPackageId={selectedPackageId} />} />
             <Route path="/faq" element={<FAQPage />} />
             <Route path="/ketentuan" element={<TermsPrivacyPage />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
+            <Route path="/error" element={<ErrorPage defaultCode={404} />} />
+            <Route path="/error/:code" element={<ErrorPage />} />
+            <Route path="/404" element={<ErrorPage defaultCode={404} />} />
+            <Route path="/500" element={<ErrorPage defaultCode={500} />} />
+            <Route path="/503" element={<ErrorPage defaultCode={503} />} />
+            <Route path="*" element={<ErrorPage defaultCode={404} />} />
           </Routes>
         </main>
 

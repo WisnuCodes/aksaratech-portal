@@ -86,14 +86,14 @@ Mewujudkan website korporat AKSARA TECH yang berkelas eksekutif, modern, berkine
 | **Pemilik Usaha / Tech Lead** | Validasi arsitektur teknis, approval penawaran, eksekusi kode | Memastikan kepatuhan aturan bisnis & keakuratan teknis |
 | **Project Manager / Admin** | Koordinasi klien via WhatsApp, pemantauan timeline & revisi | Efisiensi administrasi dokumen & kepastian alur kerja |
 | **Calon Klien UMKM / Korporat** | Pemesan website bisnis, landing page, atau toko online | Kemudahan pemahaman harga, kepastian jadwal, & profesionalisme |
-| **Calon Klien Mahasiswa** | Pemesan modul akademik / tugas akhir & dokumen rekayasa | Kebutuhan dokumen IEEE (SRS/SDD), UML, & plafon biaya terjangkau |
+| **Calon Klien Mahasiswa** | Pemesan modul akademik / tugas akhir & dokumen rekayasa | Kebutuhan dokumen rekayasa formal (SRS/SDD), UML, & plafon biaya terjangkau |
 
 ---
 
 ## 9. User Personas
 
 ### Persona 1: Rian (Mahasiswa Tingkat Akhir Teknik Informatika)
-- **Karakter:** Membutuhkan sistem web dinamis untuk skripsi dengan arsitektur modern (MVC/Laravel/NestJS) beserta dokumen lengkap IEEE (SRS, SDD) dan UML Diagram.
+- **Karakter:** Membutuhkan sistem web dinamis untuk skripsi dengan arsitektur modern (MVC/Laravel/NestJS) beserta dokumen lengkap rekayasa formal (SRS, SDD) dan UML Diagram.
 - **Kebutuhan Utama:** Kepastian harga tidak melebihi plafon mahasiswa (maks Rp 650.000) dan jadwal selesai dalam 5–10 hari kerja.
 - **Pain Point:** Sering kesulitan menyusun dokumen rekayasa formal dan diagram sistem secara rapi.
 

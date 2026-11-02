@@ -31,16 +31,16 @@ export default function WhyChooseUsSection() {
       accent: '#D97706',
       iconBg: '#FFF9E6',
       tag: 'Standar Akademik & Audit',
-      title: 'Dokumentasi IEEE (SRS & SDD) & UML',
-      shortDesc: 'Dokumen spesifikasi formal IEEE lengkap dengan Class Diagram, ERD, Use Case, Sequence.',
-      fullDesc: 'Bukan sekadar koding jalan. Kami menyusun dokumen rekayasa formal berstandar IEEE 830 (Software Requirements Specification) dan IEEE 1016 (Software Design Description) serta diagram pemodelan UML terpadu yang siap diujikan di depan dewan penguji sidang maupun audit sistem korporat.',
+      title: 'Dokumentasi Rekayasa (SRS & SDD) & UML',
+      shortDesc: 'Dokumen spesifikasi formal terstruktur lengkap dengan Class Diagram, ERD, Use Case, Sequence.',
+      fullDesc: 'Bukan sekadar koding jalan. Kami menyusun dokumen rekayasa formal terstruktur (Software Requirements Specification & Software Design Description) serta diagram pemodelan UML terpadu yang siap diujikan di depan dewan penguji sidang maupun audit sistem korporat.',
       guarantees: [
-        'Dokumen SRS (Software Requirements Specification) IEEE format',
+        'Dokumen SRS (Software Requirements Specification) format terstruktur',
         'Dokumen SDD (Software Design Description) arsitektural',
         'Diagram UML komprehensif (Use Case, Activity, Sequence, Class)',
         'Skema Entity Relationship Diagram (ERD) normalisasi data'
       ],
-      techChips: ['IEEE Std 830-1998', 'IEEE Std 1016', 'UML 2.5', 'ERD Crow\'s Foot']
+      techChips: ['SRS & SDD Formal', 'UML 2.5', 'ERD Crow\'s Foot', 'Arsitektur Modular']
     },
     {
       id: 3,

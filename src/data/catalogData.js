@@ -22,8 +22,8 @@ export const PACKAGES = [
     shortName: "Landing Page",
     category: "High-Conversion Campaign",
     description: "1 Halaman web komersial eksklusif berstandar enterprise dengan tata letak responsif optimal, dirancang untuk konversi kampanye promosi bisnis.",
-    minPrice: 120000,
-    maxPrice: 250000,
+    minPrice: 200000,
+    maxPrice: 200000,
     minDays: 3,
     maxDays: 5,
     systemType: "Statis (Tanpa Database/Login)",
@@ -45,7 +45,7 @@ export const PACKAGES = [
     shortName: "UMKM & Katalog",
     category: "Sistem Dinamis Database",
     description: "3 hingga 5 Halaman web terstruktur elegan dilengkapi etalase produk interaktif, pencarian real-time, manajemen katalog produk, dan tombol checkout order WhatsApp.",
-    minPrice: 200000,
+    minPrice: 300000,
     maxPrice: 300000,
     minDays: 4,
     maxDays: 7,
@@ -68,7 +68,7 @@ export const PACKAGES = [
     shortName: "Company Profile",
     category: "Standard Enterprise",
     description: "5 hingga 8 Halaman korporat berkelas eksekutif dengan arsitektur sistem modern, navigasi mendalam profil perusahaan, visi-misi, serta formulir pesan interaktif.",
-    minPrice: 280000,
+    minPrice: 400000,
     maxPrice: 400000,
     minDays: 5,
     maxDays: 8,
@@ -91,7 +91,7 @@ export const PACKAGES = [
     shortName: "E-Commerce Store",
     category: "Standard Store",
     description: "Sistem keranjang belanja online interaktif dengan manajemen katalog produk komprehensif, multi-kategori, dan alur checkout otomatis terhubung ke WhatsApp bisnis.",
-    minPrice: 350000,
+    minPrice: 450000,
     maxPrice: 450000,
     minDays: 6,
     maxDays: 9,
@@ -113,8 +113,8 @@ export const PACKAGES = [
     name: "Tugas Kuliah / Project Mahasiswa / Modul Akademik",
     shortName: "Modul Skripsi",
     category: "Mahasiswa & Akademisi",
-    description: "Perancangan & pengembangan sistem berbasis web sesuai bab, rancangan sistem, & tugas kuliah, dibangun dengan arsitektur modern (MVC Framework / PHP Native / TypeScript) lengkap dokumen SRS & SDD IEEE dan diagram UML.",
-    minPrice: 350000,
+    description: "Perancangan & pengembangan sistem berbasis web sesuai bab, rancangan sistem, & tugas kuliah, dibangun dengan arsitektur modern (MVC Framework / PHP Native / TypeScript) lengkap dokumen SRS & SDD formal dan diagram UML lengkap.",
+    minPrice: 500000,
     maxPrice: 500000,
     minDays: 5,
     maxDays: 10,
@@ -125,11 +125,11 @@ export const PACKAGES = [
     deliverables: [
       "Master Source Code sistem web lengkap",
       "Database Relasional (.sql) dengan data uji coba",
-      "Dokumen SRS & SDD Lengkap (Standar IEEE)",
+      "Dokumen SRS & SDD Lengkap (Standar Rekayasa Formal)",
       "UML Diagrams Lengkap (Class, ERD, Use Case, Activity, Sequence)"
     ],
     includeDocs: true,
-    docsSummary: "TERMASUK LENGKAP: Dokumen SRS & SDD (Standar IEEE) + UML Diagrams Lengkap",
+    docsSummary: "TERMASUK LENGKAP: Dokumen SRS & SDD Formal + UML Diagrams Lengkap",
     includeRevision: "Fasilitas kuota revisi MAKSIMAL 3 KALI secara mutlak (minor/mayor)",
     warranty: "Garansi Bug & Error Kode 1 Minggu (7 Hari)",
     badge: "Paling Lengkap & Siap Sidang",
@@ -166,9 +166,9 @@ export const ADDONS = [
     number: 1,
     name: "Pembuatan Dokumen SRS & SDD Tambahan",
     description: "Penyusunan dokumen rekayasa perangkat lunak Software Requirements Specification (SRS) & Software Design Document (SDD) terperinci.",
-    priceDisplay: "Rp 50.000 – Rp 75.000",
+    priceDisplay: "Rp 50.000",
     minPrice: 50000,
-    maxPrice: 75000,
+    maxPrice: 50000,
     complexity: "Menengah / Standar",
     type: "Document"
   },
@@ -177,9 +177,9 @@ export const ADDONS = [
     number: 2,
     name: "Pembuatan UML & Diagram Sistem Lengkap",
     description: "Pemodelan lengkap: Class Diagram, ERD Database, Use Case, Activity, & Sequence Diagram sesuai sistem.",
-    priceDisplay: "Rp 50.000 – Rp 75.000",
+    priceDisplay: "Rp 50.000",
     minPrice: 50000,
-    maxPrice: 75000,
+    maxPrice: 50000,
     complexity: "Menengah / Standar",
     type: "Document"
   },
@@ -188,9 +188,9 @@ export const ADDONS = [
     number: 3,
     name: "Penambahan Halaman Baru",
     description: "Pembuatan halaman web tambahan di luar paket standar utama berdasarkan permintaan khusus Klien.",
-    priceDisplay: "Rp 50.000 / hal",
-    minPrice: 50000,
-    maxPrice: 50000,
+    priceDisplay: "Rp 35.000 / hal",
+    minPrice: 35000,
+    maxPrice: 35000,
     complexity: "Sederhana / Mudah",
     type: "Feature"
   },
@@ -199,9 +199,9 @@ export const ADDONS = [
     number: 4,
     name: "Optimasi SEO On-Page Lanjutan",
     description: "Pengaturan meta tags korporat, OpenGraph social card, sitemap XML, robots.txt, serta heading.",
-    priceDisplay: "Rp 75.000",
-    minPrice: 75000,
-    maxPrice: 75000,
+    priceDisplay: "Rp 40.000",
+    minPrice: 40000,
+    maxPrice: 40000,
     complexity: "Sederhana / Mudah",
     type: "Feature"
   },
@@ -210,9 +210,9 @@ export const ADDONS = [
     number: 5,
     name: "Fitur Multi-Bahasa (Localization)",
     description: "Penerjemahan dan konfigurasi antarmuka website ke dalam Bahasa Inggris atau bahasa asing lain.",
-    priceDisplay: "Rp 50.000 – Rp 75.000",
-    minPrice: 50000,
-    maxPrice: 75000,
+    priceDisplay: "Rp 45.000",
+    minPrice: 45000,
+    maxPrice: 45000,
     complexity: "Menengah / Sedang",
     type: "Feature"
   },
@@ -221,9 +221,9 @@ export const ADDONS = [
     number: 6,
     name: "Integrasi Database MySQL & CRUD",
     description: "Perancangan dan pemodelan basis data relasional, tabel data, serta fitur CRUD pada sistem.",
-    priceDisplay: "Rp 50.000 – Rp 75.000",
-    minPrice: 50000,
-    maxPrice: 75000,
+    priceDisplay: "Rp 60.000",
+    minPrice: 60000,
+    maxPrice: 60000,
     complexity: "Menengah / Sedang",
     type: "Feature"
   },
@@ -232,9 +232,9 @@ export const ADDONS = [
     number: 7,
     name: "Custom Request Modul Khusus",
     description: "Pengembangan modul fitur kustom spesifik di luar paket standar berdasarkan kebutuhan operasional.",
-    priceDisplay: "Rp 50.000 – Rp 75.000",
+    priceDisplay: "Rp 50.000",
     minPrice: 50000,
-    maxPrice: 75000,
+    maxPrice: 50000,
     complexity: "Menengah / Custom",
     type: "Feature"
   },
@@ -243,9 +243,9 @@ export const ADDONS = [
     number: 8,
     name: "Sistem Autentikasi Login & Multi-Role",
     description: "Penambahan fitur login/register & manajemen multi-level role (Admin, User, Manager, Supervisor).",
-    priceDisplay: "Rp 50.000 – Rp 75.000",
-    minPrice: 50000,
-    maxPrice: 75000,
+    priceDisplay: "Rp 65.000",
+    minPrice: 65000,
+    maxPrice: 65000,
     complexity: "Kompleks / Rumit",
     type: "Feature"
   },
@@ -254,8 +254,8 @@ export const ADDONS = [
     number: 9,
     name: "Integrasi Payment Gateway Otomatis",
     description: "Penghubungan sistem pembayaran otomatis (Midtrans, Xendit, atau QRIS Instant) sesuai modul API.",
-    priceDisplay: "Rp 50.000 – Rp 75.000",
-    minPrice: 50000,
+    priceDisplay: "Rp 75.000",
+    minPrice: 75000,
     maxPrice: 75000,
     complexity: "Sangat Rumit",
     type: "Feature"
@@ -292,7 +292,7 @@ export const TECH_STACKS = {
   ],
   modeling: [
     { name: "Draw.io & Lucidchart", desc: "Pemodelan visual Class Diagram, ERD, Use Case, Activity, & Sequence Diagram." },
-    { name: "IEEE Standard Specification", desc: "Penyusunan dokumen Software Requirements (SRS) & Software Design (SDD)." },
+    { name: "Standar Dokumen Rekayasa Formal", desc: "Penyusunan dokumen Software Requirements (SRS) & Software Design (SDD) terstruktur." },
     { name: "Git Version Control", desc: "Manajemen repositori kode sumber kolaboratif, aman, dan terlacak." }
   ]
 };
@@ -316,7 +316,7 @@ export const WORKFLOW_STEPS = [
   {
     step: 4,
     title: "Pembayaran DP 50% & Pemrosesan Kode Program",
-    desc: "Penulisan source code, database (.sql), dan dokumen IEEE (SRS/SDD/UML) resmi dimulai setelah penerimaan Uang Muka (DP) minimum 50% dari total nilai penawaran."
+    desc: "Penulisan source code, database (.sql), dan dokumen rekayasa formal (SRS/SDD/UML) resmi dimulai setelah penerimaan Uang Muka (DP) minimum 50% dari total nilai penawaran."
   }
 ];
 
@@ -354,7 +354,7 @@ export const FAQS = [
   },
   {
     q: "Apa saja berkas yang akan saya terima saat proyek selesai?",
-    a: "Anda akan menerima master berkas arsip Source Code (.zip), Skema Database (.sql), serta Dokumen Rekayasa Sistem (SRS & SDD PDF berstandar IEEE dan Diagram UML Lengkap) sesuai paket yang disepakati."
+    a: "Anda akan menerima master berkas arsip Source Code (.zip), Skema Database (.sql), serta Dokumen Rekayasa Sistem (SRS & SDD PDF Terstruktur dan Diagram UML Lengkap) sesuai paket yang disepakati."
   }
 ];
 
@@ -368,7 +368,7 @@ export const TESTIMONIALS = [
     rating: 5,
     tag: "Akademik & Skripsi",
     date: "Oktober 2026",
-    quote: "Sistem web berbasis Laravel dan database MySQL yang dibangun Aksara Tech sangat rapi dan modular. Yang paling krusial, dokumen IEEE (SRS & SDD) dan diagram UML-nya (Use Case, Activity, Sequence, ERD) sangat presisi sehingga saya bisa menjawab semua pertanyaan dosen penguji saat sidang tanpa kendala!"
+    quote: "Sistem web berbasis Laravel dan database MySQL yang dibangun Aksara Tech sangat rapi dan modular. Yang paling krusial, dokumen formal SRS & SDD dan diagram UML-nya (Use Case, Activity, Sequence, ERD) sangat presisi sehingga saya bisa menjawab semua pertanyaan dosen penguji saat sidang tanpa kendala!"
   },
   {
     id: "testi-2",

@@ -16,7 +16,7 @@ const featureOptions = [
   'Etalase Katalog Produk Interaktif',
   'Database Relasional MySQL & CRUD',
   'Sistem Autentikasi Login & Multi-Role',
-  'Ringkasan Dokumen Rekayasa SRS & SDD (IEEE)',
+  'Ringkasan Dokumen Rekayasa SRS & SDD Formal',
   'Pemodelan UML Lengkap (Class, ERD, Use Case, Sequence)',
   'Keranjang Belanja & Checkout WhatsApp',
   'Pencarian & Filter Data Real-time',

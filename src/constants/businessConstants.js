@@ -13,7 +13,7 @@ export const REVISION_RULES = {
   MAX_ALLOWED: 3,
   TYPE: "MUTLAK (Minor maupun Mayor)",
   TRIGGER: "Setelah Pratinjau Pertama (Preview 1)",
-  EXCESS_ACTION: "Dialihkan ke Add-on Berbayar (Rp 50.000 – Rp 75.000)",
+  EXCESS_ACTION: "Dialihkan ke Add-on Berbayar (Mulai Rp 35.000 – Rp 75.000)",
   WARRANTY_PERIOD: "1 Minggu (7 Hari Kalender)",
   WARRANTY_POLICY: "Garansi perbaikan bug & error kode fungsional pasca serah terima",
 };
@@ -29,7 +29,7 @@ export const PRICE_BOUNDARIES = {
   MIN_PACKAGE: 100000,
   MAX_PACKAGE: 500000,
   DAILY_MAINTENANCE: 50000,
-  ADDON_MIN: 50000,
+  ADDON_MIN: 35000,
   ADDON_MAX: 75000,
 };
 

@@ -26,7 +26,10 @@ export default function PackageShowcase({ onSelectPackage }) {
     if (trackRef.current) {
       const card = trackRef.current.children[index];
       if (card) {
-        card.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+        const trackRect = trackRef.current.getBoundingClientRect();
+        const cardRect = card.getBoundingClientRect();
+        const scrollOffset = cardRect.left - trackRect.left + trackRef.current.scrollLeft - 16;
+        trackRef.current.scrollTo({ left: scrollOffset, behavior: 'smooth' });
         setActiveSlide(index);
       }
     }
@@ -44,11 +47,20 @@ export default function PackageShowcase({ onSelectPackage }) {
 
   const handleScroll = () => {
     if (trackRef.current && window.innerWidth < 1024) {
-      const scrollLeft = trackRef.current.scrollLeft;
-      const cardWidth = trackRef.current.children[0]?.offsetWidth || 300;
-      const newIndex = Math.round(scrollLeft / (cardWidth + 16));
-      if (newIndex >= 0 && newIndex < PACKAGES.length && newIndex !== activeSlide) {
-        setActiveSlide(newIndex);
+      const track = trackRef.current;
+      const scrollLeft = track.scrollLeft;
+      const gap = 16;
+      let closest = 0;
+      let minDist = Infinity;
+      Array.from(track.children).forEach((child, i) => {
+        const dist = Math.abs(child.offsetLeft - scrollLeft - 16);
+        if (dist < minDist) {
+          minDist = dist;
+          closest = i;
+        }
+      });
+      if (closest !== activeSlide) {
+        setActiveSlide(closest);
       }
     }
   };
@@ -593,7 +605,8 @@ export default function PackageShowcase({ onSelectPackage }) {
             gap: 16px;
             overflow-x: auto;
             scroll-snap-type: x mandatory;
-            padding: 8px 4px 18px 4px;
+            scroll-padding-left: 16px;
+            padding: 8px 16px 18px 16px;
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
           }
@@ -603,8 +616,8 @@ export default function PackageShowcase({ onSelectPackage }) {
           }
 
           .package-card-item {
-            flex: 0 0 86%;
-            max-width: 360px;
+            flex: 0 0 calc(100vw - 64px);
+            max-width: 420px;
             scroll-snap-align: start;
             align-self: flex-start !important;
             height: fit-content !important;

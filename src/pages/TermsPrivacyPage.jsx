@@ -130,7 +130,7 @@ export default function TermsPrivacyPage() {
                 7. Penyerahan Hak Master Berkas Akhir
               </h2>
               <p>
-                Setelah pelunasan 100% diterima, Aksara Tech menyerahkan master berkas digital berupa arsip Source Code (.zip), Skema Database (.sql), serta Dokumen Rekayasa Sistem berstandar IEEE (SRS &amp; SDD) dan Diagram UML Lengkap sesuai spesifikasi paket yang disepakati. Seluruh hak penggunaan kode program diserahkan sepenuhnya kepada pihak Klien.
+                Setelah pelunasan 100% diterima, Aksara Tech menyerahkan master berkas digital berupa arsip Source Code (.zip), Skema Database (.sql), serta Dokumen Rekayasa Sistem standar rekayasa formal (SRS &amp; SDD) dan Diagram UML Lengkap sesuai spesifikasi paket yang disepakati. Seluruh hak penggunaan kode program diserahkan sepenuhnya kepada pihak Klien.
               </p>
             </div>
 

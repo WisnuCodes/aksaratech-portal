@@ -87,7 +87,7 @@ export default function Footer() {
             </div>
 
             <p style={{ fontSize: '0.88rem', color: '#475569', lineHeight: '1.6', marginBottom: '20px', overflowWrap: 'break-word', wordBreak: 'break-word' }}>
-              Penyedia layanan rekayasa perangkat lunak mandiri, perancangan basis data relasional MySQL, dan penyusunan dokumen rekayasa perangkat lunak berstandar IEEE (SRS &amp; SDD) dan diagram UML.
+              Penyedia layanan rekayasa perangkat lunak mandiri, perancangan basis data relasional MySQL, dan penyusunan dokumen rekayasa perangkat lunak standar rekayasa formal (SRS &amp; SDD) dan diagram UML.
             </p>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.88rem', color: '#0F172A', fontWeight: '700' }}>
@@ -102,11 +102,12 @@ export default function Footer() {
               Layanan &amp; Paket
             </h4>
             <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '0.9rem', color: '#475569', fontWeight: '600' }}>
-              <li><Link to="/paket" style={{ transition: 'all 0.15s ease' }}>5 Paket Utama (Rp 120rb – Rp 650rb)</Link></li>
+              <li><Link to="/paket" style={{ transition: 'all 0.15s ease' }}>6 Paket Utama (Rp 100rb – Rp 500rb)</Link></li>
               <li><Link to="/eksklusi-server" style={{ transition: 'all 0.15s ease', color: '#D97706', fontWeight: '800' }}>Kebijakan Eksklusi Server</Link></li>
               <li><Link to="/alur-sop" style={{ transition: 'all 0.15s ease' }}>SOP 4 Tahap &amp; Kuota Revisi 3x</Link></li>
               <li><Link to="/pesan" style={{ transition: 'all 0.15s ease' }}>Formulir Brief Proyek</Link></li>
               <li><Link to="/faq" style={{ transition: 'all 0.15s ease' }}>Pusat Tanya Jawab (FAQ)</Link></li>
+              <li><Link to="/error" style={{ transition: 'all 0.15s ease', color: '#64748B' }}>Konsol Diagnostik HTTP (4xx &amp; 5xx)</Link></li>
             </ul>
           </div>
 

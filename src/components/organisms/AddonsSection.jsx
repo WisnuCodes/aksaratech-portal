@@ -28,9 +28,9 @@ export default function AddonsSection() {
           </p>
         </div>
 
-        <div style={{
+        <div className="addons-grid-container" style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
           gap: '20px',
           alignItems: 'start'
         }}>

@@ -1,10 +1,46 @@
 import React, { useState, useEffect } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { 
-  Shield, MessageCircle, FileText, Menu, X, ArrowRight, 
-  ChevronRight, Package, Clock, HelpCircle, PhoneCall 
-} from 'lucide-react';
+  Box, 
+  Collapse, 
+  List, 
+  ListItem, 
+  ListItemButton, 
+  ListItemIcon, 
+  ListItemText, 
+  IconButton, 
+  Button as MuiButton,
+  Badge as MuiBadge,
+  Typography
+} from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Inventory2RoundedIcon from '@mui/icons-material/Inventory2Rounded';
+import ShieldRoundedIcon from '@mui/icons-material/ShieldRounded';
+import AccessTimeRoundedIcon from '@mui/icons-material/AccessTimeRounded';
+import HelpOutlineRoundedIcon from '@mui/icons-material/HelpOutlineRounded';
+import DescriptionRoundedIcon from '@mui/icons-material/DescriptionRounded';
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
+import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
+import PhoneInTalkRoundedIcon from '@mui/icons-material/PhoneInTalkRounded';
+
 import { BUSINESS_INFO } from '../../data/catalogData';
+
+// Brand Typography Theme for Material UI Components
+const muiBrandTheme = createTheme({
+  typography: {
+    fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif",
+    allVariants: {
+      fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif",
+    },
+    button: {
+      fontFamily: "'Space Grotesk', 'Plus Jakarta Sans', sans-serif",
+      fontWeight: 800,
+    },
+  },
+});
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -45,41 +81,43 @@ export default function Navbar() {
     return () => { document.body.style.overflow = ''; };
   }, [mobileMenuOpen]);
 
+  // Material UI Navigation Items - Unified Brand Palette
   const mobileNavItems = [
     { 
       to: '/paket', 
       label: 'Katalog Paket & Harga', 
-      desc: '5 paket standar mulai Rp 150rb – Rp 650rb',
-      icon: <Package size={18} /> 
+      desc: '6 paket resmi mulai Rp 100.000 – Rp 500.000',
+      icon: <Inventory2RoundedIcon sx={{ fontSize: 21 }} />
     },
     { 
       to: '/eksklusi-server', 
       label: 'Batasan Eksklusi Server', 
-      desc: 'Software engineering murni & kepemilikan kode',
-      icon: <Shield size={18} style={{ color: '#D97706' }} /> 
+      desc: 'Software engineering murni & kepemilikan kode 100%',
+      icon: <ShieldRoundedIcon sx={{ fontSize: 21 }} />
     },
     { 
       to: '/alur-sop', 
       label: 'Alur Kerja SOP (4 Tahap)', 
       desc: 'Pengerjaan terstruktur & kuota 3x revisi mutlak',
-      icon: <Clock size={18} style={{ color: '#059669' }} /> 
+      icon: <AccessTimeRoundedIcon sx={{ fontSize: 21 }} />
     },
     { 
       to: '/faq', 
       label: 'FAQ & Tanya Jawab', 
-      desc: 'Jawaban teknis, DP 50%, & serah terima',
-      icon: <HelpCircle size={18} /> 
+      desc: 'Jawaban teknis, DP 50%, & garansi bug 1 minggu',
+      icon: <HelpOutlineRoundedIcon sx={{ fontSize: 21 }} />
     },
     { 
       to: '/ketentuan', 
       label: 'Ketentuan Layanan & Privasi', 
-      desc: 'Perjanjian legal & proteksi kerahasiaan brief',
-      icon: <FileText size={18} /> 
+      desc: 'Perjanjian legal formal & proteksi kerahasiaan brief',
+      icon: <DescriptionRoundedIcon sx={{ fontSize: 21 }} />
     },
   ];
 
   return (
-    <header className={`nav-container ${isScrolled ? 'is-scrolled' : ''}`}>
+    <ThemeProvider theme={muiBrandTheme}>
+      <header className={`nav-container ${isScrolled ? 'is-scrolled' : ''}`}>
       <div className="nav-bar-inner">
         
         {/* Brand Logo */}
@@ -116,7 +154,7 @@ export default function Navbar() {
             to="/eksklusi-server" 
             className={({ isActive }) => `desktop-nav-link ${isActive ? 'is-active' : ''}`}
           >
-            <Shield size={14} className="nav-link-icon shield-icon" />
+            <ShieldRoundedIcon sx={{ fontSize: 16, color: 'var(--prussian-blue)', mr: 0.5 }} />
             <span>Eksklusi Server</span>
           </NavLink>
           <NavLink 
@@ -135,7 +173,7 @@ export default function Navbar() {
             to="/ketentuan" 
             className={({ isActive }) => `desktop-nav-link ${isActive ? 'is-active' : ''}`}
           >
-            <FileText size={14} className="nav-link-icon doc-icon" />
+            <DescriptionRoundedIcon sx={{ fontSize: 16, color: 'var(--prussian-blue)', mr: 0.5 }} />
             <span>Ketentuan &amp; Privasi</span>
           </NavLink>
         </nav>
@@ -150,7 +188,7 @@ export default function Navbar() {
             className="btn btn-wa btn-sm wa-btn-desktop"
             title="Hubungi WhatsApp Korporat Resmi"
           >
-            <MessageCircle size={16} />
+            <WhatsAppIcon sx={{ fontSize: 18 }} />
             <span className="wa-btn-text">WA Korporat</span>
             <span className="wa-pulse-dot" />
           </a>
@@ -158,101 +196,376 @@ export default function Navbar() {
           {/* Desktop Order Button */}
           <Link to="/pesan" className="btn btn-primary btn-sm" id="order-btn-desktop">
             <span>Pesan Proyek</span>
-            <ArrowRight size={15} />
+            <ArrowForwardRoundedIcon sx={{ fontSize: 17 }} />
           </Link>
 
-          {/* Mobile WA Quick Button */}
-          <a
+          {/* Mobile WA Quick Button via Material UI IconButton */}
+          <IconButton
+            component="a"
             href={`https://wa.me/${BUSINESS_INFO.waNumber}?text=Halo%20Aksara%20Tech,%20saya%20ingin%20berkonsultasi%20mengenai%20layanan%20rekayasa%20website.`}
             target="_blank"
             rel="noopener noreferrer"
-            className="mobile-header-btn mobile-wa-btn"
             aria-label="Konsultasi WhatsApp"
             title="Chat WhatsApp"
+            className="mobile-header-mui-btn"
+            sx={{
+              display: { xs: 'flex', lg: 'none' },
+              width: 38,
+              height: 38,
+              borderRadius: '10px',
+              border: '1.5px solid #0F172A',
+              bgcolor: '#FFFFFF',
+              boxShadow: '2px 2px 0px #0F172A',
+              color: '#059669',
+              transition: 'all 0.15s cubic-bezier(0.2, 0, 0, 1)',
+              '&:hover': {
+                bgcolor: '#ECFDF5',
+                transform: 'translate(-1px, -1px)',
+                boxShadow: '3px 3px 0px #0F172A'
+              },
+              '&:active': {
+                transform: 'translate(1.5px, 1.5px)',
+                boxShadow: '0.5px 0.5px 0px #0F172A'
+              }
+            }}
           >
-            <MessageCircle size={18} strokeWidth={2.2} style={{ color: '#059669' }} />
-            <span className="mobile-wa-indicator" />
-          </a>
+            <MuiBadge
+              variant="dot"
+              sx={{
+                '& .MuiBadge-badge': {
+                  bgcolor: '#10B981',
+                  boxShadow: '0 0 4px #10B981',
+                  width: 7,
+                  height: 7,
+                  borderRadius: '50%',
+                  top: 2,
+                  right: 2
+                }
+              }}
+            >
+              <WhatsAppIcon sx={{ fontSize: 20 }} />
+            </MuiBadge>
+          </IconButton>
 
-          {/* Mobile Menu Toggle Button */}
-          <button 
-            type="button"
+          {/* Mobile Menu Toggle Button via Material UI IconButton */}
+          <IconButton
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className={`mobile-header-btn mobile-toggle-btn ${mobileMenuOpen ? 'active' : ''}`}
             aria-label={mobileMenuOpen ? 'Tutup Navigasi' : 'Buka Navigasi'}
+            className="mobile-header-mui-btn"
+            sx={{
+              display: { xs: 'flex', lg: 'none' },
+              width: 38,
+              height: 38,
+              borderRadius: '10px',
+              border: '1.5px solid #0F172A',
+              bgcolor: mobileMenuOpen ? '#0F172A' : '#FFFFFF',
+              color: mobileMenuOpen ? '#FFFFFF' : '#0F172A',
+              boxShadow: '2px 2px 0px #0F172A',
+              transition: 'all 0.15s cubic-bezier(0.2, 0, 0, 1)',
+              '&:hover': {
+                bgcolor: mobileMenuOpen ? '#1E293B' : '#F1F5F9',
+                transform: 'translate(-1px, -1px)',
+                boxShadow: '3px 3px 0px #0F172A'
+              },
+              '&:active': {
+                transform: 'translate(1.5px, 1.5px)',
+                boxShadow: '0.5px 0.5px 0px #0F172A'
+              }
+            }}
           >
-            {mobileMenuOpen ? <X size={19} strokeWidth={2.5} /> : <Menu size={19} strokeWidth={2.5} />}
-          </button>
+            {mobileMenuOpen ? (
+              <CloseRoundedIcon sx={{ fontSize: 22 }} />
+            ) : (
+              <MenuRoundedIcon sx={{ fontSize: 22 }} />
+            )}
+          </IconButton>
         </div>
 
       </div>
 
-      {/* Mobile Drawer Dropdown */}
-      <div className={`mobile-menu-drawer ${mobileMenuOpen ? 'open' : ''}`}>
-        <div className="mobile-menu-content">
-          
-          <div className="mobile-drawer-header">
-            <span className="mobile-drawer-label">MENU NAVIGASI</span>
-            <span className="mobile-drawer-sub">Aksara Tech Platform</span>
-          </div>
+      {/* Material UI Mobile Menu Drawer Dropdown — Floating Overlay (Never Pushes Page Content) */}
+      <Box
+        sx={{
+          position: 'absolute',
+          top: '100%',
+          left: 0,
+          right: 0,
+          zIndex: 1000,
+          pointerEvents: mobileMenuOpen ? 'auto' : 'none'
+        }}
+      >
+        <Collapse in={mobileMenuOpen} timeout={250}>
+          <Box 
+            sx={{
+              bgcolor: '#FFFFFF',
+              borderBottom: '2.5px solid #0F172A',
+              boxShadow: '0 16px 36px -4px rgba(15, 23, 42, 0.18)',
+              overflow: 'hidden', // No scrollbar
+              p: { xs: '10px 14px 14px', sm: '12px 18px 16px' },
+              position: 'relative'
+            }}
+          >
+            {/* Compact Drawer Header */}
+          <Box 
+            sx={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'space-between',
+              pb: 0.8,
+              mb: 0.8,
+              borderBottom: '1px solid #F1F5F9'
+            }}
+          >
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8 }}>
+              <Typography 
+                sx={{ 
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: '0.64rem',
+                  fontWeight: 900,
+                  color: '#64748B',
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase'
+                }}
+              >
+                MENU NAVIGASI
+              </Typography>
+              <Box 
+                sx={{ 
+                  fontSize: '0.6rem',
+                  fontWeight: 800,
+                  bgcolor: '#ECFDF5',
+                  color: '#059669',
+                  border: '1px solid #10B981',
+                  borderRadius: '3px',
+                  px: 0.6,
+                  py: 0.1
+                }}
+              >
+                Resmi
+              </Box>
+            </Box>
+            <Typography sx={{ fontSize: '0.66rem', color: '#94A3B8', fontWeight: 600 }}>
+              Aksara Tech Platform
+            </Typography>
+          </Box>
 
-          <div className="mobile-menu-list">
+          {/* Material UI List with Interactive Touch Ripple Buttons */}
+          <List disablePadding sx={{ display: 'flex', flexDirection: 'column', gap: 0.3 }}>
             {mobileNavItems.map((item) => {
               const isActive = location.pathname === item.to;
               return (
-                <Link
-                  key={item.to}
-                  to={item.to}
-                  className={`mobile-menu-row ${isActive ? 'is-active' : ''}`}
-                >
-                  <div className="mobile-row-icon">
-                    {item.icon}
-                  </div>
-                  <div className="mobile-row-text">
-                    <div className="mobile-row-title">{item.label}</div>
-                    <div className="mobile-row-desc">{item.desc}</div>
-                  </div>
-                  <ChevronRight size={16} className="mobile-row-chevron" />
-                </Link>
+                <ListItem key={item.to} disablePadding>
+                  <ListItemButton
+                    component={Link}
+                    to={item.to}
+                    selected={isActive}
+                    sx={{
+                      borderRadius: '10px',
+                      py: 0.7,
+                      px: 1.2,
+                      gap: 1.2,
+                      border: '1.5px solid',
+                      borderColor: isActive ? 'var(--prussian-blue)' : 'transparent',
+                      bgcolor: isActive ? '#EEF4FF' : 'transparent',
+                      boxShadow: isActive ? '2px 2px 0px var(--prussian-blue)' : 'none',
+                      transition: 'all 0.15s cubic-bezier(0.2, 0, 0, 1)',
+                      '&.Mui-selected': {
+                        bgcolor: '#EEF4FF',
+                        '&:hover': {
+                          bgcolor: '#E0EAFF',
+                        }
+                      },
+                      '&:hover': {
+                        bgcolor: '#F8FAFC',
+                        transform: 'translateX(2px)',
+                        borderColor: isActive ? 'var(--prussian-blue)' : '#E2E8F0'
+                      },
+                      '&:active': {
+                        transform: 'scale(0.99)'
+                      }
+                    }}
+                  >
+                    {/* Unified Brand Color Material Icon Container */}
+                    <ListItemIcon sx={{ minWidth: 'auto' }}>
+                      <Box 
+                        sx={{
+                          width: 34,
+                          height: 34,
+                          borderRadius: '8px',
+                          bgcolor: isActive ? 'var(--prussian-blue)' : '#EEF4FF',
+                          color: isActive ? '#FFFFFF' : 'var(--prussian-blue)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          border: '1.5px solid',
+                          borderColor: isActive ? '#0F172A' : 'rgba(29, 99, 255, 0.25)',
+                          boxShadow: isActive ? '1.5px 1.5px 0px #0F172A' : 'none',
+                          transition: 'all 0.15s cubic-bezier(0.2, 0, 0, 1)',
+                          '.MuiListItemButton-root:hover &': {
+                            transform: 'scale(1.05)',
+                            bgcolor: 'var(--prussian-blue)',
+                            color: '#FFFFFF',
+                            borderColor: '#0F172A',
+                            boxShadow: '1.5px 1.5px 0px #0F172A'
+                          }
+                        }}
+                      >
+                        {item.icon}
+                      </Box>
+                    </ListItemIcon>
+
+                    <ListItemText
+                      primary={item.label}
+                      secondary={item.desc}
+                      primaryTypographyProps={{
+                        fontFamily: "'Space Grotesk', 'Plus Jakarta Sans', sans-serif",
+                        fontWeight: isActive ? 800 : 700,
+                        fontSize: '0.84rem',
+                        color: isActive ? 'var(--prussian-blue)' : '#0F172A',
+                        lineHeight: 1.25,
+                        letterSpacing: '-0.015em'
+                      }}
+                      secondaryTypographyProps={{
+                        fontFamily: "'Plus Jakarta Sans', sans-serif",
+                        fontSize: '0.68rem',
+                        color: isActive ? '#334155' : '#64748B',
+                        lineHeight: 1.2,
+                        mt: 0.1,
+                        noWrap: true
+                      }}
+                    />
+
+                    <ChevronRightRoundedIcon 
+                      sx={{ 
+                        color: isActive ? 'var(--prussian-blue)' : '#CBD5E1', 
+                        fontSize: 17,
+                        flexShrink: 0,
+                        transition: 'transform 0.15s ease, color 0.15s ease',
+                        '.MuiListItemButton-root:hover &': {
+                          transform: 'translateX(2px)',
+                          color: 'var(--prussian-blue)'
+                        }
+                      }} 
+                    />
+                  </ListItemButton>
+                </ListItem>
               );
             })}
-          </div>
+          </List>
 
-          <div className="mobile-drawer-action">
-            <Link 
-              to="/pesan" 
-              className="btn btn-primary mobile-order-cta"
+          {/* Primary Action Button via Material UI Button */}
+          <Box sx={{ mt: 1.2, mb: 0.8 }}>
+            <MuiButton
+              component={Link}
+              to="/pesan"
+              variant="contained"
+              fullWidth
+              endIcon={<ArrowForwardRoundedIcon sx={{ fontSize: 16 }} />}
+              sx={{
+                bgcolor: 'var(--prussian-blue)',
+                color: '#FFFFFF',
+                fontFamily: 'var(--font-heading)',
+                fontWeight: 800,
+                fontSize: '0.86rem',
+                textTransform: 'none',
+                py: 1.1,
+                px: 2,
+                borderRadius: '8px',
+                border: '1.5px solid #0F172A',
+                boxShadow: '2.5px 2.5px 0px #0F172A',
+                transition: 'all 0.15s cubic-bezier(0.2, 0, 0, 1)',
+                '&:hover': {
+                  bgcolor: 'var(--prussian-blue-dark)',
+                  transform: 'translate(-1px, -1px)',
+                  boxShadow: '3px 3px 0px #0F172A'
+                },
+                '&:active': {
+                  transform: 'translate(1px, 1px)',
+                  boxShadow: '1px 1px 0px #0F172A'
+                }
+              }}
             >
-              <span>Isi Brief &amp; Formulir Proyek</span>
-              <ArrowRight size={16} />
-            </Link>
-          </div>
+              Isi Brief &amp; Formulir Proyek
+            </MuiButton>
+          </Box>
 
-          <a
+          {/* WhatsApp Hotline Surface Card via Material UI Button (Compact 1-Row Pill) */}
+          <MuiButton
+            component="a"
             href={`https://wa.me/${BUSINESS_INFO.waNumber}?text=Halo%20Aksara%20Tech,%20saya%20ingin%20berkonsultasi%20mengenai%20layanan%20rekayasa%20website.`}
             target="_blank"
             rel="noopener noreferrer"
-            className="mobile-wa-hotline-card"
+            fullWidth
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: 1.2,
+              bgcolor: '#F0FDF4',
+              color: '#0F172A',
+              border: '1.5px solid #0F172A',
+              borderRadius: '8px',
+              py: 0.8,
+              px: 1.5,
+              boxShadow: '2px 2px 0px #0F172A',
+              textTransform: 'none',
+              textAlign: 'left',
+              transition: 'all 0.15s cubic-bezier(0.2, 0, 0, 1)',
+              '&:hover': {
+                bgcolor: '#DCFCE7',
+                transform: 'translate(-1px, -1px)',
+                boxShadow: '2.5px 2.5px 0px #0F172A'
+              },
+              '&:active': {
+                transform: 'translate(1px, 1px)',
+                boxShadow: '1px 1px 0px #0F172A'
+              }
+            }}
           >
-            <div className="hotline-icon-wrap">
-              <PhoneCall size={16} style={{ color: '#059669' }} />
-            </div>
-            <div className="hotline-body">
-              <div className="hotline-title">
-                <span className="hotline-pulse" />
-                <span>Konsultasi WhatsApp Aktif</span>
-              </div>
-              <div className="hotline-meta">
-                085600386692 &bull; Plafon Max Rp 650.000
-              </div>
-            </div>
-            <div className="hotline-arrow">
-              <ChevronRight size={16} />
-            </div>
-          </a>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.2, minWidth: 0, flex: 1 }}>
+              <Box 
+                sx={{
+                  width: 28,
+                  height: 28,
+                  borderRadius: '6px',
+                  bgcolor: '#FFFFFF',
+                  border: '1.2px solid #0F172A',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#059669',
+                  flexShrink: 0
+                }}
+              >
+                <PhoneInTalkRoundedIcon sx={{ fontSize: 16 }} />
+              </Box>
+              <Box sx={{ minWidth: 0, flex: 1 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.6 }}>
+                  <Box 
+                    sx={{
+                      width: 6,
+                      height: 6,
+                      borderRadius: '50%',
+                      bgcolor: '#10B981',
+                      boxShadow: '0 0 5px #10B981',
+                      flexShrink: 0
+                    }}
+                  />
+                  <Typography sx={{ fontFamily: "'Space Grotesk', 'Plus Jakarta Sans', sans-serif", fontSize: '0.76rem', fontWeight: 800, color: '#065F46', lineHeight: 1.2 }}>
+                    Konsultasi WhatsApp Aktif
+                  </Typography>
+                </Box>
+                <Typography sx={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: '0.68rem', color: '#047857', fontWeight: 600, lineHeight: 1.2, mt: 0.1 }}>
+                  {BUSINESS_INFO.phoneDisplay} &bull; Plafon Max Rp 500.000
+                </Typography>
+              </Box>
+            </Box>
+            <ChevronRightRoundedIcon sx={{ color: '#065F46', fontSize: 17, flexShrink: 0 }} />
+          </MuiButton>
 
-        </div>
-      </div>
+          </Box>
+        </Collapse>
+      </Box>
 
       {/* Backdrop */}
       {mobileMenuOpen && (
@@ -262,7 +575,7 @@ export default function Navbar() {
         />
       )}
 
-      {/* Embedded CSS with Strict Desktop vs Mobile Separation */}
+      {/* Embedded CSS for Desktop Base & Backdrop */}
       <style>{`
         /* =======================================================
            COMMON HEADER BASE
@@ -351,7 +664,7 @@ export default function Navbar() {
           margin-top: 3px;
         }
 
-        /* Desktop Nav Link Items - Clean, Professional Typography */
+        /* Desktop Nav Link Items */
         .desktop-nav {
           display: flex;
           align-items: center;
@@ -363,7 +676,7 @@ export default function Navbar() {
           position: relative;
           display: inline-flex;
           align-items: center;
-          gap: 6px;
+          gap: 4px;
           font-size: 0.88rem;
           font-weight: 600;
           color: #475569;
@@ -374,37 +687,17 @@ export default function Navbar() {
           transition: all 0.15s ease;
         }
 
-        .desktop-nav-link .nav-link-icon {
-          flex-shrink: 0;
-          transition: color 0.15s ease;
-        }
-
-        .desktop-nav-link .shield-icon {
-          color: #D97706;
-        }
-
-        .desktop-nav-link .doc-icon {
-          color: #64748B;
-        }
-
-        /* Refined, professional hover state - NOT AI-looking pill */
         .desktop-nav-link:hover {
           color: #0F172A;
           background: #F1F5F9;
         }
 
-        .desktop-nav-link:hover .nav-link-icon {
-          color: #0F172A;
-        }
-
-        /* Confident, grounded active state */
         .desktop-nav-link.is-active {
           color: #0F172A;
           font-weight: 800;
           background: #F8FAFC;
         }
 
-        /* Subtle crisp accent indicator line for active page */
         .desktop-nav-link.is-active::after {
           content: '';
           position: absolute;
@@ -500,13 +793,6 @@ export default function Navbar() {
             transform: translate(1px, 1px);
             box-shadow: 1px 1px 0px #0F172A !important;
           }
-
-          /* Hide Mobile-Only Elements on Desktop */
-          .mobile-header-btn,
-          .mobile-menu-drawer,
-          .mobile-backdrop {
-            display: none !important;
-          }
         }
 
         /* =======================================================
@@ -526,7 +812,6 @@ export default function Navbar() {
             height: 60px;
           }
 
-          /* Hide Desktop-Only Elements on Mobile */
           .desktop-nav,
           #order-btn-desktop,
           .wa-btn-desktop,
@@ -550,278 +835,39 @@ export default function Navbar() {
           .nav-actions {
             display: flex;
             align-items: center;
-            gap: 10px; /* Clean gap on mobile */
+            gap: 8px;
             flex-shrink: 0;
           }
-
-          .mobile-header-btn {
-            display: flex !important;
-            width: 38px;
-            height: 38px;
-            border-radius: 8px;
-            border: 1.5px solid #0F172A;
-            background: #FFFFFF;
-            box-shadow: 2px 2px 0px #0F172A;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.15s ease;
-            text-decoration: none;
-            flex-shrink: 0;
-          }
-
-          .mobile-wa-btn {
-            position: relative;
-          }
-
-          .mobile-wa-btn:hover {
-            background: #F0FDF4;
-            transform: translate(-1px, -1px);
-          }
-
-          .mobile-wa-indicator {
-            position: absolute;
-            top: 6px;
-            right: 6px;
-            width: 6px;
-            height: 6px;
-            background: #10B981;
-            border-radius: 50%;
-          }
-
-          .mobile-toggle-btn {
-            color: #0F172A;
-          }
-
-          .mobile-toggle-btn.active {
-            background: #0F172A;
-            color: #FFFFFF;
-            box-shadow: 1px 1px 0px rgba(15, 23, 42, 0.4);
-          }
         }
 
-        /* Mobile Menu Drawer Styles */
-        .mobile-menu-drawer {
-          position: absolute;
-          top: 100%;
-          left: 0;
-          right: 0;
-          background: #FFFFFF;
-          border-bottom: 2.5px solid #0F172A;
-          box-shadow: 0 16px 32px rgba(15, 23, 42, 0.12);
-          max-height: 0;
-          overflow: hidden;
-          opacity: 0;
-          transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
-          z-index: 101;
+        /* Force Material UI to strictly inherit website typography */
+        .MuiTypography-root,
+        .MuiListItemText-root,
+        .MuiListItemText-primary,
+        .MuiListItemText-secondary,
+        .MuiButton-root,
+        .MuiButtonBase-root {
+          font-family: var(--font-body) !important;
         }
 
-        .mobile-menu-drawer.open {
-          max-height: 90vh;
-          overflow-y: auto;
-          opacity: 1;
-        }
-
-        .mobile-menu-content {
-          padding: 14px 16px 20px;
-        }
-
-        .mobile-drawer-header {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding-bottom: 10px;
-          margin-bottom: 6px;
-          border-bottom: 1px solid #F1F5F9;
-        }
-
-        .mobile-drawer-label {
-          font-size: 0.68rem;
-          font-weight: 800;
-          color: #94A3B8;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-        }
-
-        .mobile-drawer-sub {
-          font-size: 0.68rem;
-          color: #64748B;
-          font-weight: 600;
-        }
-
-        .mobile-menu-list {
-          display: flex;
-          flex-direction: column;
-        }
-
-        .mobile-menu-row {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          padding: 12px 10px;
-          border-bottom: 1px solid #F1F5F9;
-          text-decoration: none;
-          color: #0F172A;
-          border-radius: 8px;
-          transition: background-color 0.15s ease;
-        }
-
-        .mobile-menu-row:hover {
-          background: #F8FAFC;
-        }
-
-        .mobile-menu-row.is-active {
-          background: rgba(29, 99, 255, 0.05);
-          border-left: 3px solid var(--prussian-blue);
-          padding-left: 10px;
-        }
-
-        .mobile-row-icon {
-          width: 36px;
-          height: 36px;
-          border-radius: 8px;
-          background: #F8FAFC;
-          border: 1px solid #E2E8F0;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: var(--prussian-blue);
-          flex-shrink: 0;
-        }
-
-        .mobile-menu-row.is-active .mobile-row-icon {
-          background: #EBF2FF;
-          border-color: rgba(29, 99, 255, 0.3);
-        }
-
-        .mobile-row-text {
-          flex: 1;
-          min-width: 0;
-        }
-
+        .MuiListItemText-primary,
+        .mobile-order-cta,
+        .MuiButton-contained,
+        .drawer-header-left,
         .mobile-row-title {
-          font-size: 0.9rem;
-          font-weight: 700;
-          color: #0F172A;
-          line-height: 1.3;
-        }
-
-        .mobile-menu-row.is-active .mobile-row-title {
-          color: var(--prussian-blue);
-        }
-
-        .mobile-row-desc {
-          font-size: 0.74rem;
-          color: #64748B;
-          line-height: 1.35;
-          margin-top: 1px;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-
-        .mobile-row-chevron {
-          color: #CBD5E1;
-          flex-shrink: 0;
-          transition: transform 0.15s ease;
-        }
-
-        .mobile-menu-row:hover .mobile-row-chevron,
-        .mobile-menu-row.is-active .mobile-row-chevron {
-          color: var(--prussian-blue);
-          transform: translateX(2px);
-        }
-
-        .mobile-drawer-action {
-          margin-top: 14px;
-          margin-bottom: 12px;
-        }
-
-        .mobile-order-cta {
-          width: 100%;
-          justify-content: center;
-          padding: 13px 18px !important;
-          font-size: 0.92rem !important;
-          font-weight: 800;
-          box-shadow: 3px 3px 0px #0F172A !important;
-        }
-
-        .mobile-wa-hotline-card {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          background: #F0FDF4;
-          border: 1.5px solid #0F172A;
-          border-radius: 8px;
-          padding: 10px 14px;
-          box-shadow: 2px 2px 0px #0F172A;
-          text-decoration: none;
-          color: #0F172A;
-          transition: all 0.15s ease;
-        }
-
-        .mobile-wa-hotline-card:hover {
-          background: #DCFCE7;
-          transform: translate(-1px, -1px);
-          box-shadow: 3px 3px 0px #0F172A;
-        }
-
-        .hotline-icon-wrap {
-          width: 32px;
-          height: 32px;
-          border-radius: 6px;
-          background: #FFFFFF;
-          border: 1.2px solid #0F172A;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-shrink: 0;
-        }
-
-        .hotline-body {
-          flex: 1;
-          min-width: 0;
-        }
-
-        .hotline-title {
-          font-size: 0.8rem;
-          font-weight: 800;
-          color: #065F46;
-          display: flex;
-          align-items: center;
-          gap: 6px;
-        }
-
-        .hotline-pulse {
-          width: 6px;
-          height: 6px;
-          border-radius: 50%;
-          background: #10B981;
-          display: inline-block;
-          box-shadow: 0 0 6px #10B981;
-        }
-
-        .hotline-meta {
-          font-size: 0.72rem;
-          color: #047857;
-          font-weight: 600;
-          margin-top: 1px;
-        }
-
-        .hotline-arrow {
-          color: #065F46;
-          flex-shrink: 0;
+          font-family: var(--font-heading) !important;
         }
 
         .mobile-backdrop {
           position: fixed;
           inset: 0;
-          top: 64px;
+          top: 60px;
           background: rgba(15, 23, 42, 0.4);
           z-index: 90;
-          backdrop-filter: blur(2px);
+          backdrop-filter: blur(3px);
         }
       `}</style>
     </header>
-  );
+  </ThemeProvider>
+);
 }
