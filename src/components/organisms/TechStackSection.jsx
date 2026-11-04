@@ -11,28 +11,24 @@ export default function TechStackSection() {
       title: "Backend Frameworks & Runtime",
       shortTitle: "Backend",
       icon: Server,
-      color: 'var(--prussian-blue)',
       items: TECH_STACKS.backend
     },
     {
       title: "Frontend Engineering & UI",
       shortTitle: "Frontend",
       icon: Code2,
-      color: '#D97706',
       items: TECH_STACKS.frontend
     },
     {
       title: "Relational Database & Caching",
       shortTitle: "Database",
       icon: Database,
-      color: '#059669',
       items: TECH_STACKS.database
     },
     {
       title: "Dokumen Rekayasa & Modeling",
       shortTitle: "Dokumen & UML",
       icon: FileText,
-      color: 'var(--prussian-blue)',
       items: TECH_STACKS.modeling
     }
   ];
@@ -78,7 +74,7 @@ export default function TechStackSection() {
                 className={`neo-card tech-category-card ${isMobileActive ? 'mobile-active' : ''}`}
               >
                 <div className="tech-card-header">
-                  <div className="tech-icon-box" style={{ color: cat.color }}>
+                  <div className="tech-icon-box">
                     <Icon size={22} />
                   </div>
                   <h3 className="tech-card-title">
@@ -143,7 +139,8 @@ export default function TechStackSection() {
           align-items: center;
           justify-content: center;
           flex-shrink: 0;
-        }
+        
+          color: #0F172A;}
 
         .tech-card-title {
           font-size: 1.12rem;

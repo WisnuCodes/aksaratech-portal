@@ -246,8 +246,6 @@ export default function PackageShowcase({ onSelectPackage }) {
                     variant={pkg.number === 5 ? 'amber' : 'primary'}
                     style={{ width: '100%', justifyContent: 'center' }}
                     onClick={() => handleSelect(pkg.id)}
-                    icon={ArrowRight}
-                    iconPosition="right"
                   >
                     Pilih Paket Ini
                   </Button>
@@ -276,7 +274,7 @@ export default function PackageShowcase({ onSelectPackage }) {
           </div>
 
           <div className="swipe-guidance">
-            <Sparkles size={13} style={{ color: '#D97706' }} />
+            <ChevronRight size={13} style={{ color: '#64748B' }} />
             <span>Geser kartu ke samping untuk paket lainnya</span>
           </div>
         </div>

@@ -213,7 +213,7 @@ export default function FAQSection() {
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <Sparkles size={18} style={{ color: 'var(--prussian-blue)', flexShrink: 0 }} />
+            <HelpCircle size={18} style={{ color: '#0F172A', flexShrink: 0 }} />
             <span style={{ fontSize: '0.9rem', fontWeight: '700', color: '#0F172A' }}>
               Ingin membaca seluruh ketentuan layanan dan tanya jawab lengkap?
             </span>
@@ -226,7 +226,6 @@ export default function FAQSection() {
               style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', textDecoration: 'none' }}
             >
               <span>Buka Halaman FAQ Lengkap</span>
-              <ArrowRight size={14} />
             </Link>
             
             <a 

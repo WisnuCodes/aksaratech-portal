@@ -150,7 +150,6 @@ export default function TestimonialsSection() {
                         {item.role} &bull; <span className="testi-org">{item.organization}</span>
                       </div>
                       <div className="testi-package-tag">
-                        <Sparkles size={12} style={{ color: '#D97706' }} />
                         <span>Paket Digunakan: <strong>{item.packageUsed}</strong></span>
                       </div>
                     </div>
@@ -212,7 +211,7 @@ export default function TestimonialsSection() {
 
         {/* Mobile-Only Swipe Hint (Hidden on Desktop) */}
         <div className="testi-mobile-hint">
-          <Sparkles size={13} style={{ color: '#D97706' }} />
+          <ChevronRight size={13} style={{ color: '#64748B' }} />
           <span>Geser kartu ke kanan atau kiri untuk membaca ulasan lainnya</span>
         </div>
 

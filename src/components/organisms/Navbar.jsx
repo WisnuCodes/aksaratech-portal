@@ -196,8 +196,7 @@ export default function Navbar() {
           {/* Desktop Order Button */}
           <Link to="/pesan" className="btn btn-primary btn-sm" id="order-btn-desktop">
             <span>Pesan Proyek</span>
-            <ArrowForwardRoundedIcon sx={{ fontSize: 17 }} />
-          </Link>
+            </Link>
 
           {/* Mobile WA Quick Button via Material UI IconButton */}
           <IconButton
@@ -460,7 +459,6 @@ export default function Navbar() {
               to="/pesan"
               variant="contained"
               fullWidth
-              endIcon={<ArrowForwardRoundedIcon sx={{ fontSize: 16 }} />}
               sx={{
                 bgcolor: 'var(--prussian-blue)',
                 color: '#FFFFFF',

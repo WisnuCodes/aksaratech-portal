@@ -96,7 +96,6 @@ export default function ServerExclusionBanner() {
               }}
             >
               <span>Pelajari Batasan Eksklusi Lengkap</span>
-              <ArrowRight size={15} />
             </Link>
           </div>
         </div>

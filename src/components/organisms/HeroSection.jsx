@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { 
-  ArrowRight, 
+import {
   Clock, 
   Code2, 
   FileCode2, 
@@ -227,32 +226,24 @@ export default function HeroSection() {
     {
       id: 1,
       icon: FileCode2,
-      accent: 'var(--prussian-blue)',
-      iconBg: '#EEF4FF',
       title: 'Dokumen SRS & SDD Terstruktur',
       desc: 'Dilengkapi pemodelan UML lengkap & basis data terstruktur siap sidang akademik maupun operasional bisnis.'
     },
     {
       id: 2,
       icon: Clock,
-      accent: '#D97706',
-      iconBg: '#FFF9E6',
       title: 'Kuota Revisi 3x Mutlak',
       desc: 'Kepastian alur kerja transparan pasca tahap preview demi kedisiplinan dan ketepatan jadwal rilis proyek.'
     },
     {
       id: 3,
       icon: ShieldCheck,
-      accent: '#059669',
-      iconBg: '#ECFDF5',
       title: 'Kerahasiaan Data 100%',
       desc: 'Jaminan privasi identitas dan protokol pembersihan data berkala setelah serah terima proyek selesai.'
     },
     {
       id: 4,
       icon: Layers,
-      accent: 'var(--prussian-blue)',
-      iconBg: '#EEF4FF',
       title: 'Source Code Bersih & Modular',
       desc: 'Arsitektur kode mandiri dan database relasional tanpa ketergantungan sewa server pihak ketiga yang membebani.'
     }
@@ -278,10 +269,9 @@ export default function HeroSection() {
             <div className="hero-cta-group">
               <Link to="/pesan" className="btn btn-primary hero-btn hero-btn-main">
                 <span>Isi Brief Kebutuhan Proyek</span>
-                <ArrowRight size={18} />
-              </Link>
+                </Link>
               <Link to="/paket" className="btn btn-secondary hero-btn hero-btn-sub">
-                <Code2 size={18} style={{ color: 'var(--prussian-blue)' }} />
+                <Code2 size={18} style={{ color: '#0F172A' }} />
                 <span>Katalog 6 Paket &amp; Tarif Resmi</span>
               </Link>
             </div>
@@ -333,10 +323,7 @@ export default function HeroSection() {
                 <div key={item.id} className="neo-card hero-pillar-card">
                   <div 
                     className="pillar-icon-box"
-                    style={{
-                      background: item.iconBg,
-                      color: item.accent
-                    }}
+                    
                   >
                     <Icon size={20} />
                   </div>
@@ -808,14 +795,16 @@ export default function HeroSection() {
         }
 
         .pillar-icon-box {
-          border: 1px solid rgba(0, 0, 0, 0.06);
+          border: 1px solid var(--border-subtle);
           padding: 10px;
           border-radius: 10px;
           flex-shrink: 0;
           display: flex;
           align-items: center;
           justify-content: center;
-        }
+        
+          background: #F1F5F9;
+          color: #0F172A;}
 
         .pillar-content { flex: 1; min-width: 0; }
 

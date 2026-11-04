@@ -63,7 +63,6 @@ export default function HomePage({ onSelectPackage }) {
             <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '16px' }}>
               <Link to="/pesan" className="btn btn-primary" style={{ padding: '14px 32px', fontSize: '1rem' }}>
                 <span>Isi Lembar Kebutuhan Proyek</span>
-                <ArrowRight size={18} />
               </Link>
               <a
                 href={`https://wa.me/${BUSINESS_INFO.waNumber}?text=Halo%20Aksara%20Tech,%20saya%20ingin%20berkonsultasi%20mengenai%20layanan%20rekayasa%20website.`}
@@ -76,7 +75,7 @@ export default function HomePage({ onSelectPackage }) {
                 <span>Konsultasi WhatsApp Langsung</span>
               </a>
               <Link to="/paket" className="btn btn-secondary" style={{ padding: '14px 28px', fontSize: '1rem' }}>
-                <FileText size={18} style={{ color: 'var(--prussian-blue)' }} />
+                <FileText size={18} style={{ color: '#0F172A' }} />
                 <span>Bandingkan 6 Klasifikasi Paket</span>
               </Link>
             </div>

@@ -101,7 +101,7 @@ export default function FAQPage() {
       }}>
         <div className="container" style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'nowrap', minWidth: 'max-content' }}>
           <span style={{ fontSize: '0.75rem', fontWeight: '900', color: 'var(--prussian-blue)', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'flex', alignItems: 'center', gap: '6px', marginRight: '6px' }}>
-            <Sparkles size={14} /> Standar Layanan:
+            <ShieldCheck size={14} /> Standar Layanan:
           </span>
           <span className="faq-quick-pill">
             <ShieldCheck size={13} style={{ color: '#10B981' }} />

@@ -9,8 +9,6 @@ export default function WhyChooseUsSection() {
     {
       id: 1,
       icon: Code,
-      accent: 'var(--prussian-blue)',
-      iconBg: '#EEF4FF',
       tag: 'Kualitas Kode',
       title: 'Arsitektur Kode Bersih & Modular',
       shortDesc: 'Penulisan source code rapi (MVC, PHP Native, Laravel, TypeScript/React) mudah dirawat.',
@@ -26,8 +24,6 @@ export default function WhyChooseUsSection() {
     {
       id: 2,
       icon: FileText,
-      accent: '#D97706',
-      iconBg: '#FFF9E6',
       tag: 'Standar Akademik & Audit',
       title: 'Dokumentasi Rekayasa (SRS & SDD) & UML',
       shortDesc: 'Dokumen spesifikasi formal terstruktur lengkap dengan Class Diagram, ERD, Use Case, Sequence.',
@@ -43,8 +39,6 @@ export default function WhyChooseUsSection() {
     {
       id: 3,
       icon: Zap,
-      accent: '#D97706',
-      iconBg: '#FFF9E6',
       tag: 'Kepastian Finansial',
       title: 'Plafon Transparan Maks Rp 650.000',
       shortDesc: 'Tidak ada biaya siluman di tengah jalan. Batasan tarif resmi tertera jelas di katalog.',
@@ -60,8 +54,6 @@ export default function WhyChooseUsSection() {
     {
       id: 4,
       icon: Clock,
-      accent: '#059669',
-      iconBg: '#ECFDF5',
       tag: 'Disiplin Rilis',
       title: 'Kuota Revisi Maksimal 3x Mutlak',
       shortDesc: 'Kepastian alur kerja tanpa perselisihan revisi minor vs mayor, terpadu pasca preview.',
@@ -77,8 +69,6 @@ export default function WhyChooseUsSection() {
     {
       id: 5,
       icon: ServerOff,
-      accent: '#E11D48',
-      iconBg: '#FFF1F2',
       tag: 'Kemandirian Klien',
       title: 'Bebas Keterikatan Server / Hosting',
       shortDesc: 'Kami fokus murni pada software. Klien memegang kendali 100% atas server & hosting.',
@@ -94,8 +84,6 @@ export default function WhyChooseUsSection() {
     {
       id: 6,
       icon: Lock,
-      accent: 'var(--prussian-blue)',
-      iconBg: '#EEF4FF',
       tag: 'Keamanan Data',
       title: '100% Confidentiality & Data Cleansing',
       shortDesc: 'Jaminan kerahasiaan penuh dan pembersihan berkas berkala setelah proyek lunas.',
@@ -173,7 +161,7 @@ export default function WhyChooseUsSection() {
                     className={`why-nav-item ${isSelected ? 'active' : ''}`}
                   >
                     <div className="why-nav-item-left">
-                      <div className="why-item-icon" style={{ background: p.iconBg, color: p.accent }}>
+                      <div className="why-item-icon" >
                         <IconComponent size={18} />
                       </div>
                       <div className="why-item-text">
@@ -181,7 +169,7 @@ export default function WhyChooseUsSection() {
                         <div className="why-item-tag">{p.tag}</div>
                       </div>
                     </div>
-                    <ArrowRight size={16} className={`why-arrow ${isSelected ? 'active-arrow' : ''}`} />
+                    <ChevronRight size={16} className={`why-arrow ${isSelected ? 'active-arrow' : ''}`} />
                   </div>
                 );
               })}
@@ -222,7 +210,7 @@ export default function WhyChooseUsSection() {
 
             {/* Pillar Main Hero Content */}
             <div className="why-canvas-body">
-              <div className="why-canvas-icon-box" style={{ background: currentPillar.iconBg, color: currentPillar.accent }}>
+              <div className="why-canvas-icon-box" >
                 <ActiveIcon size={32} />
               </div>
 
@@ -281,7 +269,7 @@ export default function WhyChooseUsSection() {
               <div className="route-card-title">Katalog 6 Paket Layanan</div>
               <div className="route-card-sub" style={{ color: '#D97706' }}>Mulai Rp 100.000 – Rp 500.000</div>
             </div>
-            <ArrowRight size={20} style={{ color: 'var(--prussian-blue)' }} />
+            <ChevronRight size={18} style={{ color: '#94A3B8' }} />
           </Link>
 
           <Link to="/eksklusi-server" className="neo-card why-route-card">
@@ -289,7 +277,7 @@ export default function WhyChooseUsSection() {
               <div className="route-card-title">Kebijakan Eksklusi Server</div>
               <div className="route-card-sub" style={{ color: '#64748B' }}>Pelajari batasan resmi ruang lingkup</div>
             </div>
-            <ArrowRight size={20} style={{ color: '#D97706' }} />
+            <ChevronRight size={18} style={{ color: '#94A3B8' }} />
           </Link>
 
           <Link to="/alur-sop" className="neo-card why-route-card">
@@ -297,7 +285,7 @@ export default function WhyChooseUsSection() {
               <div className="route-card-title">Alur SOP &amp; Kuota Revisi 3x</div>
               <div className="route-card-sub" style={{ color: '#64748B' }}>4 Tahap standar operasional kerja</div>
             </div>
-            <ArrowRight size={20} style={{ color: '#059669' }} />
+            <ChevronRight size={18} style={{ color: '#94A3B8' }} />
           </Link>
         </div>
 
@@ -408,7 +396,10 @@ export default function WhyChooseUsSection() {
           align-items: center;
           justify-content: center;
           flex-shrink: 0;
-        }
+        
+          background: #F1F5F9;
+          color: #0F172A;
+          border: 1px solid var(--border-subtle);}
 
         .why-item-text {
           text-align: left;
@@ -522,7 +513,10 @@ export default function WhyChooseUsSection() {
           align-items: center;
           justify-content: center;
           margin-bottom: 20px;
-        }
+        
+          background: #F1F5F9;
+          color: #0F172A;
+          border: 1px solid var(--border-subtle);}
 
         .why-canvas-title {
           font-size: 1.65rem;

@@ -404,7 +404,7 @@ export default function OrderBriefForm({ preselectedPackageId, hideHeader = fals
                   />
 
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '8px', fontSize: '0.78rem', color: '#64748B', fontWeight: '700' }}>
-                    <Sparkles size={14} style={{ color: 'var(--prussian-blue)' }} />
+                    <Info size={14} style={{ color: '#0F172A' }} />
                     <span>Fitur kustom ini akan otomatis disertakan ke dalam brief pemesanan untuk dianalisis oleh tim teknis kami.</span>
                   </div>
                 </div>
@@ -581,7 +581,7 @@ export default function OrderBriefForm({ preselectedPackageId, hideHeader = fals
                     alignItems: 'center',
                     gap: '12px'
                   }}>
-                    <Sparkles size={22} style={{ color: '#059669', flexShrink: 0 }} />
+                    <CheckCircle2 size={20} style={{ color: '#059669', flexShrink: 0 }} />
                     <div style={{ fontSize: '0.88rem', color: '#0F172A', lineHeight: '1.5', fontWeight: '600' }}>
                       <strong>Tenang, Tidak Masalah!</strong> Anda tidak perlu menyiapkan tautan berkas saat ini. Tim pengembang Aksara Tech akan membantu menyiapkan placeholder teks profesional, struktur tata letak awal, dan visual standar siap pakai untuk website Anda.
                     </div>

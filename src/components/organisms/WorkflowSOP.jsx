@@ -12,32 +12,28 @@ export default function WorkflowSOP() {
       title: "Jelajahi Paket & Plafon Tarif",
       badge: "Transparansi Biaya",
       desc: "Calon Klien memilih 1 dari 5 paket utama (Rp 120rb – Rp 650rb) dengan estimasi pengerjaan disiplin 3–10 hari kerja tanpa risiko pembengkakan biaya tersembunyi.",
-      icon: Layers,
-      color: 'var(--prussian-blue)'
+      icon: Layers
     },
     {
       num: "2",
       title: "Pengisian Brief Kebutuhan Terstruktur",
       badge: "Formulir Cerdas Web",
       desc: "Mengisi spesifikasi teknis (database MySQL, modul CRUD, dokumen SRS/SDD formal, diagram UML, preferensi visual) melalui sistem formulir terstruktur website.",
-      icon: FileCheck,
-      color: '#D97706'
+      icon: FileCheck
     },
     {
       num: "3",
       title: "Analisis Teknis & Surat Penawaran Resmi",
       badge: "Nomor Dokumen Valid",
       desc: "Aksara Tech menerbitkan Surat Penawaran Harga resmi [OFFER-AT-2026-____] via WhatsApp 085600386692 memuat ruang lingkup, jadwal, dan syarat DP min 50%.",
-      icon: FileCode,
-      color: 'var(--prussian-blue)'
+      icon: FileCode
     },
     {
       num: "4",
       title: "Pengerjaan, Kuota 3x Revisi & Serah Terima",
       badge: "Disiplin & Terpercaya",
       desc: "Penulisan kode dimulai pasca DP. Tersedia fasilitas MAKSIMAL 3 KALI REVISI mutlak pasca Preview 1. Pelunasan 50% sebelum serah terima master (.zip, .sql, PDF) & Data Cleansing.",
-      icon: ShieldCheck,
-      color: '#059669'
+      icon: ShieldCheck
     }
   ];
 
@@ -83,7 +79,7 @@ export default function WorkflowSOP() {
               >
                 <div>
                   <div className="sop-card-top">
-                    <div className="sop-icon-wrap" style={{ color: step.color }}>
+                    <div className="sop-icon-wrap">
                       <Icon size={22} />
                     </div>
                   </div>
@@ -128,7 +124,6 @@ export default function WorkflowSOP() {
           <div className="callout-right">
             <Link to="/alur-sop" className="btn btn-primary" style={{ padding: '14px 24px', whiteSpace: 'nowrap' }}>
               <span>Lihat Detail Alur SOP</span>
-              <ArrowRight size={16} />
             </Link>
           </div>
         </div>
@@ -182,7 +177,8 @@ export default function WorkflowSOP() {
           display: flex;
           align-items: center;
           justify-content: center;
-        }
+        
+          color: #0F172A;}
 
         .sop-badge-wrap {
           margin-bottom: 12px;

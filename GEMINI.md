@@ -22,13 +22,34 @@ When designing, refactoring, or building any UI component or page, strictly foll
 - **Responsive Geometry:** Test and optimize for mobile (390px), tablet (768px), and desktop (1440px). Ensure touch targets are comfortable and mobile viewport heights use `100svh` / `100dvh` instead of jumping `100vh`.
 - **Transitions:** Name specific animated properties (`transition: transform 0.2s, opacity 0.2s`) rather than lazy `transition: all`.
 
-### C. Available Tooling
+## 2. Anti-Slop System Rules (Adopted from `miqdadbadjuber/anti-slop`)
+
+All UI development must adhere to the core rules of `miqdadbadjuber/anti-slop`:
+
+### A. Iconography (R-04 Anti-Pattern: Generic AI Icons & Pastel Squares)
+- **Monochrome & Ink-Toned:** Icons must be ink-toned (`#0F172A` or subtle ink `#334155`), not colored toys.
+- **No Pastel Rainbow Squares:** Strictly ban wrapping icons in pastel-colored containers (`#EEF4FF`, `#FFF9E6`, `#ECFDF5`, `#FFF1F2`). Use subtle neutral surface (`#F1F5F9`) or no background container at all.
+- **No Generic AI Glyphs:** Never use sparkle, star, magic wand, lightning, robot, or glowing orbs to represent features. Icons must be precise and functionally descriptive.
+
+### B. Button Design & Interaction (R-08 Anti-Pattern: Gratuitous Arrows)
+- **No Arrows on Every Button:** Do not append `→` or `↗` as a default decoration on CTAs. Arrows are strictly reserved for genuine forward progression (e.g. multi-step order wizards or paginations).
+- **Executive Button Hierarchy:**
+  - Primary CTA: Solid filled, clear typographic weight, high contrast.
+  - Secondary CTA: Clean subtle surface or neutral outline.
+  - WhatsApp CTA: Restrained official green accent (`#25D366`), functional phone/chat icon, no glowing or pulsing effects.
+
+### C. Palette Discipline & Restraint (R-29)
+- Cap active colors at 2–3 core tones (Ground `#F8FAFC`, Ink `#0F172A`, Surface `#FFFFFF`) + 1 accent (Brand Blue `#2563EB` or Brand Amber `#F59E0B`).
+- Avoid scattering 5+ random colors across feature blocks or stat badges.
+
+### D. Available Tooling
 - Run static lint scan against anti-slop rules:
   ```bash
   node .agents/skills/design-taste-frontend/scripts/lint.mjs src/
   ```
-- Deal new creative art directions and compositions:
+- Inspect responsive viewports and visual renders:
   ```bash
-  node .agents/skills/design-taste-frontend/scripts/draw.mjs --sector agency --brief "Aksara Tech digital solutions"
+  node .agents/skills/design-taste-frontend/scripts/inspect.mjs http://localhost:5173/ --out .taste-skill/inspect
   ```
+
 

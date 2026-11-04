@@ -9,7 +9,7 @@ import {
   ExternalLink,
   ChevronRight,
   Clock,
-  Sparkles,
+  CheckCircle2,
   Layers,
   FileCheck
 } from 'lucide-react';
@@ -280,9 +280,9 @@ export default function Footer() {
                   width: '28px',
                   height: '28px',
                   borderRadius: '6px',
-                  background: '#FFFBEB',
-                  border: '1.5px solid #0F172A',
-                  color: '#D97706',
+                  background: '#F1F5F9',
+                  border: '1px solid var(--border-subtle)',
+                  color: '#0F172A',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -301,11 +301,11 @@ export default function Footer() {
 
               <div style={{ borderTop: '1px dashed #E2E8F0', paddingTop: '10px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.78rem', color: '#059669', fontWeight: '800' }}>
-                  <Sparkles size={13} />
+                  <CheckCircle2 size={13} />
                   <span>Garansi Pemeliharaan Bug 7 Hari</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.78rem', color: 'var(--prussian-blue)', fontWeight: '800' }}>
-                  <Sparkles size={13} />
+                  <CheckCircle2 size={13} />
                   <span>Fasilitas Kuota Revisi Max 3 Kali</span>
                 </div>
               </div>

@@ -238,11 +238,11 @@ export default function PackagesPage({ onSelectPackage }) {
 
                   <div className="pkg-meta-icons">
                     <div className="pkg-meta-item">
-                      <Clock size={15} style={{ color: '#D97706' }} />
+                      <Clock size={15} style={{ color: '#0F172A' }} />
                       <span>{pkg.minDays}–{pkg.maxDays} Hari Kerja</span>
                     </div>
                     <div className="pkg-meta-item">
-                      <Layers size={15} style={{ color: 'var(--prussian-blue)' }} />
+                      <Layers size={15} style={{ color: '#0F172A' }} />
                       <span>{pkg.pages}</span>
                     </div>
                   </div>
@@ -254,7 +254,7 @@ export default function PackagesPage({ onSelectPackage }) {
                   <div className="pkg-del-list">
                     {pkg.deliverables.map((d, i) => (
                       <div key={i} className="pkg-del-item">
-                        <FileCode2 size={15} style={{ color: 'var(--prussian-blue)', marginTop: '2px', flexShrink: 0 }} />
+                        <FileCode2 size={15} style={{ color: '#0F172A', marginTop: '2px', flexShrink: 0 }} />
                         <span>{d}</span>
                       </div>
                     ))}
@@ -276,8 +276,7 @@ export default function PackagesPage({ onSelectPackage }) {
                     variant={pkg.number === 5 ? 'amber' : 'primary'}
                     style={{ width: '100%', justifyContent: 'center' }}
                     onClick={() => handleChoosePackage(pkg.id)}
-                    icon={ArrowRight}
-                    iconPosition="right"
+                    
                   >
                     Pilih Paket Ini
                   </Button>
@@ -290,7 +289,7 @@ export default function PackagesPage({ onSelectPackage }) {
           <div className="pkg-matrix-section">
             <div className="pkg-matrix-header">
               <div className="matrix-badge">
-                <Sparkles size={13} />
+                <Layers size={13} />
                 <span>EVALUASI TRANSPARAN</span>
               </div>
               <h2 className="pkg-matrix-title">
