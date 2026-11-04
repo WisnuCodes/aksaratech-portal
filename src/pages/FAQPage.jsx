@@ -11,13 +11,13 @@ import {
   RotateCcw, 
   ShieldCheck, 
   Clock, 
-  Sparkles, 
   X,
   Server,
   Layers,
   CreditCard,
   Lock,
-  FileCheck
+  FileCheck,
+  CheckCircle2
 } from 'lucide-react';
 
 export default function FAQPage() {
@@ -91,28 +91,21 @@ export default function FAQPage() {
       />
 
       {/* Quick Highlights Strip for Mobile / Desktop */}
-      <div style={{
-        background: '#FFFFFF',
-        borderBottom: '2px solid #0F172A',
-        padding: '14px 0',
-        overflowX: 'auto',
-        WebkitOverflowScrolling: 'touch',
-        scrollbarWidth: 'none'
-      }}>
+      <div className="faq-highlights-bar">
         <div className="container" style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'nowrap', minWidth: 'max-content' }}>
-          <span style={{ fontSize: '0.75rem', fontWeight: '900', color: 'var(--prussian-blue)', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'flex', alignItems: 'center', gap: '6px', marginRight: '6px' }}>
-            <ShieldCheck size={14} /> Standar Layanan:
+          <span style={{ fontSize: '0.75rem', fontWeight: '800', color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.04em', display: 'flex', alignItems: 'center', gap: '6px', marginRight: '6px' }}>
+            <ShieldCheck size={14} style={{ color: '#0F172A' }} /> Standar Layanan:
           </span>
           <span className="faq-quick-pill">
-            <ShieldCheck size={13} style={{ color: '#10B981' }} />
+            <CheckCircle2 size={13} style={{ color: '#0F172A' }} />
             <span>Garansi 7 Hari Kalender</span>
           </span>
           <span className="faq-quick-pill">
-            <Clock size={13} style={{ color: '#F59E0B' }} />
+            <Clock size={13} style={{ color: '#0F172A' }} />
             <span>Kuota Max 3x Revisi Mutlak</span>
           </span>
           <span className="faq-quick-pill">
-            <Lock size={13} style={{ color: '#1D63FF' }} />
+            <Lock size={13} style={{ color: '#0F172A' }} />
             <span>100% Confidentiality &amp; Data Cleansing</span>
           </span>
           <span className="faq-quick-pill">
@@ -126,8 +119,8 @@ export default function FAQPage() {
         <div className="container" style={{ maxWidth: '960px' }}>
           
           {/* Search Bar & Instant Actions */}
-          <div style={{ marginBottom: '24px' }}>
-            <div style={{ position: 'relative', width: '100%', marginBottom: '16px' }}>
+          <div style={{ marginBottom: '28px' }}>
+            <div style={{ position: 'relative', width: '100%', marginBottom: '18px' }}>
               <Search 
                 size={18} 
                 style={{ 
@@ -141,33 +134,21 @@ export default function FAQPage() {
               />
               <input
                 type="text"
-                placeholder="Cari topik (hosting, kuota revisi, garansi, skripsi, DP)..."
+                placeholder="Cari kata kunci (contoh: hosting, revisi 3x, garansi bug, database, UML, penawaran)..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="form-input"
-                style={{ 
-                  paddingLeft: '44px', 
-                  paddingRight: searchTerm ? '42px' : '16px',
-                  background: '#FFFFFF', 
-                  color: '#0F172A', 
-                  border: '2px solid #0F172A', 
-                  
-                  borderRadius: 'var(--radius-md)',
-                  fontSize: '0.95rem',
-                  fontWeight: '600'
-                }}
+                className="faq-search-input"
               />
               {searchTerm && (
                 <button
                   type="button"
                   onClick={() => setSearchTerm('')}
-                  aria-label="Hapus pencarian"
                   style={{
                     position: 'absolute',
-                    right: '12px',
+                    right: '14px',
                     top: '50%',
                     transform: 'translateY(-50%)',
-                    background: '#E2E8F0',
+                    background: '#F1F5F9',
                     border: 'none',
                     borderRadius: '50%',
                     width: '24px',
@@ -176,26 +157,17 @@ export default function FAQPage() {
                     alignItems: 'center',
                     justifyContent: 'center',
                     cursor: 'pointer',
-                    color: '#0F172A'
+                    color: '#64748B'
                   }}
+                  title="Hapus pencarian"
                 >
                   <X size={14} />
                 </button>
               )}
             </div>
 
-            {/* Category Filter Chips - Mobile First Horizontal Scrolling */}
-            <div 
-              className="faq-category-scroll"
-              style={{
-                display: 'flex',
-                gap: '8px',
-                overflowX: 'auto',
-                paddingBottom: '8px',
-                WebkitOverflowScrolling: 'touch',
-                scrollbarWidth: 'none'
-              }}
-            >
+            {/* Category Filter Pills (Horizontal Scroll on Mobile) */}
+            <div className="faq-category-scroll">
               {categories.map((cat) => {
                 const isActive = selectedCategory === cat.key;
                 const IconComp = cat.icon;
@@ -204,25 +176,9 @@ export default function FAQPage() {
                     key={cat.key}
                     type="button"
                     onClick={() => setSelectedCategory(cat.key)}
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '7px',
-                      padding: '8px 14px',
-                      borderRadius: 'var(--radius-full)',
-                      border: '2px solid #0F172A',
-                      background: isActive ? '#0F172A' : '#FFFFFF',
-                      color: isActive ? '#FFFFFF' : '#0F172A',
-                      boxShadow: isActive ? '2px 2px 0px var(--kuning)' : '2px 2px 0px #E2E8F0',
-                      fontSize: '0.82rem',
-                      fontWeight: '800',
-                      whiteSpace: 'nowrap',
-                      cursor: 'pointer',
-                      transition: 'all 0.15s ease',
-                      flexShrink: 0
-                    }}
+                    className={`faq-cat-pill ${isActive ? 'active' : ''}`}
                   >
-                    <IconComp size={14} style={{ color: isActive ? 'var(--kuning)' : 'var(--prussian-blue)' }} />
+                    <IconComp size={14} />
                     <span>{cat.label}</span>
                   </button>
                 );
@@ -230,52 +186,25 @@ export default function FAQPage() {
             </div>
 
             {/* Status & Bulk Expand/Collapse Actions */}
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              flexWrap: 'wrap',
-              gap: '12px',
-              paddingTop: '10px',
-              borderBottom: '1px solid #E2E8F0',
-              paddingBottom: '14px'
-            }}>
-              <span style={{ fontSize: '0.84rem', color: '#475569', fontWeight: '700' }}>
+            <div className="faq-status-bar">
+              <span style={{ fontSize: '0.84rem', color: '#475569', fontWeight: '600' }}>
                 Menampilkan <strong style={{ color: '#0F172A' }}>{filteredFaqs.length}</strong> pertanyaan resmi
-                {selectedCategory !== 'all' && <span> • Kategori: <em>{selectedCategory}</em></span>}
+                {selectedCategory !== 'all' && <span> &bull; Kategori: <strong style={{ color: '#0F172A' }}>{selectedCategory}</strong></span>}
               </span>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <button
                   type="button"
                   onClick={expandAll}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    color: 'var(--prussian-blue)',
-                    fontSize: '0.82rem',
-                    fontWeight: '800',
-                    cursor: 'pointer',
-                    padding: '4px 8px',
-                    borderRadius: '4px'
-                  }}
+                  className="faq-text-action-btn"
                 >
                   Buka Semua
                 </button>
-                <span style={{ color: '#CBD5E1' }}>|</span>
+                <span style={{ color: '#CBD5E1' }}>&bull;</span>
                 <button
                   type="button"
                   onClick={collapseAll}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    color: '#64748B',
-                    fontSize: '0.82rem',
-                    fontWeight: '800',
-                    cursor: 'pointer',
-                    padding: '4px 8px',
-                    borderRadius: '4px'
-                  }}
+                  className="faq-text-action-btn"
                 >
                   Tutup Semua
                 </button>
@@ -284,37 +213,17 @@ export default function FAQPage() {
           </div>
 
           {/* FAQ Accordion List */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginBottom: '48px' }}>
+          <div className="faq-accordion-list">
             {filteredFaqs.length === 0 ? (
-              <div 
-                className="neo-card"
-                style={{ 
-                  textAlign: 'center', 
-                  padding: '48px 24px', 
-                  background: '#FFFFFF',
-                  border: '2px dashed #0F172A',
-                  
-                }}
-              >
-                <div style={{
-                  width: '56px',
-                  height: '56px',
-                  borderRadius: '50%',
-                  background: '#F1F5F9',
-                  border: '2px solid #0F172A',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  margin: '0 auto 16px auto',
-                  color: '#64748B'
-                }}>
-                  <Search size={24} />
+              <div className="faq-empty-state">
+                <div className="faq-empty-icon-wrap">
+                  <Search size={22} />
                 </div>
-                <h3 style={{ fontSize: '1.15rem', fontWeight: '800', color: '#0F172A', marginBottom: '8px' }}>
+                <h3 className="faq-empty-title">
                   Tidak Ada Pertanyaan yang Cocok
                 </h3>
-                <p style={{ color: '#64748B', fontSize: '0.9rem', maxWidth: '420px', margin: '0 auto 20px auto', lineHeight: '1.6' }}>
-                  Kata kunci "<strong>{searchTerm}</strong>" tidak ditemukan dalam daftar FAQ resmi. Silakan reset filter atau tanyakan langsung ke tim kami.
+                <p className="faq-empty-desc">
+                  Kata kunci "<strong>{searchTerm}</strong>" tidak ditemukan dalam daftar FAQ resmi. Silakan reset filter atau tanyakan langsung ke tim teknis kami.
                 </p>
                 <button
                   type="button"
@@ -330,228 +239,66 @@ export default function FAQPage() {
               filteredFaqs.map((faq, idx) => {
                 const isOpen = openIndexes.includes(idx);
                 const isCopied = copiedId === idx;
-                
-                // Color coding for takeaways
-                const takeawayBorderColor = 
-                  faq.takeawayType === 'warning' ? '#F59E0B' :
-                  faq.takeawayType === 'success' ? '#10B981' : 'var(--prussian-blue)';
-
-                const takeawayBg = 
-                  faq.takeawayType === 'warning' ? '#FFFBEB' :
-                  faq.takeawayType === 'success' ? '#ECFDF5' : '#F0F5FF';
 
                 return (
                   <div
                     key={faq.id || idx}
-                    className="faq-accordion-card neo-card"
-                    style={{
-                      padding: 0,
-                      overflow: 'hidden',
-                      background: '#FFFFFF',
-                      border: '2px solid #0F172A',
-                      boxShadow: isOpen ? '4px 4px 0px var(--prussian-blue)' : '2px 2px 0px #0F172A',
-                      transition: 'box-shadow 0.15s ease, transform 0.15s ease'
-                    }}
+                    className={`faq-card ${isOpen ? 'is-open' : ''}`}
                   >
                     {/* Header Button */}
                     <button
                       type="button"
                       onClick={() => toggleIndex(idx)}
                       aria-expanded={isOpen}
-                      style={{
-                        width: '100%',
-                        padding: '16px',
-                        display: 'flex',
-                        alignItems: 'flex-start',
-                        gap: '12px',
-                        background: isOpen ? '#F8FAFC' : '#FFFFFF',
-                        border: 'none',
-                        textAlign: 'left',
-                        cursor: 'pointer',
-                        color: '#0F172A',
-                        transition: 'background 0.15s ease'
-                      }}
+                      className="faq-trigger-btn"
                     >
-                      {/* Stylized Q Badge */}
-                      <div 
-                        style={{
-                          width: '28px',
-                          height: '28px',
-                          minWidth: '28px',
-                          borderRadius: '6px',
-                          background: isOpen ? 'var(--prussian-blue)' : '#F1F5F9',
-                          color: isOpen ? '#FFFFFF' : '#0F172A',
-                          border: '1.5px solid #0F172A',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          fontFamily: 'var(--font-heading)',
-                          fontWeight: '900',
-                          fontSize: '0.85rem',
-                          marginTop: '2px',
-                          transition: 'all 0.15s ease'
-                        }}
-                      >
-                        Q
-                      </div>
-
-                      {/* Question Content & Meta Tag */}
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        {faq.badge && (
-                          <div style={{ marginBottom: '4px' }}>
-                            <span 
-                              style={{
-                                display: 'inline-block',
-                                fontSize: '0.7rem',
-                                fontWeight: '800',
-                                textTransform: 'uppercase',
-                                letterSpacing: '0.04em',
-                                color: 'var(--prussian-blue)',
-                                background: '#EBF2FF',
-                                padding: '2px 8px',
-                                borderRadius: '4px',
-                                border: '1px solid rgba(29, 99, 255, 0.2)'
-                              }}
-                            >
-                              {faq.badge}
-                            </span>
-                          </div>
-                        )}
-                        <h3 
-                          style={{
-                            fontFamily: 'var(--font-heading)',
-                            fontSize: '0.98rem',
-                            fontWeight: '800',
-                            lineHeight: '1.45',
-                            color: '#0F172A',
-                            margin: 0
-                          }}
-                        >
+                      <div className="faq-trigger-text">
+                        <h3 className="faq-question-title">
                           {faq.q}
                         </h3>
                       </div>
 
-                      {/* Rotating Chevron Toggle Button */}
-                      <div 
-                        style={{
-                          width: '28px',
-                          height: '28px',
-                          minWidth: '28px',
-                          borderRadius: '50%',
-                          background: isOpen ? 'var(--kuning)' : '#F8FAFC',
-                          border: '1.5px solid #0F172A',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          color: '#0F172A',
-                          marginTop: '2px',
-                          transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                          transition: 'transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), background 0.15s ease',
-                          flexShrink: 0
-                        }}
-                      >
-                        <ChevronDown size={16} />
+                      <div className={`faq-chevron-wrap ${isOpen ? 'open' : ''}`}>
+                        <ChevronDown size={18} />
                       </div>
                     </button>
 
                     {/* Collapsible Answer Body */}
                     {isOpen && (
-                      <div 
-                        style={{
-                          padding: '16px',
-                          borderTop: '2px solid #0F172A',
-                          background: '#FFFFFF'
-                        }}
-                      >
-                        {/* Full Answer Prose */}
-                        <div 
-                          style={{
-                            color: '#334155',
-                            fontSize: '0.92rem',
-                            lineHeight: '1.7',
-                            fontWeight: '500',
-                            marginBottom: '16px'
-                          }}
-                        >
+                      <div className="faq-answer-pane">
+                        <p className="faq-answer-prose">
                           {faq.a}
-                        </div>
+                        </p>
 
                         {/* Executive Summary / Key Takeaway Card */}
                         {faq.takeaway && (
-                          <div 
-                            style={{
-                              background: takeawayBg,
-                              borderLeft: `4px solid ${takeawayBorderColor}`,
-                              borderTop: '1px solid #E2E8F0',
-                              borderRight: '1px solid #E2E8F0',
-                              borderBottom: '1px solid #E2E8F0',
-                              borderRadius: '4px',
-                              padding: '10px 14px',
-                              marginBottom: '16px'
-                            }}
-                          >
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
-                              <span style={{ fontSize: '0.72rem', fontWeight: '900', color: takeawayBorderColor, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                                Poin Ringkasan Eksekutif
-                              </span>
+                          <div className="faq-takeaway-card">
+                            <div className="faq-takeaway-header">
+                              <CheckCircle2 size={15} className="faq-takeaway-icon" />
+                              <span className="faq-takeaway-label">Poin Kunci Transparansi:</span>
                             </div>
-                            <p style={{ margin: 0, fontSize: '0.86rem', color: '#0F172A', fontWeight: '600', lineHeight: '1.5' }}>
+                            <p className="faq-takeaway-text">
                               {faq.takeaway}
                             </p>
                           </div>
                         )}
 
                         {/* Interactive Action Bar (Copy & WA Query) */}
-                        <div 
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            flexWrap: 'wrap',
-                            gap: '8px',
-                            paddingTop: '12px',
-                            borderTop: '1px dashed #E2E8F0'
-                          }}
-                        >
+                        <div className="faq-card-action-bar">
                           <button
                             type="button"
                             onClick={() => handleCopy(faq, idx)}
-                            style={{
-                              display: 'inline-flex',
-                              alignItems: 'center',
-                              gap: '6px',
-                              background: isCopied ? '#ECFDF5' : '#F1F5F9',
-                              color: isCopied ? '#059669' : '#475569',
-                              border: isCopied ? '1px solid #10B981' : '1px solid #CBD5E1',
-                              padding: '6px 12px',
-                              borderRadius: 'var(--radius-sm)',
-                              fontSize: '0.78rem',
-                              fontWeight: '700',
-                              cursor: 'pointer',
-                              transition: 'all 0.15s ease'
-                            }}
+                            className="faq-copy-btn"
                           >
-                            {isCopied ? <Check size={13} /> : <Copy size={13} />}
-                            <span>{isCopied ? 'Tersalin!' : 'Salin Jawaban'}</span>
+                            {isCopied ? <Check size={13} style={{ color: '#059669' }} /> : <Copy size={13} />}
+                            <span>{isCopied ? 'Tersalin ke Clipboard!' : 'Salin Jawaban'}</span>
                           </button>
 
                           <a
                             href={`https://wa.me/${BUSINESS_INFO.waNumber}?text=${encodeURIComponent(`Halo Aksara Tech, saya ingin konsultasi lebih lanjut terkait FAQ: "${faq.q}"`)}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            style={{
-                              display: 'inline-flex',
-                              alignItems: 'center',
-                              gap: '6px',
-                              background: '#FFFFFF',
-                              color: '#059669',
-                              border: '1px solid #059669',
-                              padding: '6px 12px',
-                              borderRadius: 'var(--radius-sm)',
-                              fontSize: '0.78rem',
-                              fontWeight: '700',
-                              textDecoration: 'none'
-                            }}
+                            className="faq-wa-link"
                           >
                             <MessageCircle size={13} />
                             <span>Tanya Topik Ini di WA</span>
@@ -565,52 +312,26 @@ export default function FAQPage() {
             )}
           </div>
 
-          {/* Contact Support Strip - Mobile Redesigned Card */}
-          <div 
-            className="neo-card"
-            style={{
-              background: '#FFFFFF',
-              border: '2px solid #0F172A',
-              
-              borderRadius: 'var(--radius-md)',
-              padding: '24px 20px',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '18px'
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '14px' }}>
-              <div 
-                style={{
-                  width: '44px',
-                  height: '44px',
-                  minWidth: '44px',
-                  borderRadius: '10px',
-                  background: '#ECFDF5',
-                  border: '2px solid #0F172A',
-                  color: '#059669',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  
-                }}
-              >
+          {/* Contact Support Strip */}
+          <div className="faq-contact-card">
+            <div className="faq-contact-left">
+              <div className="faq-contact-icon-wrap">
                 <MessageCircle size={22} />
               </div>
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', fontSize: '0.72rem', fontWeight: '900', color: '#059669', background: '#D1FAE5', padding: '2px 8px', borderRadius: '4px' }}>
-                    <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#059669' }}></span>
+                  <span className="faq-status-pill">
+                    <span className="faq-status-dot"></span>
                     Tim Teknis Siaga
                   </span>
-                  <span style={{ fontSize: '0.72rem', color: '#64748B', fontWeight: '600' }}>
+                  <span style={{ fontSize: '0.74rem', color: '#64748B', fontWeight: '600' }}>
                     08.00 – 22.00 WIB
                   </span>
                 </div>
-                <h3 style={{ fontSize: '1.15rem', fontWeight: '900', color: '#0F172A', marginBottom: '4px', lineHeight: '1.3' }}>
+                <h3 className="faq-contact-title">
                   Punya Pertanyaan Spesifik Terkait Sistem Anda?
                 </h3>
-                <p style={{ fontSize: '0.88rem', color: '#475569', margin: 0, fontWeight: '500', lineHeight: '1.6' }}>
+                <p className="faq-contact-desc">
                   Konsultasikan rancangan sistem, skripsi, atau kebutuhan bisnis langsung dengan lead developer kami secara gratis tanpa komitmen.
                 </p>
               </div>
@@ -620,17 +341,7 @@ export default function FAQPage() {
               href={`https://wa.me/${BUSINESS_INFO.waNumber}?text=Halo%20Aksara%20Tech,%20saya%20ingin%20konsultasi%20langsung%20terkait%20layanan%20pembuatan%20website.`}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn btn-wa"
-              style={{
-                width: '100%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
-                padding: '12px 20px',
-                fontSize: '0.92rem',
-                fontWeight: '800'
-              }}
+              className="btn btn-wa faq-contact-wa-btn"
             >
               <MessageCircle size={18} />
               <span>Hubungi Tim Pengembang Resmi via WA</span>
@@ -642,13 +353,25 @@ export default function FAQPage() {
 
       {/* Embedded Mobile Polish Stylesheet */}
       <style>{`
+        .faq-highlights-bar {
+          background: #FFFFFF;
+          padding: 12px 0;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+          scrollbar-width: none;
+        }
+
+        .faq-highlights-bar::-webkit-scrollbar {
+          display: none;
+        }
+
         .faq-quick-pill {
           display: inline-flex;
           align-items: center;
           gap: 6px;
           background: #F8FAFC;
-          border: 1.5px solid #0F172A;
-          padding: 4px 10px;
+          border: 1px solid var(--border-subtle);
+          padding: 5px 12px;
           border-radius: var(--radius-full);
           font-size: 0.76rem;
           font-weight: 700;
@@ -656,34 +379,449 @@ export default function FAQPage() {
           white-space: nowrap;
         }
 
-        @media (min-width: 640px) {
-          .faq-accordion-card button {
-            padding: 18px 22px !important;
-          }
-          .faq-accordion-card button h3 {
-            font-size: 1.05rem !important;
-          }
-          .faq-accordion-card > div:last-child {
-            padding: 20px 22px 22px 22px !important;
-          }
-          .faq-page .neo-card.contact-card {
-            flex-direction: row !important;
-            align-items: center !important;
-            justify-content: space-between !important;
-          }
-          .faq-page .neo-card.contact-card .btn-wa {
-            width: auto !important;
-          }
+        .faq-search-input {
+          width: 100%;
+          padding: 13px 44px 13px 44px;
+          font-size: 0.94rem;
+          background: #FFFFFF;
+          border: 1px solid var(--border-subtle);
+          border-radius: var(--radius-sm);
+          color: #0F172A;
+          font-family: inherit;
+          font-weight: 500;
+          transition: border-color 0.15s ease;
         }
 
-        @media (max-width: 480px) {
-          .faq-quick-pill {
-            font-size: 0.72rem;
-            padding: 3px 8px;
+        .faq-search-input:focus {
+          outline: none;
+          border-color: var(--prussian-blue);
+        }
+
+        .faq-category-scroll {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+          padding-bottom: 8px;
+          margin-bottom: 14px;
+          scrollbar-width: none;
+        }
+
+        .faq-category-scroll::-webkit-scrollbar {
+          display: none;
+        }
+
+        .faq-cat-pill {
+          display: inline-flex;
+          align-items: center;
+          gap: 7px;
+          padding: 8px 14px;
+          border-radius: var(--radius-full);
+          border: 1px solid var(--border-subtle);
+          background: #FFFFFF;
+          color: #475569;
+          font-size: 0.82rem;
+          font-weight: 700;
+          white-space: nowrap;
+          cursor: pointer;
+          transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+          flex-shrink: 0;
+        }
+
+        .faq-cat-pill:hover {
+          background: #F8FAFC;
+          border-color: #CBD5E1;
+          color: #0F172A;
+        }
+
+        .faq-cat-pill.active {
+          background: #0F172A;
+          border-color: #0F172A;
+          color: #FFFFFF;
+        }
+
+        .faq-status-bar {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          flex-wrap: wrap;
+          gap: 12px;
+          padding-top: 10px;
+          padding-bottom: 14px;
+        }
+
+        .faq-text-action-btn {
+          background: none;
+          border: none;
+          color: var(--prussian-blue);
+          font-size: 0.82rem;
+          font-weight: 700;
+          cursor: pointer;
+          padding: 4px 6px;
+        }
+
+        .faq-text-action-btn:hover {
+          text-decoration: underline;
+        }
+
+        .faq-accordion-list {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          margin-bottom: 40px;
+        }
+
+        .faq-card {
+          background: #FFFFFF;
+          border: 1px solid var(--border-subtle);
+          border-radius: var(--radius-md);
+          overflow: hidden;
+          transition: border-color 0.2s ease, background-color 0.2s ease;
+        }
+
+        .faq-card.is-open {
+          border-color: #CBD5E1;
+        }
+
+        .faq-trigger-btn {
+          width: 100%;
+          padding: 18px 22px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 16px;
+          background: #FFFFFF;
+          border: none;
+          text-align: left;
+          cursor: pointer;
+          color: #0F172A;
+          transition: background-color 0.15s ease;
+          min-height: 52px;
+        }
+
+        .faq-trigger-btn:hover {
+          background-color: #F8FAFC;
+        }
+
+        .faq-card.is-open .faq-trigger-btn {
+          background-color: #F8FAFC;
+        }
+
+        .faq-trigger-text {
+          flex: 1;
+          min-width: 0;
+        }
+
+        .faq-question-title {
+          font-family: var(--font-heading);
+          font-size: 1.02rem;
+          font-weight: 700;
+          line-height: 1.45;
+          color: #0F172A;
+          margin: 0;
+        }
+
+        .faq-chevron-wrap {
+          width: 32px;
+          height: 32px;
+          min-width: 32px;
+          border-radius: 50%;
+          background: #F1F5F9;
+          border: 1px solid var(--border-subtle);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #0F172A;
+          transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease;
+          flex-shrink: 0;
+        }
+
+        .faq-chevron-wrap.open {
+          transform: rotate(180deg);
+          background-color: #E2E8F0;
+        }
+
+        .faq-answer-pane {
+          padding: 18px 22px 22px 22px;
+          background: #FFFFFF;
+        }
+
+        .faq-answer-prose {
+          color: #334155;
+          font-size: 0.94rem;
+          line-height: 1.7;
+          font-weight: 450;
+          margin: 0;
+        }
+
+        .faq-takeaway-card {
+          margin-top: 16px;
+          background: #F8FAFC;
+          border: 1px solid var(--border-subtle);
+          border-radius: 8px;
+          padding: 12px 16px;
+        }
+
+        .faq-takeaway-header {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          margin-bottom: 4px;
+        }
+
+        .faq-takeaway-icon {
+          color: #0F172A;
+          flex-shrink: 0;
+        }
+
+        .faq-takeaway-label {
+          font-size: 0.8rem;
+          font-weight: 800;
+          color: #0F172A;
+          letter-spacing: 0.02em;
+        }
+
+        .faq-takeaway-text {
+          margin: 0;
+          font-size: 0.88rem;
+          color: #334155;
+          font-weight: 600;
+          line-height: 1.55;
+        }
+
+        .faq-card-action-bar {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          flex-wrap: wrap;
+          gap: 10px;
+          padding-top: 14px;
+          margin-top: 16px;
+        }
+
+        .faq-copy-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          background: #F1F5F9;
+          color: #475569;
+          border: 1px solid var(--border-subtle);
+          padding: 6px 12px;
+          border-radius: var(--radius-sm);
+          font-size: 0.78rem;
+          font-weight: 700;
+          cursor: pointer;
+          transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+        }
+
+        .faq-copy-btn:hover {
+          background: #E2E8F0;
+          color: #0F172A;
+        }
+
+        .faq-wa-link {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          background: #FFFFFF;
+          color: #059669;
+          border: 1px solid #A7F3D0;
+          padding: 6px 12px;
+          border-radius: var(--radius-sm);
+          font-size: 0.78rem;
+          font-weight: 700;
+          text-decoration: none;
+          transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+        }
+
+        .faq-wa-link:hover {
+          background: #F0FDF4;
+          border-color: #059669;
+        }
+
+        .faq-empty-state {
+          text-align: center;
+          padding: 48px 24px;
+          background: #FFFFFF;
+          border: 1px solid var(--border-subtle);
+          border-radius: var(--radius-md);
+        }
+
+        .faq-empty-icon-wrap {
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          background: #F1F5F9;
+          border: 1px solid var(--border-subtle);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin: 0 auto 16px auto;
+          color: #64748B;
+        }
+
+        .faq-empty-title {
+          font-size: 1.12rem;
+          font-weight: 800;
+          color: #0F172A;
+          margin-bottom: 8px;
+        }
+
+        .faq-empty-desc {
+          color: #64748B;
+          font-size: 0.9rem;
+          max-width: 420px;
+          margin: 0 auto 20px auto;
+          line-height: 1.6;
+        }
+
+        /* Bottom Contact Card */
+        .faq-contact-card {
+          background: #FFFFFF;
+          border: 1px solid var(--border-subtle);
+          border-radius: var(--radius-md);
+          padding: 24px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 20px;
+          flex-wrap: wrap;
+        }
+
+        .faq-contact-left {
+          display: flex;
+          align-items: flex-start;
+          gap: 16px;
+          flex: 1 1 420px;
+        }
+
+        .faq-contact-icon-wrap {
+          width: 44px;
+          height: 44px;
+          min-width: 44px;
+          border-radius: 10px;
+          background: #F1F5F9;
+          border: 1px solid var(--border-subtle);
+          color: #0F172A;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+        }
+
+        .faq-status-pill {
+          display: inline-flex;
+          align-items: center;
+          gap: 5px;
+          font-size: 0.72rem;
+          font-weight: 800;
+          color: #059669;
+          background: #ECFDF5;
+          border: 1px solid #A7F3D0;
+          padding: 2px 8px;
+          border-radius: 4px;
+        }
+
+        .faq-status-dot {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background: #059669;
+        }
+
+        .faq-contact-title {
+          font-size: 1.1rem;
+          font-weight: 800;
+          color: #0F172A;
+          margin-bottom: 4px;
+          line-height: 1.35;
+        }
+
+        .faq-contact-desc {
+          font-size: 0.88rem;
+          color: #475569;
+          margin: 0;
+          font-weight: 500;
+          line-height: 1.6;
+        }
+
+        .faq-contact-wa-btn {
+          white-space: nowrap;
+          padding: 12px 24px;
+        }
+
+        /* Mobile Responsive Overhauls */
+        @media (max-width: 640px) {
+          .faq-trigger-btn {
+            padding: 16px 16px;
+            gap: 12px;
           }
-          .faq-category-scroll button {
-            font-size: 0.78rem !important;
-            padding: 7px 12px !important;
+
+          .faq-question-title {
+            font-size: 0.94rem;
+            line-height: 1.4;
+          }
+
+          .faq-chevron-wrap {
+            width: 28px;
+            height: 28px;
+            min-width: 28px;
+          }
+
+          .faq-answer-pane {
+            padding: 14px 16px 18px 16px;
+          }
+
+          .faq-answer-prose {
+            font-size: 0.89rem;
+            line-height: 1.65;
+          }
+
+          .faq-takeaway-card {
+            padding: 10px 14px;
+          }
+
+          .faq-takeaway-text {
+            font-size: 0.84rem;
+          }
+
+          .faq-card-action-bar {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 8px;
+          }
+
+          .faq-copy-btn,
+          .faq-wa-link {
+            width: 100%;
+            justify-content: center;
+            padding: 9px 12px;
+          }
+
+          .faq-contact-card {
+            padding: 18px 16px;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 16px;
+          }
+
+          .faq-contact-left {
+            flex: initial;
+            gap: 12px;
+          }
+
+          .faq-contact-title {
+            font-size: 0.98rem;
+          }
+
+          .faq-contact-desc {
+            font-size: 0.84rem;
+          }
+
+          .faq-contact-wa-btn {
+            width: 100%;
+            justify-content: center;
           }
         }
       `}</style>
