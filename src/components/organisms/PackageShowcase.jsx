@@ -454,16 +454,11 @@ export default function PackageShowcase({ onSelectPackage }) {
           font-weight: 800;
         }
 
-        .docs-included {
-          background: #ECFDF5;
-          border: 1.5px solid #10B981;
-          color: #065F46;
-        }
-
+        .docs-included,
         .docs-addon {
-          background: #FFF9E6;
-          border: 1.5px solid #F59E0B;
-          color: #92400E;
+          background: #F8FAFC;
+          border: 1px solid var(--border-subtle);
+          color: #0F172A;
         }
 
         .package-card-footer {
@@ -580,7 +575,7 @@ export default function PackageShowcase({ onSelectPackage }) {
           }
 
           .carousel-btn:hover:not(:disabled) {
-            background: var(--kuning);
+            background: #F1F5F9;
             transform: translate(-1px, -1px);
           }
 
@@ -653,7 +648,8 @@ export default function PackageShowcase({ onSelectPackage }) {
           }
 
           .package-page-dot.active {
-            background: var(--kuning);
+            background: #F1F5F9;
+            border-color: var(--border-main);
             color: #0F172A;
             transform: translateY(-2px);
           }

@@ -23,7 +23,7 @@ export default function Footer() {
   return (
     <footer className="footer-corporate" style={{
       background: '#F8FAFC',
-      borderTop: '2px solid #0F172A',
+      borderTop: '1px solid var(--border-subtle)',
       paddingTop: '56px',
       paddingBottom: '28px',
       position: 'relative'
@@ -161,7 +161,7 @@ export default function Footer() {
               alignItems: 'center',
               gap: '7px',
               background: '#FFFFFF',
-              border: '1.5px solid #0F172A',
+              border: '1px solid var(--border-subtle)',
               padding: '5px 12px',
               borderRadius: 'var(--radius-full)',
               
@@ -170,7 +170,7 @@ export default function Footer() {
               color: '#0F172A',
               marginBottom: '16px'
             }}>
-              <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#10B981', display: 'inline-block' }} />
+              <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#0F172A', display: 'inline-block' }} />
               <span>Tim Teknis Siaga: 08.00 – 22.00 WIB</span>
             </div>
 
@@ -236,7 +236,7 @@ export default function Footer() {
               <span>Tata Kelola &amp; SOP</span>
             </h4>
             <nav aria-label="Navigasi Tata Kelola Footer" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <Link to="/eksklusi-server" className="footer-link-item" style={{ color: '#D97706', fontWeight: '800' }}>
+              <Link to="/eksklusi-server" className="footer-link-item" style={{ color: 'var(--prussian-blue)', fontWeight: '700' }}>
                 <ShieldCheck size={14} />
                 <span>Batasan Eksklusi Server</span>
               </Link>
@@ -300,7 +300,7 @@ export default function Footer() {
               </p>
 
               <div style={{ borderTop: '1px dashed #E2E8F0', paddingTop: '10px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.78rem', color: '#059669', fontWeight: '800' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.78rem', color: '#0F172A', fontWeight: '700' }}>
                   <CheckCircle2 size={13} />
                   <span>Garansi Pemeliharaan Bug 7 Hari</span>
                 </div>

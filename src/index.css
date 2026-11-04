@@ -412,9 +412,9 @@ code, pre {
 }
 
 .badge-emerald {
-  background: var(--emerald-light);
-  color: var(--emerald);
-  border-color: rgba(5, 150, 105, 0.2);
+  background: var(--bg-surface-elevated);
+  color: var(--text-main);
+  border-color: var(--border-subtle);
 }
 
 .badge-neutral {

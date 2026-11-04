@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import PageHeader from '../components/molecules/PageHeader';
 import { 
   Clock, CheckCircle2, ShieldCheck, FileCheck, Layers, 
-  ArrowRight, AlertCircle, RefreshCw, Lock, FileCode,
+  AlertCircle, RefreshCw, Lock, FileCode,
   Sparkles, Check, ChevronRight, Shield
 } from 'lucide-react';
 
@@ -99,8 +99,7 @@ export default function WorkflowPage() {
         action={
           <Link to="/pesan" className="btn btn-primary">
             <span>Isi Brief Kebutuhan</span>
-            <ArrowRight size={16} />
-          </Link>
+            </Link>
         }
       />
 
@@ -112,17 +111,14 @@ export default function WorkflowPage() {
               <span className="step-num">1</span>
               <span className="step-label">Pilih Paket</span>
             </div>
-            <span className="step-arrow">→</span>
             <div className="roadmap-step">
               <span className="step-num">2</span>
               <span className="step-label">Kirim Brief</span>
             </div>
-            <span className="step-arrow">→</span>
             <div className="roadmap-step">
               <span className="step-num">3</span>
               <span className="step-label">Penawaran &amp; DP</span>
             </div>
-            <span className="step-arrow">→</span>
             <div className="roadmap-step">
               <span className="step-num">4</span>
               <span className="step-label">3x Revisi &amp; Rilis</span>
@@ -159,7 +155,7 @@ export default function WorkflowPage() {
                         <span className="stage-order-tag">TAHAP {stage.num}</span>
                         <span className="stage-badge-tag">{stage.badge}</span>
                         <span className="stage-time-tag">
-                          <Clock size={12} style={{ color: '#D97706' }} />
+                          <Clock size={12} style={{ color: "#0F172A" }} />
                           <span>{stage.timeline}</span>
                         </span>
                       </div>
@@ -194,11 +190,6 @@ export default function WorkflowPage() {
 
           {/* Deep-dive into 3x Revision Rules (High-Impact Neo-Brutalist Box) */}
           <div className="neo-card sop-revision-hub">
-            <div className="hub-top-badge">
-              <RefreshCw size={15} />
-              <span>ATURAN BAKU KUOTA REVISI</span>
-            </div>
-
             <h2 className="hub-title">
               Ketentuan Mutlak Kuota Maksimal 3 Kali Revisi
             </h2>
@@ -212,12 +203,10 @@ export default function WorkflowPage() {
                 <span className="quota-dot dot-1" />
                 <span>Revisi 1: Pratinjau Pertama (Preview 1)</span>
               </div>
-              <span className="quota-sep">→</span>
               <div className="quota-step-pill">
                 <span className="quota-dot dot-2" />
                 <span>Revisi 2: Pengujian Mandiri Klien</span>
               </div>
-              <span className="quota-sep">→</span>
               <div className="quota-step-pill">
                 <span className="quota-dot dot-3" />
                 <span>Revisi 3: Finalisasi Serah Terima</span>
@@ -239,7 +228,7 @@ export default function WorkflowPage() {
 
             {/* Warranty Assurance Banner */}
             <div className="hub-warranty-footer">
-              <Shield size={16} style={{ color: '#16A34A', flexShrink: 0 }} />
+              <Shield size={16} style={{ color: "#0F172A", flexShrink: 0 }} />
               <span>
                 <strong>Termasuk Garansi Bug 1 Minggu:</strong> Setelah revisi ke-3 atau serah terima selesai, Klien tetap terlindungi garansi perbaikan bug kode selama 7 hari kalender.
               </span>
@@ -250,8 +239,7 @@ export default function WorkflowPage() {
           <div className="sop-cta-box">
             <Link to="/pesan" className="btn btn-primary sop-btn-main">
               <span>Mulai Proyek Sesuai Alur SOP</span>
-              <ArrowRight size={17} />
-            </Link>
+              </Link>
             <Link to="/paket" className="btn btn-secondary sop-btn-sub">
               <span>Katalog 6 Paket &amp; Tarif Resmi</span>
             </Link>
@@ -267,15 +255,14 @@ export default function WorkflowPage() {
            ======================================================= */
         .sop-roadmap-strip {
           background: #FFFFFF;
-          border-bottom: 2px solid #0F172A;
-          padding: 10px 0;
+          padding: 12px 0;
         }
 
         .sop-roadmap-items {
           display: flex;
           align-items: center;
           justify-content: center;
-          gap: 12px;
+          gap: 10px;
           flex-wrap: wrap;
         }
 
@@ -283,31 +270,25 @@ export default function WorkflowPage() {
           display: inline-flex;
           align-items: center;
           gap: 6px;
-          font-size: 0.8rem;
-          font-weight: 700;
+          font-size: 0.82rem;
+          font-weight: 600;
           color: #475569;
           background: #F8FAFC;
-          border: 1.5px solid #E2E8F0;
+          border: 1px solid var(--border-subtle);
           border-radius: 6px;
-          padding: 4px 10px;
+          padding: 5px 12px;
         }
 
         .roadmap-step.active {
-          background: #EEF4FF;
-          border-color: var(--prussian-blue);
-          color: var(--prussian-blue);
-          font-weight: 800;
+          background: #F1F5F9;
+          border-color: var(--border-main);
+          color: #0F172A;
+          font-weight: 700;
         }
 
         .roadmap-step .step-num {
-          font-family: var(--font-body);
-          font-weight: 900;
-        }
-
-        .step-arrow {
-          color: #94A3B8;
-          font-weight: bold;
-          font-size: 0.85rem;
+          font-weight: 800;
+          color: var(--prussian-blue);
         }
 
         /* =======================================================
@@ -322,9 +303,10 @@ export default function WorkflowPage() {
 
         .sop-main-title {
           font-size: clamp(1.6rem, 3.5vw, 2.2rem);
-          font-weight: 900;
+          font-weight: 800;
           color: #0F172A;
           margin: 0 0 10px 0;
+          line-height: 1.25;
         }
 
         .sop-main-desc {
@@ -354,11 +336,12 @@ export default function WorkflowPage() {
           background: #FFFFFF;
           border: 1px solid var(--border-subtle);
           border-radius: var(--radius-md);
-          transition: transform 0.2s ease, box-shadow 0.2s ease;
+          transition: transform 0.2s ease, border-color 0.2s ease;
         }
 
         .sop-stage-card:hover {
           transform: translateY(-2px);
+          border-color: var(--border-main);
         }
 
         .stage-left-info {
@@ -374,10 +357,10 @@ export default function WorkflowPage() {
         }
 
         .stage-num-badge {
-          width: 52px;
-          height: 52px;
-          border-radius: 12px;
-          background: #EEF4FF;
+          width: 48px;
+          height: 48px;
+          border-radius: 10px;
+          background: #F8FAFC;
           border: 1px solid var(--border-subtle);
           display: flex;
           align-items: center;
@@ -386,9 +369,8 @@ export default function WorkflowPage() {
         }
 
         .stage-num-badge span {
-          font-family: var(--font-heading);
-          font-size: 1.5rem;
-          font-weight: 900;
+          font-size: 1.4rem;
+          font-weight: 800;
           color: var(--prussian-blue);
           line-height: 1;
         }
@@ -407,23 +389,23 @@ export default function WorkflowPage() {
         }
 
         .stage-order-tag {
-          font-family: var(--font-body);
-          font-size: 0.68rem;
-          font-weight: 800;
-          color: var(--prussian-blue);
-          background: #EEF4FF;
-          border: 1px solid rgba(29, 99, 255, 0.3);
+          font-size: 0.72rem;
+          font-weight: 700;
+          color: #0F172A;
+          background: #F1F5F9;
+          border: 1px solid var(--border-subtle);
           border-radius: 4px;
-          padding: 2px 6px;
+          padding: 2px 7px;
         }
 
         .stage-badge-tag {
-          font-size: 0.7rem;
-          font-weight: 700;
+          font-size: 0.72rem;
+          font-weight: 600;
           color: #475569;
-          background: #F1F5F9;
+          background: #F8FAFC;
+          border: 1px solid var(--border-subtle);
           border-radius: 4px;
-          padding: 2px 6px;
+          padding: 2px 7px;
         }
 
         .stage-time-tag {
@@ -431,26 +413,26 @@ export default function WorkflowPage() {
           align-items: center;
           gap: 4px;
           font-size: 0.72rem;
-          font-weight: 800;
-          color: #D97706;
-          background: #FFFBEB;
-          border: 1px solid rgba(217, 119, 6, 0.3);
+          font-weight: 600;
+          color: #0F172A;
+          background: #F1F5F9;
+          border: 1px solid var(--border-subtle);
           border-radius: 4px;
           padding: 2px 7px;
         }
 
         .stage-card-title {
           font-size: 1.25rem;
-          font-weight: 900;
+          font-weight: 800;
           color: #0F172A;
-          line-height: 1.3;
+          line-height: 1.35;
           margin: 0;
         }
 
         .stage-card-desc {
           font-size: 0.88rem;
-          color: #334155;
-          line-height: 1.65;
+          color: #475569;
+          line-height: 1.6;
           margin: 0;
           font-weight: 500;
         }
@@ -458,17 +440,17 @@ export default function WorkflowPage() {
         /* QA Box */
         .stage-qa-box {
           background: #F8FAFC;
-          border: 1.5px solid #0F172A;
+          border: 1px solid var(--border-subtle);
           border-radius: 8px;
-          padding: 18px;
+          padding: 20px;
         }
 
         .qa-box-header {
           font-size: 0.76rem;
           color: #0F172A;
-          font-weight: 900;
+          font-weight: 800;
           text-transform: uppercase;
-          letter-spacing: 0.06em;
+          letter-spacing: 0.04em;
           margin-bottom: 12px;
           display: flex;
           align-items: center;
@@ -476,7 +458,7 @@ export default function WorkflowPage() {
         }
 
         .qa-shield-icon {
-          color: var(--prussian-blue);
+          color: #0F172A;
         }
 
         .qa-checklist {
@@ -489,54 +471,39 @@ export default function WorkflowPage() {
           display: flex;
           align-items: flex-start;
           gap: 8px;
-          font-size: 0.82rem;
-          color: #1E293B;
-          font-weight: 600;
+          font-size: 0.84rem;
+          color: #334155;
+          font-weight: 500;
           line-height: 1.45;
         }
 
         .qa-check-icon {
-          color: #059669;
+          color: #0F172A;
           margin-top: 2px;
           flex-shrink: 0;
         }
 
         /* =======================================================
-           REVISION POLICY HUB (YELLOW NEO-BRUTALIST CARD)
+           REVISION POLICY HUB
            ======================================================= */
         .sop-revision-hub {
-          background: #FFFDF5;
+          background: #FFFFFF;
           border: 1px solid var(--border-subtle);
           border-radius: var(--radius-md);
           padding: 32px;
           margin-bottom: 48px;
         }
 
-        .hub-top-badge {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          background: var(--kuning);
-          color: #0F172A;
-          border: 1.5px solid #0F172A;
-          padding: 5px 12px;
-          border-radius: 6px;
-          font-weight: 900;
-          font-size: 0.8rem;
-          font-family: var(--font-body);
-          margin-bottom: 14px;
-        }
-
         .hub-title {
           font-size: clamp(1.4rem, 3vw, 1.8rem);
-          font-weight: 900;
+          font-weight: 800;
           color: #0F172A;
           margin-bottom: 8px;
           line-height: 1.3;
         }
 
         .hub-subtitle {
-          font-size: 0.9rem;
+          font-size: 0.92rem;
           color: #475569;
           margin-bottom: 22px;
           line-height: 1.6;
@@ -546,9 +513,9 @@ export default function WorkflowPage() {
           display: flex;
           align-items: center;
           justify-content: flex-start;
-          gap: 10px;
-          background: #FFFFFF;
-          border: 1.5px solid #0F172A;
+          gap: 12px;
+          background: #F8FAFC;
+          border: 1px solid var(--border-subtle);
           border-radius: 8px;
           padding: 10px 16px;
           margin-bottom: 22px;
@@ -563,9 +530,9 @@ export default function WorkflowPage() {
         .quota-step-pill {
           display: inline-flex;
           align-items: center;
-          gap: 6px;
-          font-size: 0.78rem;
-          font-weight: 800;
+          gap: 8px;
+          font-size: 0.8rem;
+          font-weight: 700;
           color: #0F172A;
           white-space: nowrap;
         }
@@ -575,16 +542,7 @@ export default function WorkflowPage() {
           height: 8px;
           border-radius: 50%;
           flex-shrink: 0;
-        }
-
-        .dot-1 { background: #3B82F6; }
-        .dot-2 { background: #F59E0B; }
-        .dot-3 { background: #10B981; }
-
-        .quota-sep {
-          color: #94A3B8;
-          font-weight: 900;
-          font-size: 0.8rem;
+          background: var(--prussian-blue);
         }
 
         .hub-rules-grid {
@@ -595,8 +553,8 @@ export default function WorkflowPage() {
         }
 
         .hub-rule-card {
-          background: #FFFFFF;
-          border: 1.5px solid #0F172A;
+          background: #F8FAFC;
+          border: 1px solid var(--border-subtle);
           border-radius: 8px;
           padding: 16px;
         }
@@ -614,9 +572,8 @@ export default function WorkflowPage() {
           border-radius: 50%;
           background: var(--prussian-blue);
           color: #FFFFFF;
-          font-family: var(--font-body);
           font-size: 0.72rem;
-          font-weight: 900;
+          font-weight: 800;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -625,14 +582,14 @@ export default function WorkflowPage() {
 
         .rule-title {
           color: #0F172A;
-          font-weight: 900;
+          font-weight: 800;
           font-size: 0.92rem;
         }
 
         .rule-desc {
           margin: 0;
           color: #475569;
-          font-size: 0.82rem;
+          font-size: 0.84rem;
           line-height: 1.55;
           font-weight: 500;
         }
@@ -641,182 +598,31 @@ export default function WorkflowPage() {
           display: flex;
           align-items: center;
           gap: 10px;
-          background: #F0FDF4;
-          border: 1.5px solid #86EFAC;
+          background: #F8FAFC;
+          border: 1px solid var(--border-subtle);
           border-radius: 8px;
-          padding: 10px 14px;
-          font-size: 0.82rem;
-          color: #166534;
+          padding: 12px 16px;
+          font-size: 0.84rem;
+          color: #1E293B;
           line-height: 1.5;
         }
 
-        /* =======================================================
-           CTA BUTTONS
-           ======================================================= */
         .sop-cta-box {
           display: flex;
-          align-items: center;
           justify-content: center;
+          align-items: center;
           gap: 14px;
           flex-wrap: wrap;
         }
 
-        .sop-btn-main {
-          padding: 13px 28px;
-          font-size: 0.95rem;
-        }
-
-        .sop-btn-sub {
-          padding: 13px 24px;
-          font-size: 0.95rem;
-        }
-
-        /* =======================================================
-           MOBILE RESPONSIVENESS (max-width: 640px)
-           ======================================================= */
-        @media (max-width: 640px) {
-          .sop-content-section {
-            padding-top: 24px;
-            padding-bottom: 48px;
-          }
-
-          .sop-roadmap-strip {
-            padding: 8px 0;
-          }
-
-          .sop-roadmap-items {
-            justify-content: flex-start;
-            overflow-x: auto;
-            flex-wrap: nowrap;
-            scrollbar-width: none;
-            -webkit-overflow-scrolling: touch;
-            padding: 0 4px;
-          }
-
-          .sop-roadmap-items::-webkit-scrollbar {
-            display: none;
-          }
-
-          .roadmap-step {
-            flex-shrink: 0;
-            font-size: 0.74rem;
-            padding: 3px 8px;
-          }
-
-          .step-arrow {
-            flex-shrink: 0;
-            font-size: 0.75rem;
-          }
-
-          .sop-section-head {
-            margin-bottom: 24px;
-          }
-
-          .sop-cards-stack {
-            gap: 16px;
-            margin-bottom: 36px;
-          }
-
+        @media (max-width: 1024px) {
           .sop-stage-card {
             grid-template-columns: 1fr;
-            padding: 16px;
-            gap: 16px;
+            gap: 20px;
+            padding: 22px;
           }
-
-          .stage-header-row {
-            gap: 12px;
-            margin-bottom: 10px;
-          }
-
-          .stage-num-badge {
-            width: 44px;
-            height: 44px;
-            border-radius: 10px;
-          }
-
-          .stage-num-badge span {
-            font-size: 1.25rem;
-          }
-
-          .stage-card-title {
-            font-size: 1.1rem;
-          }
-
-          .stage-card-desc {
-            font-size: 0.82rem;
-            line-height: 1.55;
-          }
-
-          .stage-qa-box {
-            padding: 14px;
-          }
-
-          .qa-check-item {
-            font-size: 0.78rem;
-            gap: 6px;
-          }
-
-          /* Revision Hub on Mobile */
-          .sop-revision-hub {
-            padding: 18px 16px;
-            margin-bottom: 32px;
-          }
-
-          .hub-title {
-            font-size: 1.25rem;
-          }
-
-          .hub-subtitle {
-            font-size: 0.82rem;
-            margin-bottom: 16px;
-          }
-
-          .quota-counter-bar {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 6px;
-            padding: 10px 12px;
-          }
-
-          .quota-sep {
-            display: none;
-          }
-
-          .quota-step-pill {
-            font-size: 0.74rem;
-          }
-
           .hub-rules-grid {
             grid-template-columns: 1fr;
-            gap: 12px;
-          }
-
-          .hub-rule-card {
-            padding: 14px;
-          }
-
-          .rule-title {
-            font-size: 0.88rem;
-          }
-
-          .rule-desc {
-            font-size: 0.78rem;
-          }
-
-          .hub-warranty-footer {
-            font-size: 0.76rem;
-            padding: 8px 12px;
-          }
-
-          .sop-cta-box {
-            flex-direction: column;
-            width: 100%;
-          }
-
-          .sop-btn-main,
-          .sop-btn-sub {
-            width: 100%;
-            justify-content: center;
           }
         }
       `}</style>

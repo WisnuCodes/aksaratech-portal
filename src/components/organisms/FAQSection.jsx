@@ -105,7 +105,7 @@ export default function FAQSection() {
               rel="noopener noreferrer"
               className="btn btn-secondary btn-sm faq-cta-btn"
             >
-              <MessageCircle size={15} style={{ color: '#059669' }} />
+              <MessageCircle size={15} style={{ color: '#0F172A' }} />
               <span>Tanya via WhatsApp</span>
             </a>
           </div>

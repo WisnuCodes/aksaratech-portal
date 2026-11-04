@@ -101,7 +101,7 @@ export default function WorkflowSOP() {
                   <span className="sop-step-indicator">
                     Tahap {idx + 1} dari 4
                   </span>
-                  {idx < 3 && <ChevronRight size={18} className="sop-next-arrow" />}
+                  
                 </div>
               </div>
             );
@@ -111,9 +111,6 @@ export default function WorkflowSOP() {
         {/* SOP Callout Card */}
         <div className="sop-callout-card neo-card">
           <div className="callout-left">
-            <div className="callout-badge">
-              <ShieldCheck size={16} /> KOMITMEN DISIPLIN WAKTU
-            </div>
             <h3 className="callout-title">
               Pemberlakuan Kuota Maksimal 3x Revisi Resmi
             </h3>
@@ -186,12 +183,12 @@ export default function WorkflowSOP() {
 
         .sop-card-badge {
           font-size: 0.72rem;
-          font-weight: 800;
-          padding: 3px 8px;
+          font-weight: 700;
+          padding: 2px 7px;
           border-radius: 4px;
-          background: #EFF6FF;
-          border: 1px solid var(--prussian-blue);
-          color: var(--prussian-blue);
+          background: #F1F5F9;
+          border: 1px solid var(--border-subtle);
+          color: #0F172A;
         }
 
         .sop-card-title {
@@ -214,7 +211,7 @@ export default function WorkflowSOP() {
           align-items: center;
           justify-content: space-between;
           padding-top: 16px;
-          border-top: 1.5px dashed #CBD5E1;
+          
         }
 
         .sop-step-indicator {
@@ -243,19 +240,7 @@ export default function WorkflowSOP() {
           max-width: 720px;
         }
 
-        .callout-badge {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          background: var(--kuning);
-          border: 1.5px solid #0F172A;
-          padding: 4px 10px;
-          border-radius: 4px;
-          font-size: 0.76rem;
-          font-weight: 900;
-          color: #0F172A;
-          margin-bottom: 12px;
-        }
+        
 
         .callout-title {
           font-size: 1.35rem;
@@ -314,7 +299,9 @@ export default function WorkflowSOP() {
           }
 
           .sop-mobile-pill.active {
-            background: var(--kuning);
+            background: #F1F5F9;
+            border-color: var(--border-main);
+            color: #0F172A;
           }
 
           .sop-steps-grid {

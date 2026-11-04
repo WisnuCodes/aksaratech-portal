@@ -117,13 +117,13 @@ export default function PackagesPage({ onSelectPackage }) {
         breadcrumbs={[{ label: 'Katalog Paket & Layanan' }]}
         badge="Katalog Resmi Aksara Tech"
         badgeIcon={Package}
-        title="Katalog 6 Paket Resmi"
-        highlightText="Layanan Enterprise & Akademik"
+        title="Katalog 6 Paket"
+        highlightText="Layanan Resmi"
         description="Seluruh paket dibangun dengan arsitektur teruji, fasilitas kuota revisi maksimal 3 kali mutlak, estimasi 1–10 hari kerja, dan plafon tarif transparan tanpa biaya tersembunyi (maks Rp 500.000)."
         action={
           <Link to="/pesan" className="btn btn-primary page-header-cta">
             <span>Isi Lembar Kebutuhan</span>
-            </Link>
+          </Link>
         }
       />
 
@@ -132,22 +132,22 @@ export default function PackagesPage({ onSelectPackage }) {
         <div className="container">
           <div className="pkg-trust-items">
             <div className="pkg-trust-item">
-              <CheckCircle2 size={15} className="text-emerald" />
+              <CheckCircle2 size={15} style={{ color: "#0F172A" }} />
               <span>6 Paket Spesifik &amp; Teruji</span>
             </div>
             <span className="pkg-trust-sep">•</span>
             <div className="pkg-trust-item">
-              <CheckCircle2 size={15} className="text-emerald" />
+              <CheckCircle2 size={15} style={{ color: "#0F172A" }} />
               <span>Plafon Resmi Max Rp 500.000</span>
             </div>
             <span className="pkg-trust-sep">•</span>
             <div className="pkg-trust-item">
-              <CheckCircle2 size={15} className="text-emerald" />
+              <CheckCircle2 size={15} style={{ color: "#0F172A" }} />
               <span>Garansi Bug 1 Minggu</span>
             </div>
             <span className="pkg-trust-sep">•</span>
             <div className="pkg-trust-item">
-              <CheckCircle2 size={15} className="text-emerald" />
+              <CheckCircle2 size={15} style={{ color: "#0F172A" }} />
               <span>Kuota 3x Revisi Mutlak</span>
             </div>
           </div>
@@ -416,9 +416,7 @@ export default function PackagesPage({ onSelectPackage }) {
           color: #CBD5E1;
         }
 
-        .text-emerald {
-          color: #0F172A;
-        }
+        
 
         /* =======================================================
            SEGMENT FILTER BAR
@@ -501,7 +499,7 @@ export default function PackagesPage({ onSelectPackage }) {
         .pkg-card-head {
           padding: 22px 24px 18px;
           background: #FFFFFF;
-          min-height: 210px;
+          min-height: 268px;
           display: flex;
           flex-direction: column;
         }
@@ -512,17 +510,17 @@ export default function PackagesPage({ onSelectPackage }) {
           justify-content: space-between;
           flex-wrap: wrap;
           gap: 8px;
-          margin-bottom: 10px;
-          min-height: 48px;
+          margin-bottom: 12px;
+          min-height: 38px;
         }
 
         .pkg-card-title {
-          font-size: 1.25rem;
+          font-size: 1.22rem;
           font-weight: 800;
           color: #0F172A;
           margin-bottom: 8px;
           line-height: 1.35;
-          min-height: 48px;
+          min-height: 64px;
           display: flex;
           align-items: flex-start;
         }
@@ -531,14 +529,14 @@ export default function PackagesPage({ onSelectPackage }) {
           font-size: 0.88rem;
           color: #475569;
           line-height: 1.55;
-          min-height: 72px;
+          min-height: 108px;
           margin-bottom: 0;
         }
 
         .pkg-price-box {
           padding: 18px 24px;
           background: #F8FAFC;
-          min-height: 145px;
+          min-height: 148px;
           display: flex;
           flex-direction: column;
           justify-content: space-between;
@@ -637,7 +635,7 @@ export default function PackagesPage({ onSelectPackage }) {
           display: flex;
           flex-direction: column;
           gap: 8px;
-          min-height: 116px;
+          min-height: 165px;
           margin-bottom: 16px;
         }
 
@@ -660,7 +658,7 @@ export default function PackagesPage({ onSelectPackage }) {
           display: flex;
           flex-direction: column;
           gap: 8px;
-          min-height: 76px;
+          min-height: 82px;
           justify-content: center;
         }
 

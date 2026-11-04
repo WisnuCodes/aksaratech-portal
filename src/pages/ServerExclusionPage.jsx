@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import PageHeader from '../components/molecules/PageHeader';
 import { 
   ShieldAlert, XCircle, CheckCircle2, AlertTriangle, 
-  ArrowRight, Globe, Server, UploadCloud, Activity,
+  Globe, Server, UploadCloud, Activity,
   FileCode2, Database, Shield, Wrench, Sparkles, Check
 } from 'lucide-react';
 
@@ -71,8 +71,7 @@ export default function ServerExclusionPage() {
         action={
           <Link to="/paket" className="btn btn-secondary">
             <span>Katalog 6 Paket</span>
-            <ArrowRight size={16} />
-          </Link>
+            </Link>
         }
       />
 
@@ -81,17 +80,17 @@ export default function ServerExclusionPage() {
         <div className="container">
           <div className="ex-trust-row">
             <div className="ex-trust-chip">
-              <CheckCircle2 size={14} className="text-emerald" />
+              <CheckCircle2 size={14} style={{ color: "#0F172A" }} />
               <span>100% Aset Milik Klien</span>
             </div>
             <span className="ex-trust-dot">•</span>
             <div className="ex-trust-chip">
-              <CheckCircle2 size={14} className="text-emerald" />
+              <CheckCircle2 size={14} style={{ color: "#0F172A" }} />
               <span>Nol Mark-Up Sewa Server</span>
             </div>
             <span className="ex-trust-dot">•</span>
             <div className="ex-trust-chip">
-              <CheckCircle2 size={14} className="text-emerald" />
+              <CheckCircle2 size={14} style={{ color: "#0F172A" }} />
               <span>Bebas Keterikatan (Vendor Lock-in)</span>
             </div>
           </div>
@@ -104,8 +103,7 @@ export default function ServerExclusionPage() {
           {/* Executive Philosophy Strip (Compact & Impactful) */}
           <div className="neo-card ex-philosophy-card">
             <div className="ex-phil-header">
-              <AlertTriangle size={18} className="text-amber" />
-              <span className="ex-phil-badge">MENGAPA KAMI MENERAPKAN EKSKLUSI SERVER?</span>
+              <AlertTriangle size={18} style={{ color: "#0F172A" }} />
             </div>
             <h2 className="ex-phil-title">
               Melindungi Klien dari Keterikatan Agensi &amp; Biaya Tersembunyi
@@ -125,18 +123,18 @@ export default function ServerExclusionPage() {
               {/* Box KIRI: Termasuk */}
               <div className="neo-card ex-scope-card scope-included">
                 <div className="scope-card-head">
-                  <div className="scope-icon-wrap icon-green">
-                    <CheckCircle2 size={18} />
+                  <div className="scope-icon-wrap">
+                    <CheckCircle2 size={18} style={{ color: "#0F172A" }} />
                   </div>
                   <div>
-                    <span className="scope-tag tag-green">TANGGUNG JAWAB KAMI</span>
+                    <span className="scope-tag">Tanggung Jawab Kami</span>
                     <h3 className="scope-title">Termasuk dalam Layanan</h3>
                   </div>
                 </div>
                 <ul className="scope-list">
                   {inScope.map((item, idx) => (
                     <li key={idx} className="scope-item">
-                      <Check size={15} className="check-icon" />
+                      <Check size={15} style={{ color: "#0F172A", marginTop: "3px", flexShrink: 0 }} />
                       <span>{item}</span>
                     </li>
                   ))}
@@ -146,18 +144,18 @@ export default function ServerExclusionPage() {
               {/* Box KANAN: Eksklusi */}
               <div className="neo-card ex-scope-card scope-excluded">
                 <div className="scope-card-head">
-                  <div className="scope-icon-wrap icon-rose">
-                    <XCircle size={18} />
+                  <div className="scope-icon-wrap">
+                    <XCircle size={18} style={{ color: "#0F172A" }} />
                   </div>
                   <div>
-                    <span className="scope-tag tag-rose">EKSKLUSI SERVER</span>
+                    <span className="scope-tag">Eksklusi Server</span>
                     <h3 className="scope-title">Dikelola Mandiri oleh Klien</h3>
                   </div>
                 </div>
                 <ul className="scope-list">
                   {outScope.map((item, idx) => (
                     <li key={idx} className="scope-item">
-                      <XCircle size={15} className="cross-icon" />
+                      <XCircle size={15} style={{ color: "#475569", marginTop: "3px", flexShrink: 0 }} />
                       <span>{item}</span>
                     </li>
                   ))}
@@ -207,7 +205,7 @@ export default function ServerExclusionPage() {
                 <Wrench size={18} />
               </div>
               <div>
-                <span className="ex-maint-tag">LAYANAN HARIAN AKSARA TECH</span>
+                
                 <h3 className="ex-maint-title">
                   Software Maintenance &amp; Enhancement (Rp 50.000 / Hari)
                 </h3>
@@ -231,8 +229,7 @@ export default function ServerExclusionPage() {
           <div className="ex-cta-box">
             <Link to="/pesan" className="btn btn-primary ex-btn-main">
               <span>Isi Brief Kebutuhan Proyek</span>
-              <ArrowRight size={16} />
-            </Link>
+              </Link>
             <Link to="/paket" className="btn btn-secondary ex-btn-sub">
               <span>Lihat Detail 6 Paket</span>
             </Link>
@@ -248,8 +245,7 @@ export default function ServerExclusionPage() {
            ======================================================= */
         .ex-trust-strip {
           background: #FFFFFF;
-          border-bottom: 2px solid #0F172A;
-          padding: 10px 0;
+          padding: 12px 0;
         }
 
         .ex-trust-row {
@@ -258,8 +254,8 @@ export default function ServerExclusionPage() {
           justify-content: center;
           flex-wrap: wrap;
           gap: 12px;
-          font-size: 0.8rem;
-          font-weight: 700;
+          font-size: 0.85rem;
+          font-weight: 600;
           color: #334155;
         }
 
@@ -273,14 +269,11 @@ export default function ServerExclusionPage() {
           color: #CBD5E1;
         }
 
-        .text-emerald { color: #059669; }
-        .text-amber { color: #D97706; }
-
         /* =======================================================
            EXECUTIVE PHILOSOPHY CARD
            ======================================================= */
         .ex-philosophy-card {
-          background: #FFFBEB;
+          background: #F8FAFC;
           border: 1px solid var(--border-subtle);
           border-radius: var(--radius-md);
           padding: 24px 28px;
@@ -291,23 +284,15 @@ export default function ServerExclusionPage() {
           display: flex;
           align-items: center;
           gap: 8px;
-          margin-bottom: 8px;
-        }
-
-        .ex-phil-badge {
-          font-family: var(--font-body);
-          font-size: 0.72rem;
-          font-weight: 900;
-          letter-spacing: 0.06em;
-          color: #B45309;
+          margin-bottom: 12px;
         }
 
         .ex-phil-title {
           font-size: 1.3rem;
-          font-weight: 900;
+          font-weight: 800;
           color: #0F172A;
           margin-bottom: 8px;
-          line-height: 1.3;
+          line-height: 1.35;
         }
 
         .ex-phil-desc {
@@ -326,16 +311,17 @@ export default function ServerExclusionPage() {
 
         .ex-comparison-header {
           text-align: center;
-          margin-bottom: 22px;
+          margin-bottom: 24px;
         }
 
         .ex-pretitle { display: none !important; }
 
         .ex-section-title {
           font-size: 1.6rem;
-          font-weight: 900;
+          font-weight: 800;
           color: #0F172A;
           margin: 0;
+          line-height: 1.3;
         }
 
         .ex-scope-grid {
@@ -345,7 +331,7 @@ export default function ServerExclusionPage() {
         }
 
         .ex-scope-card {
-          padding: 22px 24px;
+          padding: 24px;
           background: #FFFFFF;
           border: 1px solid var(--border-subtle);
           border-radius: var(--radius-md);
@@ -357,38 +343,32 @@ export default function ServerExclusionPage() {
           gap: 12px;
           padding-bottom: 14px;
           margin-bottom: 14px;
-          border-bottom: 2px solid #F1F5F9;
         }
 
         .scope-icon-wrap {
-          width: 36px;
-          height: 36px;
+          width: 38px;
+          height: 38px;
           border-radius: 8px;
+          background: #F1F5F9;
           border: 1px solid var(--border-subtle);
           display: flex;
           align-items: center;
           justify-content: center;
           flex-shrink: 0;
+          color: #0F172A;
         }
 
-        .icon-green { background: #ECFDF5; color: #059669; }
-        .icon-rose { background: #FFF1F2; color: #E11D48; }
-
         .scope-tag {
-          font-family: var(--font-body);
-          font-size: 0.68rem;
-          font-weight: 900;
-          letter-spacing: 0.06em;
+          font-size: 0.74rem;
+          font-weight: 700;
+          color: #64748B;
           display: block;
           margin-bottom: 2px;
         }
 
-        .tag-green { color: #059669; }
-        .tag-rose { color: #E11D48; }
-
         .scope-title {
           font-size: 1.05rem;
-          font-weight: 900;
+          font-weight: 800;
           color: #0F172A;
           margin: 0;
         }
@@ -406,26 +386,14 @@ export default function ServerExclusionPage() {
           display: flex;
           align-items: flex-start;
           gap: 10px;
-          font-size: 0.85rem;
+          font-size: 0.86rem;
           color: #334155;
-          line-height: 1.45;
-          font-weight: 600;
-        }
-
-        .check-icon {
-          color: #059669;
-          margin-top: 3px;
-          flex-shrink: 0;
-        }
-
-        .cross-icon {
-          color: #E11D48;
-          margin-top: 3px;
-          flex-shrink: 0;
+          line-height: 1.5;
+          font-weight: 500;
         }
 
         /* =======================================================
-           4 DETAILED EXCLUSIONS GRID (COMPACT 2x2)
+           4 DETAILED EXCLUSIONS GRID
            ======================================================= */
         .ex-details-section {
           margin-bottom: 44px;
@@ -438,7 +406,7 @@ export default function ServerExclusionPage() {
         }
 
         .ex-card-item {
-          padding: 20px;
+          padding: 22px;
           background: #FFFFFF;
           border: 1px solid var(--border-subtle);
           border-radius: var(--radius-md);
@@ -454,11 +422,11 @@ export default function ServerExclusionPage() {
         }
 
         .ex-icon-box {
-          width: 34px;
-          height: 34px;
-          border-radius: 6px;
+          width: 36px;
+          height: 36px;
+          border-radius: 8px;
           background: #F8FAFC;
-          border: 1.5px solid #0F172A;
+          border: 1px solid var(--border-subtle);
           color: #0F172A;
           display: flex;
           align-items: center;
@@ -466,10 +434,10 @@ export default function ServerExclusionPage() {
         }
 
         .ex-badge-tag {
-          font-size: 0.72rem;
-          font-weight: 800;
+          font-size: 0.74rem;
+          font-weight: 700;
           background: #F1F5F9;
-          border: 1.5px solid #0F172A;
+          border: 1px solid var(--border-subtle);
           border-radius: 4px;
           padding: 3px 8px;
           color: #0F172A;
@@ -477,13 +445,13 @@ export default function ServerExclusionPage() {
 
         .ex-card-name {
           font-size: 1.05rem;
-          font-weight: 900;
+          font-weight: 800;
           color: #0F172A;
           margin-bottom: 6px;
         }
 
         .ex-card-summary {
-          font-size: 0.84rem;
+          font-size: 0.86rem;
           color: #475569;
           line-height: 1.55;
           margin-bottom: 14px;
@@ -492,9 +460,8 @@ export default function ServerExclusionPage() {
 
         .ex-card-boundary {
           padding-top: 10px;
-          border-top: 1.5px dashed #E2E8F0;
-          font-size: 0.78rem;
-          color: #64748B;
+          font-size: 0.8rem;
+          color: #475569;
         }
 
         .ex-card-boundary strong {
@@ -508,7 +475,7 @@ export default function ServerExclusionPage() {
           background: #FFFFFF;
           border: 1px solid var(--border-subtle);
           border-radius: var(--radius-md);
-          padding: 22px 24px;
+          padding: 24px;
           margin-bottom: 40px;
         }
 
@@ -516,43 +483,34 @@ export default function ServerExclusionPage() {
           display: flex;
           align-items: center;
           gap: 12px;
-          margin-bottom: 10px;
+          margin-bottom: 12px;
         }
 
         .ex-maint-icon {
-          width: 36px;
-          height: 36px;
+          width: 38px;
+          height: 38px;
           border-radius: 8px;
-          background: #EEF4FF;
+          background: #F1F5F9;
           border: 1px solid var(--border-subtle);
-          color: var(--prussian-blue);
+          color: #0F172A;
           display: flex;
           align-items: center;
           justify-content: center;
           flex-shrink: 0;
         }
 
-        .ex-maint-tag {
-          font-family: var(--font-body);
-          font-size: 0.68rem;
-          font-weight: 900;
-          letter-spacing: 0.06em;
-          color: var(--prussian-blue);
-          display: block;
-        }
-
         .ex-maint-title {
-          font-size: 1.1rem;
-          font-weight: 900;
+          font-size: 1.15rem;
+          font-weight: 800;
           color: #0F172A;
           margin: 0;
         }
 
         .ex-maint-desc {
-          font-size: 0.86rem;
+          font-size: 0.9rem;
           color: #475569;
-          line-height: 1.55;
-          margin-bottom: 14px;
+          line-height: 1.6;
+          margin-bottom: 16px;
         }
 
         .ex-maint-chips {
@@ -562,135 +520,30 @@ export default function ServerExclusionPage() {
         }
 
         .maint-chip {
-          background: #F8FAFC;
-          border: 1.5px solid #0F172A;
-          border-radius: 6px;
-          padding: 5px 10px;
           font-size: 0.78rem;
-          font-weight: 700;
-          color: #0F172A;
+          background: #F8FAFC;
+          border: 1px solid var(--border-subtle);
+          color: #1E293B;
+          padding: 5px 12px;
+          border-radius: 6px;
+          font-weight: 600;
         }
 
-        /* =======================================================
-           CTA BUTTONS
-           ======================================================= */
         .ex-cta-box {
           display: flex;
-          align-items: center;
           justify-content: center;
+          align-items: center;
           gap: 14px;
           flex-wrap: wrap;
         }
 
-        .ex-btn-main {
-          padding: 12px 26px;
-          font-size: 0.94rem;
-        }
-
-        .ex-btn-sub {
-          padding: 12px 22px;
-          font-size: 0.94rem;
-        }
-
-        /* =======================================================
-           MOBILE RESPONSIVENESS (max-width: 640px)
-           ======================================================= */
-        @media (max-width: 640px) {
-          .ex-content-section {
-            padding-top: 24px;
-            padding-bottom: 48px;
-          }
-
-          .ex-trust-row {
-            font-size: 0.74rem;
-            gap: 6px;
-          }
-
-          .ex-trust-dot {
-            display: none;
-          }
-
-          .ex-trust-chip {
-            background: #F8FAFC;
-            border: 1px solid #E2E8F0;
-            padding: 4px 8px;
-            border-radius: 6px;
-          }
-
-          .ex-philosophy-card {
-            padding: 18px 18px;
-            margin-bottom: 28px;
-          }
-
-          .ex-phil-title {
-            font-size: 1.15rem;
-          }
-
-          .ex-phil-desc {
-            font-size: 0.84rem;
-          }
-
-          .ex-comparison-header {
-            margin-bottom: 16px;
-          }
-
-          .ex-section-title {
-            font-size: 1.35rem;
-          }
-
-          .ex-scope-grid {
-            grid-template-columns: 1fr;
-            gap: 16px;
-          }
-
-          .ex-scope-card {
-            padding: 18px;
-          }
-
-          .scope-title {
-            font-size: 0.98rem;
-          }
-
-          .scope-item {
-            font-size: 0.82rem;
-          }
-
+        @media (max-width: 768px) {
+          .ex-scope-grid,
           .ex-cards-grid {
             grid-template-columns: 1fr;
-            gap: 14px;
           }
-
-          .ex-card-item {
-            padding: 16px;
-          }
-
-          .ex-maintenance-card {
-            padding: 18px;
-            margin-bottom: 28px;
-          }
-
-          .ex-maint-title {
-            font-size: 0.98rem;
-          }
-
-          .ex-maint-chips {
-            gap: 6px;
-          }
-
-          .maint-chip {
-            font-size: 0.74rem;
-            padding: 4px 8px;
-          }
-
-          .ex-cta-box {
-            flex-direction: column;
-            width: 100%;
-          }
-
-          .ex-btn-main,
-          .ex-btn-sub {
-            width: 100%;
-            justify-content: center;
+          .ex-philosophy-card {
+            padding: 20px;
           }
         }
       `}</style>

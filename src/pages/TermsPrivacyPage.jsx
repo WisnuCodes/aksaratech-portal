@@ -47,7 +47,7 @@ export default function TermsPrivacyPage() {
             marginBottom: '12px'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-              <ShieldCheck size={16} style={{ color: '#1D63FF', flexShrink: 0 }} />
+              <ShieldCheck size={16} style={{ color: '#0F172A', flexShrink: 0 }} />
               <strong style={{ color: '#0F172A', fontSize: '0.9rem' }}>Saluran Komunikasi &amp; Transaksi Tunggal:</strong>
             </div>
             <p style={{ margin: 0, fontSize: '0.86rem', color: '#334155', lineHeight: '1.6' }}>
@@ -65,7 +65,7 @@ export default function TermsPrivacyPage() {
       number: '2',
       title: 'Batasan Ruang Lingkup Mutlak (Eksklusi Server & Hosting)',
       badge: 'Aturan Mutlak',
-      badgeColor: '#D97706',
+      badgeColor: 'var(--prussian-blue)',
       icon: AlertTriangle,
       content: (
         <div>
@@ -81,7 +81,7 @@ export default function TermsPrivacyPage() {
             
             marginBottom: '14px'
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#D97706', fontWeight: '900', fontSize: '0.82rem', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '8px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#0F172A', fontWeight: '800', fontSize: '0.82rem', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '8px' }}>
               <AlertTriangle size={15} /> Hal-Hal yang Tegas Berada di Luar Tanggung Jawab Aksara Tech:
             </div>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -92,7 +92,7 @@ export default function TermsPrivacyPage() {
                 'Penanganan kendala server down, serangan DDoS, atau gangguan infrastruktur penyedia hosting.'
               ].map((item, idx) => (
                 <li key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '0.86rem', color: '#334155' }}>
-                  <span style={{ color: "#EF4444", fontWeight: "700", flexShrink: 0 }}>&bull;</span>
+                  <span style={{ color: "#0F172A", fontWeight: "700", flexShrink: 0 }}>&bull;</span>
                   <span>{item}</span>
                 </li>
               ))}
@@ -144,7 +144,7 @@ export default function TermsPrivacyPage() {
                 key={idx}
                 style={{
                   background: '#FFFFFF',
-                  border: '1.5px solid #0F172A',
+                  border: '1px solid var(--border-subtle)',
                   borderRadius: '6px',
                   padding: '12px 14px',
                   
@@ -182,7 +182,7 @@ export default function TermsPrivacyPage() {
       number: '4',
       title: 'Skema Finansial & Pembayaran Dua Termin (50:50)',
       badge: 'DP 50% & Pelunasan',
-      badgeColor: '#059669',
+      badgeColor: 'var(--prussian-blue)',
       icon: CreditCard,
       content: (
         <div>
@@ -192,8 +192,8 @@ export default function TermsPrivacyPage() {
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '12px', marginBottom: '14px' }}>
             <div style={{
-              background: '#F0FDF4',
-              border: '2px solid #059669',
+              background: '#F8FAFC',
+              border: '1px solid var(--border-subtle)',
               borderRadius: '8px',
               padding: '14px'
             }}>
@@ -237,14 +237,14 @@ export default function TermsPrivacyPage() {
 
           <div style={{
             background: '#F0F5FF',
-            border: '1.5px solid #0F172A',
+            border: '1px solid var(--border-subtle)',
             
             borderRadius: '6px',
             padding: '14px',
             marginBottom: '10px'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-              <Lock size={16} style={{ color: 'var(--prussian-blue)' }} />
+              <Lock size={16} style={{ color: '#0F172A' }} />
               <strong style={{ fontSize: '0.9rem', color: '#0F172A' }}>Protokol Sanitasi Data (Data Cleansing Policy):</strong>
             </div>
             <p style={{ margin: 0, fontSize: '0.86rem', color: '#334155', lineHeight: '1.65' }}>
@@ -259,7 +259,7 @@ export default function TermsPrivacyPage() {
       number: '6',
       title: 'Garansi Pemeliharaan Kode 1 Minggu (7 Hari Kalender)',
       badge: 'Garansi 7 Hari',
-      badgeColor: '#059669',
+      badgeColor: 'var(--prussian-blue)',
       icon: ShieldCheck,
       content: (
         <div>
@@ -269,15 +269,15 @@ export default function TermsPrivacyPage() {
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '12px' }}>
             <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '0.86rem', color: '#334155' }}>
-              <span style={{ color: "#059669", fontWeight: "700" }}>&bull;</span>
+              <span style={{ color: "#0F172A", fontWeight: "700" }}>&bull;</span>
               <span><strong>Cakupan Garansi:</strong> Penanganan galat fungsi (*runtime error*), kesalahan sintaks koding, atau ketidaksesuaian fungsional terhadap lembar brief teknis awal.</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '0.86rem', color: '#334155' }}>
-              <span style={{ color: "#EF4444", fontWeight: "700" }}>&bull;</span>
+              <span style={{ color: "#475569", fontWeight: "700" }}>&bull;</span>
               <span><strong>Pengecualian:</strong> Tidak mencakup penambahan fitur baru di luar lembar kesepakatan awal (fitur baru dialihkan ke Add-on resmi).</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '0.86rem', color: '#334155' }}>
-              <span style={{ color: "#EF4444", fontWeight: "700" }}>&bull;</span>
+              <span style={{ color: "#475569", fontWeight: "700" }}>&bull;</span>
               <span><strong>Gugurnya Garansi:</strong> Garansi gugur otomatis apabila source code telah dimodifikasi mandiri oleh pihak ketiga atau kendala server hosting eksternal milik klien.</span>
             </div>
           </div>
@@ -299,7 +299,7 @@ export default function TermsPrivacyPage() {
 
           <div style={{
             background: '#FFFFFF',
-            border: '1.5px solid #0F172A',
+            border: '1px solid var(--border-subtle)',
             borderRadius: '6px',
             padding: '12px 14px',
             
@@ -381,7 +381,7 @@ export default function TermsPrivacyPage() {
                 height: '36px',
                 borderRadius: '8px',
                 background: '#EBF2FF',
-                border: '1.5px solid #0F172A',
+                border: '1px solid var(--border-subtle)',
                 color: 'var(--prussian-blue)',
                 display: 'flex',
                 alignItems: 'center',
@@ -413,9 +413,9 @@ export default function TermsPrivacyPage() {
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '6px',
-                  background: copied ? '#ECFDF5' : '#F8FAFC',
-                  color: copied ? '#059669' : '#0F172A',
-                  border: '1.5px solid #0F172A',
+                  background: copied ? '#0F172A' : '#FFFFFF',
+                  color: copied ? '#FFFFFF' : '#0F172A',
+                  border: '1px solid var(--border-subtle)',
                   
                   borderRadius: 'var(--radius-sm)',
                   padding: '7px 12px',
@@ -473,10 +473,10 @@ export default function TermsPrivacyPage() {
                 gap: '6px',
                 padding: '7px 14px',
                 borderRadius: 'var(--radius-full)',
-                border: '1.5px solid #0F172A',
+                border: '1px solid var(--border-subtle)',
                 background: activeFilter === 'all' ? '#0F172A' : '#FFFFFF',
                 color: activeFilter === 'all' ? '#FFFFFF' : '#0F172A',
-                boxShadow: activeFilter === 'all' ? '2px 2px 0px var(--kuning)' : '1.5px 1.5px 0px #CBD5E1',
+                boxShadow: 'none',
                 fontSize: '0.8rem',
                 fontWeight: '800',
                 whiteSpace: 'nowrap',
@@ -501,10 +501,10 @@ export default function TermsPrivacyPage() {
                     gap: '6px',
                     padding: '7px 14px',
                     borderRadius: 'var(--radius-full)',
-                    border: '1.5px solid #0F172A',
+                    border: '1px solid var(--border-subtle)',
                     background: isActive ? '#0F172A' : '#FFFFFF',
                     color: isActive ? '#FFFFFF' : '#0F172A',
-                    boxShadow: isActive ? '2px 2px 0px var(--kuning)' : '1.5px 1.5px 0px #CBD5E1',
+                    boxShadow: 'none',
                     fontSize: '0.8rem',
                     fontWeight: '800',
                     whiteSpace: 'nowrap',
@@ -512,7 +512,7 @@ export default function TermsPrivacyPage() {
                     flexShrink: 0
                   }}
                 >
-                  <IconComp size={13} style={{ color: isActive ? 'var(--kuning)' : 'var(--prussian-blue)' }} />
+                  <IconComp size={13} style={{ color: isActive ? '#0F172A' : '#475569' }} />
                   <span>Pasal {s.number}</span>
                 </button>
               );
@@ -546,8 +546,8 @@ export default function TermsPrivacyPage() {
                           height: '32px',
                           minWidth: '32px',
                           borderRadius: '8px',
-                          background: sec.id === 'eksklusi' ? '#FFFBEB' : '#F1F5F9',
-                          border: '1.5px solid #0F172A',
+                          background: '#F1F5F9',
+                          border: '1px solid var(--border-subtle)',
                           color: sec.badgeColor || 'var(--prussian-blue)',
                           display: 'flex',
                           alignItems: 'center',

@@ -35,9 +35,9 @@ const errorTheme = createTheme({
   },
   palette: {
     primary: { main: '#1D63FF', dark: '#0E46C7' },
-    error: { main: '#DC2626' },
-    warning: { main: '#D97706' },
-    success: { main: '#059669' }
+    error: { main: '#0F172A' },
+    warning: { main: '#0F172A' },
+    success: { main: '#0F172A' }
   }
 });
 
@@ -154,9 +154,9 @@ Halo Tim Aksara Tech, saya mengalami kendala teknis pada sistem web dengan rinci
 
   const is5xx = errorData.code >= 500;
   const isTeapot = errorData.code === 418;
-  const accentColor = is5xx ? '#DC2626' : isTeapot ? '#059669' : '#1D63FF';
-  const accentLight = is5xx ? '#FEF2F2' : isTeapot ? '#ECFDF5' : '#EEF4FF';
-  const tagBorderColor = is5xx ? '#F87171' : isTeapot ? '#34D399' : '#93C5FD';
+  const accentColor = 'var(--prussian-blue)';
+  const accentLight = '#F8FAFC';
+  const tagBorderColor = 'var(--border-subtle)';
 
   return (
     <ThemeProvider theme={errorTheme}>
@@ -199,7 +199,7 @@ Halo Tim Aksara Tech, saya mengalami kendala teknis pada sistem web dengan rinci
             maxWidth: '660px',
             maxHeight: 'calc(100dvh - 28px)',
             bgcolor: '#FFFFFF',
-            border: '2px solid #0F172A',
+            border: '1px solid var(--border-subtle)',
             borderRadius: '14px',
             
             display: 'flex',
@@ -214,7 +214,7 @@ Halo Tim Aksara Tech, saya mengalami kendala teknis pada sistem web dengan rinci
               px: { xs: 1.8, sm: 2.4 },
               py: 1.2,
               bgcolor: '#FFFFFF',
-              borderBottom: '2px solid #0F172A',
+              borderBottom: '1px solid var(--border-subtle)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
@@ -244,9 +244,9 @@ Halo Tim Aksara Tech, saya mengalami kendala teknis pada sistem web dengan rinci
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: 0.6,
-                  bgcolor: '#F0FDF4',
-                  color: '#166534',
-                  border: '1px solid #86EFAC',
+                  bgcolor: '#F8FAFC',
+                  color: '#0F172A',
+                  border: '1px solid var(--border-subtle)',
                   borderRadius: '9999px',
                   px: 1,
                   py: 0.3,
@@ -260,7 +260,7 @@ Halo Tim Aksara Tech, saya mengalami kendala teknis pada sistem web dengan rinci
                     width: 6,
                     height: 6,
                     borderRadius: '50%',
-                    bgcolor: '#10B981',
+                    bgcolor: '#0F172A',
                     
                     animation: 'pulseDot 1.5s infinite ease-in-out'
                   }}
@@ -301,7 +301,7 @@ Halo Tim Aksara Tech, saya mengalami kendala teknis pada sistem web dengan rinci
               <Box
                 sx={{
                   bgcolor: accentLight,
-                  border: '2px solid #0F172A',
+                  border: '1px solid var(--border-subtle)',
                   borderRadius: '10px',
                   
                   px: { xs: 1.6, sm: 2.2 },
@@ -362,7 +362,7 @@ Halo Tim Aksara Tech, saya mengalami kendala teknis pada sistem web dengan rinci
             <Box
               sx={{
                 bgcolor: '#F8FAFC',
-                border: '1.5px solid #0F172A',
+                border: '1px solid var(--border-subtle)',
                 borderRadius: '8px',
                 p: { xs: 1.2, sm: 1.4 },
                 display: 'grid',
@@ -393,8 +393,8 @@ Halo Tim Aksara Tech, saya mengalami kendala teknis pada sistem web dengan rinci
             <Box
               sx={{
                 p: 1.2,
-                bgcolor: is5xx ? '#FEF2F2' : '#EFF6FF',
-                border: `1.5px solid ${is5xx ? '#FCA5A5' : '#93C5FD'}`,
+                bgcolor: '#F8FAFC',
+                border: '1px solid var(--border-subtle)',
                 borderRadius: '8px',
                 display: 'flex',
                 alignItems: 'center',
@@ -402,11 +402,11 @@ Halo Tim Aksara Tech, saya mengalami kendala teknis pada sistem web dengan rinci
               }}
             >
               {is5xx ? (
-                <ShieldOutlinedIcon sx={{ color: '#DC2626', fontSize: 18, flexShrink: 0 }} />
+                <ShieldOutlinedIcon sx={{ color: '#0F172A', fontSize: 18, flexShrink: 0 }} />
               ) : (
-                <CheckCircleOutlineRoundedIcon sx={{ color: '#1D63FF', fontSize: 18, flexShrink: 0 }} />
+                <CheckCircleOutlineRoundedIcon sx={{ color: '#0F172A', fontSize: 18, flexShrink: 0 }} />
               )}
-              <Typography sx={{ fontSize: '0.78rem', color: is5xx ? '#991B1B' : '#1E40AF', lineHeight: 1.45, fontWeight: 600 }}>
+              <Typography sx={{ fontSize: '0.78rem', color: '#334155', lineHeight: 1.5, fontWeight: 500 }}>
                 {is5xx ? (
                   <>
                     Kendala berada di infrastruktur server hosting. Kode sumber aplikasi Anda telah tersusun modular dan aman.
@@ -428,7 +428,7 @@ Halo Tim Aksara Tech, saya mengalami kendala teknis pada sistem web dengan rinci
                 justifyContent: 'space-between',
                 gap: 1,
                 pt: 1.2,
-                borderTop: '1.5px solid #E2E8F0'
+                borderTop: '1px solid var(--border-subtle)'
               }}
             >
               <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
@@ -447,7 +447,7 @@ Halo Tim Aksara Tech, saya mengalami kendala teknis pada sistem web dengan rinci
                     px: 1.8,
                     py: 0.7,
                     borderRadius: '6px',
-                    border: '1.5px solid #0F172A',
+                    border: '1px solid #0F172A',
                     
                     '&:hover': {
                       bgcolor: '#1E293B',
@@ -517,7 +517,7 @@ Halo Tim Aksara Tech, saya mengalami kendala teknis pada sistem web dengan rinci
                   variant="contained"
                   startIcon={<WhatsAppIcon sx={{ fontSize: 16 }} />}
                   sx={{
-                    bgcolor: '#059669',
+                    bgcolor: '#0F172A',
                     color: '#FFFFFF',
                     fontFamily: 'var(--font-heading)',
                     fontWeight: 800,
@@ -529,7 +529,7 @@ Halo Tim Aksara Tech, saya mengalami kendala teknis pada sistem web dengan rinci
                     border: '1.5px solid #0F172A',
                     
                     '&:hover': {
-                      bgcolor: '#047857',
+                      bgcolor: '#1E293B',
                       transform: 'translate(-1px, -1px)',
                       
                     }

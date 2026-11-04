@@ -14,7 +14,7 @@ export default function AddonsSection() {
   const visibleAddons = showAll ? ADDONS : ADDONS.slice(0, 6);
 
   return (
-    <section id="addons" className="section-padding" style={{ background: '#FFFFFF', borderTop: '2px solid #0F172A' }}>
+    <section id="addons" className="section-padding" style={{ background: '#FFFFFF', borderTop: '1px solid var(--border-subtle)' }}>
       <div className="container">
         <div className="section-header">
           <SectionBadge icon={Puzzle}>
@@ -54,7 +54,7 @@ export default function AddonsSection() {
               >
                 <div style={{
                   background: accentBg,
-                  border: `2px solid #0F172A`,
+                  border: '1px solid var(--border-subtle)',
                   
                   borderRadius: '8px',
                   padding: '10px',

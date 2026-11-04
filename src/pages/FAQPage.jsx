@@ -290,7 +290,7 @@ export default function FAQPage() {
                             onClick={() => handleCopy(faq, idx)}
                             className="faq-copy-btn"
                           >
-                            {isCopied ? <Check size={13} style={{ color: '#059669' }} /> : <Copy size={13} />}
+                            {isCopied ? <Check size={13} style={{ color: '#0F172A' }} /> : <Copy size={13} style={{ color: '#0F172A' }} />}
                             <span>{isCopied ? 'Tersalin ke Clipboard!' : 'Salin Jawaban'}</span>
                           </button>
 
@@ -625,8 +625,8 @@ export default function FAQPage() {
           align-items: center;
           gap: 6px;
           background: #FFFFFF;
-          color: #059669;
-          border: 1px solid #A7F3D0;
+          color: #0F172A;
+          border: 1px solid var(--border-subtle);
           padding: 6px 12px;
           border-radius: var(--radius-sm);
           font-size: 0.78rem;
@@ -636,8 +636,8 @@ export default function FAQPage() {
         }
 
         .faq-wa-link:hover {
-          background: #F0FDF4;
-          border-color: #059669;
+          background: #F1F5F9;
+          border-color: var(--border-main);
         }
 
         .faq-empty-state {
@@ -716,9 +716,9 @@ export default function FAQPage() {
           gap: 5px;
           font-size: 0.72rem;
           font-weight: 800;
-          color: #059669;
-          background: #ECFDF5;
-          border: 1px solid #A7F3D0;
+          color: #0F172A;
+          background: #F1F5F9;
+          border: 1px solid var(--border-subtle);
           padding: 2px 8px;
           border-radius: 4px;
         }
@@ -727,7 +727,7 @@ export default function FAQPage() {
           width: 6px;
           height: 6px;
           border-radius: 50%;
-          background: #059669;
+          background: #0F172A;
         }
 
         .faq-contact-title {

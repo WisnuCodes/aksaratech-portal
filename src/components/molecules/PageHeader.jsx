@@ -14,7 +14,7 @@ export default function PageHeader({
   return (
     <div className="page-header" style={{
       background: '#F1F5F9',
-      borderBottom: '2px solid #0F172A',
+      borderBottom: '1px solid var(--border-subtle)',
       paddingTop: '40px',
       paddingBottom: '44px',
       position: 'relative'

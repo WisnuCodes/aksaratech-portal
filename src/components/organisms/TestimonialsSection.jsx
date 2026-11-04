@@ -373,11 +373,11 @@ export default function TestimonialsSection() {
         .testi-quote-mark {
           font-size: 3.8rem;
           font-family: Georgia, serif;
-          color: var(--kuning);
+          color: #CBD5E1;
           position: absolute;
           top: -24px;
           left: -10px;
-          opacity: 0.55;
+          opacity: 0.4;
           pointer-events: none;
           line-height: 1;
         }
@@ -506,7 +506,7 @@ export default function TestimonialsSection() {
         }
 
         .testi-arrow-btn:hover:not(:disabled) {
-          background: var(--kuning);
+          background: #F1F5F9;
           transform: translate(-1px, -1px);
         }
 
@@ -632,7 +632,7 @@ export default function TestimonialsSection() {
 
           .testi-dot.active {
             width: 24px;
-            background: var(--kuning);
+            background: #0F172A;
           }
 
           .testi-mobile-hint {

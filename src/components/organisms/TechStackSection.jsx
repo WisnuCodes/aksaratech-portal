@@ -213,7 +213,9 @@ export default function TechStackSection() {
           }
 
           .tech-mobile-pill.active {
-            background: var(--kuning);
+            background: #F1F5F9;
+            border-color: var(--border-main);
+            color: #0F172A;
           }
 
           .tech-cards-grid {

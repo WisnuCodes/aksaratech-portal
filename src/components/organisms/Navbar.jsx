@@ -215,10 +215,10 @@ export default function Navbar() {
               border: '1px solid #CBD5E1',
               bgcolor: '#FFFFFF',
               
-              color: '#059669',
+              color: '#0F172A',
               transition: 'all 0.15s cubic-bezier(0.2, 0, 0, 1)',
               '&:hover': {
-                bgcolor: '#ECFDF5',
+                bgcolor: '#F1F5F9',
                 transform: 'translate(-1px, -1px)',
                 
               },
@@ -232,7 +232,7 @@ export default function Navbar() {
               variant="dot"
               sx={{
                 '& .MuiBadge-badge': {
-                  bgcolor: '#10B981',
+                  bgcolor: '#0F172A',
                   
                   width: 7,
                   height: 7,
@@ -366,7 +366,7 @@ export default function Navbar() {
                       border: '1.5px solid',
                       borderColor: isActive ? 'var(--prussian-blue)' : 'transparent',
                       bgcolor: isActive ? '#EEF4FF' : 'transparent',
-                      boxShadow: isActive ? '2px 2px 0px var(--prussian-blue)' : 'none',
+                      boxShadow: 'none',
                       transition: 'all 0.15s cubic-bezier(0.2, 0, 0, 1)',
                       '&.Mui-selected': {
                         bgcolor: '#EEF4FF',
@@ -398,7 +398,7 @@ export default function Navbar() {
                           justifyContent: 'center',
                           border: '1.5px solid',
                           borderColor: isActive ? '#0F172A' : 'rgba(29, 99, 255, 0.25)',
-                          boxShadow: isActive ? '1.5px 1.5px 0px #0F172A' : 'none',
+                          boxShadow: 'none',
                           transition: 'all 0.15s cubic-bezier(0.2, 0, 0, 1)',
                           '.MuiListItemButton-root:hover &': {
                             transform: 'scale(1.05)',

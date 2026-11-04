@@ -195,16 +195,16 @@ export default function StepIndicator({ currentStep, totalSteps = 7, steps = [],
         }
 
         .step-circle.active {
-          background: var(--kuning);
-          color: #0F172A;
+          background: var(--prussian-blue);
+          color: #FFFFFF;
           border-color: var(--prussian-blue);
           transform: translateY(-2px);
         }
 
         .step-circle.completed {
-          background: var(--emerald);
+          background: #0F172A;
           color: #FFFFFF;
-          border-color: var(--prussian-blue);
+          border-color: #0F172A;
         }
 
         .step-label {
@@ -222,8 +222,8 @@ export default function StepIndicator({ currentStep, totalSteps = 7, steps = [],
         }
 
         .step-label.completed-label {
-          color: #059669;
-          font-weight: 700;
+          color: #0F172A;
+          font-weight: 600;
         }
 
         /* =======================================================
@@ -259,14 +259,13 @@ export default function StepIndicator({ currentStep, totalSteps = 7, steps = [],
           }
 
           .step-mobile-badge {
-            background: var(--kuning);
-            border: 1.5px solid #0F172A;
+            background: #F1F5F9;
+            border: 1px solid var(--border-subtle);
             padding: 2px 8px;
             border-radius: 4px;
             font-size: 0.72rem;
-            font-weight: 900;
+            font-weight: 700;
             color: #0F172A;
-            font-family: var(--font-heading);
             white-space: nowrap;
           }
 
@@ -277,14 +276,13 @@ export default function StepIndicator({ currentStep, totalSteps = 7, steps = [],
           }
 
           .step-mobile-percent {
-            font-family: var(--font-heading);
             font-size: 0.82rem;
-            font-weight: 900;
-            color: var(--prussian-blue);
-            background: #EFF6FF;
-            padding: 2px 6px;
+            font-weight: 800;
+            color: #0F172A;
+            background: #F1F5F9;
+            padding: 2px 8px;
             border-radius: 4px;
-            border: 1px solid var(--prussian-blue);
+            border: 1px solid var(--border-subtle);
             flex-shrink: 0;
           }
 
@@ -305,14 +303,13 @@ export default function StepIndicator({ currentStep, totalSteps = 7, steps = [],
           }
 
           .step-segment.completed {
-            background: #10B981;
-            border-color: var(--prussian-blue);
+            background: #0F172A;
+            border-color: #0F172A;
           }
 
           .step-segment.active {
-            background: var(--kuning);
+            background: var(--prussian-blue);
             border-color: var(--prussian-blue);
-            transform: scaleY(1.2);
           }
 
           /* Quick Chips */

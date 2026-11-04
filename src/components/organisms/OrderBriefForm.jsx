@@ -188,9 +188,9 @@ export default function OrderBriefForm({ preselectedPackageId, hideHeader = fals
                         className={`select-card ${isSelected ? 'active' : ''}`}
                         onClick={() => updateField('selectedPackageId', pkg.id)}
                         style={{
-                          background: isSelected ? '#FFFDF0' : '#FFFFFF',
-                          borderColor: '#0F172A',
-                          boxShadow: isSelected ? '4px 4px 0px var(--kuning)' : '3px 3px 0px #CBD5E1',
+                          background: isSelected ? '#F8FAFC' : '#FFFFFF',
+                          borderColor: isSelected ? 'var(--prussian-blue)' : 'var(--border-subtle)',
+                          boxShadow: 'none',
                           padding: '18px 20px',
                           display: 'flex',
                           flexDirection: 'column',
@@ -235,7 +235,7 @@ export default function OrderBriefForm({ preselectedPackageId, hideHeader = fals
                               : `${formatRupiah(pkg.minPrice)} – ${formatRupiah(pkg.maxPrice)}`}
                           </div>
                           <div style={{ fontSize: '0.8rem', color: '#475569', display: 'flex', alignItems: 'center', gap: '6px', marginTop: '6px', fontWeight: '700' }}>
-                            <Clock size={14} style={{ color: '#D97706' }} /> {pkg.minDays}–{pkg.maxDays} Hari Kerja &bull; Max 3x Revisi
+                            <Clock size={14} style={{ color: '#0F172A' }} /> {pkg.minDays}–{pkg.maxDays} Hari Kerja &bull; Max 3x Revisi
                           </div>
                         </div>
                       </div>
@@ -273,10 +273,10 @@ export default function OrderBriefForm({ preselectedPackageId, hideHeader = fals
                             borderRadius: '6px',
                             fontSize: '0.88rem',
                             fontWeight: '800',
-                            border: '2px solid #0F172A',
+                            border: isSel ? '1px solid var(--prussian-blue)' : '1px solid var(--border-subtle)',
                             background: isSel ? 'var(--prussian-blue)' : '#FFFFFF',
                             color: isSel ? '#FFFFFF' : '#0F172A',
-                            boxShadow: isSel ? '3px 3px 0px var(--kuning)' : '2px 2px 0px #CBD5E1',
+                            boxShadow: 'none',
                             cursor: 'pointer',
                             transition: 'all 0.15s ease'
                           }}
@@ -319,9 +319,9 @@ export default function OrderBriefForm({ preselectedPackageId, hideHeader = fals
                         key={feat}
                         onClick={() => toggleArrayItem('functionalFeatures', feat)}
                         style={{
-                          background: isChecked ? '#FFF9E6' : '#FFFFFF',
-                          border: isChecked ? '2px solid #0F172A' : '1.5px solid #CBD5E1',
-                          boxShadow: isChecked ? '3px 3px 0px var(--kuning)' : '2px 2px 0px #E2E8F0',
+                          background: isChecked ? '#F8FAFC' : '#FFFFFF',
+                          border: isChecked ? '1px solid var(--prussian-blue)' : '1px solid var(--border-subtle)',
+                          boxShadow: 'none',
                           borderRadius: '6px',
                           padding: '12px 14px',
                           display: 'flex',
@@ -473,9 +473,9 @@ export default function OrderBriefForm({ preselectedPackageId, hideHeader = fals
                     alignItems: 'center',
                     gap: '12px'
                   }}>
-                    <CheckCircle2 size={20} style={{ color: '#059669', flexShrink: 0 }} />
+                    <CheckCircle2 size={20} style={{ color: '#0F172A', flexShrink: 0 }} />
                     <div style={{ fontSize: '0.86rem', color: '#0F172A', lineHeight: '1.5', fontWeight: '600' }}>
-                      <strong style={{ color: '#059669' }}>Materi Siap Pakai:</strong> Berkas logo, teks, dan gambar yang Anda lampirkan di bawah ini akan langsung diintegrasikan secara presisi ke dalam struktur sistem website.
+                      <strong style={{ color: '#0F172A' }}>Materi Siap Pakai:</strong> Berkas logo, teks, dan gambar yang Anda lampirkan di bawah ini akan langsung diintegrasikan secara presisi ke dalam struktur sistem website.
                     </div>
                   </div>
                 )}
@@ -563,7 +563,7 @@ export default function OrderBriefForm({ preselectedPackageId, hideHeader = fals
                       alignItems: 'flex-start',
                       gap: '8px'
                     }}>
-                      <Info size={16} style={{ color: '#D97706', marginTop: '2px', flexShrink: 0 }} />
+                      <Info size={16} style={{ color: '#0F172A', marginTop: '2px', flexShrink: 0 }} />
                       <span>
                         <strong>Tips Akses:</strong> Pastikan setelan berbagi tautan Google Drive / Cloud Anda telah diatur ke <u>"Siapa saja yang memiliki link" (*Anyone with the link*)</u> agar tim pengembang Aksara Tech dapat langsung membuka dan mengunduh berkas Anda.
                       </span>
@@ -649,7 +649,7 @@ export default function OrderBriefForm({ preselectedPackageId, hideHeader = fals
                           <div style={{ fontWeight: '800', fontSize: '0.95rem', color: '#0F172A', marginBottom: '2px' }}>
                             {addon.name}
                           </div>
-                          <div style={{ color: '#D97706', fontWeight: '900', fontSize: '0.88rem', marginBottom: '4px' }}>
+                          <div style={{ color: 'var(--prussian-blue)', fontWeight: '800', fontSize: '0.88rem', marginBottom: '4px' }}>
                             {addon.priceDisplay}
                           </div>
                           <div style={{ fontSize: '0.8rem', color: '#475569', lineHeight: '1.4' }}>
@@ -791,7 +791,7 @@ export default function OrderBriefForm({ preselectedPackageId, hideHeader = fals
                     </div>
 
                     {formData.customFeatures && (
-                      <div style={{ background: '#EFF6FF', border: '1.5px solid var(--prussian-blue)', borderRadius: '6px', padding: '10px 12px', marginTop: '6px' }}>
+                      <div style={{ background: '#F1F5F9', border: '1px solid var(--border-subtle)', borderRadius: '6px', padding: '10px 12px', marginTop: '6px' }}>
                         <div style={{ fontSize: '0.78rem', fontWeight: '800', color: 'var(--prussian-blue)', marginBottom: '2px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                           <MessageSquarePlus size={14} /> Fitur Kustom (Ketik Sendiri):
                         </div>
@@ -851,7 +851,7 @@ export default function OrderBriefForm({ preselectedPackageId, hideHeader = fals
                       ))}
 
                       {formData.customModuleRequest && (
-                        <div style={{ background: '#FFFDF0', border: '1.5px solid var(--kuning)', borderRadius: '6px', padding: '10px 12px', marginTop: '8px' }}>
+                        <div style={{ background: '#F1F5F9', border: '1px solid var(--border-subtle)', borderRadius: '6px', padding: '10px 12px', marginTop: '8px' }}>
                           <div style={{ fontSize: '0.78rem', fontWeight: '800', color: '#D97706', marginBottom: '2px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                             <MessageCircle size={14} /> Permintaan Modul Khusus:
                           </div>
@@ -866,7 +866,7 @@ export default function OrderBriefForm({ preselectedPackageId, hideHeader = fals
                   {/* Total summary */}
                   <div style={{
                     paddingTop: '16px',
-                    borderTop: '2px solid #0F172A',
+                    borderTop: '1px solid var(--border-subtle)',
                     display: 'flex',
                     flexWrap: 'wrap',
                     justifyContent: 'space-between',
@@ -884,7 +884,7 @@ export default function OrderBriefForm({ preselectedPackageId, hideHeader = fals
                         Uang Muka (DP 50%): {calculations.dpMin === calculations.dpMax ? formatRupiah(calculations.dpMin) : `${formatRupiah(calculations.dpMin)} – ${formatRupiah(calculations.dpMax)}`}
                       </div>
                     </div>
-                    <div style={{ fontSize: '0.82rem', color: '#0F172A', background: 'var(--kuning)', border: '1.5px solid #0F172A', padding: '6px 14px', borderRadius: '4px', fontWeight: '800',  }}>
+                    <div style={{ fontSize: '0.82rem', color: '#0F172A', background: '#F1F5F9', border: '1px solid var(--border-subtle)', padding: '6px 14px', borderRadius: '4px', fontWeight: '700',  }}>
                       Kuota Revisi: Maksimal 3x Mutlak
                     </div>
                   </div>
@@ -900,7 +900,7 @@ export default function OrderBriefForm({ preselectedPackageId, hideHeader = fals
                       style={{ marginTop: '4px' }}
                     />
                     <span style={{ fontSize: '0.9rem', color: '#334155', lineHeight: '1.5' }}>
-                      <strong style={{ color: '#D97706' }}>Pernyataan Eksklusi Server:</strong> Saya memahami bahwa Aksara Tech berfokus murni pada penulisan kode program (software engineering). Layanan <em>tidak</em> mencakup sewa hosting, pembelian domain, atau maintenance server fisik/cloud.
+                      <strong style={{ color: '#0F172A' }}>Pernyataan Eksklusi Server:</strong> Saya memahami bahwa Aksara Tech berfokus murni pada penulisan kode program (software engineering). Layanan <em>tidak</em> mencakup sewa hosting, pembelian domain, atau maintenance server fisik/cloud.
                     </span>
                   </label>
                   {errors.serverExclusionAgreed && (
@@ -997,7 +997,7 @@ export default function OrderBriefForm({ preselectedPackageId, hideHeader = fals
           gap: 14px;
           margin-bottom: 24px;
           padding-bottom: 18px;
-          border-bottom: 2px solid #0F172A;
+          
         }
 
         .order-id-label {
@@ -1058,7 +1058,6 @@ export default function OrderBriefForm({ preselectedPackageId, hideHeader = fals
           align-items: center;
           margin-top: 32px;
           padding-top: 20px;
-          border-top: 2px solid #0F172A;
           gap: 16px;
         }
 
