@@ -42,8 +42,8 @@ export default function HomePage({ onSelectPackage }) {
       <section className="section-padding" style={{ paddingTop: '40px', paddingBottom: '96px', background: '#FFFFFF', borderTop: '1px solid var(--border-subtle)' }}>
         <div className="container">
           <div style={{
-            background: '#EFF6FF',
-            border: '1px solid rgba(29, 99, 255, 0.2)',
+            background: '#F8FAFC',
+            border: '1px solid var(--border-subtle)',
             borderRadius: 'var(--radius-md)',
             padding: '48px 36px',
             textAlign: 'center',

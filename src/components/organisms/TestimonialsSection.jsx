@@ -122,7 +122,7 @@ export default function TestimonialsSection() {
                   <div className="testi-badges-group">
                     <span className="testi-cat-badge">{item.tag}</span>
                     <span className="testi-verified-badge">
-                      <CheckCircle2 size={13} style={{ color: '#059669' }} />
+                      <CheckCircle2 size={13} style={{ color: '#0F172A' }} />
                       <span>Terverifikasi</span>
                     </span>
                   </div>
@@ -341,25 +341,25 @@ export default function TestimonialsSection() {
 
         .testi-cat-badge {
           background: #F1F5F9;
-          border: 1.5px solid #0F172A;
+          border: 1px solid var(--border-subtle);
           padding: 3px 10px;
           border-radius: 4px;
           font-size: 0.72rem;
-          font-weight: 800;
+          font-weight: 700;
           color: #0F172A;
         }
 
         .testi-verified-badge {
-          background: #ECFDF5;
-          border: 1.5px solid #10B981;
+          background: #F1F5F9;
+          border: 1px solid var(--border-subtle);
           padding: 3px 10px;
           border-radius: 4px;
           font-size: 0.72rem;
-          font-weight: 800;
-          color: #065F46;
+          font-weight: 700;
+          color: #0F172A;
           display: flex;
           align-items: center;
-          gap: 4px;
+          gap: 5px;
         }
 
         .testi-quote-wrap {
@@ -461,9 +461,9 @@ export default function TestimonialsSection() {
           gap: 10px;
         }
 
-        .testi-slide-index {
+        
           background: #F1F5F9;
-          border: 1.5px solid #0F172A;
+          border: 1px solid var(--border-subtle);
           padding: 5px 10px;
           border-radius: 4px;
           font-family: var(--font-body);
@@ -472,7 +472,7 @@ export default function TestimonialsSection() {
           align-items: center;
           gap: 4px;
           font-size: 0.82rem;
-        }
+        
 
         .index-active {
           color: var(--prussian-blue);

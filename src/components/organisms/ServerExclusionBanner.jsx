@@ -47,7 +47,7 @@ export default function ServerExclusionBanner() {
                 key={idx}
                 style={{
                   background: '#FFFFFF',
-                  border: '1px solid #FEE2E2',
+                  border: '1px solid var(--border-subtle)',
                   borderRadius: 'var(--radius-sm)',
                   padding: '16px 18px',
                   display: 'flex',
@@ -56,7 +56,7 @@ export default function ServerExclusionBanner() {
                   
                 }}
               >
-                <div style={{ color: '#E11D48', marginTop: '2px', flexShrink: 0 }}>
+                <div style={{ color: '#0F172A', marginTop: '2px', flexShrink: 0 }}>
                   <XCircle size={18} />
                 </div>
                 <div style={{ fontSize: '0.9rem', color: '#0F172A', lineHeight: '1.5', fontWeight: '600' }}>
@@ -79,7 +79,7 @@ export default function ServerExclusionBanner() {
             
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flex: '1 1 500px' }}>
-              <div style={{ color: '#059669', flexShrink: 0 }}>
+              <div style={{ color: '#0F172A', flexShrink: 0 }}>
                 <CheckCircle size={24} />
               </div>
               <div style={{ fontSize: '0.9rem', color: '#475569', lineHeight: '1.6' }}>

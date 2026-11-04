@@ -140,7 +140,7 @@ export default function PackageShowcase({ onSelectPackage }) {
                     </div>
 
                     {pkg.badge && (
-                      <div className={`badge ${isFeatured ? 'badge-kuning' : 'badge-blue'}`}>
+                      <div className="badge badge-neutral">
                         <Star size={11} fill="currentColor" />
                         <span>{pkg.badge}</span>
                       </div>
@@ -160,16 +160,16 @@ export default function PackageShowcase({ onSelectPackage }) {
                   <div className="price-label">Tarif Transparan:</div>
                   <div className="price-value">
                     {pkg.minPrice === pkg.maxPrice ? (
-                      <span>{formatRupiah(pkg.minPrice)} <span style={{ fontSize: '0.82rem', color: '#059669', fontWeight: '800' }}>(Tarif Tetap)</span></span>
+                      <span>{formatRupiah(pkg.minPrice)} <span style={{ fontSize: '0.82rem', color: '#0F172A', fontWeight: '800' }}>(Tarif Tetap)</span></span>
                     ) : (
                       <>{formatRupiah(pkg.minPrice)} – {formatRupiah(pkg.maxPrice)}</>
                     )}
                   </div>
                   <div className="timeline-row">
-                    <Clock size={14} style={{ color: '#D97706' }} />
+                    <Clock size={14} style={{ color: '#0F172A' }} />
                     <span>{pkg.minDays}–{pkg.maxDays} Hari Kerja</span>
                     <span className="bullet">&bull;</span>
-                    <span style={{ color: '#059669', fontWeight: '800' }}>Max 3x Revisi</span>
+                    <span style={{ color: '#0F172A', fontWeight: '800' }}>Max 3x Revisi</span>
                   </div>
                 </div>
 
@@ -178,7 +178,7 @@ export default function PackageShowcase({ onSelectPackage }) {
                   <div className="system-type-row">
                     <span className="system-type-label">Karakteristik Sistem:</span>
                     <div className="system-type-value">
-                      <Layers size={14} style={{ color: 'var(--prussian-blue)', flexShrink: 0, marginTop: '2px' }} />
+                      <Layers size={14} style={{ color: '#0F172A', flexShrink: 0, marginTop: '2px' }} />
                       <span>{pkg.systemType}</span>
                     </div>
                   </div>
@@ -198,7 +198,7 @@ export default function PackageShowcase({ onSelectPackage }) {
                       <div className="features-checklist">
                         {featureList.map((feat, fIdx) => (
                           <div key={fIdx} className="feature-check-item">
-                            <CheckCircle2 size={14} style={{ color: '#059669', flexShrink: 0, marginTop: '2px' }} />
+                            <CheckCircle2 size={14} style={{ color: '#0F172A', flexShrink: 0, marginTop: '2px' }} />
                             <span>{feat}</span>
                           </div>
                         ))}
@@ -208,7 +208,7 @@ export default function PackageShowcase({ onSelectPackage }) {
                       <div className="deliverables-checklist">
                         {deliverableList.map((del, dIdx) => (
                           <div key={dIdx} className="deliverable-check-item">
-                            <FileCode2 size={14} style={{ color: 'var(--prussian-blue)', flexShrink: 0, marginTop: '2px' }} />
+                            <FileCode2 size={14} style={{ color: '#0F172A', flexShrink: 0, marginTop: '2px' }} />
                             <span>{del}</span>
                           </div>
                         ))}
@@ -222,18 +222,18 @@ export default function PackageShowcase({ onSelectPackage }) {
                       {/* 1-Week Warranty Badge */}
                       <div style={{
                         marginTop: '8px',
-                        background: '#F0FDF4',
-                        border: '1.5px solid #86EFAC',
+                        background: '#F8FAFC',
+                        border: '1px solid var(--border-subtle)',
                         borderRadius: '6px',
                         padding: '6px 10px',
                         fontSize: '0.78rem',
-                        color: '#166534',
-                        fontWeight: '800',
+                        color: '#0F172A',
+                        fontWeight: '700',
                         display: 'flex',
                         alignItems: 'center',
                         gap: '6px'
                       }}>
-                        <ShieldCheck size={13} style={{ color: '#16A34A', flexShrink: 0 }} />
+                        <ShieldCheck size={13} style={{ color: '#0F172A', flexShrink: 0 }} />
                         <span>Include Garansi Bug Kode 1 Minggu (7 Hari)</span>
                       </div>
                     </div>
@@ -243,7 +243,7 @@ export default function PackageShowcase({ onSelectPackage }) {
                 {/* Select Package CTA Button */}
                 <div className="package-card-footer">
                   <Button
-                    variant={pkg.number === 5 ? 'amber' : 'primary'}
+                    variant="primary"
                     style={{ width: '100%', justifyContent: 'center' }}
                     onClick={() => handleSelect(pkg.id)}
                   >

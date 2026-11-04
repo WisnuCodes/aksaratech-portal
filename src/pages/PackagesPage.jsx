@@ -207,7 +207,7 @@ export default function PackagesPage({ onSelectPackage }) {
                     </div>
 
                     {pkg.badge && (
-                      <div className={`badge ${pkg.number === 5 ? 'badge-kuning' : 'badge-blue'}`}>
+                      <div className="badge badge-neutral">
                         <Star size={11} fill="currentColor" />
                         <span>{pkg.badge}</span>
                       </div>
@@ -265,7 +265,7 @@ export default function PackagesPage({ onSelectPackage }) {
                   </div>
 
                   <div className="pkg-warranty-badge">
-                    <Shield size={13} style={{ color: '#16A34A', flexShrink: 0 }} />
+                    <Shield size={13} style={{ color: '#0F172A', flexShrink: 0 }} />
                     <span>Include Garansi Kode 1 Minggu (7 Hari)</span>
                   </div>
                 </div>
@@ -273,7 +273,7 @@ export default function PackagesPage({ onSelectPackage }) {
                 {/* CTA Footer */}
                 <div className="pkg-card-footer">
                   <Button
-                    variant={pkg.number === 5 ? 'amber' : 'primary'}
+                    variant="primary"
                     style={{ width: '100%', justifyContent: 'center' }}
                     onClick={() => handleChoosePackage(pkg.id)}
                     
@@ -421,7 +421,7 @@ export default function PackagesPage({ onSelectPackage }) {
         }
 
         .text-emerald {
-          color: #059669;
+          color: #0F172A;
         }
 
         /* =======================================================
@@ -577,7 +577,7 @@ export default function PackagesPage({ onSelectPackage }) {
           color: #065F46;
           padding: 2px 8px;
           border-radius: 4px;
-          border: 1px solid #10B981;
+          border: 1px solid var(--border-subtle);
           font-weight: 800;
         }
 
@@ -636,13 +636,13 @@ export default function PackagesPage({ onSelectPackage }) {
 
         .pkg-docs-badge.docs-yes {
           background: #ECFDF5;
-          border: 2px solid #10B981;
+          border: 1px solid var(--border-subtle);
           color: #065F46;
         }
 
         .pkg-docs-badge.docs-addon {
           background: #FFF9E6;
-          border: 2px solid #F59E0B;
+          border: 1px solid var(--border-subtle);
           color: #92400E;
         }
 
@@ -799,7 +799,7 @@ export default function PackagesPage({ onSelectPackage }) {
         }
 
         .matrix-yes svg {
-          color: #059669;
+          color: #0F172A;
         }
 
         .matrix-optional {
@@ -813,7 +813,7 @@ export default function PackagesPage({ onSelectPackage }) {
           background: #ECFDF5;
           padding: 3px 8px;
           border-radius: 4px;
-          border: 1.5px solid #10B981;
+          border: 1px solid var(--border-subtle);
           font-weight: 800;
           font-size: 0.82rem;
           display: inline-block;

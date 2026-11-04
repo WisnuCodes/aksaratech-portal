@@ -23,10 +23,10 @@ function WorkspaceIllustration() {
       aria-hidden="true"
     >
       {/* ── Background Decorative Shapes ── */}
-      <circle className="bg-shape-1" cx="440" cy="72" r="64" fill="#EEF4FF" />
-      <circle className="bg-shape-2" cx="60" cy="360" r="44" fill="#FFF9E6" />
-      <rect className="bg-shape-3" x="20" y="100" width="28" height="28" rx="6" fill="#ECFDF5" opacity="0.7" transform="rotate(12 34 114)" />
-      <rect className="bg-shape-4" x="475" y="300" width="20" height="20" rx="4" fill="#EEF4FF" opacity="0.6" transform="rotate(-8 485 310)" />
+      <circle className="bg-shape-1" cx="440" cy="72" r="64" fill="#F1F5F9" />
+      <circle className="bg-shape-2" cx="60" cy="360" r="44" fill="#F8FAFC" />
+      <rect className="bg-shape-3" x="20" y="100" width="28" height="28" rx="6" fill="#F1F5F9" opacity="0.7" transform="rotate(12 34 114)" />
+      <rect className="bg-shape-4" x="475" y="300" width="20" height="20" rx="4" fill="#F1F5F9" opacity="0.6" transform="rotate(-8 485 310)" />
 
       {/* ── Desk ── */}
       <rect x="60" y="295" width="400" height="14" rx="5" fill="#003153" />
@@ -49,7 +49,7 @@ function WorkspaceIllustration() {
       <rect x="226" y="151" width="20" height="4" rx="1" fill="#FFFFFF" opacity="0.3" />
       <rect x="252" y="151" width="24" height="4" rx="1" fill="#FFFFFF" opacity="0.3" />
       {/* Sidebar */}
-      <rect x="171" y="164" width="44" height="92" rx="3" fill="#EEF4FF" />
+      <rect x="171" y="164" width="44" height="92" rx="3" fill="#F1F5F9" />
       <rect x="178" y="172" width="30" height="4" rx="1" fill="#003153" opacity="0.6" />
       <rect x="178" y="182" width="24" height="3" rx="1" fill="#94A3B8" />
       <rect x="178" y="190" width="28" height="3" rx="1" fill="#94A3B8" />
@@ -183,13 +183,13 @@ function WorkspaceIllustration() {
       {/* ── Floating Accent Elements ── */}
       {/* Checkmark badge (gentle float) */}
       <g className="float-el float-check">
-        <circle cx="108" cy="148" r="16" fill="#ECFDF5" stroke="#059669" strokeWidth="1.8" />
+        <circle cx="108" cy="148" r="16" fill="#F1F5F9" stroke="#059669" strokeWidth="1.8" />
         <path d="M101 148 L106 153 L116 143" stroke="#059669" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
       </g>
 
       {/* Gear icon (slow spin) */}
       <g className="float-el float-gear" style={{ transformOrigin: '460px 126px' }}>
-        <circle cx="460" cy="126" r="16" fill="#EEF4FF" stroke="#003153" strokeWidth="1.8" />
+        <circle cx="460" cy="126" r="16" fill="#F1F5F9" stroke="#003153" strokeWidth="1.8" />
         <circle cx="460" cy="126" r="5.5" fill="none" stroke="#003153" strokeWidth="1.5" />
         <line x1="460" y1="112" x2="460" y2="117" stroke="#003153" strokeWidth="2" strokeLinecap="round" />
         <line x1="460" y1="135" x2="460" y2="140" stroke="#003153" strokeWidth="2" strokeLinecap="round" />
@@ -745,7 +745,7 @@ export default function HeroSection() {
           font-weight: 700;
           color: #475569;
         }
-        .trust-icon { color: #059669; flex-shrink: 0; }
+        .trust-icon { color: #0F172A; flex-shrink: 0; }
         .trust-divider { color: #CBD5E1; font-size: 0.8rem; }
 
         /* =======================================================

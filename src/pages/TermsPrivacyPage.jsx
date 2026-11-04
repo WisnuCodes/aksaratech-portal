@@ -197,7 +197,7 @@ export default function TermsPrivacyPage() {
               borderRadius: '8px',
               padding: '14px'
             }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#059669', fontWeight: '900', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '6px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#0F172A', fontWeight: '900', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '6px' }}>
                 <CreditCard size={15} /> Termin 1: Uang Muka (DP 50%)
               </div>
               <p style={{ margin: 0, fontSize: '0.86rem', color: '#334155', lineHeight: '1.6' }}>
@@ -307,15 +307,15 @@ export default function TermsPrivacyPage() {
           }}>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '0.86rem', color: '#334155' }}>
               <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <CheckCircle2 size={15} style={{ color: '#059669' }} />
+                <CheckCircle2 size={15} style={{ color: '#0F172A' }} />
                 <span><strong>Master Source Code Penuh (.zip):</strong> Kode sumber bersih terstruktur tanpa obfuscation.</span>
               </li>
               <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <CheckCircle2 size={15} style={{ color: '#059669' }} />
+                <CheckCircle2 size={15} style={{ color: '#0F172A' }} />
                 <span><strong>Skema Database (.sql):</strong> Skema tabel relasional siap impor.</span>
               </li>
               <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <CheckCircle2 size={15} style={{ color: '#059669' }} />
+                <CheckCircle2 size={15} style={{ color: '#0F172A' }} />
                 <span><strong>Dokumen Rekayasa (SRS &amp; SDD):</strong> PDF terstruktur formal &amp; Diagram UML lengkap (sesuai paket).</span>
               </li>
             </ul>
@@ -392,7 +392,7 @@ export default function TermsPrivacyPage() {
               </div>
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                  <span style={{ fontSize: '0.72rem', fontWeight: '900', color: '#059669', background: '#D1FAE5', padding: '2px 8px', borderRadius: '4px' }}>
+                  <span style={{ fontSize: '0.72rem', fontWeight: '900', color: '#0F172A', background: '#D1FAE5', padding: '2px 8px', borderRadius: '4px' }}>
                     ● DOKUMEN AKTIF &amp; BERLAKU
                   </span>
                   <span style={{ fontFamily: 'var(--)', fontSize: '0.74rem', color: '#64748B', fontWeight: '700' }}>

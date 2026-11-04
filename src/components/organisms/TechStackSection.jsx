@@ -86,7 +86,7 @@ export default function TechStackSection() {
                   {cat.items.map((item, itemIdx) => (
                     <div key={itemIdx} className="tech-sub-card">
                       <div className="tech-item-name">
-                        <CheckCircle size={15} style={{ color: '#059669', flexShrink: 0 }} />
+                        <CheckCircle size={15} style={{ color: '#0F172A', flexShrink: 0 }} />
                         <span>{item.name}</span>
                       </div>
                       <div className="tech-item-desc">

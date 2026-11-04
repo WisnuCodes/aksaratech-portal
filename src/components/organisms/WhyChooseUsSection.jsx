@@ -225,13 +225,13 @@ export default function WhyChooseUsSection() {
               {/* Guarantees Checklist */}
               <div className="why-guarantee-box">
                 <div className="why-guarantee-header">
-                  <Shield size={16} style={{ color: 'var(--prussian-blue)' }} />
+                  <Shield size={16} style={{ color: '#0F172A' }} />
                   <span>Jaminan Spesifikasi Resmi Aksara Tech:</span>
                 </div>
                 <div className="why-guarantee-list">
                   {currentPillar.guarantees.map((g, i) => (
                     <div key={i} className="why-guarantee-item">
-                      <CheckCircle2 size={16} style={{ color: '#059669', flexShrink: 0, marginTop: '2px' }} />
+                      <CheckCircle2 size={16} style={{ color: '#0F172A', flexShrink: 0, marginTop: '2px' }} />
                       <span>{g}</span>
                     </div>
                   ))}
@@ -250,7 +250,7 @@ export default function WhyChooseUsSection() {
               <div className="why-canvas-footer">
                 <Link to="/alur-sop" className="btn btn-secondary btn-sm">
                   <span>Pelajari di Alur SOP</span>
-                  <ArrowRight size={14} />
+                  
                 </Link>
                 <Link to="/pesan" className="btn btn-primary btn-sm">
                   <span>Pesan dengan Standar Ini</span>
@@ -267,7 +267,7 @@ export default function WhyChooseUsSection() {
           <Link to="/paket" className="neo-card why-route-card">
             <div>
               <div className="route-card-title">Katalog 6 Paket Layanan</div>
-              <div className="route-card-sub" style={{ color: '#D97706' }}>Mulai Rp 100.000 – Rp 500.000</div>
+              <div className="route-card-sub" style={{ color: '#64748B' }}>Mulai Rp 100.000 – Rp 500.000</div>
             </div>
             <ChevronRight size={18} style={{ color: '#94A3B8' }} />
           </Link>
@@ -327,10 +327,10 @@ export default function WhyChooseUsSection() {
           font-size: 0.76rem;
           font-weight: 900;
           color: #0F172A;
-          background: var(--kuning);
+          background: #F1F5F9;
           padding: 3px 8px;
           border-radius: 4px;
-          border: 1.5px solid #0F172A;
+          border: 1px solid var(--border-subtle);
         }
 
         .why-nav-sub {
@@ -391,7 +391,7 @@ export default function WhyChooseUsSection() {
           width: 34px;
           height: 34px;
           border-radius: 6px;
-          border: 1.5px solid #0F172A;
+          border: 1px solid var(--border-subtle);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -465,7 +465,7 @@ export default function WhyChooseUsSection() {
           background: #EEF4FF;
           padding: 5px 12px;
           border-radius: 6px;
-          border: 1.5px solid #0F172A;
+          border: 1px solid var(--border-subtle);
         }
 
         .why-canvas-tag {
@@ -475,7 +475,7 @@ export default function WhyChooseUsSection() {
           background: #F1F5F9;
           padding: 5px 12px;
           border-radius: 6px;
-          border: 1.5px solid #0F172A;
+          border: 1px solid var(--border-subtle);
         }
 
         .why-canvas-nav-arrows {
@@ -490,7 +490,7 @@ export default function WhyChooseUsSection() {
           height: 38px;
           border-radius: 8px;
           background: #FFFFFF;
-          border: 1.5px solid #0F172A;
+          border: 1px solid var(--border-subtle);
           color: #0F172A;
           cursor: pointer;
           display: flex;
@@ -500,7 +500,7 @@ export default function WhyChooseUsSection() {
         }
 
         .why-ctrl-btn:hover {
-          background: var(--kuning);
+          background: #F1F5F9;
           transform: translate(-1px, -1px);
         }
 
@@ -586,7 +586,7 @@ export default function WhyChooseUsSection() {
 
         .why-chip {
           background: #EFF6FF;
-          border: 1.5px solid #0F172A;
+          border: 1px solid var(--border-subtle);
           padding: 3px 10px;
           border-radius: 4px;
           font-size: 0.76rem;
@@ -677,7 +677,7 @@ export default function WhyChooseUsSection() {
           }
 
           .why-pill-btn.active {
-            background: var(--kuning);
+            background: #F1F5F9;
           }
 
           .why-right-canvas {
