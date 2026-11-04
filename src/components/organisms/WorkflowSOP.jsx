@@ -8,7 +8,7 @@ export default function WorkflowSOP() {
 
   const detailedSteps = [
     {
-      num: "01",
+      num: "1",
       title: "Jelajahi Paket & Plafon Tarif",
       badge: "Transparansi Biaya",
       desc: "Calon Klien memilih 1 dari 5 paket utama (Rp 120rb – Rp 650rb) dengan estimasi pengerjaan disiplin 3–10 hari kerja tanpa risiko pembengkakan biaya tersembunyi.",
@@ -16,7 +16,7 @@ export default function WorkflowSOP() {
       color: 'var(--prussian-blue)'
     },
     {
-      num: "02",
+      num: "2",
       title: "Pengisian Brief Kebutuhan Terstruktur",
       badge: "Formulir Cerdas Web",
       desc: "Mengisi spesifikasi teknis (database MySQL, modul CRUD, dokumen SRS/SDD formal, diagram UML, preferensi visual) melalui sistem formulir terstruktur website.",
@@ -24,7 +24,7 @@ export default function WorkflowSOP() {
       color: '#D97706'
     },
     {
-      num: "03",
+      num: "3",
       title: "Analisis Teknis & Surat Penawaran Resmi",
       badge: "Nomor Dokumen Valid",
       desc: "Aksara Tech menerbitkan Surat Penawaran Harga resmi [OFFER-AT-2026-____] via WhatsApp 085600386692 memuat ruang lingkup, jadwal, dan syarat DP min 50%.",
@@ -32,7 +32,7 @@ export default function WorkflowSOP() {
       color: 'var(--prussian-blue)'
     },
     {
-      num: "04",
+      num: "4",
       title: "Pengerjaan, Kuota 3x Revisi & Serah Terima",
       badge: "Disiplin & Terpercaya",
       desc: "Penulisan kode dimulai pasca DP. Tersedia fasilitas MAKSIMAL 3 KALI REVISI mutlak pasca Preview 1. Pelunasan 50% sebelum serah terima master (.zip, .sql, PDF) & Data Cleansing.",
@@ -42,14 +42,11 @@ export default function WorkflowSOP() {
   ];
 
   return (
-    <section id="alur" className="section-padding workflow-sop-section" style={{ background: '#F1F5F9', borderTop: '2px solid #0F172A', borderBottom: '2px solid #0F172A' }}>
+    <section id="alur" className="section-padding workflow-sop-section" style={{ background: '#F1F5F9', borderTop: '1px solid var(--border-subtle)', borderBottom: '1px solid var(--border-subtle)' }}>
       <div className="container">
         
         {/* Section Header */}
         <div className="section-header">
-          <SectionBadge icon={Clock}>
-            Standar Operasional Prosedur (SOP)
-          </SectionBadge>
           <h2 className="section-title">
             Alur Pengerjaan Proyek yang <span style={{ color: 'var(--prussian-blue)' }}>Terstruktur &amp; Disiplin</span>
           </h2>
@@ -68,7 +65,6 @@ export default function WorkflowSOP() {
                 onClick={() => setActiveStepIdx(idx)}
                 className={`sop-mobile-pill ${activeStepIdx === idx ? 'active' : ''}`}
               >
-                <span className="sop-pill-num">{step.num}</span>
                 <span className="sop-pill-title">{step.title.split(' ')[0]} {step.title.split(' ')[1]}</span>
               </button>
             ))}
@@ -87,9 +83,6 @@ export default function WorkflowSOP() {
               >
                 <div>
                   <div className="sop-card-top">
-                    <span className="sop-step-number">
-                      {step.num}
-                    </span>
                     <div className="sop-icon-wrap" style={{ color: step.color }}>
                       <Icon size={22} />
                     </div>
@@ -162,7 +155,7 @@ export default function WorkflowSOP() {
           flex-direction: column;
           justify-content: space-between;
           background: #FFFFFF;
-          border: 2px solid #0F172A;
+          border: 1px solid var(--border-subtle);
         }
 
         .sop-card-top {
@@ -185,8 +178,7 @@ export default function WorkflowSOP() {
           height: 44px;
           border-radius: 8px;
           background: #F8FAFC;
-          border: 2px solid #0F172A;
-          box-shadow: 2px 2px 0px #0F172A;
+          border: 1px solid var(--border-subtle);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -233,7 +225,7 @@ export default function WorkflowSOP() {
           font-size: 0.76rem;
           font-weight: 800;
           color: #64748B;
-          font-family: var(--font-mono);
+          font-family: var(--font-body);
         }
 
         .sop-next-arrow {
@@ -241,15 +233,14 @@ export default function WorkflowSOP() {
         }
 
         .sop-callout-card {
-          background: #FFFDF0;
-          border: 2px solid #0F172A;
-          box-shadow: 5px 5px 0px var(--kuning);
+          background: #FFFFFF;
+          border: 1px solid var(--border-subtle);
+          border-radius: var(--radius-md);
           padding: 32px 36px;
           display: flex;
           align-items: center;
           justify-content: space-between;
-          flex-wrap: wrap;
-          gap: 24px;
+          gap: 32px;
         }
 
         .callout-left {
@@ -267,7 +258,6 @@ export default function WorkflowSOP() {
           font-size: 0.76rem;
           font-weight: 900;
           color: #0F172A;
-          box-shadow: 1.5px 1.5px 0px #0F172A;
           margin-bottom: 12px;
         }
 
@@ -313,24 +303,22 @@ export default function WorkflowSOP() {
             gap: 6px;
             padding: 8px 14px;
             background: #FFFFFF;
-            border: 2px solid #0F172A;
+            border: 1px solid var(--border-subtle);
             border-radius: 6px;
             font-size: 0.8rem;
             font-weight: 800;
             color: #0F172A;
-            box-shadow: 2px 2px 0px #0F172A;
             cursor: pointer;
             white-space: nowrap;
           }
 
           .sop-mobile-pill .sop-pill-num {
             color: var(--prussian-blue);
-            font-family: var(--font-mono);
+            font-family: var(--font-body);
           }
 
           .sop-mobile-pill.active {
             background: var(--kuning);
-            box-shadow: 2px 2px 0px var(--prussian-blue);
           }
 
           .sop-steps-grid {
@@ -345,7 +333,6 @@ export default function WorkflowSOP() {
 
           .sop-step-card.mobile-active {
             display: flex;
-            box-shadow: 4px 4px 0px var(--prussian-blue);
           }
 
           .sop-callout-card {

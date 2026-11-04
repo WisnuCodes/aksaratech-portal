@@ -303,7 +303,7 @@ export default function PackagesPage({ onSelectPackage }) {
 
             {/* Mobile Swipe Hint */}
             <div className="matrix-mobile-hint">
-              <span>👉 Geser tabel ke samping untuk melihat seluruh Paket 1 s/d 6</span>
+              <span>Geser tabel ke samping untuk melihat seluruh Paket 1 s/d 6</span>
             </div>
 
             {/* Matrix Table with Sticky Parameter Column on Mobile */}
@@ -450,10 +450,9 @@ export default function PackagesPage({ onSelectPackage }) {
           align-items: center;
           gap: 6px;
           background: #F1F5F9;
-          border: 2px solid #0F172A;
+          border: 1px solid var(--border-subtle);
           padding: 4px;
           border-radius: 8px;
-          box-shadow: 2px 2px 0px #0F172A;
         }
 
         .pkg-cat-btn {
@@ -465,7 +464,7 @@ export default function PackagesPage({ onSelectPackage }) {
           font-weight: 800;
           color: #475569;
           cursor: pointer;
-          transition: all 0.15s ease;
+          transition: transform 0.18s ease, opacity 0.18s ease, background-color 0.18s ease;
           white-space: nowrap;
         }
 
@@ -473,7 +472,6 @@ export default function PackagesPage({ onSelectPackage }) {
           background: #FFFFFF;
           color: #0F172A;
           border-color: #0F172A;
-          box-shadow: 1.5px 1.5px 0px #0F172A;
         }
 
         /* =======================================================
@@ -494,20 +492,17 @@ export default function PackagesPage({ onSelectPackage }) {
           overflow: hidden;
           position: relative;
           background: #FFFFFF;
-          border: 2px solid #0F172A;
+          border: 1px solid var(--border-subtle);
           border-radius: var(--radius-md);
-          box-shadow: 4px 4px 0px #0F172A;
           transition: transform 0.2s ease, box-shadow 0.2s ease;
           align-self: start;
         }
 
         .pkg-card.pkg-featured {
-          box-shadow: 6px 6px 0px var(--kuning);
         }
 
         .pkg-card:hover {
           transform: translateY(-3px);
-          box-shadow: 6px 6px 0px #0F172A;
         }
 
         .pkg-card-head {
@@ -689,7 +684,7 @@ export default function PackagesPage({ onSelectPackage }) {
           display: inline-flex;
           align-items: center;
           gap: 6px;
-          font-family: var(--font-mono);
+          font-family: var(--font-body);
           font-size: 0.72rem;
           font-weight: 900;
           letter-spacing: 0.08em;
@@ -730,8 +725,7 @@ export default function PackagesPage({ onSelectPackage }) {
 
         .pkg-matrix-table-wrap {
           background: #FFFFFF;
-          border: 2px solid #0F172A;
-          box-shadow: 4px 4px 0px #0F172A;
+          border: 1px solid var(--border-subtle);
           border-radius: var(--radius-md);
           overflow-x: auto;
           -webkit-overflow-scrolling: touch;
@@ -781,7 +775,7 @@ export default function PackagesPage({ onSelectPackage }) {
 
         .matrix-row-even,
         .matrix-row-odd {
-          border-bottom: 1px solid #E2E8F0;
+          /* border separated by tone */
         }
 
         .matrix-td-label {
@@ -848,7 +842,6 @@ export default function PackagesPage({ onSelectPackage }) {
             left: 0;
             background: #FFFFFF;
             z-index: 2;
-            box-shadow: 2px 0 5px rgba(0,0,0,0.06);
           }
           thead tr .sticky-col {
             background: #F1F5F9;
@@ -892,8 +885,7 @@ export default function PackagesPage({ onSelectPackage }) {
           background: #FFFFFF;
           padding: 6px;
           border-radius: 6px;
-          border: 2px solid #0F172A;
-          box-shadow: 2px 2px 0px #0F172A;
+          border: 1px solid var(--border-subtle);
           flex-wrap: wrap;
         }
 
@@ -906,7 +898,7 @@ export default function PackagesPage({ onSelectPackage }) {
           font-size: 0.82rem;
           font-weight: 800;
           cursor: pointer;
-          transition: all 0.15s ease;
+          transition: transform 0.18s ease, opacity 0.18s ease, background-color 0.18s ease;
           white-space: nowrap;
         }
 
@@ -933,8 +925,7 @@ export default function PackagesPage({ onSelectPackage }) {
           flex-direction: column;
           align-self: start;
           background: #FFFFFF;
-          border: 2px solid #0F172A;
-          box-shadow: 4px 4px 0px #0F172A;
+          border: 1px solid var(--border-subtle);
           transition: transform 0.2s ease;
         }
 
@@ -1074,7 +1065,6 @@ export default function PackagesPage({ onSelectPackage }) {
           }
 
           .pkg-card {
-            box-shadow: 3.5px 3.5px 0px #0F172A;
           }
 
           .pkg-card-head {
@@ -1131,7 +1121,6 @@ export default function PackagesPage({ onSelectPackage }) {
           }
 
           .pkg-matrix-table-wrap {
-            box-shadow: 3px 3px 0px #0F172A;
           }
 
           .matrix-th-label {
@@ -1200,7 +1189,6 @@ export default function PackagesPage({ onSelectPackage }) {
 
           .pkg-addon-card {
             padding: 18px;
-            box-shadow: 3px 3px 0px #0F172A;
           }
         }
       `}</style>

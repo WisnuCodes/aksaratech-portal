@@ -357,7 +357,7 @@ export default function OrderBriefForm({ preselectedPackageId, hideHeader = fals
                   background: '#F0F5FF',
                   border: '2px solid #0F172A',
                   borderRadius: 'var(--radius-md)',
-                  boxShadow: '4px 4px 0px var(--prussian-blue)',
+                  
                   padding: '22px'
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
@@ -371,7 +371,7 @@ export default function OrderBriefForm({ preselectedPackageId, hideHeader = fals
                       alignItems: 'center',
                       justifyContent: 'center',
                       border: '2px solid #0F172A',
-                      boxShadow: '2px 2px 0px #0F172A',
+                      
                       flexShrink: 0
                     }}>
                       <MessageSquarePlus size={20} />
@@ -447,7 +447,7 @@ export default function OrderBriefForm({ preselectedPackageId, hideHeader = fals
                     background: '#EFF6FF',
                     border: '2px solid #0F172A',
                     borderRadius: 'var(--radius-md)',
-                    boxShadow: '3px 3px 0px var(--prussian-blue)',
+                    
                     padding: '16px 20px',
                     marginBottom: '20px',
                     display: 'flex',
@@ -466,7 +466,7 @@ export default function OrderBriefForm({ preselectedPackageId, hideHeader = fals
                     background: '#F0FDF4',
                     border: '2px solid #0F172A',
                     borderRadius: 'var(--radius-md)',
-                    boxShadow: '3px 3px 0px #10B981',
+                    
                     padding: '14px 18px',
                     marginBottom: '20px',
                     display: 'flex',
@@ -486,7 +486,7 @@ export default function OrderBriefForm({ preselectedPackageId, hideHeader = fals
                     background: '#FFFFFF',
                     border: '2px solid #0F172A',
                     borderRadius: 'var(--radius-md)',
-                    boxShadow: '4px 4px 0px #CBD5E1',
+                    
                     padding: '24px',
                     marginBottom: '22px'
                   }}>
@@ -501,7 +501,7 @@ export default function OrderBriefForm({ preselectedPackageId, hideHeader = fals
                         alignItems: 'center',
                         justifyContent: 'center',
                         border: '2px solid #0F172A',
-                        boxShadow: '2px 2px 0px #0F172A',
+                        
                         flexShrink: 0
                       }}>
                         <Link2 size={20} />
@@ -574,7 +574,7 @@ export default function OrderBriefForm({ preselectedPackageId, hideHeader = fals
                     background: '#F0FDF4',
                     border: '2px solid #0F172A',
                     borderRadius: 'var(--radius-md)',
-                    boxShadow: '3px 3px 0px #0F172A',
+                    
                     padding: '16px 20px',
                     marginBottom: '22px',
                     display: 'flex',
@@ -683,7 +683,7 @@ export default function OrderBriefForm({ preselectedPackageId, hideHeader = fals
                         alignItems: 'center',
                         justifyContent: 'center',
                         border: '2px solid #0F172A',
-                        boxShadow: '2px 2px 0px #0F172A',
+                        
                         flexShrink: 0
                       }}>
                         <MessageCircle size={20} />
@@ -756,7 +756,7 @@ export default function OrderBriefForm({ preselectedPackageId, hideHeader = fals
                 <div style={{
                   background: '#F8FAFC',
                   border: '2px solid #0F172A',
-                  boxShadow: '4px 4px 0px #CBD5E1',
+                  
                   borderRadius: 'var(--radius-md)',
                   padding: '24px',
                   marginBottom: '28px'
@@ -884,7 +884,7 @@ export default function OrderBriefForm({ preselectedPackageId, hideHeader = fals
                         Uang Muka (DP 50%): {calculations.dpMin === calculations.dpMax ? formatRupiah(calculations.dpMin) : `${formatRupiah(calculations.dpMin)} – ${formatRupiah(calculations.dpMax)}`}
                       </div>
                     </div>
-                    <div style={{ fontSize: '0.82rem', color: '#0F172A', background: 'var(--kuning)', border: '1.5px solid #0F172A', padding: '6px 14px', borderRadius: '4px', fontWeight: '800', boxShadow: '2px 2px 0px #0F172A' }}>
+                    <div style={{ fontSize: '0.82rem', color: '#0F172A', background: 'var(--kuning)', border: '1.5px solid #0F172A', padding: '6px 14px', borderRadius: '4px', fontWeight: '800',  }}>
                       Kuota Revisi: Maksimal 3x Mutlak
                     </div>
                   </div>
@@ -971,7 +971,7 @@ export default function OrderBriefForm({ preselectedPackageId, hideHeader = fals
                 fontWeight: '600',
                 lineHeight: '1.5'
               }}>
-                📌 <em>Catatan:</em> Mengklik tombol di atas akan membuka obrolan WhatsApp dengan draf teks brief Anda. Berkas aset Anda dapat langsung diakses melalui tautan cloud yang Anda lampirkan.
+                <em>Catatan:</em> Mengklik tombol di atas akan membuka obrolan WhatsApp dengan draf teks brief Anda. Berkas aset Anda dapat langsung diakses melalui tautan cloud yang Anda lampirkan.
               </div>
             )}
 
@@ -1009,7 +1009,7 @@ export default function OrderBriefForm({ preselectedPackageId, hideHeader = fals
         }
 
         .order-id-code {
-          font-family: var(--font-mono);
+          font-family: var(--font-body);
           color: var(--prussian-blue);
           font-weight: 900;
           font-size: 1.1rem;
@@ -1039,13 +1039,12 @@ export default function OrderBriefForm({ preselectedPackageId, hideHeader = fals
 
         .order-reset-btn {
           background: #F1F5F9;
-          border: 2px solid #0F172A;
+          border: 1px solid var(--border-subtle);
           color: #0F172A;
           cursor: pointer;
           padding: 7px 9px;
           border-radius: 6px;
-          box-shadow: 1.5px 1.5px 0px #0F172A;
-          transition: all 0.15s ease;
+          transition: transform 0.18s ease, opacity 0.18s ease, background-color 0.18s ease;
         }
 
         .order-reset-btn:hover {
@@ -1080,7 +1079,6 @@ export default function OrderBriefForm({ preselectedPackageId, hideHeader = fals
           .order-brief-card {
             padding: 20px 16px !important;
             border-radius: var(--radius-sm) !important;
-            box-shadow: 3px 3px 0px #0F172A !important;
           }
 
           .order-header-strip {
@@ -1109,7 +1107,6 @@ export default function OrderBriefForm({ preselectedPackageId, hideHeader = fals
             border: 1.5px solid #0F172A;
             border-radius: 6px;
             padding: 10px 14px;
-            box-shadow: 2px 2px 0px #CBD5E1;
           }
 
           .order-est-box {
@@ -1167,7 +1164,6 @@ export default function OrderBriefForm({ preselectedPackageId, hideHeader = fals
             justify-content: center;
             padding: 15px 18px !important;
             font-size: 0.98rem !important;
-            box-shadow: 3.5px 3.5px 0px #0F172A !important;
           }
 
           .order-nav-buttons.is-step-final .order-btn-prev {

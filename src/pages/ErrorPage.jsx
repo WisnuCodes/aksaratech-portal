@@ -166,7 +166,7 @@ Halo Tim Aksara Tech, saya mengalami kendala teknis pada sistem web dengan rinci
           width: '100vw',
           overflow: 'hidden', // Strictly NO outer page scroll
           bgcolor: '#F8FAFC',
-          backgroundImage: 'radial-gradient(#CBD5E1 1px, transparent 1px)',
+          backgroundImage: 'none',
           backgroundSize: '20px 20px',
           display: 'flex',
           alignItems: 'center',
@@ -201,7 +201,7 @@ Halo Tim Aksara Tech, saya mengalami kendala teknis pada sistem web dengan rinci
             bgcolor: '#FFFFFF',
             border: '2px solid #0F172A',
             borderRadius: '14px',
-            boxShadow: '5px 5px 0px #0F172A',
+            
             display: 'flex',
             flexDirection: 'column',
             overflow: 'hidden',
@@ -222,7 +222,7 @@ Halo Tim Aksara Tech, saya mengalami kendala teknis pada sistem web dengan rinci
               flexShrink: 0
             }}
           >
-            {/* Official Full Brand Logo (Icon + Text Combined Seamlessly) */}
+            {/* Official Full Brand Logo (Icon + Text Combined Directly) */}
             <Link to="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }} title="Kembali ke Beranda Aksara Tech">
               <img
                 src="/brand-logo.png"
@@ -252,7 +252,7 @@ Halo Tim Aksara Tech, saya mengalami kendala teknis pada sistem web dengan rinci
                   py: 0.3,
                   fontSize: '0.7rem',
                   fontWeight: 800,
-                  fontFamily: 'var(--font-mono)'
+                  fontFamily: 'var(--)'
                 }}
               >
                 <Box
@@ -261,7 +261,7 @@ Halo Tim Aksara Tech, saya mengalami kendala teknis pada sistem web dengan rinci
                     height: 6,
                     borderRadius: '50%',
                     bgcolor: '#10B981',
-                    boxShadow: '0 0 4px #10B981',
+                    
                     animation: 'pulseDot 1.5s infinite ease-in-out'
                   }}
                 />
@@ -273,7 +273,7 @@ Halo Tim Aksara Tech, saya mengalami kendala teknis pada sistem web dengan rinci
                 size="small"
                 sx={{
                   display: { xs: 'none', sm: 'inline-flex' },
-                  fontFamily: 'var(--font-mono)',
+                  fontFamily: 'var(--)',
                   fontWeight: 700,
                   fontSize: '0.66rem',
                   bgcolor: '#F1F5F9',
@@ -303,7 +303,7 @@ Halo Tim Aksara Tech, saya mengalami kendala teknis pada sistem web dengan rinci
                   bgcolor: accentLight,
                   border: '2px solid #0F172A',
                   borderRadius: '10px',
-                  boxShadow: '3px 3px 0px #0F172A',
+                  
                   px: { xs: 1.6, sm: 2.2 },
                   py: 0.6,
                   textAlign: 'center',
@@ -371,19 +371,19 @@ Halo Tim Aksara Tech, saya mengalami kendala teknis pada sistem web dengan rinci
               }}
             >
               <Box>
-                <Typography sx={{ fontFamily: 'var(--font-mono)', fontSize: '0.64rem', color: '#64748B', fontWeight: 800 }}>
+                <Typography sx={{ fontFamily: 'var(--)', fontSize: '0.64rem', color: '#64748B', fontWeight: 800 }}>
                   TARGET RUTE:
                 </Typography>
-                <Typography sx={{ fontFamily: 'var(--font-mono)', fontSize: '0.74rem', color: '#0F172A', fontWeight: 800, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                <Typography sx={{ fontFamily: 'var(--)', fontSize: '0.74rem', color: '#0F172A', fontWeight: 800, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {location.pathname || '/'}
                 </Typography>
               </Box>
 
               <Box>
-                <Typography sx={{ fontFamily: 'var(--font-mono)', fontSize: '0.64rem', color: '#64748B', fontWeight: 800 }}>
+                <Typography sx={{ fontFamily: 'var(--)', fontSize: '0.64rem', color: '#64748B', fontWeight: 800 }}>
                   ID INSIDEN:
                 </Typography>
-                <Typography sx={{ fontFamily: 'var(--font-mono)', fontSize: '0.74rem', color: '#0F172A', fontWeight: 800 }}>
+                <Typography sx={{ fontFamily: 'var(--)', fontSize: '0.74rem', color: '#0F172A', fontWeight: 800 }}>
                   {incidentId}
                 </Typography>
               </Box>
@@ -448,11 +448,11 @@ Halo Tim Aksara Tech, saya mengalami kendala teknis pada sistem web dengan rinci
                     py: 0.7,
                     borderRadius: '6px',
                     border: '1.5px solid #0F172A',
-                    boxShadow: '2.5px 2.5px 0px var(--prussian-blue)',
+                    
                     '&:hover': {
                       bgcolor: '#1E293B',
                       transform: 'translate(-1px, -1px)',
-                      boxShadow: '3.5px 3.5px 0px var(--prussian-blue)'
+                      
                     }
                   }}
                 >
@@ -475,11 +475,11 @@ Halo Tim Aksara Tech, saya mengalami kendala teknis pada sistem web dengan rinci
                     py: 0.7,
                     borderRadius: '6px',
                     border: '1.5px solid #0F172A',
-                    boxShadow: '2px 2px 0px #0F172A',
+                    
                     '&:hover': {
                       bgcolor: '#F1F5F9',
                       transform: 'translate(-1px, -1px)',
-                      boxShadow: '3px 3px 0px #0F172A'
+                      
                     }
                   }}
                 >
@@ -527,11 +527,11 @@ Halo Tim Aksara Tech, saya mengalami kendala teknis pada sistem web dengan rinci
                     py: 0.7,
                     borderRadius: '6px',
                     border: '1.5px solid #0F172A',
-                    boxShadow: '2px 2px 0px #0F172A',
+                    
                     '&:hover': {
                       bgcolor: '#047857',
                       transform: 'translate(-1px, -1px)',
-                      boxShadow: '3px 3px 0px #0F172A'
+                      
                     }
                   }}
                 >
@@ -567,7 +567,7 @@ Halo Tim Aksara Tech, saya mengalami kendala teknis pada sistem web dengan rinci
               fontWeight: 700,
               fontSize: '0.84rem',
               border: '1.5px solid #1D63FF',
-              boxShadow: '3px 3px 0px #1D63FF',
+              
               borderRadius: '8px'
             }
           }}

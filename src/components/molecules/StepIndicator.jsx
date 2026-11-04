@@ -187,27 +187,24 @@ export default function StepIndicator({ currentStep, totalSteps = 7, steps = [],
           justify-content: center;
           font-size: 0.9rem;
           font-weight: 900;
-          transition: all 0.15s ease;
+          transition: transform 0.15s ease, background-color 0.15s ease;
           background: #FFFFFF;
           color: #64748B;
           border: 2px solid #CBD5E1;
-          box-shadow: 2px 2px 0px #E2E8F0;
           flex-shrink: 0;
         }
 
         .step-circle.active {
           background: var(--kuning);
           color: #0F172A;
-          border-color: #0F172A;
-          box-shadow: 3px 3px 0px var(--prussian-blue);
+          border-color: var(--prussian-blue);
           transform: translateY(-2px);
         }
 
         .step-circle.completed {
           background: var(--emerald);
           color: #FFFFFF;
-          border-color: #0F172A;
-          box-shadow: 2px 2px 0px #0F172A;
+          border-color: var(--prussian-blue);
         }
 
         .step-label {
@@ -240,10 +237,9 @@ export default function StepIndicator({ currentStep, totalSteps = 7, steps = [],
           .step-mobile-view {
             display: block !important;
             background: #F8FAFC;
-            border: 2px solid #0F172A;
+            border: 1px solid var(--border-subtle);
             border-radius: 8px;
             padding: 14px 16px;
-            box-shadow: 3px 3px 0px #CBD5E1;
           }
 
           .step-mobile-header {
@@ -270,7 +266,7 @@ export default function StepIndicator({ currentStep, totalSteps = 7, steps = [],
             font-size: 0.72rem;
             font-weight: 900;
             color: #0F172A;
-            font-family: var(--font-mono);
+            font-family: var(--font-heading);
             white-space: nowrap;
           }
 
@@ -281,7 +277,7 @@ export default function StepIndicator({ currentStep, totalSteps = 7, steps = [],
           }
 
           .step-mobile-percent {
-            font-family: var(--font-mono);
+            font-family: var(--font-heading);
             font-size: 0.82rem;
             font-weight: 900;
             color: var(--prussian-blue);
@@ -305,19 +301,17 @@ export default function StepIndicator({ currentStep, totalSteps = 7, steps = [],
             border-radius: 3px;
             background: #E2E8F0;
             border: 1.5px solid #CBD5E1;
-            transition: all 0.2s ease;
+            transition: transform 0.2s ease, background-color 0.2s ease;
           }
 
           .step-segment.completed {
             background: #10B981;
-            border-color: #0F172A;
-            box-shadow: 1px 1px 0px #0F172A;
+            border-color: var(--prussian-blue);
           }
 
           .step-segment.active {
             background: var(--kuning);
-            border-color: #0F172A;
-            box-shadow: 1.5px 1.5px 0px var(--prussian-blue);
+            border-color: var(--prussian-blue);
             transform: scaleY(1.2);
           }
 
@@ -325,7 +319,7 @@ export default function StepIndicator({ currentStep, totalSteps = 7, steps = [],
           .step-mobile-quick-chips {
             margin-top: 10px;
             padding-top: 8px;
-            border-top: 1px dashed #CBD5E1;
+            /* border separated by tone */
             display: flex;
             align-items: center;
             gap: 8px;
@@ -362,7 +356,6 @@ export default function StepIndicator({ currentStep, totalSteps = 7, steps = [],
             font-size: 0.72rem;
             font-weight: 700;
             color: #0F172A;
-            box-shadow: 1px 1px 0px #0F172A;
             cursor: pointer;
             white-space: nowrap;
           }

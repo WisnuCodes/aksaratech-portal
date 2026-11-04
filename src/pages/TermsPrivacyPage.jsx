@@ -78,7 +78,7 @@ export default function TermsPrivacyPage() {
             border: '2px solid #0F172A',
             borderRadius: 'var(--radius-sm)',
             padding: '14px',
-            boxShadow: '2px 2px 0px #0F172A',
+            
             marginBottom: '14px'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#D97706', fontWeight: '900', fontSize: '0.82rem', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '8px' }}>
@@ -92,7 +92,7 @@ export default function TermsPrivacyPage() {
                 'Penanganan kendala server down, serangan DDoS, atau gangguan infrastruktur penyedia hosting.'
               ].map((item, idx) => (
                 <li key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '0.86rem', color: '#334155' }}>
-                  <span style={{ color: '#EF4444', fontWeight: '900', flexShrink: 0 }}>✕</span>
+                  <span style={{ color: "#EF4444", fontWeight: "700", flexShrink: 0 }}>&bull;</span>
                   <span>{item}</span>
                 </li>
               ))}
@@ -147,7 +147,7 @@ export default function TermsPrivacyPage() {
                   border: '1.5px solid #0F172A',
                   borderRadius: '6px',
                   padding: '12px 14px',
-                  boxShadow: '1.5px 1.5px 0px #CBD5E1'
+                  
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
@@ -238,7 +238,7 @@ export default function TermsPrivacyPage() {
           <div style={{
             background: '#F0F5FF',
             border: '1.5px solid #0F172A',
-            boxShadow: '2px 2px 0px #0F172A',
+            
             borderRadius: '6px',
             padding: '14px',
             marginBottom: '10px'
@@ -269,15 +269,15 @@ export default function TermsPrivacyPage() {
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '12px' }}>
             <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '0.86rem', color: '#334155' }}>
-              <span style={{ color: '#059669', fontWeight: '900' }}>✓</span>
+              <span style={{ color: "#059669", fontWeight: "700" }}>&bull;</span>
               <span><strong>Cakupan Garansi:</strong> Penanganan galat fungsi (*runtime error*), kesalahan sintaks koding, atau ketidaksesuaian fungsional terhadap lembar brief teknis awal.</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '0.86rem', color: '#334155' }}>
-              <span style={{ color: '#EF4444', fontWeight: '900' }}>✕</span>
+              <span style={{ color: "#EF4444", fontWeight: "700" }}>&bull;</span>
               <span><strong>Pengecualian:</strong> Tidak mencakup penambahan fitur baru di luar lembar kesepakatan awal (fitur baru dialihkan ke Add-on resmi).</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '0.86rem', color: '#334155' }}>
-              <span style={{ color: '#EF4444', fontWeight: '900' }}>✕</span>
+              <span style={{ color: "#EF4444", fontWeight: "700" }}>&bull;</span>
               <span><strong>Gugurnya Garansi:</strong> Garansi gugur otomatis apabila source code telah dimodifikasi mandiri oleh pihak ketiga atau kendala server hosting eksternal milik klien.</span>
             </div>
           </div>
@@ -302,7 +302,7 @@ export default function TermsPrivacyPage() {
             border: '1.5px solid #0F172A',
             borderRadius: '6px',
             padding: '12px 14px',
-            boxShadow: '2px 2px 0px #CBD5E1',
+            
             marginBottom: '10px'
           }}>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '0.86rem', color: '#334155' }}>
@@ -364,7 +364,7 @@ export default function TermsPrivacyPage() {
             style={{
               background: '#FFFFFF',
               border: '2px solid #0F172A',
-              boxShadow: '3px 3px 0px #0F172A',
+              
               borderRadius: 'var(--radius-md)',
               padding: '16px 20px',
               marginBottom: '24px',
@@ -395,7 +395,7 @@ export default function TermsPrivacyPage() {
                   <span style={{ fontSize: '0.72rem', fontWeight: '900', color: '#059669', background: '#D1FAE5', padding: '2px 8px', borderRadius: '4px' }}>
                     ● DOKUMEN AKTIF &amp; BERLAKU
                   </span>
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.74rem', color: '#64748B', fontWeight: '700' }}>
+                  <span style={{ fontFamily: 'var(--)', fontSize: '0.74rem', color: '#64748B', fontWeight: '700' }}>
                     DOC-ID: AT/LEGAL/SOP-V1.4
                   </span>
                 </div>
@@ -416,7 +416,7 @@ export default function TermsPrivacyPage() {
                   background: copied ? '#ECFDF5' : '#F8FAFC',
                   color: copied ? '#059669' : '#0F172A',
                   border: '1.5px solid #0F172A',
-                  boxShadow: '2px 2px 0px #0F172A',
+                  
                   borderRadius: 'var(--radius-sm)',
                   padding: '7px 12px',
                   fontSize: '0.78rem',
@@ -531,7 +531,7 @@ export default function TermsPrivacyPage() {
                   style={{
                     background: '#FFFFFF',
                     border: '2px solid #0F172A',
-                    boxShadow: '3px 3px 0px #0F172A',
+                    
                     borderRadius: 'var(--radius-md)',
                     padding: '24px 20px',
                     position: 'relative'
@@ -616,7 +616,7 @@ export default function TermsPrivacyPage() {
             style={{
               background: '#FFFFFF',
               border: '2px solid #0F172A',
-              boxShadow: '4px 4px 0px var(--prussian-blue)',
+              
               borderRadius: 'var(--radius-md)',
               padding: '24px 20px',
               display: 'flex',
@@ -637,7 +637,7 @@ export default function TermsPrivacyPage() {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  boxShadow: '2px 2px 0px #0F172A'
+                  
                 }}
               >
                 <CheckCircle2 size={22} />

@@ -151,7 +151,7 @@ export default function FAQPage() {
                   background: '#FFFFFF', 
                   color: '#0F172A', 
                   border: '2px solid #0F172A', 
-                  boxShadow: '3px 3px 0px #CBD5E1',
+                  
                   borderRadius: 'var(--radius-md)',
                   fontSize: '0.95rem',
                   fontWeight: '600'
@@ -293,7 +293,7 @@ export default function FAQPage() {
                   padding: '48px 24px', 
                   background: '#FFFFFF',
                   border: '2px dashed #0F172A',
-                  boxShadow: 'none'
+                  
                 }}
               >
                 <div style={{
@@ -571,7 +571,7 @@ export default function FAQPage() {
             style={{
               background: '#FFFFFF',
               border: '2px solid #0F172A',
-              boxShadow: '4px 4px 0px var(--prussian-blue)',
+              
               borderRadius: 'var(--radius-md)',
               padding: '24px 20px',
               display: 'flex',
@@ -592,7 +592,7 @@ export default function FAQPage() {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  boxShadow: '2px 2px 0px #0F172A'
+                  
                 }}
               >
                 <MessageCircle size={22} />
@@ -653,7 +653,6 @@ export default function FAQPage() {
           font-size: 0.76rem;
           font-weight: 700;
           color: #0F172A;
-          box-shadow: 1.5px 1.5px 0px #CBD5E1;
           white-space: nowrap;
         }
 

@@ -12,12 +12,9 @@ export default function FAQSection() {
   };
 
   return (
-    <section id="faq" className="section-padding" style={{ background: '#F8FAFC', borderTop: '2px solid #0F172A' }}>
+    <section id="faq" className="section-padding" style={{ background: '#F8FAFC', borderTop: '1px solid var(--border-subtle)' }}>
       <div className="container">
         <div className="section-header">
-          <SectionBadge icon={HelpCircle}>
-            Pusat Informasi &amp; FAQ
-          </SectionBadge>
           <h2 className="section-title">
             Pertanyaan yang <span style={{ color: 'var(--prussian-blue)' }}>Sering Diajukan</span> Calon Klien
           </h2>
@@ -46,9 +43,7 @@ export default function FAQSection() {
                   padding: 0,
                   overflow: 'hidden',
                   background: '#FFFFFF',
-                  borderColor: '#0F172A',
-                  borderWidth: '2px',
-                  boxShadow: isOpen ? '4px 4px 0px var(--prussian-blue)' : '2px 2px 0px #0F172A',
+                  borderColor: 'var(--border-subtle)', borderWidth: '1px', 
                   transition: 'all 0.15s ease'
                 }}
               >
@@ -79,7 +74,7 @@ export default function FAQSection() {
                       borderRadius: '6px',
                       background: isOpen ? 'var(--prussian-blue)' : '#F1F5F9',
                       color: isOpen ? '#FFFFFF' : '#0F172A',
-                      border: '1.5px solid #0F172A',
+                      border: '1px solid var(--border-subtle)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -136,7 +131,7 @@ export default function FAQSection() {
                       minWidth: '28px',
                       borderRadius: '50%',
                       background: isOpen ? 'var(--kuning)' : '#F8FAFC',
-                      border: '1.5px solid #0F172A',
+                      border: '1px solid var(--border-subtle)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -155,7 +150,7 @@ export default function FAQSection() {
                   <div 
                     style={{
                       padding: '16px',
-                      borderTop: '2px solid #0F172A',
+                      borderTop: '1px solid var(--border-subtle)',
                       background: '#FFFFFF'
                     }}
                   >
@@ -212,7 +207,7 @@ export default function FAQSection() {
             gap: '16px',
             background: '#FFFFFF',
             border: '2px solid #0F172A',
-            boxShadow: '3px 3px 0px #0F172A',
+            
             borderRadius: 'var(--radius-md)',
             padding: '18px 20px'
           }}

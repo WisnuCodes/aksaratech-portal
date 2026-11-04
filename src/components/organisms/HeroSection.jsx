@@ -267,31 +267,12 @@ export default function HeroSection() {
           {/* LEFT COLUMN */}
           <div className="hero-left-content">
             
-            <div className="hero-badge-group">
-              <div className="hero-status-pill">
-                <span className="status-ping-wrap">
-                  <span className="status-ping-ring" />
-                  <span className="status-ping-dot" />
-                </span>
-                <span className="status-text">Kapasitas Pengerjaan Aktif</span>
-              </div>
-
-              <div className="hero-standard-pill">
-                <FileCode2 size={13} className="pill-icon" />
-                <span>Standar Rekayasa Formal &amp; UML Terstruktur</span>
-              </div>
-            </div>
-
             <h1 className="hero-headline">
-              <span className="headline-segment">Rekayasa Perangkat Lunak</span>{' '}
-              <span className="headline-segment">&amp; Sistem Web Berstandar</span>{' '}
-              <span className="headline-highlight-wrap">
-                <span className="hero-highlight">Enterprise</span>
-              </span>
+              Rekayasa Perangkat Lunak <span className="hero-highlight">&amp; Solusi Web Enterprise</span>
             </h1>
 
             <p className="hero-subtitle">
-              Aksara Tech melayani pengembangan source code fungsional, arsitektur basis data relasional, dan dokumen rekayasa formal (SRS &amp; SDD) terstruktur. Transparan, terstruktur, serta dilengkapi kuota revisi 3x mutlak demi kepastian target rilis Anda.
+              Aksara Tech melayani rekayasa software fungsional, arsitektur basis data relasional, dan dokumen rekayasa formal (SRS &amp; SDD). Transparan, terstruktur, serta dilengkapi kuota revisi 3x mutlak demi kepastian target rilis Anda.
             </p>
 
             <div className="hero-cta-group">
@@ -306,6 +287,14 @@ export default function HeroSection() {
             </div>
 
             <div className="hero-trust-bar">
+              <div className="trust-item trust-item-status">
+                <span className="status-ping-wrap">
+                  <span className="status-ping-ring" />
+                  <span className="status-ping-dot" />
+                </span>
+                <span>Kapasitas Pengerjaan Aktif</span>
+              </div>
+              <span className="trust-divider" aria-hidden="true">•</span>
               <div className="trust-item">
                 <CheckCircle2 size={14} className="trust-icon" />
                 <span>Kuota Revisi 3x Mutlak</span>
@@ -318,12 +307,7 @@ export default function HeroSection() {
               <span className="trust-divider" aria-hidden="true">•</span>
               <div className="trust-item">
                 <CheckCircle2 size={14} className="trust-icon" />
-                <span>Master Source Code Penuh</span>
-              </div>
-              <span className="trust-divider" aria-hidden="true">•</span>
-              <div className="trust-item">
-                <CheckCircle2 size={14} className="trust-icon" />
-                <span>Tarif Transparan Mulai Rp 100.000</span>
+                <span>Tarif Mulai Rp 100.000</span>
               </div>
             </div>
 
@@ -339,7 +323,6 @@ export default function HeroSection() {
         {/* 4 PILLARS */}
         <div className="hero-pillars-wrapper">
           <div className="hero-pillars-header">
-            <span className="pillars-pretitle">STANDAR PENGERJAAN AKSARA TECH</span>
             <h2 className="pillars-title">4 Pilar Jaminan Mutu Rekayasa</h2>
           </div>
 
@@ -418,12 +401,12 @@ export default function HeroSection() {
           }
 
           .hero-headline {
-            font-size: clamp(2.4rem, 3.8vw, 3.6rem);
-            font-weight: 900;
+            font-size: clamp(2.3rem, 3.6vw, 3.4rem);
+            font-weight: 800;
             line-height: 1.15;
             margin: 0 0 18px 0;
-            letter-spacing: -0.035em;
-            color: #0F172A;
+            letter-spacing: -0.03em;
+            color: var(--ink);
             text-align: left;
             text-wrap: balance;
           }
@@ -498,7 +481,7 @@ export default function HeroSection() {
           }
 
           .hero-headline {
-            font-size: clamp(2rem, 5vw, 2.7rem);
+            font-size: clamp(1.85rem, 5vw, 2.4rem);
             font-weight: 900;
             line-height: 1.18;
             margin: 0 auto 16px auto;
@@ -551,6 +534,11 @@ export default function HeroSection() {
         }
 
         @media (max-width: 480px) {
+          .hero-headline {
+            font-size: clamp(1.48rem, 6.4vw, 1.78rem) !important;
+            line-height: 1.18 !important;
+            letter-spacing: -0.025em !important;
+          }
           .hero-right-visual {
             max-width: 320px;
           }
@@ -693,7 +681,6 @@ export default function HeroSection() {
           border: 2px solid #0F172A;
           border-radius: 9999px;
           padding: 6px 14px;
-          box-shadow: 2px 2px 0px #0F172A;
           font-size: 0.8rem;
           font-weight: 800;
           color: #0F172A;
@@ -749,22 +736,16 @@ export default function HeroSection() {
         .headline-highlight-wrap { display: inline-block; }
 
         .hero-highlight {
-          background: var(--kuning);
-          color: #0F172A;
-          padding: 2px 12px;
-          border-radius: 8px;
-          border: 2px solid #0F172A;
-          box-shadow: 3.5px 3.5px 0px var(--prussian-blue);
-          display: inline-block;
-          transform: rotate(-1.5deg);
-          white-space: nowrap;
+          color: var(--prussian-blue);
+          display: inline;
+          font-weight: 800;
         }
 
         .hero-btn {
           font-family: var(--font-heading);
           letter-spacing: 0.01em;
           font-weight: 800;
-          transition: all 0.15s ease;
+          transition: transform 0.18s ease, opacity 0.18s ease, background-color 0.18s ease;
         }
         .hero-btn-main { padding: 13px 28px; font-size: 0.98rem; }
         .hero-btn-sub { padding: 13px 24px; font-size: 0.98rem; }
@@ -794,15 +775,7 @@ export default function HeroSection() {
           text-align: center;
         }
 
-        .pillars-pretitle {
-          font-size: 0.74rem;
-          font-weight: 900;
-          letter-spacing: 0.1em;
-          color: var(--prussian-blue);
-          display: block;
-          margin-bottom: 4px;
-          font-family: var(--font-mono);
-        }
+        .pillars-pretitle { display: none !important; }
 
         .pillars-title {
           font-size: 1.28rem;
@@ -818,28 +791,26 @@ export default function HeroSection() {
         }
 
         .hero-pillar-card {
-          padding: 20px;
+          padding: 22px;
           text-align: left;
           display: flex;
           gap: 14px;
           align-items: flex-start;
           background: #FFFFFF;
-          border: 2px solid #0F172A;
+          border: 1px solid var(--border-subtle);
           border-radius: var(--radius-md);
-          box-shadow: 4px 4px 0px #0F172A;
-          transition: transform 0.2s ease, box-shadow 0.2s ease;
+          transition: transform 0.2s ease, border-color 0.2s ease;
         }
 
         .hero-pillar-card:hover {
-          transform: translateY(-3px);
-          box-shadow: 6px 6px 0px var(--prussian-blue);
+          transform: translateY(-2px);
+          border-color: var(--border-main);
         }
 
         .pillar-icon-box {
-          border: 2px solid #0F172A;
-          padding: 9px;
-          border-radius: 8px;
-          box-shadow: 2px 2px 0px #0F172A;
+          border: 1px solid rgba(0, 0, 0, 0.06);
+          padding: 10px;
+          border-radius: 10px;
           flex-shrink: 0;
           display: flex;
           align-items: center;
@@ -880,7 +851,6 @@ export default function HeroSection() {
 
           .hero-pillar-card {
             padding: 16px 14px;
-            box-shadow: 3px 3px 0px #0F172A !important;
             gap: 12px;
           }
 

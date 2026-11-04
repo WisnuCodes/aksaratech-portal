@@ -31,3 +31,4 @@ When designing, refactoring, or building any UI component or page, strictly foll
   ```bash
   node .agents/skills/design-taste-frontend/scripts/draw.mjs --sector agency --brief "Aksara Tech digital solutions"
   ```
+

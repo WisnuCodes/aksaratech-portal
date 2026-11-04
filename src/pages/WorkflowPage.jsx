@@ -10,7 +10,7 @@ import {
 export default function WorkflowPage() {
   const sopStages = [
     {
-      num: "01",
+      num: "1",
       title: "Penjelajahan Paket & Plafon Tarif",
       timeline: "Tahap Awal",
       badge: "Transparansi Biaya",
@@ -22,7 +22,7 @@ export default function WorkflowPage() {
       ]
     },
     {
-      num: "02",
+      num: "2",
       title: "Pengisian Brief Kebutuhan Terstruktur",
       timeline: "10–15 Menit",
       badge: "Formulir Cerdas Web",
@@ -35,7 +35,7 @@ export default function WorkflowPage() {
       ]
     },
     {
-      num: "03",
+      num: "3",
       title: "Analisis Teknis & Surat Penawaran Resmi",
       timeline: "1 Hari Kerja",
       badge: "Nomor Dokumen Valid",
@@ -48,7 +48,7 @@ export default function WorkflowPage() {
       ]
     },
     {
-      num: "04",
+      num: "4",
       title: "Pengerjaan, Kuota 3x Revisi & Serah Terima",
       timeline: "1–10 Hari Kerja",
       badge: "Disiplin & Terpercaya",
@@ -109,22 +109,22 @@ export default function WorkflowPage() {
         <div className="container">
           <div className="sop-roadmap-items">
             <div className="roadmap-step active">
-              <span className="step-num">01</span>
+              <span className="step-num">1</span>
               <span className="step-label">Pilih Paket</span>
             </div>
             <span className="step-arrow">→</span>
             <div className="roadmap-step">
-              <span className="step-num">02</span>
+              <span className="step-num">2</span>
               <span className="step-label">Kirim Brief</span>
             </div>
             <span className="step-arrow">→</span>
             <div className="roadmap-step">
-              <span className="step-num">03</span>
+              <span className="step-num">3</span>
               <span className="step-label">Penawaran &amp; DP</span>
             </div>
             <span className="step-arrow">→</span>
             <div className="roadmap-step">
-              <span className="step-num">04</span>
+              <span className="step-num">4</span>
               <span className="step-label">3x Revisi &amp; Rilis</span>
             </div>
           </div>
@@ -136,7 +136,6 @@ export default function WorkflowPage() {
           
           {/* Section Heading */}
           <div className="sop-section-head">
-            <span className="sop-pretitle">TAHAPAN SISTEMATIS PROYEK</span>
             <h2 className="sop-main-title">4 Tahap Eksekusi Standar Aksara Tech</h2>
             <p className="sop-main-desc">
               Setiap proyek dikawal dengan alur kendali mutu formal sejak pemilihan spesifikasi hingga serah terima master file.
@@ -301,7 +300,7 @@ export default function WorkflowPage() {
         }
 
         .roadmap-step .step-num {
-          font-family: var(--font-mono);
+          font-family: var(--font-body);
           font-weight: 900;
         }
 
@@ -319,15 +318,7 @@ export default function WorkflowPage() {
           margin-bottom: 40px;
         }
 
-        .sop-pretitle {
-          font-family: var(--font-mono);
-          font-size: 0.74rem;
-          font-weight: 900;
-          letter-spacing: 0.1em;
-          color: var(--prussian-blue);
-          display: block;
-          margin-bottom: 6px;
-        }
+        .sop-pretitle { display: none !important; }
 
         .sop-main-title {
           font-size: clamp(1.6rem, 3.5vw, 2.2rem);
@@ -361,15 +352,13 @@ export default function WorkflowPage() {
           gap: 28px;
           align-items: start;
           background: #FFFFFF;
-          border: 2px solid #0F172A;
-          box-shadow: 4px 4px 0px #0F172A;
+          border: 1px solid var(--border-subtle);
           border-radius: var(--radius-md);
           transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
         .sop-stage-card:hover {
           transform: translateY(-2px);
-          box-shadow: 6px 6px 0px var(--prussian-blue);
         }
 
         .stage-left-info {
@@ -389,8 +378,7 @@ export default function WorkflowPage() {
           height: 52px;
           border-radius: 12px;
           background: #EEF4FF;
-          border: 2px solid #0F172A;
-          box-shadow: 2.5px 2.5px 0px #0F172A;
+          border: 1px solid var(--border-subtle);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -419,7 +407,7 @@ export default function WorkflowPage() {
         }
 
         .stage-order-tag {
-          font-family: var(--font-mono);
+          font-family: var(--font-body);
           font-size: 0.68rem;
           font-weight: 800;
           color: var(--prussian-blue);
@@ -471,7 +459,6 @@ export default function WorkflowPage() {
         .stage-qa-box {
           background: #F8FAFC;
           border: 1.5px solid #0F172A;
-          box-shadow: 2.5px 2.5px 0px #0F172A;
           border-radius: 8px;
           padding: 18px;
         }
@@ -519,9 +506,8 @@ export default function WorkflowPage() {
            ======================================================= */
         .sop-revision-hub {
           background: #FFFDF5;
-          border: 2px solid #0F172A;
+          border: 1px solid var(--border-subtle);
           border-radius: var(--radius-md);
-          box-shadow: 5px 5px 0px var(--kuning);
           padding: 32px;
           margin-bottom: 48px;
         }
@@ -533,12 +519,11 @@ export default function WorkflowPage() {
           background: var(--kuning);
           color: #0F172A;
           border: 1.5px solid #0F172A;
-          box-shadow: 2px 2px 0px #0F172A;
           padding: 5px 12px;
           border-radius: 6px;
           font-weight: 900;
           font-size: 0.8rem;
-          font-family: var(--font-mono);
+          font-family: var(--font-body);
           margin-bottom: 14px;
         }
 
@@ -614,7 +599,6 @@ export default function WorkflowPage() {
           border: 1.5px solid #0F172A;
           border-radius: 8px;
           padding: 16px;
-          box-shadow: 2.5px 2.5px 0px #0F172A;
         }
 
         .rule-card-header {
@@ -630,7 +614,7 @@ export default function WorkflowPage() {
           border-radius: 50%;
           background: var(--prussian-blue);
           color: #FFFFFF;
-          font-family: var(--font-mono);
+          font-family: var(--font-body);
           font-size: 0.72rem;
           font-weight: 900;
           display: flex;
@@ -737,7 +721,6 @@ export default function WorkflowPage() {
             grid-template-columns: 1fr;
             padding: 16px;
             gap: 16px;
-            box-shadow: 3px 3px 0px #0F172A;
           }
 
           .stage-header-row {
@@ -777,7 +760,6 @@ export default function WorkflowPage() {
           .sop-revision-hub {
             padding: 18px 16px;
             margin-bottom: 32px;
-            box-shadow: 4px 4px 0px var(--kuning);
           }
 
           .hub-title {

@@ -100,7 +100,7 @@ export function createWhatsAppPayload(formData, selectedPackage, selectedAddons)
 
 *III. SPESIFIKASI FITUR TERPILIH:*
 ${featuresText}
-${formData.customFeatures ? `\n*FITUR KUSTOM (DIKETIK SENDIRI):*\n💬 "${formData.customFeatures}"` : ""}
+${formData.customFeatures ? `\n*FITUR KUSTOM (DIKETIK SENDIRI):*\n"${formData.customFeatures}"` : ""}
 
 *IV. KESIAPAN DESAIN & ASET VISUAL:*
 • Status Kesiapan Konten: ${formData.designReadiness || "-"}
@@ -109,7 +109,7 @@ ${formData.designReference ? `• Referensi Desain / Gaya: ${formData.designRefe
 
 *V. LAYANAN TAMBAHAN (ADD-ON) DIMINTA:*
 ${addonText}
-${formData.customModuleRequest ? `\n*RINCIAN PERMINTAAN MODUL KHUSUS (CHAT REQUEST):*\n💬 "${formData.customModuleRequest}"` : ""}
+${formData.customModuleRequest ? `\n*RINCIAN PERMINTAAN MODUL KHUSUS (CHAT REQUEST):*\n"${formData.customModuleRequest}"` : ""}
 
 *VI. CATATAN & KEBUTUHAN KHUSUS:*
 ${formData.specialNotes ? formData.specialNotes : "Mengikuti spesifikasi standar paket."}

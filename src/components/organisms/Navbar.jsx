@@ -213,19 +213,19 @@ export default function Navbar() {
               width: 38,
               height: 38,
               borderRadius: '10px',
-              border: '1.5px solid #0F172A',
+              border: '1px solid #CBD5E1',
               bgcolor: '#FFFFFF',
-              boxShadow: '2px 2px 0px #0F172A',
+              
               color: '#059669',
               transition: 'all 0.15s cubic-bezier(0.2, 0, 0, 1)',
               '&:hover': {
                 bgcolor: '#ECFDF5',
                 transform: 'translate(-1px, -1px)',
-                boxShadow: '3px 3px 0px #0F172A'
+                
               },
               '&:active': {
                 transform: 'translate(1.5px, 1.5px)',
-                boxShadow: '0.5px 0.5px 0px #0F172A'
+                
               }
             }}
           >
@@ -234,7 +234,7 @@ export default function Navbar() {
               sx={{
                 '& .MuiBadge-badge': {
                   bgcolor: '#10B981',
-                  boxShadow: '0 0 4px #10B981',
+                  
                   width: 7,
                   height: 7,
                   borderRadius: '50%',
@@ -257,19 +257,19 @@ export default function Navbar() {
               width: 38,
               height: 38,
               borderRadius: '10px',
-              border: '1.5px solid #0F172A',
+              border: '1px solid #CBD5E1',
               bgcolor: mobileMenuOpen ? '#0F172A' : '#FFFFFF',
               color: mobileMenuOpen ? '#FFFFFF' : '#0F172A',
-              boxShadow: '2px 2px 0px #0F172A',
+              
               transition: 'all 0.15s cubic-bezier(0.2, 0, 0, 1)',
               '&:hover': {
                 bgcolor: mobileMenuOpen ? '#1E293B' : '#F1F5F9',
                 transform: 'translate(-1px, -1px)',
-                boxShadow: '3px 3px 0px #0F172A'
+                
               },
               '&:active': {
                 transform: 'translate(1.5px, 1.5px)',
-                boxShadow: '0.5px 0.5px 0px #0F172A'
+                
               }
             }}
           >
@@ -298,8 +298,8 @@ export default function Navbar() {
           <Box 
             sx={{
               bgcolor: '#FFFFFF',
-              borderBottom: '2.5px solid #0F172A',
-              boxShadow: '0 16px 36px -4px rgba(15, 23, 42, 0.18)',
+              borderBottom: '1px solid #E2E8F0',
+              
               overflow: 'hidden', // No scrollbar
               p: { xs: '10px 14px 14px', sm: '12px 18px 16px' },
               position: 'relative'
@@ -319,7 +319,7 @@ export default function Navbar() {
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8 }}>
               <Typography 
                 sx={{ 
-                  fontFamily: 'var(--font-mono)',
+                  fontFamily: 'var(--font-heading)',
                   fontSize: '0.64rem',
                   fontWeight: 900,
                   color: '#64748B',
@@ -406,7 +406,7 @@ export default function Navbar() {
                             bgcolor: 'var(--prussian-blue)',
                             color: '#FFFFFF',
                             borderColor: '#0F172A',
-                            boxShadow: '1.5px 1.5px 0px #0F172A'
+                            
                           }
                         }}
                       >
@@ -471,17 +471,17 @@ export default function Navbar() {
                 py: 1.1,
                 px: 2,
                 borderRadius: '8px',
-                border: '1.5px solid #0F172A',
-                boxShadow: '2.5px 2.5px 0px #0F172A',
+                border: '1px solid #CBD5E1',
+                
                 transition: 'all 0.15s cubic-bezier(0.2, 0, 0, 1)',
                 '&:hover': {
                   bgcolor: 'var(--prussian-blue-dark)',
                   transform: 'translate(-1px, -1px)',
-                  boxShadow: '3px 3px 0px #0F172A'
+                  
                 },
                 '&:active': {
                   transform: 'translate(1px, 1px)',
-                  boxShadow: '1px 1px 0px #0F172A'
+                  
                 }
               }}
             >
@@ -503,22 +503,22 @@ export default function Navbar() {
               gap: 1.2,
               bgcolor: '#F0FDF4',
               color: '#0F172A',
-              border: '1.5px solid #0F172A',
+              border: '1px solid #CBD5E1',
               borderRadius: '8px',
               py: 0.8,
               px: 1.5,
-              boxShadow: '2px 2px 0px #0F172A',
+              
               textTransform: 'none',
               textAlign: 'left',
               transition: 'all 0.15s cubic-bezier(0.2, 0, 0, 1)',
               '&:hover': {
                 bgcolor: '#DCFCE7',
                 transform: 'translate(-1px, -1px)',
-                boxShadow: '2.5px 2.5px 0px #0F172A'
+                
               },
               '&:active': {
                 transform: 'translate(1px, 1px)',
-                boxShadow: '1px 1px 0px #0F172A'
+                
               }
             }}
           >
@@ -547,7 +547,7 @@ export default function Navbar() {
                       height: 6,
                       borderRadius: '50%',
                       bgcolor: '#10B981',
-                      boxShadow: '0 0 5px #10B981',
+                      
                       flexShrink: 0
                     }}
                   />
@@ -587,7 +587,7 @@ export default function Navbar() {
           right: 0;
           z-index: 1000;
           background: #FFFFFF;
-          border-bottom: 2px solid #0F172A;
+          /* border separated by tone */
           width: 100%;
           transition: background-color 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
         }
@@ -596,7 +596,6 @@ export default function Navbar() {
           background: rgba(255, 255, 255, 0.96);
           backdrop-filter: blur(12px);
           -webkit-backdrop-filter: blur(12px);
-          box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.08);
         }
 
         .nav-bar-inner {
@@ -625,7 +624,7 @@ export default function Navbar() {
           max-width: 65px;
           object-fit: contain;
           display: block;
-          filter: drop-shadow(1.5px 1.5px 0px rgba(15, 23, 42, 0.25));
+          
           transition: transform 0.15s ease;
         }
 
@@ -684,7 +683,7 @@ export default function Navbar() {
           padding: 8px 12px;
           border-radius: 6px;
           white-space: nowrap;
-          transition: all 0.15s ease;
+          transition: color 0.15s ease, background-color 0.15s ease;
         }
 
         .desktop-nav-link:hover {
@@ -722,7 +721,6 @@ export default function Navbar() {
           border-radius: 50%;
           background: #34D399;
           display: inline-block;
-          box-shadow: 0 0 6px #34D399;
         }
 
         /* =======================================================
@@ -762,36 +760,30 @@ export default function Navbar() {
             display: inline-flex !important;
             padding: 9px 20px !important;
             font-size: 0.88rem !important;
-            box-shadow: 3px 3px 0px var(--kuning) !important;
-            transition: all 0.15s ease !important;
+            transition: transform 0.15s ease, background-color 0.15s ease !important;
           }
 
           #order-btn-desktop:hover {
             transform: translate(-1px, -1px);
-            box-shadow: 4px 4px 0px var(--kuning) !important;
           }
 
           #order-btn-desktop:active {
             transform: translate(1px, 1px);
-            box-shadow: 1px 1px 0px var(--kuning) !important;
           }
 
           .wa-btn-desktop {
             display: inline-flex !important;
             padding: 9px 16px !important;
             font-size: 0.88rem !important;
-            box-shadow: 3px 3px 0px #0F172A !important;
-            transition: all 0.15s ease !important;
+            transition: transform 0.15s ease, background-color 0.15s ease !important;
           }
 
           .wa-btn-desktop:hover {
             transform: translate(-1px, -1px);
-            box-shadow: 4px 4px 0px #0F172A !important;
           }
 
           .wa-btn-desktop:active {
             transform: translate(1px, 1px);
-            box-shadow: 1px 1px 0px #0F172A !important;
           }
         }
 

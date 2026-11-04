@@ -72,9 +72,7 @@ export default function PackageShowcase({ onSelectPackage }) {
         {/* Section Header */}
         <div className="package-section-header">
           <div>
-            <div className="section-badge">
-              <Package size={14} /> Katalog Paket Resmi
-            </div>
+            
             <h2 className="section-title" style={{ marginBottom: '8px' }}>
               6 Klasifikasi Paket <span style={{ color: 'var(--prussian-blue)' }}>Layanan Resmi</span>
             </h2>
@@ -86,9 +84,9 @@ export default function PackageShowcase({ onSelectPackage }) {
           {/* Mobile-Only Carousel Controls (Hidden on Desktop) */}
           <div className="package-mobile-nav-controls">
             <div className="package-counter-badge">
-              <span className="current-num">0{activeSlide + 1}</span>
+              <span className="current-num">{activeSlide + 1}</span>
               <span className="sep">/</span>
-              <span className="total-num">0{PACKAGES.length}</span>
+              <span className="total-num">{PACKAGES.length}</span>
             </div>
 
             <div className="carousel-arrow-group">
@@ -303,20 +301,18 @@ export default function PackageShowcase({ onSelectPackage }) {
           flex-direction: column;
           position: relative;
           background: #FFFFFF;
-          border: 2px solid #0F172A;
+          border: 1px solid var(--border-subtle);
           border-radius: var(--radius-md);
-          box-shadow: 4px 4px 0px #0F172A;
           transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
         .package-card-item.is-featured-package {
-          box-shadow: 6px 6px 0px var(--kuning);
           border-color: #0F172A;
         }
 
         .package-card-header {
           padding: 22px 24px 18px;
-          border-bottom: 2px solid #0F172A;
+          /* border separated by tone */
         }
 
         .package-meta-row {
@@ -346,7 +342,7 @@ export default function PackageShowcase({ onSelectPackage }) {
         .package-price-box {
           padding: 16px 24px;
           background: #F8FAFC;
-          border-bottom: 2px solid #0F172A;
+          /* border separated by tone */
         }
 
         .price-label {
@@ -387,8 +383,7 @@ export default function PackageShowcase({ onSelectPackage }) {
 
         .system-type-label {
           font-size: 0.74rem;
-          text-transform: uppercase;
-          letter-spacing: 0.05em;
+          text-transform: none; letter-spacing: -0.01em;
           color: #64748B;
           font-weight: 800;
           display: block;
@@ -425,7 +420,7 @@ export default function PackageShowcase({ onSelectPackage }) {
         .package-expanded-content {
           margin-top: 14px;
           padding-top: 14px;
-          border-top: 1.5px dashed #CBD5E1;
+          /* border separated by tone */
         }
 
         .expanded-section-title {
@@ -433,8 +428,7 @@ export default function PackageShowcase({ onSelectPackage }) {
           font-weight: 800;
           color: #0F172A;
           margin-bottom: 8px;
-          text-transform: uppercase;
-          letter-spacing: 0.04em;
+          text-transform: none; letter-spacing: -0.01em;
         }
 
         .features-checklist, .deliverables-checklist {
@@ -476,7 +470,7 @@ export default function PackageShowcase({ onSelectPackage }) {
 
         .package-card-footer {
           padding: 16px 24px;
-          border-top: 2px solid #0F172A;
+          /* border separated by tone */
           background: #F8FAFC;
         }
 
@@ -515,12 +509,13 @@ export default function PackageShowcase({ onSelectPackage }) {
           }
 
           .package-card-item:hover {
-            transform: translateY(-4px);
-            box-shadow: 6px 6px 0px #0F172A;
+            transform: translateY(-2px);
+            border-color: var(--border-main);
           }
 
           .package-card-item.is-featured-package:hover {
-            box-shadow: 8px 8px 0px var(--kuning);
+            transform: translateY(-2px);
+            border-color: var(--prussian-blue);
           }
         }
 
@@ -549,13 +544,13 @@ export default function PackageShowcase({ onSelectPackage }) {
             align-items: center;
             gap: 4px;
             background: #F1F5F9;
-            border: 1.5px solid #0F172A;
+            border: 1px solid var(--border-subtle);
             padding: 4px 10px;
             border-radius: 6px;
             font-size: 0.8rem;
             font-weight: 900;
             color: #0F172A;
-            font-family: var(--font-mono);
+            
           }
 
           .package-counter-badge .current-num {
@@ -574,7 +569,7 @@ export default function PackageShowcase({ onSelectPackage }) {
 
           .carousel-btn {
             background: #FFFFFF;
-            border: 2px solid #0F172A;
+            border: 1px solid var(--border-subtle);
             border-radius: 8px;
             width: 36px;
             height: 36px;
@@ -582,9 +577,8 @@ export default function PackageShowcase({ onSelectPackage }) {
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            box-shadow: 2px 2px 0px #0F172A;
             color: #0F172A;
-            transition: all 0.15s ease;
+            transition: transform 0.18s ease, opacity 0.18s ease, background-color 0.18s ease;
           }
 
           .carousel-btn:hover:not(:disabled) {
@@ -595,7 +589,6 @@ export default function PackageShowcase({ onSelectPackage }) {
           .carousel-btn:disabled {
             opacity: 0.35;
             cursor: not-allowed;
-            box-shadow: 1px 1px 0px #CBD5E1;
           }
 
           /* Swipe Track on Mobile with Independent Card Heights */
@@ -651,21 +644,19 @@ export default function PackageShowcase({ onSelectPackage }) {
 
           .package-page-dot {
             background: #FFFFFF;
-            border: 1.5px solid #0F172A;
+            border: 1px solid var(--border-subtle);
             padding: 5px 10px;
             border-radius: 6px;
             font-size: 0.74rem;
             font-weight: 800;
             cursor: pointer;
             color: #475569;
-            box-shadow: 1.5px 1.5px 0px #CBD5E1;
-            transition: all 0.15s ease;
+            transition: transform 0.18s ease, opacity 0.18s ease, background-color 0.18s ease;
           }
 
           .package-page-dot.active {
             background: var(--kuning);
             color: #0F172A;
-            box-shadow: 2px 2px 0px #0F172A;
             transform: translateY(-2px);
           }
 

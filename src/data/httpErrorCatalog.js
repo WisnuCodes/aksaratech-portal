@@ -493,7 +493,7 @@ export const HTTP_ERRORS = {
     recommendedActions: [
       "Tunggu beberapa saat hingga proses penguncian (lock lease) berakhir.",
       "Hubungi administrator jika berkas terkunci tanpa pemilik sesi yang jelas.",
-      "Lakukan unlock eksplisit jika Anda memiliki token lock WebDAV yang sah."
+      "Lakukan enable eksplisit jika Anda memiliki token lock WebDAV yang sah."
     ],
     rfcSpec: "RFC 4918 Section 11.3 (WebDAV)",
     severity: "warning",

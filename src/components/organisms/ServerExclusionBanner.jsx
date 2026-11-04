@@ -8,42 +8,20 @@ export default function ServerExclusionBanner() {
     <section id="eksklusi-server" className="section-padding" style={{ paddingTop: '40px', paddingBottom: '60px', background: '#FFFFFF' }}>
       <div className="container">
         <div style={{
-          background: '#FFFBEB',
-          border: '2px solid #0F172A',
+          background: '#F8FAFC',
+          border: '1px solid var(--border-subtle)',
           borderRadius: 'var(--radius-md)',
           padding: '36px 32px',
-          boxShadow: '6px 6px 0px #0F172A',
+          
           position: 'relative'
         }}>
-          {/* Top Label */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
-            <div style={{
-              background: 'var(--kuning)',
-              color: '#0F172A',
-              padding: '6px 14px',
-              borderRadius: '6px',
-              fontSize: '0.8rem',
-              fontWeight: '800',
-              letterSpacing: '0.06em',
-              textTransform: 'uppercase',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              border: '2px solid #0F172A',
-              boxShadow: '2px 2px 0px #0F172A'
-            }}>
-              <ShieldAlert size={16} /> Batasan Ruang Lingkup Mutlak
-            </div>
-            <span style={{ fontSize: '0.88rem', color: '#475569', fontWeight: '700' }}>Kebijakan Resmi Operasional Aksara Tech</span>
-          </div>
-
           <h3 style={{
             fontSize: 'clamp(1.4rem, 2.5vw, 1.95rem)',
             fontWeight: '900',
             marginBottom: '14px',
             color: '#0F172A'
           }}>
-            Penegasan Kebijakan <span style={{ color: 'var(--prussian-blue)' }}>Eksklusi Layanan Server &amp; Hosting</span>
+            Kebijakan Eksklusi <span style={{ color: 'var(--prussian-blue)' }}>Server &amp; Hosting</span>
           </h3>
 
           <p style={{
@@ -69,13 +47,13 @@ export default function ServerExclusionBanner() {
                 key={idx}
                 style={{
                   background: '#FFFFFF',
-                  border: '2px solid #0F172A',
-                  borderRadius: '6px',
+                  border: '1px solid #FEE2E2',
+                  borderRadius: 'var(--radius-sm)',
                   padding: '16px 18px',
                   display: 'flex',
                   alignItems: 'flex-start',
                   gap: '12px',
-                  boxShadow: '3px 3px 0px #E11D48'
+                  
                 }}
               >
                 <div style={{ color: '#E11D48', marginTop: '2px', flexShrink: 0 }}>
@@ -90,8 +68,7 @@ export default function ServerExclusionBanner() {
 
           {/* Scope Comparison Strip */}
           <div style={{
-            background: '#FFFFFF',
-            border: '2px solid #0F172A',
+            background: '#FFFFFF', border: '1px solid var(--border-subtle)',
             borderRadius: '6px',
             padding: '20px 24px',
             display: 'flex',
@@ -99,7 +76,7 @@ export default function ServerExclusionBanner() {
             alignItems: 'center',
             justifyContent: 'space-between',
             gap: '16px',
-            boxShadow: '3px 3px 0px #0F172A'
+            
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flex: '1 1 500px' }}>
               <div style={{ color: '#059669', flexShrink: 0 }}>

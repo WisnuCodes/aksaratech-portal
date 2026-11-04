@@ -39,36 +39,21 @@ export default function HomePage({ onSelectPackage }) {
       <FAQSection />
 
       {/* 9. Conversion Banner Section */}
-      <section className="section-padding" style={{ paddingTop: '40px', paddingBottom: '96px', background: '#FFFFFF', borderTop: '2px solid #0F172A' }}>
+      <section className="section-padding" style={{ paddingTop: '40px', paddingBottom: '96px', background: '#FFFFFF', borderTop: '1px solid var(--border-subtle)' }}>
         <div className="container">
           <div style={{
-            background: '#F0F5FF',
-            border: '2px solid #0F172A',
+            background: '#EFF6FF',
+            border: '1px solid rgba(29, 99, 255, 0.2)',
             borderRadius: 'var(--radius-md)',
             padding: '48px 36px',
             textAlign: 'center',
-            boxShadow: '6px 6px 0px var(--kuning)',
+            
             position: 'relative'
           }}>
-            <div style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '8px',
-              padding: '6px 16px',
-              borderRadius: '6px',
-              fontSize: '0.84rem',
-              fontWeight: '800',
-              background: 'var(--kuning)',
-              color: '#0F172A',
-              border: '2px solid #0F172A',
-              boxShadow: '2px 2px 0px #0F172A',
-              marginBottom: '20px'
-            }}>
-              <Shield size={16} /> Mulai Kolaborasi Tanpa Risiko
-            </div>
+            
 
-            <h2 style={{ fontSize: 'clamp(1.9rem, 3.4vw, 2.7rem)', fontWeight: '900', marginBottom: '16px', color: '#0F172A' }}>
-              Konsultasikan Kebutuhan Sistem Anda Bersama <span style={{ color: 'var(--prussian-blue)' }}>Aksara Tech</span>
+            <h2 style={{ fontSize: 'clamp(1.5rem, 3.4vw, 2.3rem)', fontWeight: '900', marginBottom: '16px', color: '#0F172A' }}>
+              Konsultasi Sistem Bersama <span style={{ color: 'var(--prussian-blue)' }}>Aksara Tech</span>
             </h2>
 
             <p style={{ fontSize: '1.05rem', color: '#334155', maxWidth: '720px', margin: '0 auto 36px auto', lineHeight: '1.7', fontWeight: '500' }}>

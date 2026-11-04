@@ -55,7 +55,7 @@ export default function AddonsSection() {
                 <div style={{
                   background: accentBg,
                   border: `2px solid #0F172A`,
-                  boxShadow: '2px 2px 0px #0F172A',
+                  
                   borderRadius: '8px',
                   padding: '10px',
                   color: accentColor,

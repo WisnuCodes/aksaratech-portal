@@ -11,7 +11,7 @@ export default function ServerExclusionPage() {
   const exclusions = [
     {
       icon: Globe,
-      number: "01",
+      number: "1",
       title: "Domain & DNS",
       shortSummary: "Pendaftaran, perpanjangan, dan pengelolaan DNS record (.com, .id, dll).",
       boundary: "Domain dibeli mandiri atas nama Klien",
@@ -19,7 +19,7 @@ export default function ServerExclusionPage() {
     },
     {
       icon: Server,
-      number: "02",
+      number: "2",
       title: "Sewa Hosting / VPS",
       shortSummary: "Biaya langganan bulanan/tahunan server, cPanel, atau infrastruktur cloud.",
       boundary: "Klien pegang kendali 100% server sendiri",
@@ -27,7 +27,7 @@ export default function ServerExclusionPage() {
     },
     {
       icon: UploadCloud,
-      number: "03",
+      number: "3",
       title: "Deployment Publik",
       shortSummary: "Proses login cPanel/SSH pihak ketiga untuk upload berkas atau konfigurasi SSL.",
       boundary: "Deliverable berupa master file bersih (.zip & .sql)",
@@ -35,7 +35,7 @@ export default function ServerExclusionPage() {
     },
     {
       icon: Activity,
-      number: "04",
+      number: "4",
       title: "Downtime Server",
       shortSummary: "Kendala koneksi data center, server crash pihak ketiga, atau serangan DDoS.",
       boundary: "Tanggung jawab murni pada integritas kode program",
@@ -118,7 +118,6 @@ export default function ServerExclusionPage() {
           {/* Quick Scope Comparison: Tanggung Jawab vs Eksklusi */}
           <div className="ex-comparison-wrapper">
             <div className="ex-comparison-header">
-              <span className="ex-pretitle">BATASAN TANGGUNG JAWAB REKAYASA</span>
               <h2 className="ex-section-title">Pemetaan Ruang Lingkup Kerja</h2>
             </div>
 
@@ -170,7 +169,6 @@ export default function ServerExclusionPage() {
           {/* 4 Detailed Exclusions (Compact 2x2 Grid) */}
           <div className="ex-details-section">
             <div className="ex-comparison-header">
-              <span className="ex-pretitle">DETAIL 4 POIN MUTLAK</span>
               <h2 className="ex-section-title">4 Batasan Ruang Lingkup Mutlak</h2>
             </div>
 
@@ -283,9 +281,8 @@ export default function ServerExclusionPage() {
            ======================================================= */
         .ex-philosophy-card {
           background: #FFFBEB;
-          border: 2px solid #0F172A;
+          border: 1px solid var(--border-subtle);
           border-radius: var(--radius-md);
-          box-shadow: 4px 4px 0px #0F172A;
           padding: 24px 28px;
           margin-bottom: 40px;
         }
@@ -298,7 +295,7 @@ export default function ServerExclusionPage() {
         }
 
         .ex-phil-badge {
-          font-family: var(--font-mono);
+          font-family: var(--font-body);
           font-size: 0.72rem;
           font-weight: 900;
           letter-spacing: 0.06em;
@@ -332,15 +329,7 @@ export default function ServerExclusionPage() {
           margin-bottom: 22px;
         }
 
-        .ex-pretitle {
-          font-family: var(--font-mono);
-          font-size: 0.72rem;
-          font-weight: 900;
-          letter-spacing: 0.08em;
-          color: var(--prussian-blue);
-          display: block;
-          margin-bottom: 4px;
-        }
+        .ex-pretitle { display: none !important; }
 
         .ex-section-title {
           font-size: 1.6rem;
@@ -358,8 +347,7 @@ export default function ServerExclusionPage() {
         .ex-scope-card {
           padding: 22px 24px;
           background: #FFFFFF;
-          border: 2px solid #0F172A;
-          box-shadow: 4px 4px 0px #0F172A;
+          border: 1px solid var(--border-subtle);
           border-radius: var(--radius-md);
         }
 
@@ -376,7 +364,7 @@ export default function ServerExclusionPage() {
           width: 36px;
           height: 36px;
           border-radius: 8px;
-          border: 2px solid #0F172A;
+          border: 1px solid var(--border-subtle);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -387,7 +375,7 @@ export default function ServerExclusionPage() {
         .icon-rose { background: #FFF1F2; color: #E11D48; }
 
         .scope-tag {
-          font-family: var(--font-mono);
+          font-family: var(--font-body);
           font-size: 0.68rem;
           font-weight: 900;
           letter-spacing: 0.06em;
@@ -452,8 +440,7 @@ export default function ServerExclusionPage() {
         .ex-card-item {
           padding: 20px;
           background: #FFFFFF;
-          border: 2px solid #0F172A;
-          box-shadow: 3.5px 3.5px 0px #0F172A;
+          border: 1px solid var(--border-subtle);
           border-radius: var(--radius-md);
           display: flex;
           flex-direction: column;
@@ -519,8 +506,7 @@ export default function ServerExclusionPage() {
            ======================================================= */
         .ex-maintenance-card {
           background: #FFFFFF;
-          border: 2px solid #0F172A;
-          box-shadow: 4px 4px 0px #0F172A;
+          border: 1px solid var(--border-subtle);
           border-radius: var(--radius-md);
           padding: 22px 24px;
           margin-bottom: 40px;
@@ -538,7 +524,7 @@ export default function ServerExclusionPage() {
           height: 36px;
           border-radius: 8px;
           background: #EEF4FF;
-          border: 2px solid #0F172A;
+          border: 1px solid var(--border-subtle);
           color: var(--prussian-blue);
           display: flex;
           align-items: center;
@@ -547,7 +533,7 @@ export default function ServerExclusionPage() {
         }
 
         .ex-maint-tag {
-          font-family: var(--font-mono);
+          font-family: var(--font-body);
           font-size: 0.68rem;
           font-weight: 900;
           letter-spacing: 0.06em;
@@ -583,7 +569,6 @@ export default function ServerExclusionPage() {
           font-size: 0.78rem;
           font-weight: 700;
           color: #0F172A;
-          box-shadow: 1.5px 1.5px 0px #CBD5E1;
         }
 
         /* =======================================================

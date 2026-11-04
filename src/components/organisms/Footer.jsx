@@ -56,7 +56,7 @@ export default function Footer() {
           font-size: 0.88rem;
           font-weight: 600;
           text-decoration: none;
-          transition: all 0.15s ease;
+          transition: transform 0.18s ease, opacity 0.18s ease, background-color 0.18s ease;
           padding: 3px 0;
         }
 
@@ -164,7 +164,7 @@ export default function Footer() {
               border: '1.5px solid #0F172A',
               padding: '5px 12px',
               borderRadius: 'var(--radius-full)',
-              boxShadow: '1.5px 1.5px 0px #0F172A',
+              
               fontSize: '0.76rem',
               fontWeight: '800',
               color: '#0F172A',
@@ -268,7 +268,7 @@ export default function Footer() {
             <div style={{
               background: '#FFFFFF',
               border: '2px solid #0F172A',
-              boxShadow: '3px 3px 0px #0F172A',
+              
               borderRadius: 'var(--radius-md)',
               padding: '18px 16px',
               display: 'flex',
@@ -355,7 +355,7 @@ export default function Footer() {
               style={{
                 background: '#FFFFFF',
                 border: '2px solid #0F172A',
-                boxShadow: '2px 2px 0px #0F172A',
+                
                 borderRadius: 'var(--radius-sm)',
                 padding: '6px 14px',
                 color: '#0F172A',

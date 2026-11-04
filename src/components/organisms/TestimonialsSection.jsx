@@ -65,14 +65,12 @@ export default function TestimonialsSection() {
   };
 
   return (
-    <section id="testimoni" className="section-padding testimonials-carousel-section" style={{ position: 'relative', background: '#F8FAFC', borderTop: '2px solid #0F172A' }}>
+    <section id="testimoni" className="section-padding testimonials-carousel-section" style={{ position: 'relative', background: '#F8FAFC', borderTop: '1px solid var(--border-subtle)' }}>
       <div className="container">
         
         {/* Section Header */}
         <div className="section-header">
-          <div className="section-badge">
-            <MessageSquare size={14} /> Testimoni Klien &amp; Rekam Jejak
-          </div>
+          
           <h2 className="section-title">
             Kepuasan Nyata dari <span style={{ color: 'var(--prussian-blue)' }}>Klien Aksara Tech</span>
           </h2>
@@ -101,13 +99,6 @@ export default function TestimonialsSection() {
         {/* Testimonial Showcase Box */}
         <div className="testi-stage-container">
           
-          {/* Pinned Vertical Yellow Ribbon */}
-          <div className="testi-vertical-ribbon">
-            <span className="vertical-text">
-              ★ TESTIMONI RESMI KLIEN AKSARA TECH ★
-            </span>
-          </div>
-
           {/* Carousel Track */}
           <div 
             ref={trackRef}
@@ -168,9 +159,9 @@ export default function TestimonialsSection() {
                   {/* Carousel Controls */}
                   <div className="testi-controls-group">
                     <div className="testi-slide-index">
-                      <span className="index-active">0{idx + 1}</span>
+                      <span className="index-active">{idx + 1}</span>
                       <span className="index-divider">/</span>
-                      <span className="index-total">0{filteredTestimonials.length}</span>
+                      <span className="index-total">{filteredTestimonials.length}</span>
                     </div>
 
                     <div className="testi-nav-arrows">
@@ -254,9 +245,8 @@ export default function TestimonialsSection() {
           background: #FFFFFF;
           color: #334155;
           border: 1.5px solid #CBD5E1;
-          box-shadow: 1.5px 1.5px 0px #E2E8F0;
           cursor: pointer;
-          transition: all 0.15s ease;
+          transition: transform 0.18s ease, opacity 0.18s ease, background-color 0.18s ease;
         }
 
         .testi-filter-btn:hover {
@@ -269,33 +259,18 @@ export default function TestimonialsSection() {
           background: var(--prussian-blue);
           color: #FFFFFF;
           border-color: #0F172A;
-          box-shadow: 2px 2px 0px #0F172A;
         }
 
         .testi-stage-container {
-          max-width: 940px;
-          margin: 0 auto;
           background: #FFFFFF;
-          border: 2px solid #0F172A;
+          border: 1px solid var(--border-subtle);
           border-radius: var(--radius-md);
-          box-shadow: 6px 6px 0px var(--prussian-blue);
-          display: flex;
           overflow: hidden;
           position: relative;
-          align-items: stretch;
         }
 
         /* Pinned Vertical Yellow Ribbon */
-        .testi-vertical-ribbon {
-          background: var(--kuning);
-          border-right: 2px solid #0F172A;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-shrink: 0;
-          user-select: none;
-          z-index: 10;
-        }
+        .testi-vertical-ribbon { display: none !important; }
 
         .vertical-text {
           writing-mode: vertical-rl;
@@ -356,7 +331,7 @@ export default function TestimonialsSection() {
           font-size: 0.82rem;
           font-weight: 900;
           color: #0F172A;
-          font-family: var(--font-mono);
+          font-family: var(--font-body);
         }
 
         .testi-badges-group {
@@ -438,8 +413,7 @@ export default function TestimonialsSection() {
           height: 44px;
           border-radius: 8px;
           background: var(--prussian-blue);
-          border: 2px solid #0F172A;
-          box-shadow: 2px 2px 0px var(--kuning);
+          border: 1px solid var(--border-subtle);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -493,7 +467,7 @@ export default function TestimonialsSection() {
           border: 1.5px solid #0F172A;
           padding: 5px 10px;
           border-radius: 4px;
-          font-family: var(--font-mono);
+          font-family: var(--font-body);
           font-weight: 900;
           display: flex;
           align-items: center;
@@ -523,14 +497,13 @@ export default function TestimonialsSection() {
           height: 38px;
           border-radius: 6px;
           background: #FFFFFF;
-          border: 2px solid #0F172A;
+          border: 1px solid var(--border-subtle);
           color: #0F172A;
           cursor: pointer;
           display: flex;
           align-items: center;
           justify-content: center;
-          box-shadow: 2px 2px 0px #0F172A;
-          transition: all 0.15s ease;
+          transition: transform 0.18s ease, opacity 0.18s ease, background-color 0.18s ease;
         }
 
         .testi-arrow-btn:hover:not(:disabled) {
@@ -541,7 +514,6 @@ export default function TestimonialsSection() {
         .testi-arrow-btn:disabled {
           opacity: 0.35;
           cursor: not-allowed;
-          box-shadow: 1px 1px 0px #CBD5E1;
         }
 
         /* =======================================================
@@ -655,14 +627,13 @@ export default function TestimonialsSection() {
             background: #CBD5E1;
             border: 1.5px solid #0F172A;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: transform 0.18s ease, opacity 0.18s ease, background-color 0.18s ease;
             padding: 0;
           }
 
           .testi-dot.active {
             width: 24px;
             background: var(--kuning);
-            box-shadow: 1px 1px 0px #0F172A;
           }
 
           .testi-mobile-hint {

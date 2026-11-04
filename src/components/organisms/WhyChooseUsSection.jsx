@@ -8,7 +8,6 @@ export default function WhyChooseUsSection() {
   const pillars = [
     {
       id: 1,
-      num: '01',
       icon: Code,
       accent: 'var(--prussian-blue)',
       iconBg: '#EEF4FF',
@@ -26,7 +25,6 @@ export default function WhyChooseUsSection() {
     },
     {
       id: 2,
-      num: '02',
       icon: FileText,
       accent: '#D97706',
       iconBg: '#FFF9E6',
@@ -44,7 +42,6 @@ export default function WhyChooseUsSection() {
     },
     {
       id: 3,
-      num: '03',
       icon: Zap,
       accent: '#D97706',
       iconBg: '#FFF9E6',
@@ -62,7 +59,6 @@ export default function WhyChooseUsSection() {
     },
     {
       id: 4,
-      num: '04',
       icon: Clock,
       accent: '#059669',
       iconBg: '#ECFDF5',
@@ -80,7 +76,6 @@ export default function WhyChooseUsSection() {
     },
     {
       id: 5,
-      num: '05',
       icon: ServerOff,
       accent: '#E11D48',
       iconBg: '#FFF1F2',
@@ -98,7 +93,6 @@ export default function WhyChooseUsSection() {
     },
     {
       id: 6,
-      num: '06',
       icon: Lock,
       accent: 'var(--prussian-blue)',
       iconBg: '#EEF4FF',
@@ -128,14 +122,12 @@ export default function WhyChooseUsSection() {
   };
 
   return (
-    <section className="section-padding why-choose-section" style={{ position: 'relative', background: '#F8FAFC', borderTop: '2px solid #0F172A', borderBottom: '2px solid #0F172A' }}>
+    <section className="section-padding why-choose-section" style={{ position: 'relative', background: '#F8FAFC', borderTop: '1px solid var(--border-subtle)', borderBottom: '1px solid var(--border-subtle)' }}>
       <div className="container">
         
         {/* Section Header */}
         <div className="section-header">
-          <div className="section-badge">
-            <Shield size={14} /> Standar Rekayasa Terpercaya
-          </div>
+          
           <h2 className="section-title">
             Mengapa Memilih <span style={{ color: 'var(--prussian-blue)' }}>Aksara Tech</span>?
           </h2>
@@ -154,7 +146,6 @@ export default function WhyChooseUsSection() {
                 onClick={() => setActivePillarIdx(idx)}
                 className={`why-pill-btn ${activePillarIdx === idx ? 'active' : ''}`}
               >
-                <span className="pill-num">{item.num}</span>
                 <span>{item.title.split(' ')[0]} {item.title.split(' ')[1]}</span>
               </button>
             ))}
@@ -182,7 +173,6 @@ export default function WhyChooseUsSection() {
                     className={`why-nav-item ${isSelected ? 'active' : ''}`}
                   >
                     <div className="why-nav-item-left">
-                      <span className={`why-item-num ${isSelected ? 'active-num' : ''}`}>{p.num}</span>
                       <div className="why-item-icon" style={{ background: p.iconBg, color: p.accent }}>
                         <IconComponent size={18} />
                       </div>
@@ -204,7 +194,6 @@ export default function WhyChooseUsSection() {
             {/* Top Meta Bar */}
             <div className="why-canvas-header">
               <div className="why-canvas-badge-group">
-                <span className="why-canvas-counter">PILAR {currentPillar.num} DARI 06</span>
                 <span className="why-canvas-tag">{currentPillar.tag}</span>
               </div>
 
@@ -289,8 +278,8 @@ export default function WhyChooseUsSection() {
         <div className="why-route-strip">
           <Link to="/paket" className="neo-card why-route-card">
             <div>
-              <div className="route-card-title">Katalog 5 Paket &amp; Add-on</div>
-              <div className="route-card-sub" style={{ color: '#D97706' }}>Mulai Rp 120.000 – Rp 650.000</div>
+              <div className="route-card-title">Katalog 6 Paket Layanan</div>
+              <div className="route-card-sub" style={{ color: '#D97706' }}>Mulai Rp 100.000 – Rp 500.000</div>
             </div>
             <ArrowRight size={20} style={{ color: 'var(--prussian-blue)' }} />
           </Link>
@@ -330,9 +319,8 @@ export default function WhyChooseUsSection() {
 
         .why-left-nav {
           background: #FFFFFF;
-          border: 2px solid #0F172A;
+          border: 1px solid var(--border-subtle);
           border-radius: var(--radius-md);
-          box-shadow: 4px 4px 0px #0F172A;
           padding: 20px;
           display: flex;
           flex-direction: column;
@@ -355,7 +343,6 @@ export default function WhyChooseUsSection() {
           padding: 3px 8px;
           border-radius: 4px;
           border: 1.5px solid #0F172A;
-          box-shadow: 1.5px 1.5px 0px #0F172A;
         }
 
         .why-nav-sub {
@@ -380,7 +367,7 @@ export default function WhyChooseUsSection() {
           border: 2px solid transparent;
           background: #F8FAFC;
           cursor: pointer;
-          transition: all 0.2s ease;
+          transition: transform 0.18s ease, opacity 0.18s ease, background-color 0.18s ease;
         }
 
         .why-nav-item:hover {
@@ -392,7 +379,6 @@ export default function WhyChooseUsSection() {
         .why-nav-item.active {
           background: #FFFDF0;
           border-color: #0F172A;
-          box-shadow: 3px 3px 0px var(--kuning);
           transform: translateX(4px);
         }
 
@@ -405,7 +391,7 @@ export default function WhyChooseUsSection() {
         .why-item-num {
           font-size: 0.78rem;
           font-weight: 900;
-          font-family: var(--font-mono);
+          font-family: var(--font-body);
           color: #94A3B8;
         }
 
@@ -422,7 +408,6 @@ export default function WhyChooseUsSection() {
           align-items: center;
           justify-content: center;
           flex-shrink: 0;
-          box-shadow: 1.5px 1.5px 0px #0F172A;
         }
 
         .why-item-text {
@@ -456,9 +441,8 @@ export default function WhyChooseUsSection() {
         .why-right-canvas {
           padding: 36px;
           background: #FFFFFF;
-          border: 2px solid #0F172A;
+          border: 1px solid var(--border-subtle);
           border-radius: var(--radius-md);
-          box-shadow: 6px 6px 0px var(--prussian-blue);
           display: flex;
           flex-direction: column;
           justify-content: space-between;
@@ -483,7 +467,7 @@ export default function WhyChooseUsSection() {
         }
 
         .why-canvas-counter {
-          font-family: var(--font-mono);
+          font-family: var(--font-body);
           font-size: 0.78rem;
           font-weight: 900;
           color: var(--prussian-blue);
@@ -521,22 +505,19 @@ export default function WhyChooseUsSection() {
           display: flex;
           align-items: center;
           justify-content: center;
-          box-shadow: 2px 2px 0px #0F172A;
-          transition: all 0.15s ease;
+          transition: transform 0.18s ease, opacity 0.18s ease, background-color 0.18s ease;
         }
 
         .why-ctrl-btn:hover {
           background: var(--kuning);
           transform: translate(-1px, -1px);
-          box-shadow: 3px 3px 0px #0F172A;
         }
 
         .why-canvas-icon-box {
           width: 58px;
           height: 58px;
           border-radius: 10px;
-          border: 2px solid #0F172A;
-          box-shadow: 3px 3px 0px #0F172A;
+          border: 1px solid var(--border-subtle);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -561,7 +542,7 @@ export default function WhyChooseUsSection() {
 
         .why-guarantee-box {
           background: #F8FAFC;
-          border: 2px solid #0F172A;
+          border: 1px solid var(--border-subtle);
           border-radius: 8px;
           padding: 20px;
           margin-bottom: 24px;
@@ -617,7 +598,6 @@ export default function WhyChooseUsSection() {
           font-size: 0.76rem;
           font-weight: 800;
           color: var(--prussian-blue);
-          box-shadow: 1px 1px 0px #0F172A;
         }
 
         .why-canvas-footer {
@@ -641,8 +621,7 @@ export default function WhyChooseUsSection() {
           align-items: center;
           justify-content: space-between;
           text-decoration: none;
-          border: 2px solid #0F172A;
-          box-shadow: 3px 3px 0px #0F172A;
+          border: 1px solid var(--border-subtle);
           background: #FFFFFF;
         }
 
@@ -689,29 +668,26 @@ export default function WhyChooseUsSection() {
             gap: 6px;
             padding: 8px 14px;
             background: #FFFFFF;
-            border: 2px solid #0F172A;
+            border: 1px solid var(--border-subtle);
             border-radius: 6px;
             font-size: 0.8rem;
             font-weight: 800;
             color: #0F172A;
-            box-shadow: 2px 2px 0px #0F172A;
             cursor: pointer;
             white-space: nowrap;
           }
 
           .why-pill-btn .pill-num {
             color: var(--prussian-blue);
-            font-family: var(--font-mono);
+            font-family: var(--font-body);
           }
 
           .why-pill-btn.active {
             background: var(--kuning);
-            box-shadow: 2px 2px 0px var(--prussian-blue);
           }
 
           .why-right-canvas {
             padding: 22px;
-            box-shadow: 4px 4px 0px var(--prussian-blue);
           }
 
           .why-canvas-title {

@@ -32,7 +32,7 @@ function PageFallback() {
         gap: '10px',
         background: '#FFFFFF',
         border: '2px solid #0F172A',
-        boxShadow: '3px 3px 0px #0F172A',
+        
         borderRadius: '8px',
         padding: '10px 18px',
         fontWeight: '800',

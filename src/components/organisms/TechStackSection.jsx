@@ -38,14 +38,11 @@ export default function TechStackSection() {
   ];
 
   return (
-    <section id="teknologi" className="section-padding tech-stack-section" style={{ background: '#F8FAFC', borderTop: '2px solid #0F172A' }}>
+    <section id="teknologi" className="section-padding tech-stack-section" style={{ background: '#F8FAFC', borderTop: '1px solid var(--border-subtle)' }}>
       <div className="container">
         
         {/* Section Header */}
         <div className="section-header">
-          <SectionBadge icon={Cpu}>
-            Arsitektur &amp; Standar Teknologi
-          </SectionBadge>
           <h2 className="section-title">
             Teknologi Modern Berstandar <span style={{ color: 'var(--prussian-blue)' }}>Industri &amp; Akademik</span>
           </h2>
@@ -124,7 +121,7 @@ export default function TechStackSection() {
         .tech-category-card {
           padding: 28px 24px;
           background: #FFFFFF;
-          border: 2px solid #0F172A;
+          border: 1px solid var(--border-subtle);
           display: flex;
           flex-direction: column;
         }
@@ -138,8 +135,7 @@ export default function TechStackSection() {
 
         .tech-icon-box {
           background: #F1F5F9;
-          border: 2px solid #0F172A;
-          box-shadow: 2px 2px 0px #0F172A;
+          border: 1px solid var(--border-subtle);
           width: 44px;
           height: 44px;
           border-radius: 8px;
@@ -167,7 +163,6 @@ export default function TechStackSection() {
           border: 1.5px solid #0F172A;
           border-radius: 6px;
           padding: 12px 14px;
-          box-shadow: 2px 2px 0px #CBD5E1;
         }
 
         .tech-item-name {
@@ -211,19 +206,17 @@ export default function TechStackSection() {
           .tech-mobile-pill {
             padding: 8px 16px;
             background: #FFFFFF;
-            border: 2px solid #0F172A;
+            border: 1px solid var(--border-subtle);
             border-radius: 6px;
             font-size: 0.82rem;
             font-weight: 800;
             color: #0F172A;
-            box-shadow: 2px 2px 0px #0F172A;
             cursor: pointer;
             white-space: nowrap;
           }
 
           .tech-mobile-pill.active {
             background: var(--kuning);
-            box-shadow: 2px 2px 0px var(--prussian-blue);
           }
 
           .tech-cards-grid {
@@ -236,7 +229,6 @@ export default function TechStackSection() {
 
           .tech-category-card.mobile-active {
             display: flex;
-            box-shadow: 4px 4px 0px var(--prussian-blue);
           }
         }
       `}</style>
