@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Taste skill temporary working directory
+.taste-skill/
+
