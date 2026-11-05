@@ -52,4 +52,25 @@ All UI development must adhere to the core rules of `miqdadbadjuber/anti-slop`:
   node .agents/skills/design-taste-frontend/scripts/inspect.mjs http://localhost:5173/ --out .taste-skill/inspect
   ```
 
+## 3. Installed Skill Registries & Craftsmanship Ecosystem
+
+The agent has 20 active skills installed in `.agents/skills/` (and globally in `~/.gemini/config/skills/`), integrated from `tech-leads-club/agent-skills`, `rmyndharis/antigravity-skills`, `miqdadbadjuber/anti-slop`, and `leonxlnx/taste-skill`:
+
+### A. Design & Anti-Slop Frontend
+- `frontend-design` (`tech-leads-club` / Impeccable): Eliminates generic AI aesthetics, cyan/purple gradients, and cookie-cutter grids. Focuses on bold, bespoke, memorable interfaces.
+- `web-design-guidelines` (`tech-leads-club` / Vercel): Enforces Vercel Web Interface Guidelines (interaction, responsive behavior, typography, focus states).
+- `design-taste-frontend` (`leonxlnx/taste-skill`): Enforces anti-slop house style, 10 house rules, and headless browser inspector.
+- `antislop`, `antislop-ui`, `antislop-layoutmobile`, `antislop-copywriting`, `antislop-human`, `antislop-code`: Modular filters across copy, UI tokens, mobile layouts, and code comments.
+- `ui-ux-designer` (`rmyndharis`): Tokenized design systems, component libraries, and UX flows.
+- `ui-visual-validator` (`rmyndharis`): Critical screenshot and visual evidence verification.
+
+### B. Engineering Quality & Best Practices
+- `react-best-practices` (`tech-leads-club` / Vercel): 57 rules for React/Next.js architecture, waterfall elimination, and bundle optimization.
+- `web-quality-audit` (`tech-leads-club`): 150+ checks across Performance, Accessibility, SEO, and Best Practices.
+- `web-best-practices` & `coding-guidelines`: Production-grade patterns.
+- `the-judge`: Evidence-first review that flags structural bugs, spaghetti growth, and AI slop comments.
+- `code-review-excellence` & `code-refactoring-refactor-clean`: Clean code craftsmanship without behavioral regressions.
+- `antigravity-skills-manager`: Full CLI and registry access to search and install from the 300+ skills vault.
+
+
 
