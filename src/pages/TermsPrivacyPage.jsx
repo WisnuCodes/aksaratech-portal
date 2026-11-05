@@ -325,9 +325,10 @@ export default function TermsPrivacyPage() {
                 onClick={handleCopySummary}
                 className="terms-action-btn"
                 title="Salin Poin Inti Ketentuan Layanan"
+                aria-label="Salin ringkasan poin inti ketentuan layanan"
               >
                 {copied ? <Check size={15} /> : <Copy size={15} />}
-                <span>{copied ? 'Tersalin' : 'Salin Poin Inti'}</span>
+                <span aria-live="polite">{copied ? 'Tersalin' : 'Salin Poin Inti'}</span>
               </button>
 
               <button
@@ -335,6 +336,7 @@ export default function TermsPrivacyPage() {
                 onClick={handlePrint}
                 className="terms-action-btn secondary"
                 title="Cetak Dokumen Legal"
+                aria-label="Cetak berkas ketentuan layanan resmi"
               >
                 <Printer size={15} />
                 <span>Cetak Dokumen</span>
@@ -343,11 +345,12 @@ export default function TermsPrivacyPage() {
           </div>
 
           {/* Quick Jump Category Chips */}
-          <nav aria-label="Navigasi Pasal" className="terms-category-nav">
+          <nav aria-label="Navigasi Pilihan Pasal" className="terms-category-nav">
             <button
               type="button"
               onClick={() => setActiveFilter('all')}
               className={`terms-nav-chip ${activeFilter === 'all' ? 'active' : ''}`}
+              aria-pressed={activeFilter === 'all'}
             >
               <span>Semua 7 Pasal</span>
             </button>
@@ -360,6 +363,7 @@ export default function TermsPrivacyPage() {
                   type="button"
                   onClick={() => setActiveFilter(s.id)}
                   className={`terms-nav-chip ${isActive ? 'active' : ''}`}
+                  aria-pressed={isActive}
                 >
                   <span>Pasal {s.number}</span>
                 </button>
@@ -416,9 +420,10 @@ export default function TermsPrivacyPage() {
                 href={`https://wa.me/${BUSINESS_INFO.waNumber}?text=Halo%20Aksara%20Tech,%20saya%20ingin%20berkonsultasi%20terkait%20Ketentuan%20Layanan%20dan%20SOP%20Kerja.`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn btn-wa terms-wa-btn"
+                className="btn terms-wa-btn"
+                aria-label="Konsultasi pertanyaan legal via WhatsApp resmi Aksara Tech"
               >
-                <MessageCircle size={18} />
+                <MessageCircle size={18} style={{ color: '#25D366' }} />
                 <span>Konsultasi Pertanyaan Legal via WA</span>
               </a>
             </div>
@@ -599,6 +604,7 @@ export default function TermsPrivacyPage() {
           border: 1px solid var(--border-subtle);
           border-radius: var(--radius-md);
           padding: 32px 36px;
+          scroll-margin-top: 100px;
           transition: border-color 0.2s ease;
         }
 
@@ -640,6 +646,7 @@ export default function TermsPrivacyPage() {
           line-height: 1.35;
           margin-bottom: 8px;
           letter-spacing: -0.015em;
+          text-wrap: balance;
         }
 
         .terms-article-summary {
@@ -863,6 +870,25 @@ export default function TermsPrivacyPage() {
           padding: 14px 24px;
           font-size: 0.96rem;
           font-weight: 800;
+          background: #0F172A;
+          color: #FFFFFF !important;
+          border: 1px solid #0F172A;
+          border-radius: var(--radius-sm);
+          transition: background 0.18s ease, transform 0.18s ease;
+          touch-action: manipulation;
+          -webkit-tap-highlight-color: transparent;
+        }
+
+        .terms-wa-btn:hover {
+          background: #1E293B;
+          transform: translateY(-1px);
+        }
+
+        .terms-action-btn:focus-visible,
+        .terms-nav-chip:focus-visible,
+        .terms-wa-btn:focus-visible {
+          outline: 2px solid var(--prussian-blue);
+          outline-offset: 2px;
         }
 
         /* Responsive Breakpoints */
