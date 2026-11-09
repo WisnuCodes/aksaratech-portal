@@ -40,7 +40,9 @@ import {
   exportOrdersToExcel,
   exportOrdersToCSV, 
   getSheetConfig, 
-  saveSheetConfig 
+  saveSheetConfig,
+  syncOrderToSheet,
+  syncAllOrdersToSheet 
 } from '../utils/orderStorage';
 import { PACKAGES } from '../data/catalogData';
 import { formatRupiah, generateInquiryId } from '../utils/documentEngine';
@@ -73,6 +75,8 @@ export default function AdminDashboardPage() {
   // Google Sheet Webhook Config State
   const [sheetConfig, setSheetConfig] = useState(getSheetConfig());
   const [copiedScript, setCopiedScript] = useState(false);
+  const [isTestingWebhook, setIsTestingWebhook] = useState(false);
+  const [testResult, setTestResult] = useState('');
 
   // Load orders from storage on mount & sync across tabs
   useEffect(() => {
@@ -270,6 +274,62 @@ export default function AdminDashboardPage() {
     triggerSuccess('Konfigurasi Webhook Google Spreadsheet berhasil disimpan.');
   };
 
+  // Test Webhook Connection Handler
+  const handleTestWebhook = async () => {
+    if (!sheetConfig.webhookUrl || !sheetConfig.webhookUrl.trim().startsWith('http')) {
+      alert('Silakan masukkan URL Webhook Google Apps Script terlebih dahulu lalu klik Simpan.');
+      return;
+    }
+
+    setIsTestingWebhook(true);
+    setTestResult('');
+    const dummyTestOrder = {
+      id: generateInquiryId(),
+      orderNumber: 'TEST-ORD-001',
+      statusType: 'FIX_ORDER',
+      clientName: 'Uji Coba Sistem Aksara Tech',
+      clientPhone: '081234567890',
+      clientEmail: 'test@aksaratech.com',
+      projectTitle: 'Uji Konektivitas Google Spreadsheet Webhook',
+      category: 'UMKM & Bisnis',
+      packageName: 'Website UMKM & Katalog Produk Digital',
+      totalInvestment: 300000,
+      dpAmount: 150000,
+      dpStatus: 'LUNAS (DP 50%)',
+      currentStageNumber: 2,
+      developerNotes: 'Pengujian koneksi otomatis antara portal Aksara Tech dan Google Sheets berhasil!',
+      orderDate: new Date().toLocaleDateString('id-ID', { dateStyle: 'long' })
+    };
+
+    const res = await syncOrderToSheet(dummyTestOrder);
+    setIsTestingWebhook(false);
+    if (res.success) {
+      triggerSuccess('Data uji coba terkirim! Buka tab Google Spreadsheet Anda untuk melihat baris baru.');
+      setTestResult('Terkoneksi! Buka Google Spreadsheet Anda, baris baru dengan nama "Uji Coba Sistem Aksara Tech" akan otomatis masuk.');
+    } else {
+      setTestResult('Perhatian: ' + res.message);
+    }
+  };
+
+  // Sync All Orders to Google Sheet Handler
+  const handleSyncAllOrders = async () => {
+    if (!sheetConfig.webhookUrl || !sheetConfig.webhookUrl.trim().startsWith('http')) {
+      alert('Silakan masukkan URL Webhook Google Apps Script terlebih dahulu.');
+      return;
+    }
+
+    setIsTestingWebhook(true);
+    setTestResult('');
+    const res = await syncAllOrdersToSheet();
+    setIsTestingWebhook(false);
+    if (res.success) {
+      triggerSuccess(res.message);
+      setTestResult(res.message);
+    } else {
+      alert(res.message);
+    }
+  };
+
   // Metrics calculation
   const metrics = useMemo(() => {
     const total = orders.length;
@@ -307,27 +367,73 @@ export default function AdminDashboardPage() {
 
   // Google Apps Script template code
   const googleAppsScriptCode = `// KODE GOOGLE APPS SCRIPT AKSARA TECH
-// Tempelkan di Google Spreadsheet: Menu Extensions > Apps Script
+// Tempelkan di Google Spreadsheet: Menu Ekstensi > Apps Script
+
+// 1. Endpoint status untuk pengujian browser
+function doGet(e) {
+  return ContentService.createTextOutput(JSON.stringify({
+    "status": "connected",
+    "message": "Webhook Aksara Tech aktif dan siap menerima data pesanan."
+  })).setMimeType(ContentService.MimeType.JSON);
+}
+
+// 2. Endpoint penerima data pesanan otomatis
 function doPost(e) {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  var data = JSON.parse(e.postData.contents);
-  
-  sheet.appendRow([
-    data.id,
-    data.orderNumber,
-    data.statusType,
-    data.clientName,
-    data.clientPhone,
-    data.projectTitle,
-    data.packageName,
-    data.totalInvestment,
-    data.dpStatus,
-    data.currentStageNumber,
-    new Date()
-  ]);
-  
-  return ContentService.createTextOutput(JSON.stringify({"result": "success"}))
-    .setMimeType(ContentService.MimeType.JSON);
+  try {
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    var data = JSON.parse(e.postData.contents);
+    
+    // Otomatis buat baris Judul Kolom jika sheet masih kosong
+    if (sheet.getLastRow() === 0) {
+      sheet.appendRow([
+        "ID Tiket",
+        "Nomor Order",
+        "Tipe Status",
+        "Nama Klien",
+        "Nomor WhatsApp",
+        "Email",
+        "Judul Proyek",
+        "Kategori",
+        "Paket Layanan",
+        "Total Investasi (Rp)",
+        "Uang Muka DP 50% (Rp)",
+        "Status Pembayaran",
+        "Tahap SOP",
+        "Catatan Pengembang",
+        "Waktu Pencatatan"
+      ]);
+      sheet.getRange(1, 1, 1, 15).setFontWeight("bold");
+    }
+    
+    // Tambahkan baris pesanan baru
+    sheet.appendRow([
+      data.id || "-",
+      data.orderNumber || "-",
+      data.statusType || "INQUIRY",
+      data.clientName || "-",
+      "'" + (data.clientPhone || "-"), // Tanda petik agar angka 0 nomor WA tetap utuh
+      data.clientEmail || "-",
+      data.projectTitle || "-",
+      data.category || "-",
+      data.packageName || "-",
+      data.totalInvestment || 0,
+      data.dpAmount || 0,
+      data.dpStatus || "-",
+      "Tahap " + (data.currentStageNumber || 1) + " dari 5",
+      data.developerNotes || "-",
+      new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta" })
+    ]);
+    
+    return ContentService.createTextOutput(JSON.stringify({
+      "result": "success",
+      "id": data.id
+    })).setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return ContentService.createTextOutput(JSON.stringify({
+      "result": "error",
+      "message": err.toString()
+    })).setMimeType(ContentService.MimeType.JSON);
+  }
 }`;
 
   // ─────────────────────────────────────────────────────────────
@@ -730,10 +836,10 @@ function doPost(e) {
               Hubungkan portal Aksara Tech dengan Google Spreadsheet Anda untuk pencatatan otomatis tanpa memerlukan biaya sewa server basis data bulanan.
             </p>
 
-            <form onSubmit={handleSaveSheetConfig} style={{ marginBottom: '32px' }}>
+            <form onSubmit={handleSaveSheetConfig} style={{ marginBottom: '28px' }}>
               <div style={{ marginBottom: '16px' }}>
-                <label style={{ fontSize: '0.86rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '6px' }}>
-                  Google Apps Script Webhook URL (Opsional):
+                <label style={{ fontSize: '0.86rem', fontWeight: '800', color: '#0F172A', display: 'block', marginBottom: '6px' }}>
+                  Google Apps Script Webhook URL (Aplikasi Web)
                 </label>
                 <input
                   type="url"
@@ -745,23 +851,35 @@ function doPost(e) {
                     boxSizing: 'border-box',
                     padding: '12px 14px',
                     fontSize: '0.92rem',
-                    borderRadius: '6px',
+                    borderRadius: '8px',
                     border: '1.5px solid #CBD5E1',
-                    background: '#F8FAFC',
-                    outline: 'none'
+                    background: '#FFFFFF',
+                    outline: 'none',
+                    color: '#0F172A',
+                    fontWeight: '600'
                   }}
                 />
+                <span style={{ fontSize: '0.78rem', color: '#64748B', marginTop: '4px', display: 'block' }}>
+                  URL resmi yang didapat setelah menekan tombol <strong>Terapkan &gt; Deployment baru</strong> di Google Apps Script (berakhiran <code>/exec</code>).
+                </span>
               </div>
 
-              <div style={{ display: 'flex', gap: '10px' }}>
+              {testResult && (
+                <div style={{ background: '#F0FDF4', border: '1px solid #BBF7D0', color: '#166534', padding: '12px 16px', borderRadius: '8px', marginBottom: '16px', fontSize: '0.88rem', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <CheckCircle2 size={18} color="#16A34A" />
+                  <span>{testResult}</span>
+                </div>
+              )}
+
+              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
                 <button
                   type="submit"
                   style={{
                     background: 'var(--prussian-blue)',
                     color: '#FFFFFF',
                     border: 'none',
-                    borderRadius: '6px',
-                    padding: '10px 18px',
+                    borderRadius: '8px',
+                    padding: '11px 18px',
                     fontSize: '0.88rem',
                     fontWeight: '800',
                     cursor: 'pointer',
@@ -776,13 +894,57 @@ function doPost(e) {
 
                 <button
                   type="button"
+                  onClick={handleTestWebhook}
+                  disabled={isTestingWebhook}
+                  style={{
+                    background: '#F1F5F9',
+                    color: '#0F172A',
+                    border: '1px solid #CBD5E1',
+                    borderRadius: '8px',
+                    padding: '11px 18px',
+                    fontSize: '0.88rem',
+                    fontWeight: '800',
+                    cursor: isTestingWebhook ? 'wait' : 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px'
+                  }}
+                >
+                  <CheckCircle2 size={16} color="var(--prussian-blue)" />
+                  <span>{isTestingWebhook ? 'Mengirim data...' : 'Kirim 1 Data Uji Coba'}</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleSyncAllOrders}
+                  disabled={isTestingWebhook}
+                  style={{
+                    background: '#F1F5F9',
+                    color: '#0F172A',
+                    border: '1px solid #CBD5E1',
+                    borderRadius: '8px',
+                    padding: '11px 18px',
+                    fontSize: '0.88rem',
+                    fontWeight: '800',
+                    cursor: isTestingWebhook ? 'wait' : 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px'
+                  }}
+                >
+                  <RotateCcw size={16} />
+                  <span>Sinkronkan Semua Pesanan ke Sheet</span>
+                </button>
+
+                <button
+                  type="button"
                   onClick={exportOrdersToExcel}
                   style={{
                     background: '#16A34A',
                     color: '#FFFFFF',
                     border: 'none',
-                    borderRadius: '6px',
-                    padding: '10px 18px',
+                    borderRadius: '8px',
+                    padding: '11px 18px',
                     fontSize: '0.88rem',
                     fontWeight: '800',
                     cursor: 'pointer',
@@ -793,7 +955,7 @@ function doPost(e) {
                   title="Unduh format spreadsheet rapi dengan kolom terpisah, warna header, dan penataan nomor telepon"
                 >
                   <FileSpreadsheet size={16} />
-                  <span>Unduh Excel Spreadsheet (.xls) Rapi</span>
+                  <span>Ekspor Excel (.xls) Rapi</span>
                 </button>
 
                 <button
@@ -803,8 +965,8 @@ function doPost(e) {
                     background: '#0F172A',
                     color: '#FFFFFF',
                     border: 'none',
-                    borderRadius: '6px',
-                    padding: '10px 16px',
+                    borderRadius: '8px',
+                    padding: '11px 16px',
                     fontSize: '0.88rem',
                     fontWeight: '700',
                     cursor: 'pointer',
@@ -814,24 +976,33 @@ function doPost(e) {
                   }}
                   title="Unduh format CSV standar dengan pemisah titik koma (sep=;)"
                 >
-                  <span>Unduh CSV (.csv)</span>
+                  <span>CSV (.csv)</span>
                 </button>
               </div>
             </form>
 
-            {/* Step-by-step Guide */}
-            <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '10px', padding: '20px' }}>
-              <h3 style={{ fontSize: '1rem', fontWeight: '800', color: '#0F172A', margin: '0 0 12px 0' }}>
-                Panduan Menghubungkan Google Sheet dalam 2 Menit:
+            {/* Step-by-step Guide with Visual Clarity */}
+            <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '12px', padding: '24px' }}>
+              
+              <div style={{ background: '#FEF3C7', border: '1px solid #FDE68A', color: '#92400E', padding: '12px 16px', borderRadius: '8px', marginBottom: '18px', fontSize: '0.88rem', lineHeight: '1.5' }}>
+                <strong>PENTING (Jangan Tekan Tombol "Jalankan"):</strong> Tombol <em>"▶ Jalankan"</em> di editor Google Script hanya untuk skrip internal dan akan memunculkan pesan peringatan akses. Untuk mengaktifkan webhook, gunakan tombol biru <strong>"Terapkan"</strong> (Deploy) di pojok kanan atas!
+              </div>
+
+              <h3 style={{ fontSize: '1.05rem', fontWeight: '900', color: '#0F172A', margin: '0 0 14px 0' }}>
+                Panduan Langkah demi Langkah Menghubungkan Google Sheet:
               </h3>
-              <ol style={{ margin: 0, paddingLeft: '20px', fontSize: '0.88rem', color: '#334155', lineHeight: '1.7' }}>
-                <li>Buka <strong>Google Sheets</strong> baru, beri nama (misal: <em>Aksara Tech Orders Database</em>).</li>
-                <li>Klik menu <strong>Extensions &gt; Apps Script</strong>.</li>
-                <li>Hapus kode bawaan, lalu salin dan tempelkan skrip di bawah ini:</li>
+
+              <ol style={{ margin: 0, paddingLeft: '20px', fontSize: '0.9rem', color: '#334155', lineHeight: '1.8' }}>
+                <li>
+                  Buka tab <strong>Google Spreadsheet</strong> Anda, klik menu atas: <strong>Ekstensi &gt; Apps Script</strong>.
+                </li>
+                <li>
+                  Hapus seluruh kode bawaan yang ada di file <code>Kode.gs</code>, lalu salin dan tempelkan skrip di bawah ini:
+                </li>
               </ol>
 
-              <div style={{ position: 'relative', marginTop: '12px', marginBottom: '14px' }}>
-                <pre style={{ background: '#0F172A', color: '#F8FAFC', padding: '16px', borderRadius: '8px', fontSize: '0.82rem', overflowX: 'auto', margin: 0 }}>
+              <div style={{ position: 'relative', marginTop: '12px', marginBottom: '18px' }}>
+                <pre style={{ background: '#0F172A', color: '#F8FAFC', padding: '18px', borderRadius: '8px', fontSize: '0.82rem', overflowX: 'auto', margin: 0, lineHeight: '1.5' }}>
                   {googleAppsScriptCode}
                 </pre>
                 <button
@@ -848,14 +1019,14 @@ function doPost(e) {
                     background: '#334155',
                     color: '#FFFFFF',
                     border: 'none',
-                    borderRadius: '4px',
-                    padding: '6px 10px',
-                    fontSize: '0.78rem',
-                    fontWeight: '700',
+                    borderRadius: '6px',
+                    padding: '7px 12px',
+                    fontSize: '0.8rem',
+                    fontWeight: '800',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '4px'
+                    gap: '5px'
                   }}
                 >
                   {copiedScript ? <Check size={14} color="#22C55E" /> : <Copy size={14} />}
@@ -863,11 +1034,31 @@ function doPost(e) {
                 </button>
               </div>
 
-              <ol start={4} style={{ margin: 0, paddingLeft: '20px', fontSize: '0.88rem', color: '#334155', lineHeight: '1.7' }}>
-                <li>Klik tombol <strong>Deploy &gt; New deployment</strong> &gt; Pilih tipe <em>Web app</em>.</li>
-                <li>Atur <em>Who has access</em> ke <strong>Anyone</strong>, lalu klik <strong>Deploy</strong>.</li>
-                <li>Salin <em>Web app URL</em> yang muncul dan tempelkan ke kolom URL Webhook di atas. Selesai!</li>
+              <ol start={3} style={{ margin: 0, paddingLeft: '20px', fontSize: '0.9rem', color: '#334155', lineHeight: '1.8' }}>
+                <li>
+                  Tekan ikon <strong>Simpan (Disket)</strong> atau tekan <code>Ctrl + S</code>.
+                </li>
+                <li>
+                  Di pojok kanan atas, klik tombol biru <strong>"Terapkan"</strong> (Deploy) &gt; pilih <strong>"Deployment baru"</strong>.
+                </li>
+                <li>
+                  Di samping kiri tulisan <em>Pilih jenis</em>, klik ikon <strong>Roda Gigi (Gear)</strong> &gt; pilih <strong>"Aplikasi web"</strong>.
+                </li>
+                <li>
+                  Pada opsi <strong>"Siapa yang memiliki akses"</strong> (Who has access), ubah dari <em>Hanya saya</em> menjadi <strong>"Siapa saja"</strong> (Anyone). <em>(Ini kunci agar website bisa mengirim data).</em>
+                </li>
+                <li>
+                  Klik tombol biru <strong>"Terapkan"</strong>. Jika Google meminta izin akses:
+                  <ul style={{ marginTop: '4px', paddingLeft: '18px' }}>
+                    <li>Klik <strong>"Otorisasi akses"</strong> &gt; Pilih akun Google Anda.</li>
+                    <li>Jika muncul peringatan <em>Google belum memverifikasi aplikasi ini</em>: klik teks <strong>"Lanjutan"</strong> (Advanced) di kiri bawah &gt; klik <strong>"Buka ... (tidak aman)"</strong> &gt; klik <strong>"Izinkan"</strong>.</li>
+                  </ul>
+                </li>
+                <li>
+                  Salin <strong>URL Aplikasi web</strong> (berakhiran <code>/exec</code>), tempelkan ke kolom URL Webhook di atas, lalu klik <strong>"Simpan Pengaturan Webhook"</strong>. Selesai!
+                </li>
               </ol>
+
             </div>
 
           </div>

@@ -217,6 +217,20 @@ export function createOrder(newOrder) {
     updated = [newOrder, ...orders];
   }
   saveAllOrders(updated);
+
+  // Background sync to Google Sheet Webhook if configured
+  try {
+    const config = getSheetConfig();
+    if (config?.webhookUrl && config.webhookUrl.trim().startsWith('http')) {
+      fetch(config.webhookUrl.trim(), {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newOrder)
+      }).catch(() => {});
+    }
+  } catch (e) {}
+
   return newOrder;
 }
 
@@ -293,6 +307,66 @@ export function saveSheetConfig(config) {
   try {
     localStorage.setItem(SHEET_CONFIG_KEY, JSON.stringify(config));
   } catch (e) {}
+}
+
+/**
+ * Send a single order to Google Spreadsheet via Webhook
+ */
+export async function syncOrderToSheet(order) {
+  const config = getSheetConfig();
+  if (!config.webhookUrl || !config.webhookUrl.trim().startsWith('http')) {
+    return { success: false, message: 'URL Webhook Google Apps Script belum diisi.' };
+  }
+
+  try {
+    await fetch(config.webhookUrl.trim(), {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(order)
+    });
+    return { success: true, message: 'Data berhasil dikirim ke Google Spreadsheet.' };
+  } catch (err) {
+    return { success: false, message: 'Gagal menghubungi server Webhook: ' + err.message };
+  }
+}
+
+/**
+ * Sync all active orders to Google Spreadsheet
+ */
+export async function syncAllOrdersToSheet() {
+  const orders = getAllOrders();
+  const config = getSheetConfig();
+  if (!config.webhookUrl || !config.webhookUrl.trim().startsWith('http')) {
+    return { success: false, message: 'URL Webhook Google Apps Script belum diisi.' };
+  }
+
+  if (orders.length === 0) {
+    return { success: false, message: 'Database lokal kosong. Belum ada pesanan untuk disinkronkan.' };
+  }
+
+  let successCount = 0;
+  for (const ord of orders) {
+    try {
+      await fetch(config.webhookUrl.trim(), {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(ord)
+      });
+      successCount++;
+    } catch (e) {}
+  }
+
+  return { 
+    success: true, 
+    count: successCount, 
+    message: `${successCount} pesanan berhasil dikirim ke Google Spreadsheet Anda!` 
+  };
 }
 
 function escapeHtml(str) {
