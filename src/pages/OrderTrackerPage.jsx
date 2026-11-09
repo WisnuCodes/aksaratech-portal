@@ -22,7 +22,7 @@ import {
 import PageHeader from '../components/molecules/PageHeader';
 import { formatRupiah } from '../utils/documentEngine';
 import { BUSINESS_INFO, PACKAGES } from '../data/catalogData';
-import { findOrderByQuery } from '../utils/orderStorage';
+import { findOrderByQuery, getAllOrders } from '../utils/orderStorage';
 
 // Standard 5-Step SOP Pipeline
 const SOP_STAGES = [
@@ -58,207 +58,69 @@ const SOP_STAGES = [
   }
 ];
 
-// Curated active mock database with varied stages for demonstration and instant lookup
-const MOCK_ORDERS = [
-  {
-    id: 'INQ-AT-20261109-8F2A',
-    orderNumber: 'ORD-AT-2026-0042',
-    clientName: 'Budi Santoso',
-    clientPhone: '081234567890',
-    projectTitle: 'Website Katalog Kopi Nusantara & Direct WhatsApp Order',
-    category: 'UMKM & Bisnis',
-    packageId: 'umkm-katalog',
-    packageName: 'Website UMKM & Katalog Produk Digital',
-    packagePrice: 300000,
-    addons: [
-      { name: 'Integrasi Database MySQL & CRUD', price: 60000 },
-      { name: 'Fitur Multi-Bahasa (Localization)', price: 45000 }
-    ],
-    totalInvestment: 405000,
-    dpAmount: 202500,
-    dpStatus: 'LUNAS (DP 50%)',
-    orderDate: '09 November 2026',
-    estimatedCompletion: '15 November 2026',
-    currentStageNumber: 3,
-    revisionQuotaTotal: 3,
-    revisionQuotaUsed: 0,
-    developerNotes: 'Basis data MySQL dan 4 tabel relasional katalog produk telah siap. Tim saat ini sedang menghubungkan endpoint filter pencarian real-time dan format checkout WhatsApp. Pratinjau pertama dijadwalkan tayang pada Rabu, 12 November.',
-    deliverablesPreview: [
-      'Master Source Code (.zip) Full Stack',
-      'Skema Database MySQL (.sql) dengan data uji produk kopi',
-      'Ringkasan SRS Fungsional & ERD Diagram'
-    ]
-  },
-  {
-    id: 'ORD-AT-2026-0018',
-    orderNumber: 'ORD-AT-2026-0018',
-    clientName: 'PT Samudera Logistik Nusantara',
-    clientPhone: '085711223344',
-    projectTitle: 'Portal Company Profile Eksekutif & Formulir Permintaan Penawaran',
-    category: 'Standard Enterprise',
-    packageId: 'company-profile',
-    packageName: 'Company Profile Korporat',
-    packagePrice: 400000,
-    addons: [
-      { name: 'Optimasi SEO On-Page Lanjutan', price: 40000 }
-    ],
-    totalInvestment: 440000,
-    dpAmount: 220000,
-    dpStatus: 'LUNAS (DP 50%)',
-    orderDate: '04 November 2026',
-    estimatedCompletion: '11 November 2026',
-    currentStageNumber: 4,
-    revisionQuotaTotal: 3,
-    revisionQuotaUsed: 1,
-    developerNotes: 'Pratinjau pertama telah disampaikan kepada PIC Klien. Sesi revisi ke-1 (penyesuaian tata letak profil direksi dan nomor kontak cabang) sedang dalam proses perbaikan. Sisa kuota revisi: 2 sesi.',
-    deliverablesPreview: [
-      'Master Source Code Company Profile Korporat 6 Halaman',
-      'Panduan Operasional & Dokumentasi Struktur Kode',
-      'Konfigurasi Meta Tags SEO On-Page'
-    ]
-  },
-  {
-    id: 'ORD-AT-2026-0005',
-    orderNumber: 'ORD-AT-2026-0005',
-    clientName: 'Rian Prawira',
-    clientPhone: '089699887766',
-    projectTitle: 'Sistem Informasi Rekam Medis Klinik berbasis Role Dokter & Pasien',
-    category: 'Mahasiswa & Akademisi',
-    packageId: 'skripsi-akademik',
-    packageName: 'Tugas Kuliah / Project Mahasiswa / Modul Akademik',
-    packagePrice: 500000,
-    addons: [
-      { name: 'Pembuatan Dokumen SRS & SDD Tambahan', price: 50000 },
-      { name: 'Pembuatan UML & Diagram Sistem Lengkap', price: 50000 }
-    ],
-    totalInvestment: 600000,
-    dpAmount: 300000,
-    dpStatus: 'LUNAS 100% (SELESAI)',
-    orderDate: '28 Oktober 2026',
-    estimatedCompletion: '05 November 2026',
-    currentStageNumber: 5,
-    revisionQuotaTotal: 3,
-    revisionQuotaUsed: 2,
-    developerNotes: 'Seluruh tahapan rekayasa telah rampung 100%. Master Source Code (.zip), database .sql dengan dummy data, serta dokumen SRS/SDD dan UML diagram lengkap telah diserahterimakan. Masa garansi bug 1 minggu aktif hingga 12 November 2026.',
-    deliverablesPreview: [
-      'Master Source Code Sistem Web Rekam Medis Siap Run',
-      'Database Relasional (.sql) dengan 60+ data rekam medis dummy',
-      'Dokumen SRS & SDD Standar IEEE Formal Lengkap',
-      'Paket UML Diagrams (Use Case, Activity, Sequence, Class, ERD)'
-    ]
-  }
-];
-
 export default function OrderTrackerPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchInput, setSearchInput] = useState('');
   const [activeOrder, setActiveOrder] = useState(null);
   const [searchStatus, setSearchStatus] = useState('idle'); // idle, found, not_found
   const [copiedId, setCopiedId] = useState(false);
+  const [activeDbOrders, setActiveDbOrders] = useState([]);
 
-  // Read URL query parameters on initial load
+  // Fetch available orders directly from central database
+  const refreshDbOrders = () => {
+    try {
+      const all = getAllOrders();
+      setActiveDbOrders(Array.isArray(all) ? all : []);
+    } catch (e) {
+      setActiveDbOrders([]);
+    }
+  };
+
+  // Read URL query parameters on initial load & bind live cross-tab storage sync
   useEffect(() => {
+    refreshDbOrders();
+
     const codeParam = searchParams.get('kode') || searchParams.get('id') || searchParams.get('no');
     if (codeParam) {
       setSearchInput(codeParam);
       executeSearch(codeParam);
-    } else {
-      // Check localStorage for recent brief inquiry
-      try {
-        const stored = localStorage.getItem('aksara_order_brief_v1');
-        if (stored) {
-          const parsed = JSON.parse(stored);
-          if (parsed && parsed.inquiryId && !activeOrder) {
-            // Found a local brief submission, keep query ready
-            setSearchInput(parsed.inquiryId);
-            executeSearch(parsed.inquiryId);
-          }
-        }
-      } catch (e) {
-        // Fallback silently
-      }
     }
-  }, [searchParams]);
 
-  // Execute lookup logic across mock database & localStorage
+    const handleStorageSync = () => {
+      refreshDbOrders();
+      if (activeOrder) {
+        const fresh = findOrderByQuery(activeOrder.id);
+        if (fresh) {
+          setActiveOrder(fresh);
+        } else {
+          setActiveOrder(null);
+          setSearchStatus('not_found');
+        }
+      }
+    };
+
+    window.addEventListener('storage', handleStorageSync);
+    window.addEventListener('aksara_orders_updated', handleStorageSync);
+    return () => {
+      window.removeEventListener('storage', handleStorageSync);
+      window.removeEventListener('aksara_orders_updated', handleStorageSync);
+    };
+  }, [searchParams, activeOrder]);
+
+  // Execute lookup logic strictly from unified central database (Single Source of Truth)
   const executeSearch = (rawQuery) => {
     const query = (rawQuery || searchInput || '').trim();
     if (!query) return;
 
-    // 1. Check in unified orderStorage (LocalStorage + Central Database)
+    // Check in unified orderStorage (Sole database)
     const storedMatch = findOrderByQuery(query);
     if (storedMatch) {
       setActiveOrder(storedMatch);
       setSearchStatus('found');
-      return;
+    } else {
+      setActiveOrder(null);
+      setSearchStatus('not_found');
     }
-
-    const normalizedQuery = query.toLowerCase().replace(/[\s-]/g, '');
-
-    // 2. Check in curated MOCK_ORDERS by ID, orderNumber, or clientPhone
-    const matched = MOCK_ORDERS.find(ord => {
-      const ordIdNorm = (ord.id || '').toLowerCase().replace(/[\s-]/g, '');
-      const ordNoNorm = (ord.orderNumber || '').toLowerCase().replace(/[\s-]/g, '');
-      const ordPhoneNorm = (ord.clientPhone || '').replace(/[\s-+]/g, '').replace(/^62/, '0');
-      const qPhoneNorm = normalizedQuery.replace(/[\s-+]/g, '').replace(/^62/, '0');
-
-      return ordIdNorm.includes(normalizedQuery) ||
-             ordNoNorm.includes(normalizedQuery) ||
-             (qPhoneNorm.length >= 8 && ordPhoneNorm.includes(qPhoneNorm));
-    });
-
-    if (matched) {
-      setActiveOrder(matched);
-      setSearchStatus('found');
-      return;
-    }
-
-    // 2. Check in localStorage (Recent brief filled by the user on this browser)
-    try {
-      const stored = localStorage.getItem('aksara_order_brief_v1');
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        const storedIdNorm = (parsed.inquiryId || '').toLowerCase().replace(/[\s-]/g, '');
-        const storedPhoneNorm = (parsed.clientPhone || '').replace(/[\s-+]/g, '').replace(/^62/, '0');
-        const qPhoneNorm = normalizedQuery.replace(/[\s-+]/g, '').replace(/^62/, '0');
-
-        if (storedIdNorm.includes(normalizedQuery) || (qPhoneNorm.length >= 8 && storedPhoneNorm.includes(qPhoneNorm))) {
-          // Construct live order object from local brief
-          const pkg = PACKAGES.find(p => p.id === parsed.selectedPackageId) || PACKAGES[1];
-          const localOrder = {
-            id: parsed.inquiryId || 'INQ-AT-LOCAL',
-            orderNumber: 'INQ-MENUNGGU-DP',
-            clientName: parsed.clientName || 'Calon Klien',
-            clientPhone: parsed.clientPhone || '-',
-            projectTitle: parsed.projectTitle || 'Proyek Website Kustom Aksara Tech',
-            category: parsed.projectCategory || 'UMKM & Bisnis',
-            packageId: pkg.id,
-            packageName: pkg.name,
-            packagePrice: pkg.minPrice,
-            addons: (parsed.selectedAddonIds || []).map(aId => ({ name: aId, price: 50000 })),
-            totalInvestment: pkg.minPrice,
-            dpAmount: Math.round(pkg.minPrice / 2),
-            dpStatus: 'MENUNGGU VERIFIKASI DP 50%',
-            orderDate: new Date().toLocaleDateString('id-ID', { dateStyle: 'long' }),
-            estimatedCompletion: 'Menunggu Konfirmasi DP',
-            currentStageNumber: 1,
-            revisionQuotaTotal: 3,
-            revisionQuotaUsed: 0,
-            developerNotes: 'Formulir brief teknis telah tersimpan di browser Anda. Segera kirimkan brief ke WhatsApp resmi Aksara Tech untuk verifikasi spesifikasi dan penerbitan draf penawaran resmi.',
-            deliverablesPreview: pkg.deliverables || ['Full Source Code Lengkap', 'Database Relasional (.sql)']
-          };
-
-          setActiveOrder(localOrder);
-          setSearchStatus('found');
-          return;
-        }
-      }
-    } catch (e) {
-      // LocalStorage fallback handled silently
-    }
-
-    setActiveOrder(null);
-    setSearchStatus('not_found');
   };
 
   const handleSearchSubmit = (e) => {
@@ -357,62 +219,35 @@ export default function OrderTrackerPage() {
             </button>
           </form>
 
-          {/* Interactive Preset Demos */}
-          <div style={{ marginTop: '24px', paddingTop: '8px' }}>
-            <div style={{ fontSize: '0.88rem', fontWeight: '800', color: '#1E293B', marginBottom: '10px' }}>
-              Uji Coba Langsung dengan Contoh Data Pesanan Aktif:
+          {/* Interactive Preset Demos (Only shown if active orders exist in DB) */}
+          {activeDbOrders.length > 0 && (
+            <div style={{ marginTop: '24px', paddingTop: '8px' }}>
+              <div style={{ fontSize: '0.88rem', fontWeight: '800', color: '#1E293B', marginBottom: '10px' }}>
+                Uji Coba Langsung dengan Data Pesanan Tersimpan:
+              </div>
+              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                {activeDbOrders.slice(0, 3).map((ord, idx) => (
+                  <button
+                    key={ord.id}
+                    type="button"
+                    onClick={() => handleSelectDemo(ord.id)}
+                    style={{
+                      background: '#F1F5F9',
+                      color: '#0F172A',
+                      border: '1px solid #CBD5E1',
+                      borderRadius: '6px',
+                      padding: '7px 12px',
+                      fontSize: '0.82rem',
+                      fontWeight: '700',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Contoh {idx + 1}: {ord.id} ({ord.statusType === 'FIX_ORDER' ? `Tahap ${ord.currentStageNumber} SOP` : 'Inquiry'})
+                  </button>
+                ))}
+              </div>
             </div>
-            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-              <button
-                type="button"
-                onClick={() => handleSelectDemo('INQ-AT-20261109-8F2A')}
-                style={{
-                  background: '#F1F5F9',
-                  color: '#0F172A',
-                  border: '1px solid #CBD5E1',
-                  borderRadius: '6px',
-                  padding: '7px 12px',
-                  fontSize: '0.82rem',
-                  fontWeight: '700',
-                  cursor: 'pointer'
-                }}
-              >
-                Demo 1: INQ-AT-20261109-8F2A (Tahap Koding Backend)
-              </button>
-              <button
-                type="button"
-                onClick={() => handleSelectDemo('ORD-AT-2026-0018')}
-                style={{
-                  background: '#F1F5F9',
-                  color: '#0F172A',
-                  border: '1px solid #CBD5E1',
-                  borderRadius: '6px',
-                  padding: '7px 12px',
-                  fontSize: '0.82rem',
-                  fontWeight: '700',
-                  cursor: 'pointer'
-                }}
-              >
-                Demo 2: ORD-AT-2026-0018 (Tahap Sesi Revisi)
-              </button>
-              <button
-                type="button"
-                onClick={() => handleSelectDemo('ORD-AT-2026-0005')}
-                style={{
-                  background: '#F1F5F9',
-                  color: '#0F172A',
-                  border: '1px solid #CBD5E1',
-                  borderRadius: '6px',
-                  padding: '7px 12px',
-                  fontSize: '0.82rem',
-                  fontWeight: '700',
-                  cursor: 'pointer'
-                }}
-              >
-                Demo 3: ORD-AT-2026-0005 (Tahap Selesai &amp; Serah Terima)
-              </button>
-            </div>
-          </div>
+          )}
 
           {/* Transparent Guide: Where to find the tracking number */}
           <div style={{ marginTop: '24px', background: '#F8FAFC', borderRadius: '10px', padding: '18px 20px', border: '1px solid #E2E8F0' }}>
@@ -698,22 +533,24 @@ export default function OrderTrackerPage() {
               Pastikan Anda mengetikkan format yang sesuai (contoh: <code style={{ fontWeight: '700', color: '#0F172A' }}>INQ-AT-20261109-8F2A</code>) atau gunakan nomor WhatsApp yang sama saat Anda mengisi form di halaman /pesan.
             </p>
             <div style={{ display: 'inline-flex', gap: '12px', flexWrap: 'wrap', justifyContent: 'center' }}>
-              <button
-                type="button"
-                onClick={() => handleSelectDemo('INQ-AT-20261109-8F2A')}
-                style={{
-                  background: 'var(--prussian-blue)',
-                  color: '#FFFFFF',
-                  border: 'none',
-                  borderRadius: '6px',
-                  padding: '10px 18px',
-                  fontWeight: '700',
-                  fontSize: '0.88rem',
-                  cursor: 'pointer'
-                }}
-              >
-                Buka Contoh Proyek Aktif
-              </button>
+              {activeDbOrders.length > 0 && (
+                <button
+                  type="button"
+                  onClick={() => handleSelectDemo(activeDbOrders[0].id)}
+                  style={{
+                    background: 'var(--prussian-blue)',
+                    color: '#FFFFFF',
+                    border: 'none',
+                    borderRadius: '6px',
+                    padding: '10px 18px',
+                    fontWeight: '700',
+                    fontSize: '0.88rem',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Buka Contoh Proyek Aktif ({activeDbOrders[0].id})
+                </button>
+              )}
               <Link
                 to="/pesan"
                 style={{

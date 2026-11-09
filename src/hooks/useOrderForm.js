@@ -4,6 +4,7 @@ import { useState, useMemo, useEffect } from 'react';
 import { PACKAGES, ADDONS } from '../data/catalogData';
 import { generateInquiryId, createWhatsAppPayload } from '../utils/documentEngine';
 import { useLocalStorage } from './useLocalStorage';
+import { createOrder } from '../utils/orderStorage';
 
 const INITIAL_FORM_STATE = {
   inquiryId: '',
@@ -242,6 +243,37 @@ export function useOrderForm(initialPackageId = null) {
 
     const waUrl = createWhatsAppPayload(sanitizedData, selectedPackage, selectedAddons);
     setIsSubmitted(true);
+
+    // Register inquiry to central orderStorage database
+    try {
+      const activeInquiryId = sanitizedData.inquiryId || generateInquiryId();
+      createOrder({
+        id: activeInquiryId,
+        orderNumber: 'MENUNGGU-DP',
+        statusType: 'INQUIRY',
+        clientName: sanitizedData.clientName || activeInquiryId,
+        clientPhone: sanitizedData.clientPhone || '-',
+        clientEmail: sanitizedData.clientEmail || '-',
+        projectTitle: sanitizedData.projectTitle || 'Proyek Website Kustom Aksara Tech',
+        category: sanitizedData.projectCategory || 'UMKM & Bisnis',
+        packageId: selectedPackage.id,
+        packageName: selectedPackage.name,
+        packagePrice: selectedPackage.minPrice,
+        addons: selectedAddons.map(a => ({ name: a.name, price: a.minPrice })),
+        totalInvestment: calculations.minPrice,
+        dpAmount: calculations.dpMin,
+        dpStatus: 'MENUNGGU VERIFIKASI DP 50%',
+        orderDate: new Date().toLocaleDateString('id-ID', { dateStyle: 'long' }),
+        estimatedCompletion: `${selectedPackage.minDays}–${selectedPackage.maxDays} Hari Kerja`,
+        currentStageNumber: 1,
+        revisionQuotaTotal: 3,
+        revisionQuotaUsed: 0,
+        developerNotes: 'Formulir brief teknis telah diajukan via website. Menunggu verifikasi DP termin 1 (50%) untuk memulai antrean pengerjaan.',
+        deliverablesPreview: selectedPackage.deliverables || ['Master Source Code (.zip)', 'Database Relasional (.sql)']
+      });
+    } catch (e) {
+      // Storage fallback handled silently
+    }
 
     // Open WhatsApp in new tab
     window.open(waUrl, '_blank', 'noopener,noreferrer');

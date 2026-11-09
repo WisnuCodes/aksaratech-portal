@@ -31,6 +31,8 @@ import {
   updateOrder, 
   createOrder, 
   deleteOrder, 
+  clearAllOrders,
+  resetToDefaultOrders,
   exportOrdersToExcel,
   exportOrdersToCSV, 
   getSheetConfig, 
@@ -62,11 +64,22 @@ export default function AdminDashboardPage() {
   const [sheetConfig, setSheetConfig] = useState(getSheetConfig());
   const [copiedScript, setCopiedScript] = useState(false);
 
-  // Load orders from storage on mount
+  // Load orders from storage on mount & sync across tabs
   useEffect(() => {
     if (isAuthenticated) {
       setOrders(getAllOrders());
     }
+
+    const handleSync = () => {
+      setOrders(getAllOrders());
+    };
+
+    window.addEventListener('storage', handleSync);
+    window.addEventListener('aksara_orders_updated', handleSync);
+    return () => {
+      window.removeEventListener('storage', handleSync);
+      window.removeEventListener('aksara_orders_updated', handleSync);
+    };
   }, [isAuthenticated]);
 
   // Auth Handler
@@ -142,10 +155,28 @@ export default function AdminDashboardPage() {
 
   // Delete Order Handler
   const handleDeleteOrder = (order) => {
-    if (window.confirm(`Hapus catatan pesanan ${order.id} (${order.clientName})? Data akan dihapus dari sistem.`)) {
+    if (window.confirm(`Hapus catatan pesanan ${order.id} (${order.clientName})? Data akan dihapus secara permanen dari sistem dan pelacak.`)) {
       deleteOrder(order.id);
       setOrders(getAllOrders());
-      triggerSuccess(`Pesanan ${order.id} berhasil dihapus.`);
+      triggerSuccess(`Pesanan ${order.id} berhasil dihapus permanen.`);
+    }
+  };
+
+  // Clear All Orders Handler
+  const handleClearAllOrders = () => {
+    if (window.confirm('PERINGATAN: Apakah Anda yakin ingin MENGHAPUS SEMUA DATA PESANAN secara permanen?\n\nSemua data inquiry, pesanan fix, dan draf brief lokal di browser akan dibersihkan total. Tampilan pelacak (/lacak) akan bersih dan kosong.')) {
+      clearAllOrders();
+      setOrders([]);
+      triggerSuccess('Seluruh database pesanan dan draf brief lokal berhasil dikosongkan.');
+    }
+  };
+
+  // Reset Demo Orders Handler
+  const handleResetDemoOrders = () => {
+    if (window.confirm('Muat ulang 4 data contoh pesanan awal untuk pengujian sistem?')) {
+      const restored = resetToDefaultOrders();
+      setOrders(restored);
+      triggerSuccess('Data contoh awal berhasil dimuat kembali ke sistem.');
     }
   };
 
@@ -473,26 +504,72 @@ function doPost(e) {
             </p>
           </div>
 
-          <button
-            type="button"
-            onClick={() => setIsCreatingNew(true)}
-            style={{
-              background: 'var(--prussian-blue)',
-              color: '#FFFFFF',
-              border: 'none',
-              borderRadius: '8px',
-              padding: '12px 20px',
-              fontSize: '0.92rem',
-              fontWeight: '800',
-              cursor: 'pointer',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '8px'
-            }}
-          >
-            <Plus size={18} />
-            <span>Tambah Pesanan Manual</span>
-          </button>
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
+            <button
+              type="button"
+              onClick={handleClearAllOrders}
+              style={{
+                background: '#FEE2E2',
+                color: '#DC2626',
+                border: '1px solid #FECACA',
+                borderRadius: '8px',
+                padding: '11px 16px',
+                fontSize: '0.86rem',
+                fontWeight: '800',
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px'
+              }}
+              title="Hapus seluruh data pesanan dari sistem dan kosongkan pelacak"
+            >
+              <Trash2 size={16} />
+              <span>Kosongkan Semua Data</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={handleResetDemoOrders}
+              style={{
+                background: '#F1F5F9',
+                color: '#0F172A',
+                border: '1px solid #CBD5E1',
+                borderRadius: '8px',
+                padding: '11px 16px',
+                fontSize: '0.86rem',
+                fontWeight: '700',
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px'
+              }}
+              title="Muat ulang 4 data contoh awal untuk pengujian"
+            >
+              <RotateCcw size={16} />
+              <span>Muat Ulang Contoh</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setIsCreatingNew(true)}
+              style={{
+                background: 'var(--prussian-blue)',
+                color: '#FFFFFF',
+                border: 'none',
+                borderRadius: '8px',
+                padding: '11px 18px',
+                fontSize: '0.88rem',
+                fontWeight: '800',
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}
+            >
+              <Plus size={18} />
+              <span>Tambah Pesanan Manual</span>
+            </button>
+          </div>
         </div>
 
         {/* 4 Overview Metric Cards */}
@@ -754,11 +831,35 @@ function doPost(e) {
               <div style={{ background: '#FFFFFF', border: '1px solid #CBD5E1', borderRadius: '12px', padding: '48px 24px', textAlign: 'center' }}>
                 <AlertCircle size={32} color="#64748B" style={{ margin: '0 auto 12px auto' }} />
                 <h3 style={{ fontSize: '1.1rem', fontWeight: '800', color: '#0F172A', margin: '0 0 6px 0' }}>
-                  Tidak Ada Pesanan pada Kategori Ini
+                  {orders.length === 0 ? 'Seluruh Database Pesanan Sedang Kosong' : 'Tidak Ada Pesanan pada Kategori Ini'}
                 </h3>
-                <p style={{ fontSize: '0.88rem', color: '#64748B', margin: 0 }}>
-                  Gunakan tombol "Tambah Pesanan Manual" di kanan atas jika ada pesanan langsung dari WhatsApp.
+                <p style={{ fontSize: '0.88rem', color: '#64748B', margin: orders.length === 0 ? '0 0 18px 0' : 0 }}>
+                  {orders.length === 0 
+                    ? 'Semua pesanan telah dihapus. Halaman pelacak (/lacak) saat ini bersih dan tidak menampilkan order apa pun. Anda dapat menambah pesanan baru atau memuat ulang data contoh.'
+                    : 'Gunakan tombol "Tambah Pesanan Manual" di kanan atas jika ada pesanan langsung dari WhatsApp.'}
                 </p>
+                {orders.length === 0 && (
+                  <button
+                    type="button"
+                    onClick={handleResetDemoOrders}
+                    style={{
+                      background: '#F1F5F9',
+                      color: '#0F172A',
+                      border: '1px solid #CBD5E1',
+                      borderRadius: '6px',
+                      padding: '8px 16px',
+                      fontSize: '0.84rem',
+                      fontWeight: '700',
+                      cursor: 'pointer',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '6px'
+                    }}
+                  >
+                    <RotateCcw size={15} />
+                    <span>Muat Ulang 4 Contoh Data Awal</span>
+                  </button>
+                )}
               </div>
             ) : (
               filteredOrders.map(ord => {

@@ -135,35 +135,39 @@ export const INITIAL_ORDERS = [
 ];
 
 /**
- * Get all orders from localStorage, fallback to INITIAL_ORDERS
+ * Get all orders from localStorage, fallback to INITIAL_ORDERS only on very first visit
  */
 export function getAllOrders() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) {
+    // Only seed initial orders if key has never been set (null)
+    if (raw === null) {
       saveAllOrders(INITIAL_ORDERS);
       return INITIAL_ORDERS;
     }
     const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : INITIAL_ORDERS;
+    return Array.isArray(parsed) ? parsed : [];
   } catch (e) {
-    return INITIAL_ORDERS;
+    return [];
   }
 }
 
 /**
- * Save array of orders to localStorage
+ * Save array of orders to localStorage and notify all listeners
  */
 export function saveAllOrders(orders) {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(orders || []));
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event('aksara_orders_updated'));
+    }
   } catch (e) {
     // LocalStorage quota error handling
   }
 }
 
 /**
- * Find order by Ticket ID or WhatsApp Phone Number
+ * Find order by Ticket ID or WhatsApp Phone Number strictly from database
  */
 export function findOrderByQuery(rawQuery) {
   if (!rawQuery) return null;
@@ -176,7 +180,9 @@ export function findOrderByQuery(rawQuery) {
     const ordPhoneNorm = (ord.clientPhone || '').replace(/[\s-+]/g, '').replace(/^62/, '0');
     const qPhoneNorm = normalizedQuery.replace(/[\s-+]/g, '').replace(/^62/, '0');
 
-    return ordIdNorm.includes(normalizedQuery) ||
+    return ordIdNorm === normalizedQuery ||
+           ordNoNorm === normalizedQuery ||
+           ordIdNorm.includes(normalizedQuery) ||
            ordNoNorm.includes(normalizedQuery) ||
            (qPhoneNorm.length >= 8 && ordPhoneNorm.includes(qPhoneNorm));
   }) || null;
@@ -201,18 +207,71 @@ export function updateOrder(updatedOrder) {
  */
 export function createOrder(newOrder) {
   const orders = getAllOrders();
-  const updated = [newOrder, ...orders];
+  // Prevent duplicate insertion
+  const existingIdx = orders.findIndex(o => o.id === newOrder.id);
+  let updated;
+  if (existingIdx >= 0) {
+    orders[existingIdx] = { ...orders[existingIdx], ...newOrder };
+    updated = [...orders];
+  } else {
+    updated = [newOrder, ...orders];
+  }
   saveAllOrders(updated);
   return newOrder;
 }
 
 /**
- * Delete an order by ID
+ * Delete an order by ID completely across all storage
  */
 export function deleteOrder(id) {
   const orders = getAllOrders();
   const filtered = orders.filter(o => o.id !== id);
   saveAllOrders(filtered);
+
+  // Also purge from brief cache if matching or if database becomes empty
+  try {
+    const rawBrief = localStorage.getItem('aksara_order_brief_v1');
+    if (rawBrief) {
+      const parsed = JSON.parse(rawBrief);
+      if (parsed && (parsed.inquiryId === id || parsed.id === id || filtered.length === 0)) {
+        localStorage.removeItem('aksara_order_brief_v1');
+      }
+    }
+  } catch (e) {}
+
+  if (filtered.length === 0) {
+    try {
+      localStorage.removeItem('aksara_order_brief_v1');
+    } catch (e) {}
+  }
+
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new Event('aksara_orders_updated'));
+  }
+}
+
+/**
+ * Clear all orders completely
+ */
+export function clearAllOrders() {
+  saveAllOrders([]);
+  try {
+    localStorage.removeItem('aksara_order_brief_v1');
+  } catch (e) {}
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new Event('aksara_orders_updated'));
+  }
+}
+
+/**
+ * Reset orders to initial sample demos
+ */
+export function resetToDefaultOrders() {
+  saveAllOrders(INITIAL_ORDERS);
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new Event('aksara_orders_updated'));
+  }
+  return INITIAL_ORDERS;
 }
 
 /**
