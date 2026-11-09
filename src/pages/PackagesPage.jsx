@@ -4,6 +4,7 @@ import { PACKAGES, ADDONS } from '../data/catalogData';
 import { formatRupiah } from '../utils/documentEngine';
 import PageHeader from '../components/molecules/PageHeader';
 import Button from '../components/atoms/Button';
+import InstantPriceEstimator from '../components/organisms/InstantPriceEstimator';
 import { 
   Package, Clock, CheckCircle2, XCircle, ArrowRight, Star, 
   FileCode2, Shield, Layers, HelpCircle, Code2, Sparkles,
@@ -121,9 +122,14 @@ export default function PackagesPage({ onSelectPackage }) {
         highlightText="Layanan Resmi"
         description="Seluruh paket dibangun dengan arsitektur teruji, fasilitas kuota revisi maksimal 3 kali mutlak, estimasi 1–10 hari kerja, dan plafon tarif transparan tanpa biaya tersembunyi (maks Rp 500.000)."
         action={
-          <Link to="/pesan" className="btn btn-primary page-header-cta">
-            <span>Isi Lembar Kebutuhan</span>
-          </Link>
+          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+            <a href="#kalkulator" className="btn btn-secondary page-header-cta" style={{ background: '#FFFFFF', color: '#0F172A', border: '1.5px solid #CBD5E1' }}>
+              <span>Simulasi Anggaran</span>
+            </a>
+            <Link to="/pesan" className="btn btn-primary page-header-cta">
+              <span>Isi Lembar Kebutuhan</span>
+            </Link>
+          </div>
         }
       />
 
@@ -384,6 +390,9 @@ export default function PackagesPage({ onSelectPackage }) {
 
         </div>
       </section>
+
+      {/* Interactive Instant Price Estimator Section */}
+      <InstantPriceEstimator onSelectPackage={onSelectPackage} />
 
       {/* ── Embedded CSS ── */}
       <style>{`

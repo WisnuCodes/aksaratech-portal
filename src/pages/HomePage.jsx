@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import HeroSection from '../components/organisms/HeroSection';
 import WhyChooseUsSection from '../components/organisms/WhyChooseUsSection';
 import PackageShowcase from '../components/organisms/PackageShowcase';
+import InstantPriceEstimator from '../components/organisms/InstantPriceEstimator';
 import TestimonialsSection from '../components/organisms/TestimonialsSection';
 import ServerExclusionBanner from '../components/organisms/ServerExclusionBanner';
 import WorkflowSOP from '../components/organisms/WorkflowSOP';
@@ -22,6 +23,9 @@ export default function HomePage({ onSelectPackage }) {
 
       {/* 3. Package Showcase Snapshot */}
       <PackageShowcase onSelectPackage={onSelectPackage} />
+
+      {/* 3.5 Interactive Live Instant Price Estimator */}
+      <InstantPriceEstimator onSelectPackage={onSelectPackage} />
 
       {/* 4. Client Testimonials & Track Record */}
       <TestimonialsSection />
