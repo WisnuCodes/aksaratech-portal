@@ -31,6 +31,7 @@ import {
   updateOrder, 
   createOrder, 
   deleteOrder, 
+  exportOrdersToExcel,
   exportOrdersToCSV, 
   getSheetConfig, 
   saveSheetConfig 
@@ -384,13 +385,13 @@ function doPost(e) {
 
             <button
               type="button"
-              onClick={exportOrdersToCSV}
+              onClick={exportOrdersToExcel}
               style={{
                 background: '#16A34A',
                 color: '#FFFFFF',
                 border: 'none',
                 fontSize: '0.84rem',
-                fontWeight: '700',
+                fontWeight: '800',
                 padding: '7px 14px',
                 borderRadius: '6px',
                 cursor: 'pointer',
@@ -398,9 +399,31 @@ function doPost(e) {
                 alignItems: 'center',
                 gap: '6px'
               }}
+              title="Unduh format spreadsheet rapi dengan kolom terpisah, warna header, dan penataan nomor telepon"
             >
               <FileSpreadsheet size={15} />
-              <span>Ekspor CSV Spreadsheet</span>
+              <span>Ekspor Excel Spreadsheet (.xls)</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={exportOrdersToCSV}
+              style={{
+                background: '#1E293B',
+                color: '#FFFFFF',
+                border: '1px solid #475569',
+                fontSize: '0.84rem',
+                fontWeight: '700',
+                padding: '7px 12px',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px'
+              }}
+              title="Unduh format CSV standar dengan pemisah titik koma (sep=;)"
+            >
+              <span>CSV (.csv)</span>
             </button>
 
             <button
@@ -624,7 +647,7 @@ function doPost(e) {
 
                 <button
                   type="button"
-                  onClick={exportOrdersToCSV}
+                  onClick={exportOrdersToExcel}
                   style={{
                     background: '#16A34A',
                     color: '#FFFFFF',
@@ -638,9 +661,31 @@ function doPost(e) {
                     alignItems: 'center',
                     gap: '6px'
                   }}
+                  title="Unduh format spreadsheet rapi dengan kolom terpisah, warna header, dan penataan nomor telepon"
                 >
                   <FileSpreadsheet size={16} />
-                  <span>Unduh File CSV (.csv) Siap Pakai</span>
+                  <span>Unduh Excel Spreadsheet (.xls) Rapi</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={exportOrdersToCSV}
+                  style={{
+                    background: '#0F172A',
+                    color: '#FFFFFF',
+                    border: 'none',
+                    borderRadius: '6px',
+                    padding: '10px 16px',
+                    fontSize: '0.88rem',
+                    fontWeight: '700',
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px'
+                  }}
+                  title="Unduh format CSV standar dengan pemisah titik koma (sep=;)"
+                >
+                  <span>Unduh CSV (.csv)</span>
                 </button>
               </div>
             </form>

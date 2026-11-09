@@ -236,8 +236,123 @@ export function saveSheetConfig(config) {
   } catch (e) {}
 }
 
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
 /**
- * Export all orders to CSV format for Google Sheets / Excel
+ * Export all orders to native styled Microsoft Excel spreadsheet (.xls)
+ * Opens with clean separate columns, styled navy header, zebra rows, and preserved phone numbers
+ */
+export function exportOrdersToExcel() {
+  const orders = getAllOrders();
+  const dateStr = new Date().toISOString().slice(0, 10);
+
+  const headers = [
+    'ID Tiket',
+    'Nomor Order',
+    'Tipe Status',
+    'Nama Klien',
+    'Nomor WhatsApp',
+    'Email',
+    'Nama Proyek',
+    'Kategori',
+    'Paket Layanan',
+    'Total Investasi (Rp)',
+    'Uang Muka DP 50% (Rp)',
+    'Status Pembayaran',
+    'Tahap SOP',
+    'Kuota Revisi',
+    'Tanggal Pesan',
+    'Estimasi Selesai',
+    'Catatan Pengembang'
+  ];
+
+  const rowsHtml = orders.map((o, idx) => {
+    const isEven = idx % 2 === 0;
+    const bgRow = isEven ? '#FFFFFF' : '#F8FAFC';
+    const statusBg = o.statusType === 'FIX_ORDER' ? '#EFF6FF' : '#FEF3C7';
+    const statusColor = o.statusType === 'FIX_ORDER' ? '#1D63FF' : '#B45309';
+
+    return `
+      <tr style="background-color: ${bgRow};">
+        <td style="mso-number-format:'\\@'; font-weight: bold; padding: 10px 12px; border: 1px solid #CBD5E1;">${o.id}</td>
+        <td style="mso-number-format:'\\@'; padding: 10px 12px; border: 1px solid #CBD5E1;">${o.orderNumber || '-'}</td>
+        <td style="padding: 10px 12px; border: 1px solid #CBD5E1; background-color: ${statusBg}; color: ${statusColor}; font-weight: bold;">${o.statusType === 'FIX_ORDER' ? 'FIX ORDER' : 'INQUIRY'}</td>
+        <td style="padding: 10px 12px; border: 1px solid #CBD5E1; font-weight: bold;">${escapeHtml(o.clientName)}</td>
+        <td style="mso-number-format:'\\@'; padding: 10px 12px; border: 1px solid #CBD5E1;">${o.clientPhone}</td>
+        <td style="padding: 10px 12px; border: 1px solid #CBD5E1;">${o.clientEmail || '-'}</td>
+        <td style="padding: 10px 12px; border: 1px solid #CBD5E1;">${escapeHtml(o.projectTitle)}</td>
+        <td style="padding: 10px 12px; border: 1px solid #CBD5E1;">${escapeHtml(o.category)}</td>
+        <td style="padding: 10px 12px; border: 1px solid #CBD5E1;">${escapeHtml(o.packageName)}</td>
+        <td style="mso-number-format:'\\#\\,\\#\\#0'; text-align: right; padding: 10px 12px; border: 1px solid #CBD5E1; font-weight: bold;">${o.totalInvestment}</td>
+        <td style="mso-number-format:'\\#\\,\\#\\#0'; text-align: right; padding: 10px 12px; border: 1px solid #CBD5E1;">${o.dpAmount}</td>
+        <td style="padding: 10px 12px; border: 1px solid #CBD5E1; font-weight: bold;">${escapeHtml(o.dpStatus)}</td>
+        <td style="padding: 10px 12px; border: 1px solid #CBD5E1; text-align: center;">Tahap ${o.currentStageNumber} dari 5</td>
+        <td style="padding: 10px 12px; border: 1px solid #CBD5E1; text-align: center;">${o.revisionQuotaUsed} / ${o.revisionQuotaTotal}</td>
+        <td style="padding: 10px 12px; border: 1px solid #CBD5E1;">${o.orderDate}</td>
+        <td style="padding: 10px 12px; border: 1px solid #CBD5E1;">${o.estimatedCompletion}</td>
+        <td style="padding: 10px 12px; border: 1px solid #CBD5E1;">${escapeHtml(o.developerNotes || '')}</td>
+      </tr>
+    `;
+  }).join('');
+
+  const tableHtml = `
+    <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+    <head>
+      <!--[if gte mso 9]>
+      <xml>
+        <x:ExcelWorkbook>
+          <x:ExcelWorksheets>
+            <x:ExcelWorksheet>
+              <x:Name>Database Pesanan Aksara Tech</x:Name>
+              <x:WorksheetOptions>
+                <x:DisplayGridlines/>
+              </x:WorksheetOptions>
+            </x:ExcelWorksheet>
+          </x:ExcelWorksheets>
+        </x:ExcelWorkbook>
+      </xml>
+      <![endif]-->
+      <meta http-equiv="content-type" content="application/vnd.ms-excel; charset=UTF-8"/>
+      <style>
+        body { font-family: 'Segoe UI', Calibri, Arial, sans-serif; font-size: 10pt; }
+        table { border-collapse: collapse; width: 100%; }
+        th { background-color: #0F172A; color: #FFFFFF; font-weight: bold; font-size: 11pt; padding: 12px 10px; border: 1px solid #0F172A; text-align: left; }
+      </style>
+    </head>
+    <body>
+      <table>
+        <thead>
+          <tr>
+            ${headers.map(h => `<th style="background-color: #0F172A; color: #FFFFFF; font-weight: bold; padding: 12px 10px; border: 1px solid #0F172A;">${h}</th>`).join('')}
+          </tr>
+        </thead>
+        <tbody>
+          ${rowsHtml}
+        </tbody>
+      </table>
+    </body>
+    </html>
+  `;
+
+  const blob = new Blob(['\uFEFF' + tableHtml], { type: 'application/vnd.ms-excel;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.setAttribute('href', url);
+  link.setAttribute('download', `AksaraTech_Orders_Database_${dateStr}.xls`);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+/**
+ * Export all orders to CSV format with Excel regional separator compatibility (sep=;)
  */
 export function exportOrdersToCSV() {
   const orders = getAllOrders();
@@ -246,7 +361,7 @@ export function exportOrdersToCSV() {
     'Nomor Order',
     'Tipe Status',
     'Nama Klien',
-    'WhatsApp',
+    'Nomor WhatsApp',
     'Email',
     'Nama Proyek',
     'Kategori',
@@ -265,23 +380,24 @@ export function exportOrdersToCSV() {
     `"${o.id}"`,
     `"${o.orderNumber || '-'}"`,
     `"${o.statusType}"`,
-    `"${o.clientName}"`,
-    `"${o.clientPhone}"`,
+    `"${(o.clientName || '').replace(/"/g, '""')}"`,
+    `"=""${o.clientPhone}"""`,
     `"${o.clientEmail || '-'}"`,
-    `"${o.projectTitle.replace(/"/g, '""')}"`,
-    `"${o.category}"`,
-    `"${o.packageName}"`,
+    `"${(o.projectTitle || '').replace(/"/g, '""')}"`,
+    `"${(o.category || '').replace(/"/g, '""')}"`,
+    `"${(o.packageName || '').replace(/"/g, '""')}"`,
     o.totalInvestment,
     o.dpAmount,
-    `"${o.dpStatus}"`,
+    `"${(o.dpStatus || '').replace(/"/g, '""')}"`,
     o.currentStageNumber,
-    `${o.revisionQuotaUsed}/${o.revisionQuotaTotal}`,
+    `"${o.revisionQuotaUsed}/${o.revisionQuotaTotal}"`,
     `"${o.orderDate}"`,
     `"${o.estimatedCompletion}"`,
     `"${(o.developerNotes || '').replace(/"/g, '""')}"`
   ]);
 
-  const csvContent = '\uFEFF' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+  // Use sep=;\r\n so Microsoft Excel in Indonesia/any locale splits into columns cleanly
+  const csvContent = '\uFEFFsep=;\r\n' + [headers.join(';'), ...rows.map(r => r.join(';'))].join('\r\n');
   const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
@@ -291,3 +407,4 @@ export function exportOrdersToCSV() {
   link.click();
   document.body.removeChild(link);
 }
+
