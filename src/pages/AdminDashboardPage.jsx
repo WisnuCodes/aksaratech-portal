@@ -425,78 +425,160 @@ export default function AdminDashboardPage() {
   }, [orders, activeTab, searchQuery]);
 
   // Google Apps Script template code
-  const googleAppsScriptCode = `// KODE GOOGLE APPS SCRIPT AKSARA TECH
+  const googleAppsScriptCode = `// KODE GOOGLE APPS SCRIPT AKSARA TECH (SINKRONISASI UTUH & AUTO-DELETE)
 // Tempelkan di Google Spreadsheet: Menu Ekstensi > Apps Script
 
-// 1. Endpoint status untuk pengujian browser
+// 1. Endpoint status untuk pengujian browser langsung
 function doGet(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var rowCount = Math.max(0, sheet.getLastRow() - 1);
   return ContentService.createTextOutput(JSON.stringify({
     "status": "connected",
-    "message": "Webhook Aksara Tech aktif dan siap menerima data pesanan."
+    "spreadsheetName": SpreadsheetApp.getActiveSpreadsheet().getName(),
+    "sheetName": sheet.getName(),
+    "totalOrdersInSheet": rowCount,
+    "message": "Webhook Aksara Tech aktif, terhubung normal, dan siap menerima sinkronisasi."
   })).setMimeType(ContentService.MimeType.JSON);
 }
 
-// 2. Endpoint penerima data pesanan otomatis (Tanpa Kolom Nama Klien)
+// 2. Format baris data pesanan resmi (16 kolom standar)
+function formatOrderRow(data) {
+  var revLogs = "-";
+  if (data.revisionHistory && Array.isArray(data.revisionHistory) && data.revisionHistory.length > 0) {
+    revLogs = data.revisionHistory.map(function(r) {
+      return "[Sesi " + r.sessionNumber + " - " + r.date + "]: " + r.note;
+    }).join("; ");
+  }
+  return [
+    data.id || "-",
+    data.orderNumber || "-",
+    data.statusType || "INQUIRY",
+    "'" + (data.clientPhone || "-"), // Tanda petik agar angka 0 nomor WA tetap utuh
+    data.clientEmail || "-",
+    data.projectTitle || "-",
+    data.category || "-",
+    data.packageName || "-",
+    data.totalInvestment || 0,
+    data.dpAmount || 0,
+    data.dpStatus || "-",
+    "Tahap " + (data.currentStageNumber || 1) + " dari 5",
+    "" + (data.revisionQuotaUsed || 0) + " / " + (data.revisionQuotaTotal || 3),
+    revLogs,
+    data.developerNotes || "-",
+    new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta" })
+  ];
+}
+
+// 3. Pastikan Header Kolom tersedia dan bergaya navy resmi
+function ensureHeader(sheet) {
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow([
+      "ID Tiket",
+      "Nomor Order",
+      "Tipe Status",
+      "Nomor WhatsApp",
+      "Email",
+      "Judul Proyek",
+      "Kategori",
+      "Paket Layanan",
+      "Total Investasi (Rp)",
+      "Uang Muka DP 50% (Rp)",
+      "Status Pembayaran",
+      "Tahap SOP",
+      "Kuota Revisi",
+      "Riwayat Catatan Revisi",
+      "Catatan Pengembang",
+      "Waktu Pencatatan"
+    ]);
+    sheet.getRange(1, 1, 1, 16).setFontWeight("bold");
+    sheet.getRange(1, 1, 1, 16).setBackground("#0F172A").setFontColor("#FFFFFF");
+  }
+}
+
+// 4. Endpoint penerima data otomatis (Sinkronisasi Total, Hapus, Ubah, Tambah)
 function doPost(e) {
   try {
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
     var data = JSON.parse(e.postData.contents);
     
-    // Otomatis buat baris Judul Kolom jika sheet masih kosong
-    if (sheet.getLastRow() === 0) {
-      sheet.appendRow([
-        "ID Tiket",
-        "Nomor Order",
-        "Tipe Status",
-        "Nomor WhatsApp",
-        "Email",
-        "Judul Proyek",
-        "Kategori",
-        "Paket Layanan",
-        "Total Investasi (Rp)",
-        "Uang Muka DP 50% (Rp)",
-        "Status Pembayaran",
-        "Tahap SOP",
-        "Kuota Revisi",
-        "Riwayat Catatan Revisi",
-        "Catatan Pengembang",
-        "Waktu Pencatatan"
-      ]);
-      sheet.getRange(1, 1, 1, 16).setFontWeight("bold");
+    // AKSI 1: SINKRONISASI PENUH / REWRITE (Menyesuaikan dengan database lokal, hapus data usang)
+    if (data.action === "sync_all" || Array.isArray(data.orders)) {
+      var orders = data.orders || [];
+      sheet.clearContents();
+      ensureHeader(sheet);
+      
+      orders.forEach(function(ord) {
+        sheet.appendRow(formatOrderRow(ord));
+      });
+      
+      return ContentService.createTextOutput(JSON.stringify({
+        "result": "success",
+        "action": "sync_all",
+        "count": orders.length
+      })).setMimeType(ContentService.MimeType.JSON);
     }
     
-    // Format riwayat revisi menjadi teks ringkas
-    var revLogs = "-";
-    if (data.revisionHistory && Array.isArray(data.revisionHistory) && data.revisionHistory.length > 0) {
-      revLogs = data.revisionHistory.map(function(r) {
-        return "[Sesi " + r.sessionNumber + " - " + r.date + "]: " + r.note;
-      }).join("; ");
+    // AKSI 2: KOSONGKAN SEMUA DATA (Hapus semua baris pesanan, sisakan Header)
+    if (data.action === "clear_all") {
+      sheet.clearContents();
+      ensureHeader(sheet);
+      return ContentService.createTextOutput(JSON.stringify({
+        "result": "success",
+        "action": "clear_all"
+      })).setMimeType(ContentService.MimeType.JSON);
     }
     
-    // Tambahkan baris pesanan baru
-    sheet.appendRow([
-      data.id || "-",
-      data.orderNumber || "-",
-      data.statusType || "INQUIRY",
-      "'" + (data.clientPhone || "-"), // Tanda petik agar angka 0 nomor WA tetap utuh
-      data.clientEmail || "-",
-      data.projectTitle || "-",
-      data.category || "-",
-      data.packageName || "-",
-      data.totalInvestment || 0,
-      data.dpAmount || 0,
-      data.dpStatus || "-",
-      "Tahap " + (data.currentStageNumber || 1) + " dari 5",
-      "" + (data.revisionQuotaUsed || 0) + " / " + (data.revisionQuotaTotal || 3),
-      revLogs,
-      data.developerNotes || "-",
-      new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta" })
-    ]);
+    // AKSI 3: HAPUS 1 PESANAN (Cari baris berdasarkan ID Tiket dan hapus baris tersebut)
+    if (data.action === "delete" && data.id) {
+      ensureHeader(sheet);
+      var lastRow = sheet.getLastRow();
+      var deleted = false;
+      if (lastRow > 1) {
+        var ids = sheet.getRange(2, 1, lastRow - 1, 1).getValues();
+        for (var i = ids.length - 1; i >= 0; i--) {
+          if (ids[i][0] == data.id) {
+            sheet.deleteRow(i + 2);
+            deleted = true;
+          }
+        }
+      }
+      return ContentService.createTextOutput(JSON.stringify({
+        "result": "success",
+        "action": "delete",
+        "deleted": deleted,
+        "id": data.id
+      })).setMimeType(ContentService.MimeType.JSON);
+    }
+    
+    // AKSI 4: UPDATE ATAU TAMBAH PESANAN TUNGGAL
+    var targetOrder = data.order || data;
+    ensureHeader(sheet);
+    var lastRow = sheet.getLastRow();
+    var updated = false;
+    
+    if (lastRow > 1 && targetOrder.id) {
+      var idList = sheet.getRange(2, 1, lastRow - 1, 1).getValues();
+      for (var r = 0; r < idList.length; r++) {
+        if (idList[r][0] == targetOrder.id) {
+          var rowIdx = r + 2;
+          sheet.getRange(rowIdx, 1, 1, 16).setValues([formatOrderRow(targetOrder)]);
+          updated = true;
+          break;
+        }
+      }
+    }
+    
+    // Jika data baru belum ada di sheet, tambahkan sebagai baris baru
+    if (!updated && targetOrder.id) {
+      sheet.appendRow(formatOrderRow(targetOrder));
+    }
     
     return ContentService.createTextOutput(JSON.stringify({
       "result": "success",
-      "id": data.id
+      "action": updated ? "updated" : "appended",
+      "id": targetOrder.id
     })).setMimeType(ContentService.MimeType.JSON);
+    
   } catch (err) {
     return ContentService.createTextOutput(JSON.stringify({
       "result": "error",
@@ -906,13 +988,27 @@ function doPost(e) {
             </p>
 
             <form onSubmit={handleSaveSheetConfig} style={{ marginBottom: '28px' }}>
+              {/* Field 1: Webhook URL */}
               <div style={{ marginBottom: '16px' }}>
-                <label style={{ fontSize: '0.86rem', fontWeight: '800', color: '#0F172A', display: 'block', marginBottom: '6px' }}>
-                  Google Apps Script Webhook URL (Aplikasi Web)
-                </label>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                  <label style={{ fontSize: '0.86rem', fontWeight: '800', color: '#0F172A' }}>
+                    1. Google Apps Script Webhook URL (Aplikasi Web)
+                  </label>
+                  {sheetConfig.webhookUrl && sheetConfig.webhookUrl.trim().startsWith('http') && (
+                    <a
+                      href={sheetConfig.webhookUrl.trim()}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ fontSize: '0.8rem', color: 'var(--prussian-blue)', fontWeight: '700', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                    >
+                      <ExternalLink size={13} />
+                      <span>Uji Akses Web App di Tab Baru</span>
+                    </a>
+                  )}
+                </div>
                 <input
                   type="url"
-                  value={sheetConfig.webhookUrl}
+                  value={sheetConfig.webhookUrl || ''}
                   onChange={(e) => setSheetConfig({ ...sheetConfig, webhookUrl: e.target.value })}
                   placeholder="https://script.google.com/macros/s/.../exec"
                   style={{
@@ -929,7 +1025,72 @@ function doPost(e) {
                   }}
                 />
                 <span style={{ fontSize: '0.78rem', color: '#64748B', marginTop: '4px', display: 'block' }}>
-                  URL resmi yang didapat setelah menekan tombol <strong>Terapkan &gt; Deployment baru</strong> di Google Apps Script (berakhiran <code>/exec</code>).
+                  URL mesin webhook dari tombol <strong>Terapkan &gt; Deployment baru</strong> di Apps Script (berakhiran <code>/exec</code>).
+                </span>
+              </div>
+
+              {/* Field 2: Direct Google Spreadsheet Document Link */}
+              <div style={{ marginBottom: '18px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                  <label style={{ fontSize: '0.86rem', fontWeight: '800', color: '#0F172A' }}>
+                    2. Tautan Berkas Google Spreadsheet Anda (docs.google.com)
+                  </label>
+                  {sheetConfig.spreadsheetUrl && sheetConfig.spreadsheetUrl.trim().startsWith('http') && (
+                    <a
+                      href={sheetConfig.spreadsheetUrl.trim()}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ fontSize: '0.8rem', color: '#16A34A', fontWeight: '800', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                    >
+                      <ExternalLink size={13} />
+                      <span>Buka File Spreadsheet Sekarang</span>
+                    </a>
+                  )}
+                </div>
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <input
+                    type="url"
+                    value={sheetConfig.spreadsheetUrl || ''}
+                    onChange={(e) => setSheetConfig({ ...sheetConfig, spreadsheetUrl: e.target.value })}
+                    placeholder="Contoh: https://docs.google.com/spreadsheets/d/.../edit"
+                    style={{
+                      flex: 1,
+                      padding: '12px 14px',
+                      fontSize: '0.92rem',
+                      borderRadius: '8px',
+                      border: '1.5px solid #CBD5E1',
+                      background: '#FFFFFF',
+                      outline: 'none',
+                      color: '#0F172A',
+                      fontWeight: '600'
+                    }}
+                  />
+                  {sheetConfig.spreadsheetUrl && sheetConfig.spreadsheetUrl.trim().startsWith('http') && (
+                    <a
+                      href={sheetConfig.spreadsheetUrl.trim()}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        background: '#16A34A',
+                        color: '#FFFFFF',
+                        textDecoration: 'none',
+                        borderRadius: '8px',
+                        padding: '12px 18px',
+                        fontSize: '0.88rem',
+                        fontWeight: '800',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        whiteSpace: 'nowrap'
+                      }}
+                    >
+                      <ExternalLink size={16} />
+                      <span>Buka Sheet</span>
+                    </a>
+                  )}
+                </div>
+                <span style={{ fontSize: '0.78rem', color: '#64748B', marginTop: '4px', display: 'block' }}>
+                  Buka tab spreadsheet Anda di browser, salin URL dari address bar, lalu tempelkan di sini agar bisa dibuka instan kapan saja.
                 </span>
               </div>
 
@@ -1127,6 +1288,41 @@ function doPost(e) {
                   Salin <strong>URL Aplikasi web</strong> (berakhiran <code>/exec</code>), tempelkan ke kolom URL Webhook di atas, lalu klik <strong>"Simpan Pengaturan Webhook"</strong>. Selesai!
                 </li>
               </ol>
+
+              {/* Guidance: Difference Between Web App & Google Sheet File */}
+              <div style={{ marginTop: '24px', background: '#FFFFFF', border: '1px solid #CBD5E1', borderRadius: '10px', padding: '18px 20px' }}>
+                <h4 style={{ fontSize: '0.98rem', fontWeight: '900', color: '#0F172A', margin: '0 0 10px 0' }}>
+                  Panduan: Cara Membuka Berkas Google Sheet &amp; Memeriksa Web App
+                </h4>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '14px', fontSize: '0.86rem', color: '#334155', lineHeight: '1.6' }}>
+                  <div style={{ background: '#F8FAFC', padding: '14px', borderRadius: '8px', border: '1px solid #E2E8F0' }}>
+                    <div style={{ fontWeight: '800', color: '#0F172A', marginBottom: '4px' }}>
+                      1. Membuka Berkas Google Spreadsheet
+                    </div>
+                    <div>
+                      Buka tab browser di mana Anda pertama kali membuat spreadsheet (atau buka <a href="https://sheets.google.com" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--prussian-blue)', fontWeight: '700' }}>Google Sheets</a> / <a href="https://drive.google.com" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--prussian-blue)', fontWeight: '700' }}>Google Drive</a>). Salin alamat URL spreadsheet (berakhiran <code>/edit</code>) dan tempelkan ke kolom <strong>"Tautan Berkas Google Spreadsheet"</strong> di atas. Selanjutnya Anda cukup menekan tombol hijau <strong>"Buka Sheet"</strong> untuk langsung mengaksesnya.
+                    </div>
+                  </div>
+
+                  <div style={{ background: '#F8FAFC', padding: '14px', borderRadius: '8px', border: '1px solid #E2E8F0' }}>
+                    <div style={{ fontWeight: '800', color: '#0F172A', marginBottom: '4px' }}>
+                      2. Memeriksa Status Web App (API)
+                    </div>
+                    <div>
+                      URL Web App yang berakhiran <code>/exec</code> adalah mesin API komunikasi data. Jika diklik, browser akan menampilkan teks kode: <code>{'{"status":"connected", "totalOrdersInSheet": ...}'}</code>. Tampilan ini menandakan webhook aktif dan siap menerima data.
+                    </div>
+                  </div>
+
+                  <div style={{ background: '#F8FAFC', padding: '14px', borderRadius: '8px', border: '1px solid #E2E8F0' }}>
+                    <div style={{ fontWeight: '800', color: '#0F172A', marginBottom: '4px' }}>
+                      3. Sinkronisasi Otomatis &amp; Auto-Delete
+                    </div>
+                    <div>
+                      Dengan skrip terbaru di atas, setiap kali Anda menghapus pesanan di web portal, baris di spreadsheet otomatis terhapus. Jika Anda menekan tombol <strong>"Sinkronkan Semua Pesanan ke Sheet"</strong>, seluruh isi spreadsheet akan ditulis ulang sesuai database aktif saat ini tanpa ada data duplikat.
+                    </div>
+                  </div>
+                </div>
+              </div>
 
             </div>
 

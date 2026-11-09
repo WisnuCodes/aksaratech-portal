@@ -221,6 +221,24 @@ export function updateOrder(updatedOrder) {
   if (index >= 0) {
     orders[index] = { ...orders[index], ...updatedOrder };
     saveAllOrders(orders);
+
+    // Sync updated order to Google Sheet Webhook if configured
+    try {
+      const config = getSheetConfig();
+      if (config?.webhookUrl && config.webhookUrl.trim().startsWith('http')) {
+        fetch(config.webhookUrl.trim(), {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'update',
+            order: orders[index],
+            ...orders[index]
+          })
+        }).catch(() => {});
+      }
+    } catch (e) {}
+
     return true;
   }
   return false;
@@ -266,6 +284,22 @@ export function deleteOrder(id) {
   const filtered = orders.filter(o => o.id !== id);
   saveAllOrders(filtered);
 
+  // Sync deletion to Google Sheet Webhook if configured
+  try {
+    const config = getSheetConfig();
+    if (config?.webhookUrl && config.webhookUrl.trim().startsWith('http')) {
+      fetch(config.webhookUrl.trim(), {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'delete',
+          id: id
+        })
+      }).catch(() => {});
+    }
+  } catch (e) {}
+
   // Also purge from brief cache if matching or if database becomes empty
   try {
     const rawBrief = localStorage.getItem('aksara_order_brief_v1');
@@ -296,6 +330,23 @@ export function clearAllOrders() {
   try {
     localStorage.removeItem('aksara_order_brief_v1');
   } catch (e) {}
+
+  // Sync clear_all to Google Sheet Webhook if configured
+  try {
+    const config = getSheetConfig();
+    if (config?.webhookUrl && config.webhookUrl.trim().startsWith('http')) {
+      fetch(config.webhookUrl.trim(), {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'clear_all',
+          orders: []
+        })
+      }).catch(() => {});
+    }
+  } catch (e) {}
+
   if (typeof window !== 'undefined') {
     window.dispatchEvent(new Event('aksara_orders_updated'));
   }
@@ -318,9 +369,9 @@ export function resetToDefaultOrders() {
 export function getSheetConfig() {
   try {
     const raw = localStorage.getItem(SHEET_CONFIG_KEY);
-    return raw ? JSON.parse(raw) : { webhookUrl: '', sheetName: 'Orders' };
+    return raw ? JSON.parse(raw) : { webhookUrl: '', spreadsheetUrl: '', sheetName: 'Orders' };
   } catch (e) {
-    return { webhookUrl: '', sheetName: 'Orders' };
+    return { webhookUrl: '', spreadsheetUrl: '', sheetName: 'Orders' };
   }
 }
 
@@ -367,30 +418,29 @@ export async function syncAllOrdersToSheet() {
     return { success: false, message: 'URL Webhook Google Apps Script belum diisi.' };
   }
 
-  if (orders.length === 0) {
-    return { success: false, message: 'Database lokal kosong. Belum ada pesanan untuk disinkronkan.' };
-  }
+  try {
+    await fetch(config.webhookUrl.trim(), {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        action: 'sync_all',
+        orders: orders
+      })
+    });
 
-  let successCount = 0;
-  for (const ord of orders) {
-    try {
-      await fetch(config.webhookUrl.trim(), {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(ord)
-      });
-      successCount++;
-    } catch (e) {}
+    return { 
+      success: true, 
+      count: orders.length, 
+      message: orders.length === 0
+        ? 'Google Spreadsheet berhasil disinkronkan & dikosongkan (0 pesanan aktif).'
+        : `Seluruh ${orders.length} pesanan berhasil disinkronkan & diperbarui rapi di Google Spreadsheet!` 
+    };
+  } catch (err) {
+    return { success: false, message: 'Gagal menghubungi server Webhook: ' + err.message };
   }
-
-  return { 
-    success: true, 
-    count: successCount, 
-    message: `${successCount} pesanan berhasil dikirim ke Google Spreadsheet Anda!` 
-  };
 }
 
 export function formatPhoneNumber(phone) {
