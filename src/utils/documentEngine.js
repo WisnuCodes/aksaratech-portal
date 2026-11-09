@@ -119,6 +119,9 @@ ${formData.specialNotes ? formData.specialNotes : "Mengikuti spesifikasi standar
 [x] Saya memahami BATASAN EKSKLUSI SERVER (Aksara Tech murni rekayasa software, tidak melayani pembelian domain, sewa hosting, atau maintenance server).
 [x] Saya memahami ketentuan Kuota Revisi Maksimal 3 Kali Mutlak dan DP min 50% non-refundable.
 
+*Tautan Lacak Status Proyek:*
+https://aksaratech.id/lacak?kode=${inquiryId}
+
 ----------------------------------------
 Mohon ditindaklanjuti untuk analisis teknis dan penerbitan Surat Penawaran Harga resmi. Terima kasih.`;
 

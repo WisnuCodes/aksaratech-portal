@@ -19,6 +19,7 @@ import ShieldRoundedIcon from '@mui/icons-material/ShieldRounded';
 import AccessTimeRoundedIcon from '@mui/icons-material/AccessTimeRounded';
 import HelpOutlineRoundedIcon from '@mui/icons-material/HelpOutlineRounded';
 import DescriptionRoundedIcon from '@mui/icons-material/DescriptionRounded';
+import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
@@ -113,6 +114,12 @@ export default function Navbar() {
       desc: 'Perjanjian legal formal & proteksi kerahasiaan brief',
       icon: <DescriptionRoundedIcon sx={{ fontSize: 21 }} />
     },
+    { 
+      to: '/lacak', 
+      label: 'Lacak Status Proyek', 
+      desc: 'Pantau progres koding & sisa kuota revisi',
+      icon: <SearchRoundedIcon sx={{ fontSize: 21 }} />
+    },
   ];
 
   return (
@@ -175,6 +182,13 @@ export default function Navbar() {
           >
             <DescriptionRoundedIcon sx={{ fontSize: 16, color: 'var(--prussian-blue)', mr: 0.5 }} />
             <span>Ketentuan &amp; Privasi</span>
+          </NavLink>
+          <NavLink 
+            to="/lacak" 
+            className={({ isActive }) => `desktop-nav-link ${isActive ? 'is-active' : ''}`}
+          >
+            <SearchRoundedIcon sx={{ fontSize: 16, color: 'var(--prussian-blue)', mr: 0.5 }} />
+            <span>Lacak Proyek</span>
           </NavLink>
         </nav>
 

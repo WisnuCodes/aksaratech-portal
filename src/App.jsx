@@ -14,6 +14,7 @@ const WorkflowPage = lazy(() => import('./pages/WorkflowPage'));
 const OrderBriefPage = lazy(() => import('./pages/OrderBriefPage'));
 const FAQPage = lazy(() => import('./pages/FAQPage'));
 const TermsPrivacyPage = lazy(() => import('./pages/TermsPrivacyPage'));
+const OrderTrackerPage = lazy(() => import('./pages/OrderTrackerPage'));
 const ErrorPage = lazy(() => import('./pages/ErrorPage'));
 
 // Lightweight page loading fallback
@@ -119,6 +120,7 @@ function AppContent() {
             <Route path="/eksklusi-server" element={<ServerExclusionPage />} />
             <Route path="/alur-sop" element={<WorkflowPage />} />
             <Route path="/pesan" element={<OrderBriefPage preselectedPackageId={selectedPackageId} />} />
+            <Route path="/lacak" element={<OrderTrackerPage />} />
             <Route path="/faq" element={<FAQPage />} />
             <Route path="/ketentuan" element={<TermsPrivacyPage />} />
             <Route path="/error" element={<ErrorPage defaultCode={404} />} />
