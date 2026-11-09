@@ -23,6 +23,10 @@ import {
   Copy,
   ChevronRight,
   Database,
+  FolderPlus,
+  User,
+  Calendar,
+  Layers,
   X
 } from 'lucide-react';
 import { 
@@ -58,6 +62,12 @@ export default function AdminDashboardPage() {
   const [activeTab, setActiveTab] = useState('ALL'); // ALL, INQUIRY, FIX_ORDER, COMPLETED, SPREADSHEET
   const [editingOrder, setEditingOrder] = useState(null);
   const [isCreatingNew, setIsCreatingNew] = useState(false);
+  const [newOrderForm, setNewOrderForm] = useState({
+    packageId: 'umkm-katalog',
+    totalInvestment: 300000,
+    category: 'UMKM & Bisnis',
+    statusType: 'FIX_ORDER'
+  });
   const [actionSuccessMsg, setActionSuccessMsg] = useState('');
 
   // Google Sheet Webhook Config State
@@ -191,11 +201,36 @@ export default function AdminDashboardPage() {
     triggerSuccess(`Perubahan pesanan ${editingOrder.id} berhasil disimpan.`);
   };
 
+  // Open Create Order Modal Helper
+  const handleOpenCreateModal = () => {
+    setNewOrderForm({
+      packageId: 'umkm-katalog',
+      totalInvestment: 300000,
+      category: 'UMKM & Bisnis',
+      statusType: 'FIX_ORDER'
+    });
+    setIsCreatingNew(true);
+  };
+
+  // Dynamic Package Selection Change
+  const handleNewOrderPackageChange = (pkgId) => {
+    const pkg = PACKAGES.find(p => p.id === pkgId);
+    if (pkg) {
+      setNewOrderForm(prev => ({
+        ...prev,
+        packageId: pkgId,
+        totalInvestment: pkg.minPrice,
+        category: pkg.categoryBadge || 'UMKM & Bisnis'
+      }));
+    }
+  };
+
   // Save New Manual Order Form
   const handleCreateNewOrder = (e) => {
     e.preventDefault();
     const form = e.target;
     const selectedPkg = PACKAGES.find(p => p.id === form.packageId.value) || PACKAGES[1];
+    const totalInvest = Number(form.totalInvestment.value) || selectedPkg.minPrice;
 
     const newOrder = {
       id: generateInquiryId(),
@@ -210,22 +245,22 @@ export default function AdminDashboardPage() {
       packageName: selectedPkg.name,
       packagePrice: selectedPkg.minPrice,
       addons: [],
-      totalInvestment: Number(form.totalInvestment.value) || selectedPkg.minPrice,
-      dpAmount: Math.round((Number(form.totalInvestment.value) || selectedPkg.minPrice) / 2),
+      totalInvestment: totalInvest,
+      dpAmount: Math.round(totalInvest / 2),
       dpStatus: form.statusType.value === 'FIX_ORDER' ? 'LUNAS (DP 50%)' : 'MENUNGGU TRANSFER DP 50%',
       orderDate: new Date().toLocaleDateString('id-ID', { dateStyle: 'long' }),
-      estimatedCompletion: form.estimatedCompletion.value || '7 Hari Kerja',
+      estimatedCompletion: form.estimatedCompletion.value.trim() || '7 Hari Kerja',
       currentStageNumber: form.statusType.value === 'FIX_ORDER' ? 2 : 1,
       revisionQuotaTotal: 3,
       revisionQuotaUsed: 0,
-      developerNotes: form.developerNotes.value.trim() || 'Pesanan manual dimasukkan oleh tim admin Aksara Tech.',
+      developerNotes: form.developerNotes.value.trim() || 'Pesanan resmi terdaftar. Menyiapkan repositori kode sumber dan skema basis data.',
       deliverablesPreview: selectedPkg.deliverables || ['Master Source Code (.zip)', 'Database Relasional (.sql)']
     };
 
     createOrder(newOrder);
     setOrders(getAllOrders());
     setIsCreatingNew(false);
-    triggerSuccess(`Pesanan baru ${newOrder.id} (${newOrder.clientName}) berhasil ditambahkan!`);
+    triggerSuccess(`Pesanan baru ${newOrder.id} (${newOrder.clientName}) berhasil ditambahkan ke sistem!`);
   };
 
   // Save Sheet Config Handler
@@ -307,17 +342,17 @@ function doPost(e) {
             <Lock size={24} color="#0F172A" />
           </div>
 
-          <h1 style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.2rem)', fontWeight: '900', color: '#0F172A', margin: '0 0 10px 0', letterSpacing: '-0.02em', lineHeight: '1.2' }}>
+          <h1 style={{ fontSize: '1.5rem', fontWeight: '900', color: '#0F172A', margin: '0 0 8px 0', letterSpacing: '-0.01em', lineHeight: '1.25' }}>
             Panel Admin Aksara Tech
           </h1>
-          <p style={{ fontSize: '1rem', color: '#334155', margin: '0 0 28px 0', lineHeight: '1.6' }}>
+          <p style={{ fontSize: '0.94rem', color: '#334155', margin: '0 0 24px 0', lineHeight: '1.5' }}>
             Masukkan PIN Keamanan internal untuk mengelola draf inquiry, verifikasi pembayaran DP, dan tahapan koding klien.
           </p>
 
           <form onSubmit={handlePinSubmit}>
             <div style={{ marginBottom: '20px', textAlign: 'left' }}>
-              <label style={{ fontSize: '0.88rem', fontWeight: '800', color: '#0F172A', display: 'block', marginBottom: '8px' }}>
-                PIN Keamanan Admin:
+              <label style={{ fontSize: '0.86rem', fontWeight: '800', color: '#0F172A', display: 'block', marginBottom: '8px' }}>
+                PIN Keamanan Admin
               </label>
               <input
                 type="password"
@@ -380,6 +415,23 @@ function doPost(e) {
   // ─────────────────────────────────────────────────────────────
   return (
     <div className="admin-page" style={{ background: '#F8FAFC', minHeight: '100vh', paddingBottom: '96px' }}>
+      <style>{`
+        @keyframes adminModalSlideUp {
+          from {
+            opacity: 0;
+            transform: scale(0.97) translateY(12px);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+          }
+        }
+        .admin-modal-input:focus, .admin-modal-select:focus, .admin-modal-textarea:focus {
+          border-color: var(--prussian-blue) !important;
+          outline: 2px solid var(--prussian-blue);
+          outline-offset: -1px;
+        }
+      `}</style>
       
       {/* Top Banner Bar */}
       <div style={{ background: '#0F172A', color: '#FFFFFF', padding: '16px 0', borderBottom: '1px solid #334155' }}>
@@ -496,10 +548,10 @@ function doPost(e) {
         {/* Dashboard Title & Quick Actions */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px', marginBottom: '28px' }}>
           <div>
-            <h1 style={{ fontSize: 'clamp(1.5rem, 3vw, 2.1rem)', fontWeight: '900', color: '#0F172A', letterSpacing: '-0.02em', margin: '0 0 6px 0', lineHeight: '1.2' }}>
+            <h1 style={{ fontSize: 'clamp(1.25rem, 2vw, 1.5rem)', fontWeight: '900', color: '#0F172A', letterSpacing: '-0.01em', margin: '0 0 6px 0', lineHeight: '1.25' }}>
               Pusat Kendali Pesanan &amp; Tahapan Koding
             </h1>
-            <p style={{ fontSize: '0.98rem', color: '#475569', margin: 0, maxWidth: '780px', lineHeight: '1.5' }}>
+            <p style={{ fontSize: '0.94rem', color: '#475569', margin: 0, maxWidth: '780px', lineHeight: '1.5' }}>
               Verifikasi bukti transfer DP 50%, ubah draf inquiry menjadi pesanan fix, perbarui tahapan koding SOP, dan catat sisa kuota revisi.
             </p>
           </div>
@@ -551,7 +603,7 @@ function doPost(e) {
 
             <button
               type="button"
-              onClick={() => setIsCreatingNew(true)}
+              onClick={handleOpenCreateModal}
               style={{
                 background: 'var(--prussian-blue)',
                 color: '#FFFFFF',
@@ -1069,8 +1121,8 @@ function doPost(e) {
                     </div>
 
                     {/* Developer Log Snippet */}
-                    <div style={{ fontSize: '0.86rem', color: '#334155', lineHeight: '1.5' }}>
-                      <span style={{ fontWeight: '700', color: '#0F172A' }}>Catatan Pengembang untuk Klien: </span>
+                    <div style={{ fontSize: '0.86rem', color: '#334155', lineHeight: '1.5', background: '#F8FAFC', borderLeft: '3px solid var(--prussian-blue)', padding: '10px 14px', borderRadius: '0 8px 8px 0' }}>
+                      <span style={{ fontWeight: '800', color: '#0F172A' }}>Catatan Pengembang (Live Log di /lacak): </span>
                       <span>"{ord.developerNotes}"</span>
                     </div>
 
@@ -1085,138 +1137,418 @@ function doPost(e) {
       </div>
 
       {/* ─────────────────────────────────────────────────────────────
-          MODAL: EDIT ORDER DETAILS
+          MODAL: EDIT ORDER DETAILS (Executive Anti-Slop Design)
           ───────────────────────────────────────────────────────────── */}
       {editingOrder && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(15, 23, 42, 0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999, padding: '20px' }}>
-          <div style={{ background: '#FFFFFF', borderRadius: '14px', maxWidth: '640px', width: '100%', maxHeight: '90vh', overflowY: 'auto', padding: '32px 28px', boxSizing: 'border-box' }}>
-            
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid #F1F5F9', paddingBottom: '14px' }}>
-              <div>
-                <h3 style={{ fontSize: '1.25rem', fontWeight: '900', color: '#0F172A', margin: 0 }}>
-                  Edit Rincian Pesanan
-                </h3>
-                <div style={{ fontSize: '0.82rem', color: '#64748B' }}>
-                  ID: {editingOrder.id}
+        <div 
+          style={{ 
+            position: 'fixed', 
+            inset: 0, 
+            background: 'rgba(15, 23, 42, 0.65)', 
+            backdropFilter: 'blur(4px)',
+            WebkitBackdropFilter: 'blur(4px)',
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center', 
+            zIndex: 9999, 
+            padding: '20px' 
+          }}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setEditingOrder(null);
+          }}
+        >
+          <div 
+            style={{ 
+              background: '#FFFFFF', 
+              borderRadius: '16px', 
+              maxWidth: '720px', 
+              width: '100%', 
+              maxHeight: '90vh', 
+              display: 'flex',
+              flexDirection: 'column',
+              boxShadow: '0 20px 40px -15px rgba(15, 23, 42, 0.25)',
+              border: '1px solid #CBD5E1',
+              boxSizing: 'border-box',
+              animation: 'adminModalSlideUp 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
+            }}
+          >
+            {/* Modal Header */}
+            <div style={{ padding: '22px 28px', borderBottom: '1px solid #E2E8F0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: '#EFF6FF', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Edit3 size={20} color="var(--prussian-blue)" />
+                </div>
+                <div>
+                  <h3 style={{ fontSize: '1.25rem', fontWeight: '900', color: '#0F172A', margin: 0, letterSpacing: '-0.01em' }}>
+                    Edit Rincian Pesanan
+                  </h3>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '2px' }}>
+                    <code style={{ background: '#F1F5F9', padding: '2px 6px', borderRadius: '4px', fontSize: '0.8rem', fontWeight: '800', color: '#0F172A' }}>
+                      {editingOrder.id}
+                    </code>
+                    <span style={{ fontSize: '0.8rem', color: '#64748B' }}>
+                      &bull; Terdaftar pada {editingOrder.orderDate}
+                    </span>
+                  </div>
                 </div>
               </div>
               <button
                 type="button"
                 onClick={() => setEditingOrder(null)}
-                style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#64748B', display: 'flex', padding: 0 }}
-                aria-label="Tutup"
+                style={{ 
+                  background: '#F8FAFC', 
+                  border: '1px solid #E2E8F0', 
+                  borderRadius: '8px', 
+                  width: '32px', 
+                  height: '32px', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center', 
+                  cursor: 'pointer', 
+                  color: '#64748B' 
+                }}
+                aria-label="Tutup modal"
               >
-                <X size={20} />
+                <X size={16} />
               </button>
             </div>
 
-            <form onSubmit={handleSaveEdit}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }}>
-                <div>
-                  <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '4px' }}>Nama Klien:</label>
-                  <input
-                    type="text"
-                    required
-                    value={editingOrder.clientName}
-                    onChange={(e) => setEditingOrder({ ...editingOrder, clientName: e.target.value })}
-                    style={{ width: '100%', boxSizing: 'border-box', padding: '10px', borderRadius: '6px', border: '1px solid #CBD5E1' }}
-                  />
+            {/* Modal Scrollable Body */}
+            <form onSubmit={handleSaveEdit} style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>
+              <div style={{ overflowY: 'auto', padding: '24px 28px', flex: 1 }}>
+                
+                {/* SECTION 1: DATA PEMESAN */}
+                <div style={{ marginBottom: '22px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                    <User size={15} color="#0F172A" />
+                    <span style={{ fontSize: '0.82rem', fontWeight: '800', color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                      1. Identitas Klien &amp; Kontak
+                    </span>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }}>
+                    <div>
+                      <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '6px' }}>
+                        Nama Klien / Instansi
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        className="admin-modal-input"
+                        value={editingOrder.clientName}
+                        onChange={(e) => setEditingOrder({ ...editingOrder, clientName: e.target.value })}
+                        style={{
+                          width: '100%',
+                          boxSizing: 'border-box',
+                          padding: '11px 13px',
+                          borderRadius: '7px',
+                          border: '1px solid #CBD5E1',
+                          fontSize: '0.9rem',
+                          color: '#0F172A',
+                          background: '#FFFFFF'
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '6px' }}>
+                        Nomor WhatsApp
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        className="admin-modal-input"
+                        value={editingOrder.clientPhone}
+                        onChange={(e) => setEditingOrder({ ...editingOrder, clientPhone: e.target.value })}
+                        style={{
+                          width: '100%',
+                          boxSizing: 'border-box',
+                          padding: '11px 13px',
+                          borderRadius: '7px',
+                          border: '1px solid #CBD5E1',
+                          fontSize: '0.9rem',
+                          color: '#0F172A',
+                          background: '#FFFFFF'
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '6px' }}>
+                      Email Klien (Opsional)
+                    </label>
+                    <input
+                      type="email"
+                      className="admin-modal-input"
+                      value={editingOrder.clientEmail || ''}
+                      onChange={(e) => setEditingOrder({ ...editingOrder, clientEmail: e.target.value })}
+                      placeholder="klien@email.com"
+                      style={{
+                        width: '100%',
+                        boxSizing: 'border-box',
+                        padding: '11px 13px',
+                        borderRadius: '7px',
+                        border: '1px solid #CBD5E1',
+                        fontSize: '0.9rem',
+                        color: '#0F172A',
+                        background: '#FFFFFF'
+                      }}
+                    />
+                  </div>
                 </div>
-                <div>
-                  <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '4px' }}>Nomor WhatsApp:</label>
-                  <input
-                    type="text"
-                    required
-                    value={editingOrder.clientPhone}
-                    onChange={(e) => setEditingOrder({ ...editingOrder, clientPhone: e.target.value })}
-                    style={{ width: '100%', boxSizing: 'border-box', padding: '10px', borderRadius: '6px', border: '1px solid #CBD5E1' }}
-                  />
+
+                {/* SECTION 2: RUANG LINGKUP & STATUS */}
+                <div style={{ marginBottom: '22px', paddingTop: '16px', borderTop: '1px solid #F1F5F9' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                    <Layers size={15} color="#0F172A" />
+                    <span style={{ fontSize: '0.82rem', fontWeight: '800', color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                      2. Ruang Lingkup Proyek &amp; Tipe Status
+                    </span>
+                  </div>
+
+                  <div style={{ marginBottom: '14px' }}>
+                    <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '6px' }}>
+                      Judul Proyek
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      className="admin-modal-input"
+                      value={editingOrder.projectTitle}
+                      onChange={(e) => setEditingOrder({ ...editingOrder, projectTitle: e.target.value })}
+                      style={{
+                        width: '100%',
+                        boxSizing: 'border-box',
+                        padding: '11px 13px',
+                        borderRadius: '7px',
+                        border: '1px solid #CBD5E1',
+                        fontSize: '0.9rem',
+                        color: '#0F172A',
+                        background: '#FFFFFF'
+                      }}
+                    />
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                    <div>
+                      <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '6px' }}>
+                        Tipe Status Proyek
+                      </label>
+                      <select
+                        className="admin-modal-select"
+                        value={editingOrder.statusType}
+                        onChange={(e) => setEditingOrder({ ...editingOrder, statusType: e.target.value })}
+                        style={{
+                          width: '100%',
+                          padding: '11px 13px',
+                          borderRadius: '7px',
+                          border: '1px solid #CBD5E1',
+                          background: '#FFFFFF',
+                          fontSize: '0.88rem',
+                          fontWeight: '700',
+                          color: '#0F172A',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        <option value="INQUIRY">INQUIRY (Draf Tanya / Belum DP)</option>
+                        <option value="FIX_ORDER">FIX ORDER (DP Lunas &amp; Dikerjakan)</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '6px' }}>
+                        Nomor Order Resmi
+                      </label>
+                      <input
+                        type="text"
+                        className="admin-modal-input"
+                        value={editingOrder.orderNumber || ''}
+                        onChange={(e) => setEditingOrder({ ...editingOrder, orderNumber: e.target.value })}
+                        placeholder="Contoh: ORD-AT-2026-0042"
+                        style={{
+                          width: '100%',
+                          boxSizing: 'border-box',
+                          padding: '11px 13px',
+                          borderRadius: '7px',
+                          border: '1px solid #CBD5E1',
+                          fontSize: '0.9rem',
+                          color: '#0F172A',
+                          background: '#FFFFFF'
+                        }}
+                      />
+                    </div>
+                  </div>
                 </div>
+
+                {/* SECTION 3: PARAMETER FINANSIAL */}
+                <div style={{ marginBottom: '22px', paddingTop: '16px', borderTop: '1px solid #F1F5F9' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                    <Calendar size={15} color="#0F172A" />
+                    <span style={{ fontSize: '0.82rem', fontWeight: '800', color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                      3. Nilai Investasi &amp; Status Pembayaran
+                    </span>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }}>
+                    <div>
+                      <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '6px' }}>
+                        Total Biaya Investasi (Rp)
+                      </label>
+                      <input
+                        type="number"
+                        className="admin-modal-input"
+                        value={editingOrder.totalInvestment}
+                        onChange={(e) => setEditingOrder({ ...editingOrder, totalInvestment: Number(e.target.value) })}
+                        style={{
+                          width: '100%',
+                          boxSizing: 'border-box',
+                          padding: '11px 13px',
+                          borderRadius: '7px',
+                          border: '1px solid #CBD5E1',
+                          fontSize: '0.92rem',
+                          fontWeight: '800',
+                          color: 'var(--prussian-blue)',
+                          background: '#FFFFFF'
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '6px' }}>
+                        Status Pembayaran DP
+                      </label>
+                      <select
+                        className="admin-modal-select"
+                        value={editingOrder.dpStatus}
+                        onChange={(e) => setEditingOrder({ ...editingOrder, dpStatus: e.target.value })}
+                        style={{
+                          width: '100%',
+                          padding: '11px 13px',
+                          borderRadius: '7px',
+                          border: '1px solid #CBD5E1',
+                          background: '#FFFFFF',
+                          fontSize: '0.88rem',
+                          fontWeight: '700',
+                          color: '#0F172A',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        <option value="MENUNGGU TRANSFER DP 50%">MENUNGGU TRANSFER DP 50%</option>
+                        <option value="LUNAS (DP 50%)">LUNAS (DP 50%)</option>
+                        <option value="LUNAS 100% (SELESAI)">LUNAS 100% (SELESAI)</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '6px' }}>
+                      Target Tanggal Selesai
+                    </label>
+                    <input
+                      type="text"
+                      className="admin-modal-input"
+                      value={editingOrder.estimatedCompletion || ''}
+                      onChange={(e) => setEditingOrder({ ...editingOrder, estimatedCompletion: e.target.value })}
+                      placeholder="Contoh: 15 November 2026"
+                      style={{
+                        width: '100%',
+                        boxSizing: 'border-box',
+                        padding: '11px 13px',
+                        borderRadius: '7px',
+                        border: '1px solid #CBD5E1',
+                        fontSize: '0.9rem',
+                        color: '#0F172A',
+                        background: '#FFFFFF'
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* SECTION 4: LOG PENGEMBANG */}
+                <div style={{ paddingTop: '16px', borderTop: '1px solid #F1F5F9' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                    <FileText size={15} color="#0F172A" />
+                    <span style={{ fontSize: '0.82rem', fontWeight: '800', color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                      4. Catatan Pengembang untuk Klien (Live Log di /lacak)
+                    </span>
+                  </div>
+
+                  <textarea
+                    rows={3}
+                    className="admin-modal-textarea"
+                    value={editingOrder.developerNotes || ''}
+                    onChange={(e) => setEditingOrder({ ...editingOrder, developerNotes: e.target.value })}
+                    style={{
+                      width: '100%',
+                      boxSizing: 'border-box',
+                      padding: '11px 13px',
+                      borderRadius: '7px',
+                      border: '1px solid #CBD5E1',
+                      fontSize: '0.88rem',
+                      color: '#0F172A',
+                      fontFamily: 'inherit',
+                      lineHeight: '1.5'
+                    }}
+                  />
+                  <span style={{ fontSize: '0.74rem', color: '#64748B', marginTop: '4px', display: 'block' }}>
+                    Catatan ini dibaca secara transparan oleh klien di pelacak status proyek.
+                  </span>
+                </div>
+
               </div>
 
-              <div style={{ marginBottom: '14px' }}>
-                <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '4px' }}>Judul Proyek:</label>
-                <input
-                  type="text"
-                  required
-                  value={editingOrder.projectTitle}
-                  onChange={(e) => setEditingOrder({ ...editingOrder, projectTitle: e.target.value })}
-                  style={{ width: '100%', boxSizing: 'border-box', padding: '10px', borderRadius: '6px', border: '1px solid #CBD5E1' }}
-                />
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }}>
-                <div>
-                  <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '4px' }}>Status Order:</label>
-                  <select
-                    value={editingOrder.statusType}
-                    onChange={(e) => setEditingOrder({ ...editingOrder, statusType: e.target.value })}
-                    style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #CBD5E1', background: '#FFFFFF' }}
+              {/* Modal Grounded Footer */}
+              <div 
+                style={{ 
+                  background: '#F8FAFC', 
+                  borderTop: '1px solid #E2E8F0', 
+                  padding: '16px 28px', 
+                  display: 'flex', 
+                  justifyContent: 'space-between', 
+                  alignItems: 'center', 
+                  borderRadius: '0 0 16px 16px',
+                  gap: '12px',
+                  flexWrap: 'wrap'
+                }}
+              >
+                <div style={{ fontSize: '0.82rem', color: '#64748B' }}>
+                  ID: <strong>{editingOrder.id}</strong>
+                </div>
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <button
+                    type="button"
+                    onClick={() => setEditingOrder(null)}
+                    style={{
+                      background: '#FFFFFF',
+                      color: '#475569',
+                      border: '1px solid #CBD5E1',
+                      borderRadius: '8px',
+                      padding: '10px 18px',
+                      fontSize: '0.88rem',
+                      fontWeight: '700',
+                      cursor: 'pointer'
+                    }}
                   >
-                    <option value="INQUIRY">INQUIRY (Draf Tanya / Belum DP)</option>
-                    <option value="FIX_ORDER">FIX ORDER (DP Lunas &amp; Dikerjakan)</option>
-                  </select>
-                </div>
-                <div>
-                  <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '4px' }}>Nomor Order Resmi:</label>
-                  <input
-                    type="text"
-                    value={editingOrder.orderNumber || ''}
-                    onChange={(e) => setEditingOrder({ ...editingOrder, orderNumber: e.target.value })}
-                    placeholder="Contoh: ORD-AT-2026-0042"
-                    style={{ width: '100%', boxSizing: 'border-box', padding: '10px', borderRadius: '6px', border: '1px solid #CBD5E1' }}
-                  />
-                </div>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }}>
-                <div>
-                  <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '4px' }}>Total Biaya Investasi (Rp):</label>
-                  <input
-                    type="number"
-                    value={editingOrder.totalInvestment}
-                    onChange={(e) => setEditingOrder({ ...editingOrder, totalInvestment: Number(e.target.value) })}
-                    style={{ width: '100%', boxSizing: 'border-box', padding: '10px', borderRadius: '6px', border: '1px solid #CBD5E1' }}
-                  />
-                </div>
-                <div>
-                  <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '4px' }}>Status Pembayaran DP:</label>
-                  <select
-                    value={editingOrder.dpStatus}
-                    onChange={(e) => setEditingOrder({ ...editingOrder, dpStatus: e.target.value })}
-                    style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #CBD5E1', background: '#FFFFFF' }}
+                    Batal
+                  </button>
+                  <button
+                    type="submit"
+                    style={{
+                      background: 'var(--prussian-blue)',
+                      color: '#FFFFFF',
+                      border: 'none',
+                      borderRadius: '8px',
+                      padding: '10px 22px',
+                      fontSize: '0.9rem',
+                      fontWeight: '800',
+                      cursor: 'pointer',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '8px'
+                    }}
                   >
-                    <option value="MENUNGGU TRANSFER DP 50%">MENUNGGU TRANSFER DP 50%</option>
-                    <option value="LUNAS (DP 50%)">LUNAS (DP 50%)</option>
-                    <option value="LUNAS 100% (SELESAI)">LUNAS 100% (SELESAI)</option>
-                  </select>
+                    <Save size={16} />
+                    <span>Simpan Perubahan</span>
+                  </button>
                 </div>
-              </div>
-
-              <div style={{ marginBottom: '14px' }}>
-                <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '4px' }}>Catatan Pengembang untuk Klien (Live Log):</label>
-                <textarea
-                  rows={3}
-                  value={editingOrder.developerNotes || ''}
-                  onChange={(e) => setEditingOrder({ ...editingOrder, developerNotes: e.target.value })}
-                  style={{ width: '100%', boxSizing: 'border-box', padding: '10px', borderRadius: '6px', border: '1px solid #CBD5E1', fontFamily: 'inherit' }}
-                />
-              </div>
-
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '20px' }}>
-                <button
-                  type="button"
-                  onClick={() => setEditingOrder(null)}
-                  style={{ background: '#F1F5F9', border: '1px solid #CBD5E1', padding: '10px 18px', borderRadius: '6px', fontWeight: '700', cursor: 'pointer' }}
-                >
-                  Batal
-                </button>
-                <button
-                  type="submit"
-                  style={{ background: 'var(--prussian-blue)', color: '#FFFFFF', border: 'none', padding: '10px 20px', borderRadius: '6px', fontWeight: '800', cursor: 'pointer' }}
-                >
-                  Simpan Perubahan
-                </button>
               </div>
             </form>
 
@@ -1225,156 +1557,428 @@ function doPost(e) {
       )}
 
       {/* ─────────────────────────────────────────────────────────────
-          MODAL: CREATE NEW MANUAL ORDER
+          MODAL: CREATE NEW MANUAL ORDER (Executive Anti-Slop Design)
           ───────────────────────────────────────────────────────────── */}
       {isCreatingNew && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(15, 23, 42, 0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999, padding: '20px' }}>
-          <div style={{ background: '#FFFFFF', borderRadius: '14px', maxWidth: '640px', width: '100%', maxHeight: '90vh', overflowY: 'auto', padding: '32px 28px', boxSizing: 'border-box' }}>
-            
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid #F1F5F9', paddingBottom: '14px' }}>
-              <h3 style={{ fontSize: '1.25rem', fontWeight: '900', color: '#0F172A', margin: 0 }}>
-                Tambah Pesanan Baru Manual
-              </h3>
+        <div 
+          style={{ 
+            position: 'fixed', 
+            inset: 0, 
+            background: 'rgba(15, 23, 42, 0.65)', 
+            backdropFilter: 'blur(4px)',
+            WebkitBackdropFilter: 'blur(4px)',
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center', 
+            zIndex: 9999, 
+            padding: '20px' 
+          }}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setIsCreatingNew(false);
+          }}
+        >
+          <div 
+            style={{ 
+              background: '#FFFFFF', 
+              borderRadius: '16px', 
+              maxWidth: '720px', 
+              width: '100%', 
+              maxHeight: '90vh', 
+              display: 'flex',
+              flexDirection: 'column',
+              boxShadow: '0 20px 40px -15px rgba(15, 23, 42, 0.25)',
+              border: '1px solid #CBD5E1',
+              boxSizing: 'border-box',
+              animation: 'adminModalSlideUp 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
+            }}
+          >
+            {/* Modal Header */}
+            <div style={{ padding: '22px 28px', borderBottom: '1px solid #E2E8F0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: '#EFF6FF', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <FolderPlus size={20} color="var(--prussian-blue)" />
+                </div>
+                <div>
+                  <h3 style={{ fontSize: '1.25rem', fontWeight: '900', color: '#0F172A', margin: 0, letterSpacing: '-0.01em' }}>
+                    Tambah Pesanan Baru Manual
+                  </h3>
+                  <p style={{ fontSize: '0.84rem', color: '#64748B', margin: '2px 0 0 0' }}>
+                    Registrasi proyek langsung dari kesepakatan WhatsApp atau offline ke antrean kerja sistem.
+                  </p>
+                </div>
+              </div>
               <button
                 type="button"
                 onClick={() => setIsCreatingNew(false)}
-                style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#64748B', display: 'flex', padding: 0 }}
-                aria-label="Tutup"
+                style={{ 
+                  background: '#F8FAFC', 
+                  border: '1px solid #E2E8F0', 
+                  borderRadius: '8px', 
+                  width: '32px', 
+                  height: '32px', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center', 
+                  cursor: 'pointer', 
+                  color: '#64748B' 
+                }}
+                aria-label="Tutup modal"
               >
-                <X size={20} />
+                <X size={16} />
               </button>
             </div>
 
-            <form onSubmit={handleCreateNewOrder}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }}>
-                <div>
-                  <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '4px' }}>Nama Klien:</label>
-                  <input
-                    type="text"
-                    name="clientName"
-                    required
-                    placeholder="Contoh: Maya Anggraini"
-                    style={{ width: '100%', boxSizing: 'border-box', padding: '10px', borderRadius: '6px', border: '1px solid #CBD5E1' }}
-                  />
+            {/* Modal Scrollable Body */}
+            <form onSubmit={handleCreateNewOrder} style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>
+              <div style={{ overflowY: 'auto', padding: '24px 28px', flex: 1 }}>
+                
+                {/* SECTION 1: IDENTITAS PEMESAN */}
+                <div style={{ marginBottom: '22px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                    <User size={15} color="#0F172A" />
+                    <span style={{ fontSize: '0.82rem', fontWeight: '800', color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                      1. Identitas Klien &amp; Saluran Komunikasi
+                    </span>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }}>
+                    <div>
+                      <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '6px' }}>
+                        Nama Klien / Instansi
+                      </label>
+                      <input
+                        type="text"
+                        name="clientName"
+                        required
+                        className="admin-modal-input"
+                        placeholder="Contoh: Maya Anggraini / PT Cipta Solusi"
+                        style={{
+                          width: '100%',
+                          boxSizing: 'border-box',
+                          padding: '11px 13px',
+                          borderRadius: '7px',
+                          border: '1px solid #CBD5E1',
+                          fontSize: '0.9rem',
+                          color: '#0F172A',
+                          background: '#FFFFFF'
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '6px' }}>
+                        Nomor WhatsApp Aktif
+                      </label>
+                      <input
+                        type="text"
+                        name="clientPhone"
+                        required
+                        className="admin-modal-input"
+                        placeholder="Contoh: 081234567890"
+                        style={{
+                          width: '100%',
+                          boxSizing: 'border-box',
+                          padding: '11px 13px',
+                          borderRadius: '7px',
+                          border: '1px solid #CBD5E1',
+                          fontSize: '0.9rem',
+                          color: '#0F172A',
+                          background: '#FFFFFF'
+                        }}
+                      />
+                      <span style={{ fontSize: '0.74rem', color: '#64748B', marginTop: '4px', display: 'block' }}>
+                        Digunakan klien untuk lacak status di /lacak
+                      </span>
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                    <div>
+                      <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '6px' }}>
+                        Email Klien (Opsional)
+                      </label>
+                      <input
+                        type="email"
+                        name="clientEmail"
+                        className="admin-modal-input"
+                        placeholder="klien@email.com"
+                        style={{
+                          width: '100%',
+                          boxSizing: 'border-box',
+                          padding: '11px 13px',
+                          borderRadius: '7px',
+                          border: '1px solid #CBD5E1',
+                          fontSize: '0.9rem',
+                          color: '#0F172A',
+                          background: '#FFFFFF'
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '6px' }}>
+                        Status Awal Pesanan
+                      </label>
+                      <select
+                        name="statusType"
+                        className="admin-modal-select"
+                        value={newOrderForm.statusType}
+                        onChange={(e) => setNewOrderForm({ ...newOrderForm, statusType: e.target.value })}
+                        style={{
+                          width: '100%',
+                          padding: '11px 13px',
+                          borderRadius: '7px',
+                          border: '1px solid #CBD5E1',
+                          background: '#FFFFFF',
+                          fontSize: '0.9rem',
+                          fontWeight: '700',
+                          color: '#0F172A',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        <option value="FIX_ORDER">FIX ORDER (DP 50% Sudah Diterima &amp; Antrean Kerja)</option>
+                        <option value="INQUIRY">INQUIRY (Draf Tanya / Menunggu Bukti Transfer DP)</option>
+                      </select>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '4px' }}>Nomor WhatsApp:</label>
-                  <input
-                    type="text"
-                    name="clientPhone"
-                    required
-                    placeholder="Contoh: 081234567890"
-                    style={{ width: '100%', boxSizing: 'border-box', padding: '10px', borderRadius: '6px', border: '1px solid #CBD5E1' }}
-                  />
+
+                {/* SECTION 2: SPESIFIKASI PROYEK */}
+                <div style={{ marginBottom: '22px', paddingTop: '16px', borderTop: '1px solid #F1F5F9' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                    <Layers size={15} color="#0F172A" />
+                    <span style={{ fontSize: '0.82rem', fontWeight: '800', color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                      2. Ruang Lingkup &amp; Paket Layanan
+                    </span>
+                  </div>
+
+                  <div style={{ marginBottom: '14px' }}>
+                    <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '6px' }}>
+                      Judul / Kebutuhan Utama Proyek
+                    </label>
+                    <input
+                      type="text"
+                      name="projectTitle"
+                      required
+                      className="admin-modal-input"
+                      placeholder="Contoh: Website Profil Klinik Gigi &amp; Form Reservasi Direct WhatsApp"
+                      style={{
+                        width: '100%',
+                        boxSizing: 'border-box',
+                        padding: '11px 13px',
+                        borderRadius: '7px',
+                        border: '1px solid #CBD5E1',
+                        fontSize: '0.9rem',
+                        color: '#0F172A',
+                        background: '#FFFFFF'
+                      }}
+                    />
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                    <div>
+                      <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '6px' }}>
+                        Pilihan Paket Layanan
+                      </label>
+                      <select
+                        name="packageId"
+                        className="admin-modal-select"
+                        value={newOrderForm.packageId}
+                        onChange={(e) => handleNewOrderPackageChange(e.target.value)}
+                        style={{
+                          width: '100%',
+                          padding: '11px 13px',
+                          borderRadius: '7px',
+                          border: '1px solid #CBD5E1',
+                          background: '#FFFFFF',
+                          fontSize: '0.88rem',
+                          fontWeight: '700',
+                          color: '#0F172A',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        {PACKAGES.map(p => (
+                          <option key={p.id} value={p.id}>
+                            {p.name} — Rp {p.minPrice.toLocaleString('id-ID')}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '6px' }}>
+                        Kategori Segmentasi
+                      </label>
+                      <select
+                        name="category"
+                        className="admin-modal-select"
+                        value={newOrderForm.category}
+                        onChange={(e) => setNewOrderForm({ ...newOrderForm, category: e.target.value })}
+                        style={{
+                          width: '100%',
+                          padding: '11px 13px',
+                          borderRadius: '7px',
+                          border: '1px solid #CBD5E1',
+                          background: '#FFFFFF',
+                          fontSize: '0.88rem',
+                          fontWeight: '700',
+                          color: '#0F172A',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        <option value="UMKM & Bisnis">UMKM &amp; Bisnis</option>
+                        <option value="Standard Enterprise">Company Profile Korporat</option>
+                        <option value="Mahasiswa & Akademisi">Tugas Kuliah / Modul Skripsi</option>
+                      </select>
+                    </div>
+                  </div>
                 </div>
+
+                {/* SECTION 3: KEUANGAN & TARGET SELESAI */}
+                <div style={{ marginBottom: '22px', paddingTop: '16px', borderTop: '1px solid #F1F5F9' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                    <Calendar size={15} color="#0F172A" />
+                    <span style={{ fontSize: '0.82rem', fontWeight: '800', color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                      3. Nilai Investasi &amp; Target Pengerjaan
+                    </span>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                    <div>
+                      <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '6px' }}>
+                        Total Biaya Disepakati (Rp)
+                      </label>
+                      <input
+                        type="number"
+                        name="totalInvestment"
+                        className="admin-modal-input"
+                        value={newOrderForm.totalInvestment}
+                        onChange={(e) => setNewOrderForm({ ...newOrderForm, totalInvestment: Number(e.target.value) })}
+                        style={{
+                          width: '100%',
+                          boxSizing: 'border-box',
+                          padding: '11px 13px',
+                          borderRadius: '7px',
+                          border: '1px solid #CBD5E1',
+                          fontSize: '0.92rem',
+                          fontWeight: '800',
+                          color: 'var(--prussian-blue)',
+                          background: '#FFFFFF'
+                        }}
+                      />
+                      <span style={{ fontSize: '0.74rem', color: '#64748B', marginTop: '4px', display: 'block' }}>
+                        Uang Muka DP 50%: <strong>{formatRupiah(Math.round((newOrderForm.totalInvestment || 0) / 2))}</strong>
+                      </span>
+                    </div>
+                    <div>
+                      <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '6px' }}>
+                        Target Tanggal Selesai
+                      </label>
+                      <input
+                        type="text"
+                        name="estimatedCompletion"
+                        className="admin-modal-input"
+                        placeholder="Contoh: 18 November 2026 atau 7 Hari Kerja"
+                        defaultValue="7 Hari Kerja"
+                        style={{
+                          width: '100%',
+                          boxSizing: 'border-box',
+                          padding: '11px 13px',
+                          borderRadius: '7px',
+                          border: '1px solid #CBD5E1',
+                          fontSize: '0.9rem',
+                          color: '#0F172A',
+                          background: '#FFFFFF'
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* SECTION 4: LOG PENGEMBANG AWAL */}
+                <div style={{ paddingTop: '16px', borderTop: '1px solid #F1F5F9' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                    <FileText size={15} color="#0F172A" />
+                    <span style={{ fontSize: '0.82rem', fontWeight: '800', color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                      4. Catatan Pengembang Awal (Live Log di /lacak)
+                    </span>
+                  </div>
+
+                  <textarea
+                    name="developerNotes"
+                    rows={2}
+                    className="admin-modal-textarea"
+                    defaultValue="Pesanan resmi terdaftar. Menyiapkan repositori kode sumber dan perancangan skema basis data."
+                    style={{
+                      width: '100%',
+                      boxSizing: 'border-box',
+                      padding: '11px 13px',
+                      borderRadius: '7px',
+                      border: '1px solid #CBD5E1',
+                      fontSize: '0.88rem',
+                      color: '#0F172A',
+                      fontFamily: 'inherit',
+                      lineHeight: '1.5'
+                    }}
+                  />
+                  <span style={{ fontSize: '0.74rem', color: '#64748B', marginTop: '4px', display: 'block' }}>
+                    Catatan ini akan langsung terlihat oleh klien saat memasukkan nomor tiket di halaman /lacak.
+                  </span>
+                </div>
+
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }}>
-                <div>
-                  <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '4px' }}>Email (Opsional):</label>
-                  <input
-                    type="email"
-                    name="clientEmail"
-                    placeholder="klien@email.com"
-                    style={{ width: '100%', boxSizing: 'border-box', padding: '10px', borderRadius: '6px', border: '1px solid #CBD5E1' }}
-                  />
+              {/* Modal Grounded Footer */}
+              <div 
+                style={{ 
+                  background: '#F8FAFC', 
+                  borderTop: '1px solid #E2E8F0', 
+                  padding: '16px 28px', 
+                  display: 'flex', 
+                  justifyContent: 'space-between', 
+                  alignItems: 'center', 
+                  borderRadius: '0 0 16px 16px',
+                  gap: '12px',
+                  flexWrap: 'wrap'
+                }}
+              >
+                <div style={{ fontSize: '0.82rem', color: '#64748B' }}>
+                  Tersinkronisasi ke <strong>/lacak</strong> &amp; <strong>Spreadsheet</strong>
                 </div>
-                <div>
-                  <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '4px' }}>Status Awal:</label>
-                  <select
-                    name="statusType"
-                    defaultValue="FIX_ORDER"
-                    style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #CBD5E1', background: '#FFFFFF' }}
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <button
+                    type="button"
+                    onClick={() => setIsCreatingNew(false)}
+                    style={{
+                      background: '#FFFFFF',
+                      color: '#475569',
+                      border: '1px solid #CBD5E1',
+                      borderRadius: '8px',
+                      padding: '10px 18px',
+                      fontSize: '0.88rem',
+                      fontWeight: '700',
+                      cursor: 'pointer'
+                    }}
                   >
-                    <option value="FIX_ORDER">FIX ORDER (DP 50% Sudah Diterima)</option>
-                    <option value="INQUIRY">INQUIRY (Hanya Nanya / Belum DP)</option>
-                  </select>
-                </div>
-              </div>
-
-              <div style={{ marginBottom: '14px' }}>
-                <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '4px' }}>Judul / Kebutuhan Proyek:</label>
-                <input
-                  type="text"
-                  name="projectTitle"
-                  required
-                  placeholder="Contoh: Website Profil Klinik Gigi & Form Reservasi"
-                  style={{ width: '100%', boxSizing: 'border-box', padding: '10px', borderRadius: '6px', border: '1px solid #CBD5E1' }}
-                />
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }}>
-                <div>
-                  <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '4px' }}>Paket Layanan:</label>
-                  <select
-                    name="packageId"
-                    defaultValue="umkm-katalog"
-                    style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #CBD5E1', background: '#FFFFFF' }}
+                    Batal
+                  </button>
+                  <button
+                    type="submit"
+                    style={{
+                      background: 'var(--prussian-blue)',
+                      color: '#FFFFFF',
+                      border: 'none',
+                      borderRadius: '8px',
+                      padding: '10px 22px',
+                      fontSize: '0.9rem',
+                      fontWeight: '800',
+                      cursor: 'pointer',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '8px'
+                    }}
                   >
-                    {PACKAGES.map(p => (
-                      <option key={p.id} value={p.id}>{p.name} ({formatRupiah(p.minPrice)})</option>
-                    ))}
-                  </select>
+                    <Plus size={16} />
+                    <span>Daftarkan ke Sistem</span>
+                  </button>
                 </div>
-                <div>
-                  <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '4px' }}>Kategori Proyek:</label>
-                  <select
-                    name="category"
-                    defaultValue="UMKM & Bisnis"
-                    style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #CBD5E1', background: '#FFFFFF' }}
-                  >
-                    <option value="UMKM & Bisnis">UMKM &amp; Bisnis</option>
-                    <option value="Standard Enterprise">Company Profile Korporat</option>
-                    <option value="Mahasiswa & Akademisi">Tugas Kuliah / Skripsi</option>
-                  </select>
-                </div>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }}>
-                <div>
-                  <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '4px' }}>Total Biaya Disepakati (Rp):</label>
-                  <input
-                    type="number"
-                    name="totalInvestment"
-                    defaultValue={300000}
-                    style={{ width: '100%', boxSizing: 'border-box', padding: '10px', borderRadius: '6px', border: '1px solid #CBD5E1' }}
-                  />
-                </div>
-                <div>
-                  <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '4px' }}>Target Tanggal Selesai:</label>
-                  <input
-                    type="text"
-                    name="estimatedCompletion"
-                    placeholder="Contoh: 18 November 2026"
-                    style={{ width: '100%', boxSizing: 'border-box', padding: '10px', borderRadius: '6px', border: '1px solid #CBD5E1' }}
-                  />
-                </div>
-              </div>
-
-              <div style={{ marginBottom: '14px' }}>
-                <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '4px' }}>Catatan Pengembang Awal:</label>
-                <textarea
-                  name="developerNotes"
-                  rows={2}
-                  defaultValue="Pesanan resmi terdaftar. Menyiapkan repositori kode sumber dan skema basis data."
-                  style={{ width: '100%', boxSizing: 'border-box', padding: '10px', borderRadius: '6px', border: '1px solid #CBD5E1', fontFamily: 'inherit' }}
-                />
-              </div>
-
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '20px' }}>
-                <button
-                  type="button"
-                  onClick={() => setIsCreatingNew(false)}
-                  style={{ background: '#F1F5F9', border: '1px solid #CBD5E1', padding: '10px 18px', borderRadius: '6px', fontWeight: '700', cursor: 'pointer' }}
-                >
-                  Batal
-                </button>
-                <button
-                  type="submit"
-                  style={{ background: 'var(--prussian-blue)', color: '#FFFFFF', border: 'none', padding: '10px 20px', borderRadius: '6px', fontWeight: '800', cursor: 'pointer' }}
-                >
-                  Tambahkan ke Sistem
-                </button>
               </div>
             </form>
 
