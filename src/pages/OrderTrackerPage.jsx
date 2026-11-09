@@ -22,6 +22,7 @@ import {
 import PageHeader from '../components/molecules/PageHeader';
 import { formatRupiah } from '../utils/documentEngine';
 import { BUSINESS_INFO, PACKAGES } from '../data/catalogData';
+import { findOrderByQuery } from '../utils/orderStorage';
 
 // Standard 5-Step SOP Pipeline
 const SOP_STAGES = [
@@ -184,9 +185,17 @@ export default function OrderTrackerPage() {
     const query = (rawQuery || searchInput || '').trim();
     if (!query) return;
 
+    // 1. Check in unified orderStorage (LocalStorage + Central Database)
+    const storedMatch = findOrderByQuery(query);
+    if (storedMatch) {
+      setActiveOrder(storedMatch);
+      setSearchStatus('found');
+      return;
+    }
+
     const normalizedQuery = query.toLowerCase().replace(/[\s-]/g, '');
 
-    // 1. Check in curated MOCK_ORDERS by ID, orderNumber, or clientPhone
+    // 2. Check in curated MOCK_ORDERS by ID, orderNumber, or clientPhone
     const matched = MOCK_ORDERS.find(ord => {
       const ordIdNorm = (ord.id || '').toLowerCase().replace(/[\s-]/g, '');
       const ordNoNorm = (ord.orderNumber || '').toLowerCase().replace(/[\s-]/g, '');

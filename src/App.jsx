@@ -15,6 +15,7 @@ const OrderBriefPage = lazy(() => import('./pages/OrderBriefPage'));
 const FAQPage = lazy(() => import('./pages/FAQPage'));
 const TermsPrivacyPage = lazy(() => import('./pages/TermsPrivacyPage'));
 const OrderTrackerPage = lazy(() => import('./pages/OrderTrackerPage'));
+const AdminDashboardPage = lazy(() => import('./pages/AdminDashboardPage'));
 const ErrorPage = lazy(() => import('./pages/ErrorPage'));
 
 // Lightweight page loading fallback
@@ -94,8 +95,10 @@ function AppContent() {
     '/eksklusi-server',
     '/alur-sop',
     '/pesan',
+    '/lacak',
     '/faq',
-    '/ketentuan'
+    '/ketentuan',
+    '/admin'
   ];
 
   // If path is not a valid main route, or explicitly an error route, render standalone error view without navbar & footer
@@ -106,10 +109,12 @@ function AppContent() {
     location.pathname === '/500' || 
     location.pathname === '/503';
 
+  const isAdminPage = location.pathname.startsWith('/admin');
+
   return (
     <div className="app-layout" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       {/* Full-width sticky Navbar - only rendered for standard portal pages */}
-      {!isErrorPage && <Navbar />}
+      {!isErrorPage && !isAdminPage && <Navbar />}
 
       {/* Multi-page Dynamic Body with Suspense code splitting */}
       <main style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
@@ -123,6 +128,7 @@ function AppContent() {
             <Route path="/lacak" element={<OrderTrackerPage />} />
             <Route path="/faq" element={<FAQPage />} />
             <Route path="/ketentuan" element={<TermsPrivacyPage />} />
+            <Route path="/admin" element={<AdminDashboardPage />} />
             <Route path="/error" element={<ErrorPage defaultCode={404} />} />
             <Route path="/error/:code" element={<ErrorPage />} />
             <Route path="/404" element={<ErrorPage defaultCode={404} />} />
@@ -134,7 +140,7 @@ function AppContent() {
       </main>
 
       {/* Corporate Footer - only rendered for standard portal pages */}
-      {!isErrorPage && <Footer />}
+      {!isErrorPage && !isAdminPage && <Footer />}
     </div>
   );
 }
