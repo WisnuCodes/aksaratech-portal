@@ -27,7 +27,9 @@ import {
   User,
   Calendar,
   Layers,
-  X
+  X,
+  History,
+  Phone
 } from 'lucide-react';
 import { 
   getAllOrders, 
@@ -71,6 +73,11 @@ export default function AdminDashboardPage() {
     statusType: 'FIX_ORDER'
   });
   const [actionSuccessMsg, setActionSuccessMsg] = useState('');
+
+  // Revision Note Modal State
+  const [revisionModalOrder, setRevisionModalOrder] = useState(null);
+  const [revisionNoteInput, setRevisionNoteInput] = useState('');
+  const [revisionNoteError, setRevisionNoteError] = useState('');
 
   // Google Sheet Webhook Config State
   const [sheetConfig, setSheetConfig] = useState(getSheetConfig());
@@ -137,22 +144,73 @@ export default function AdminDashboardPage() {
     triggerSuccess(`Inquiry ${order.id} berhasil diverifikasi menjadi Fix Order (${nextOrderNumber})!`);
   };
 
-  // Increment Revision Quota Handler
-  const handleIncrementRevision = (order) => {
-    if (order.revisionQuotaUsed >= order.revisionQuotaTotal) {
-      alert(`Kuota revisi standar maksimal (${order.revisionQuotaTotal}x) telah habis. Revisi tambahan wajib dikenakan add-on pemeliharaan.`);
+  // Revision Quota & Notes Handlers
+  const handleOpenRevisionModal = (order) => {
+    if ((order.revisionQuotaUsed || 0) >= (order.revisionQuotaTotal || 3)) {
+      alert(`Kuota revisi standar maksimal (${order.revisionQuotaTotal || 3}x) untuk pesanan ${order.id} telah habis. Silakan tawarkan paket add-on pemeliharaan untuk revisi tambahan.`);
+      return;
+    }
+    setRevisionModalOrder(order);
+    setRevisionNoteInput('');
+    setRevisionNoteError('');
+  };
+
+  const handleSaveRevisionRecord = (e) => {
+    e.preventDefault();
+    if (!revisionModalOrder) return;
+    if (!revisionNoteInput.trim()) {
+      setRevisionNoteError('Silakan tuliskan rincian catatan revisi klien terlebih dahulu.');
       return;
     }
 
+    const currentUsed = revisionModalOrder.revisionQuotaUsed || 0;
+    const nextSessionNum = currentUsed + 1;
+    const todayFormatted = new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' });
+
+    const newRecord = {
+      sessionNumber: nextSessionNum,
+      date: todayFormatted,
+      note: revisionNoteInput.trim(),
+      timestamp: new Date().toISOString()
+    };
+
+    const updatedHistory = [...(revisionModalOrder.revisionHistory || []), newRecord];
     const updated = {
-      ...order,
-      revisionQuotaUsed: order.revisionQuotaUsed + 1,
-      developerNotes: `Sesi revisi ke-${order.revisionQuotaUsed + 1} sedang diproses oleh pengembang.`
+      ...revisionModalOrder,
+      revisionQuotaUsed: nextSessionNum,
+      revisionHistory: updatedHistory,
+      developerNotes: `Sesi revisi ke-${nextSessionNum} (${todayFormatted}): ${revisionNoteInput.trim()}`
     };
 
     updateOrder(updated);
     setOrders(getAllOrders());
-    triggerSuccess(`Sesi revisi ke-${updated.revisionQuotaUsed} berhasil dicatat untuk ${order.clientName}.`);
+    setRevisionModalOrder(null);
+    setRevisionNoteInput('');
+    triggerSuccess(`Catatan Sesi Revisi ke-${nextSessionNum} untuk pesanan ${updated.id} berhasil disimpan!`);
+  };
+
+  const handleDeleteLastRevision = (order) => {
+    if (!order.revisionHistory || order.revisionHistory.length === 0) return;
+    const lastSession = order.revisionHistory[order.revisionHistory.length - 1];
+    if (window.confirm(`Batalkan / hapus catatan Sesi Revisi ke-${lastSession.sessionNumber} ("${lastSession.note}")? Kuota terpakai akan berkurang 1.`)) {
+      const updatedHistory = order.revisionHistory.slice(0, -1);
+      const updatedUsed = Math.max(0, (order.revisionQuotaUsed || 1) - 1);
+      const lastRemaining = updatedHistory[updatedHistory.length - 1];
+      const updatedNotes = lastRemaining 
+        ? `Sesi revisi ke-${lastRemaining.sessionNumber} (${lastRemaining.date}): ${lastRemaining.note}` 
+        : 'Revisi dibatalkan. Menyiapkan repositori kode sumber dan antrean pengerjaan.';
+
+      const updated = {
+        ...order,
+        revisionQuotaUsed: updatedUsed,
+        revisionHistory: updatedHistory,
+        developerNotes: updatedNotes
+      };
+
+      updateOrder(updated);
+      setOrders(getAllOrders());
+      triggerSuccess(`Catatan Sesi Revisi ke-${lastSession.sessionNumber} berhasil dibatalkan.`);
+    }
   };
 
   // Update Stage Number Handler
@@ -169,7 +227,7 @@ export default function AdminDashboardPage() {
 
   // Delete Order Handler
   const handleDeleteOrder = (order) => {
-    if (window.confirm(`Hapus catatan pesanan ${order.id} (${order.clientName})? Data akan dihapus secara permanen dari sistem dan pelacak.`)) {
+    if (window.confirm(`Hapus catatan pesanan ${order.id} (${order.projectTitle})? Data akan dihapus secara permanen dari sistem dan pelacak.`)) {
       deleteOrder(order.id);
       setOrders(getAllOrders());
       triggerSuccess(`Pesanan ${order.id} berhasil dihapus permanen.`);
@@ -229,7 +287,7 @@ export default function AdminDashboardPage() {
     }
   };
 
-  // Save New Manual Order Form
+  // Save New Manual Order Form (Tanpa kolom Nama Klien)
   const handleCreateNewOrder = (e) => {
     e.preventDefault();
     const form = e.target;
@@ -240,9 +298,9 @@ export default function AdminDashboardPage() {
       id: generateInquiryId(),
       orderNumber: form.statusType.value === 'FIX_ORDER' ? `ORD-AT-2026-${String(Math.floor(Math.random() * 900) + 100)}` : 'MENUNGGU-DP',
       statusType: form.statusType.value,
-      clientName: form.clientName.value.trim(),
+      clientName: '-',
       clientPhone: form.clientPhone.value.trim(),
-      clientEmail: form.clientEmail.value.trim(),
+      clientEmail: form.clientEmail?.value?.trim() || '-',
       projectTitle: form.projectTitle.value.trim(),
       category: form.category.value,
       packageId: selectedPkg.id,
@@ -257,6 +315,7 @@ export default function AdminDashboardPage() {
       currentStageNumber: form.statusType.value === 'FIX_ORDER' ? 2 : 1,
       revisionQuotaTotal: 3,
       revisionQuotaUsed: 0,
+      revisionHistory: [],
       developerNotes: form.developerNotes.value.trim() || 'Pesanan resmi terdaftar. Menyiapkan repositori kode sumber dan skema basis data.',
       deliverablesPreview: selectedPkg.deliverables || ['Master Source Code (.zip)', 'Database Relasional (.sql)']
     };
@@ -264,7 +323,7 @@ export default function AdminDashboardPage() {
     createOrder(newOrder);
     setOrders(getAllOrders());
     setIsCreatingNew(false);
-    triggerSuccess(`Pesanan baru ${newOrder.id} (${newOrder.clientName}) berhasil ditambahkan ke sistem!`);
+    triggerSuccess(`Pesanan baru ${newOrder.id} (${newOrder.projectTitle}) berhasil ditambahkan ke sistem!`);
   };
 
   // Save Sheet Config Handler
@@ -287,7 +346,7 @@ export default function AdminDashboardPage() {
       id: generateInquiryId(),
       orderNumber: 'TEST-ORD-001',
       statusType: 'FIX_ORDER',
-      clientName: 'Uji Coba Sistem Aksara Tech',
+      clientName: '-',
       clientPhone: '081234567890',
       clientEmail: 'test@aksaratech.com',
       projectTitle: 'Uji Konektivitas Google Spreadsheet Webhook',
@@ -377,7 +436,7 @@ function doGet(e) {
   })).setMimeType(ContentService.MimeType.JSON);
 }
 
-// 2. Endpoint penerima data pesanan otomatis
+// 2. Endpoint penerima data pesanan otomatis (Tanpa Kolom Nama Klien)
 function doPost(e) {
   try {
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
@@ -389,7 +448,6 @@ function doPost(e) {
         "ID Tiket",
         "Nomor Order",
         "Tipe Status",
-        "Nama Klien",
         "Nomor WhatsApp",
         "Email",
         "Judul Proyek",
@@ -399,10 +457,20 @@ function doPost(e) {
         "Uang Muka DP 50% (Rp)",
         "Status Pembayaran",
         "Tahap SOP",
+        "Kuota Revisi",
+        "Riwayat Catatan Revisi",
         "Catatan Pengembang",
         "Waktu Pencatatan"
       ]);
-      sheet.getRange(1, 1, 1, 15).setFontWeight("bold");
+      sheet.getRange(1, 1, 1, 16).setFontWeight("bold");
+    }
+    
+    // Format riwayat revisi menjadi teks ringkas
+    var revLogs = "-";
+    if (data.revisionHistory && Array.isArray(data.revisionHistory) && data.revisionHistory.length > 0) {
+      revLogs = data.revisionHistory.map(function(r) {
+        return "[Sesi " + r.sessionNumber + " - " + r.date + "]: " + r.note;
+      }).join("; ");
     }
     
     // Tambahkan baris pesanan baru
@@ -410,7 +478,6 @@ function doPost(e) {
       data.id || "-",
       data.orderNumber || "-",
       data.statusType || "INQUIRY",
-      data.clientName || "-",
       "'" + (data.clientPhone || "-"), // Tanda petik agar angka 0 nomor WA tetap utuh
       data.clientEmail || "-",
       data.projectTitle || "-",
@@ -420,6 +487,8 @@ function doPost(e) {
       data.dpAmount || 0,
       data.dpStatus || "-",
       "Tahap " + (data.currentStageNumber || 1) + " dari 5",
+      "" + (data.revisionQuotaUsed || 0) + " / " + (data.revisionQuotaTotal || 3),
+      revLogs,
       data.developerNotes || "-",
       new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta" })
     ]);
@@ -1149,7 +1218,7 @@ function doPost(e) {
                         </h3>
 
                         <div style={{ fontSize: '0.88rem', color: '#475569' }}>
-                          Klien: <strong>{ord.clientName}</strong> &bull; WA: <strong>{ord.clientPhone}</strong> &bull; Paket: <strong>{ord.packageName}</strong>
+                          WhatsApp: <strong>{ord.clientPhone}</strong> &bull; Paket: <strong>{ord.packageName}</strong> &bull; Kategori: <strong>{ord.category}</strong>
                         </div>
                       </div>
 
@@ -1286,22 +1355,22 @@ function doPost(e) {
                           Kuota Revisi SOP (Maks 3x):
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                          <span style={{ fontSize: '0.94rem', fontWeight: '800', color: ord.revisionQuotaUsed >= 3 ? '#DC2626' : '#0F172A' }}>
-                            {ord.revisionQuotaUsed} / {ord.revisionQuotaTotal} Terpakai
+                          <span style={{ fontSize: '0.94rem', fontWeight: '800', color: (ord.revisionQuotaUsed || 0) >= (ord.revisionQuotaTotal || 3) ? '#DC2626' : '#0F172A' }}>
+                            {ord.revisionQuotaUsed || 0} / {ord.revisionQuotaTotal || 3} Terpakai
                           </span>
                           <button
                             type="button"
-                            onClick={() => handleIncrementRevision(ord)}
-                            disabled={ord.revisionQuotaUsed >= 3}
+                            onClick={() => handleOpenRevisionModal(ord)}
+                            disabled={(ord.revisionQuotaUsed || 0) >= (ord.revisionQuotaTotal || 3)}
                             style={{
-                              background: '#FFFFFF',
+                              background: (ord.revisionQuotaUsed || 0) >= (ord.revisionQuotaTotal || 3) ? '#F1F5F9' : '#FFFFFF',
                               border: '1px solid #CBD5E1',
                               borderRadius: '4px',
                               padding: '4px 8px',
                               fontSize: '0.78rem',
                               fontWeight: '700',
-                              cursor: ord.revisionQuotaUsed >= 3 ? 'not-allowed' : 'pointer',
-                              color: '#0F172A'
+                              cursor: (ord.revisionQuotaUsed || 0) >= (ord.revisionQuotaTotal || 3) ? 'not-allowed' : 'pointer',
+                              color: (ord.revisionQuotaUsed || 0) >= (ord.revisionQuotaTotal || 3) ? '#94A3B8' : '#0F172A'
                             }}
                           >
                             + Catat Revisi
@@ -1310,6 +1379,60 @@ function doPost(e) {
                       </div>
 
                     </div>
+
+                    {/* Riwayat Catatan Sesi Revisi Proyek */}
+                    {ord.revisionHistory && ord.revisionHistory.length > 0 && (
+                      <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '8px', padding: '12px 16px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                          <div style={{ fontSize: '0.82rem', fontWeight: '800', color: '#0F172A', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <History size={14} color="#0F172A" />
+                            <span>Riwayat Catatan Sesi Revisi ({ord.revisionHistory.length} dari {ord.revisionQuotaTotal || 3} Terpakai):</span>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteLastRevision(ord)}
+                            title="Batalkan sesi revisi terakhir jika salah input"
+                            style={{
+                              background: 'transparent',
+                              border: 'none',
+                              color: '#DC2626',
+                              fontSize: '0.74rem',
+                              fontWeight: '700',
+                              cursor: 'pointer',
+                              padding: 0
+                            }}
+                          >
+                            Batalkan Sesi Terakhir
+                          </button>
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                          {ord.revisionHistory.map((rev) => (
+                            <div 
+                              key={rev.sessionNumber} 
+                              style={{ 
+                                background: '#FFFFFF', 
+                                border: '1px solid #CBD5E1', 
+                                borderRadius: '6px', 
+                                padding: '8px 12px',
+                                fontSize: '0.84rem' 
+                              }}
+                            >
+                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
+                                <span style={{ fontWeight: '800', color: 'var(--prussian-blue)' }}>
+                                  Sesi {rev.sessionNumber}
+                                </span>
+                                <span style={{ fontSize: '0.74rem', color: '#64748B', fontWeight: '600' }}>
+                                  {rev.date}
+                                </span>
+                              </div>
+                              <div style={{ color: '#334155', lineHeight: '1.4' }}>
+                                "{rev.note}"
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
 
                     {/* Developer Log Snippet */}
                     <div style={{ fontSize: '0.86rem', color: '#334155', lineHeight: '1.5', background: '#F8FAFC', borderLeft: '3px solid var(--prussian-blue)', padding: '10px 14px', borderRadius: '0 8px 8px 0' }}>
@@ -1408,38 +1531,16 @@ function doPost(e) {
             <form onSubmit={handleSaveEdit} style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>
               <div style={{ overflowY: 'auto', padding: '24px 28px', flex: 1 }}>
                 
-                {/* SECTION 1: DATA PEMESAN */}
+                {/* SECTION 1: KONTAK & KOMUNIKASI */}
                 <div style={{ marginBottom: '22px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
-                    <User size={15} color="#0F172A" />
+                    <Phone size={15} color="#0F172A" />
                     <span style={{ fontSize: '0.82rem', fontWeight: '800', color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                      1. Identitas Klien &amp; Kontak
+                      1. Kontak &amp; Saluran Komunikasi
                     </span>
                   </div>
 
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }}>
-                    <div>
-                      <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '6px' }}>
-                        Nama Klien / Instansi
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        className="admin-modal-input"
-                        value={editingOrder.clientName}
-                        onChange={(e) => setEditingOrder({ ...editingOrder, clientName: e.target.value })}
-                        style={{
-                          width: '100%',
-                          boxSizing: 'border-box',
-                          padding: '11px 13px',
-                          borderRadius: '7px',
-                          border: '1px solid #CBD5E1',
-                          fontSize: '0.9rem',
-                          color: '#0F172A',
-                          background: '#FFFFFF'
-                        }}
-                      />
-                    </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                     <div>
                       <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '6px' }}>
                         Nomor WhatsApp
@@ -1462,29 +1563,28 @@ function doPost(e) {
                         }}
                       />
                     </div>
-                  </div>
-
-                  <div>
-                    <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '6px' }}>
-                      Email Klien (Opsional)
-                    </label>
-                    <input
-                      type="email"
-                      className="admin-modal-input"
-                      value={editingOrder.clientEmail || ''}
-                      onChange={(e) => setEditingOrder({ ...editingOrder, clientEmail: e.target.value })}
-                      placeholder="klien@email.com"
-                      style={{
-                        width: '100%',
-                        boxSizing: 'border-box',
-                        padding: '11px 13px',
-                        borderRadius: '7px',
-                        border: '1px solid #CBD5E1',
-                        fontSize: '0.9rem',
-                        color: '#0F172A',
-                        background: '#FFFFFF'
-                      }}
-                    />
+                    <div>
+                      <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '6px' }}>
+                        Email Klien (Opsional)
+                      </label>
+                      <input
+                        type="email"
+                        className="admin-modal-input"
+                        value={editingOrder.clientEmail || ''}
+                        onChange={(e) => setEditingOrder({ ...editingOrder, clientEmail: e.target.value })}
+                        placeholder="klien@email.com"
+                        style={{
+                          width: '100%',
+                          boxSizing: 'border-box',
+                          padding: '11px 13px',
+                          borderRadius: '7px',
+                          border: '1px solid #CBD5E1',
+                          fontSize: '0.9rem',
+                          color: '#0F172A',
+                          background: '#FFFFFF'
+                        }}
+                      />
+                    </div>
                   </div>
                 </div>
 
@@ -1823,41 +1923,19 @@ function doPost(e) {
             <form onSubmit={handleCreateNewOrder} style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>
               <div style={{ overflowY: 'auto', padding: '24px 28px', flex: 1 }}>
                 
-                {/* SECTION 1: IDENTITAS PEMESAN */}
+                {/* SECTION 1: KONTAK & SALURAN KOMUNIKASI */}
                 <div style={{ marginBottom: '22px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
-                    <User size={15} color="#0F172A" />
+                    <Phone size={15} color="#0F172A" />
                     <span style={{ fontSize: '0.82rem', fontWeight: '800', color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                      1. Identitas Klien &amp; Saluran Komunikasi
+                      1. Kontak &amp; Saluran Komunikasi Proyek
                     </span>
                   </div>
 
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }}>
                     <div>
                       <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '6px' }}>
-                        Nama Klien / Instansi
-                      </label>
-                      <input
-                        type="text"
-                        name="clientName"
-                        required
-                        className="admin-modal-input"
-                        placeholder="Contoh: Maya Anggraini / PT Cipta Solusi"
-                        style={{
-                          width: '100%',
-                          boxSizing: 'border-box',
-                          padding: '11px 13px',
-                          borderRadius: '7px',
-                          border: '1px solid #CBD5E1',
-                          fontSize: '0.9rem',
-                          color: '#0F172A',
-                          background: '#FFFFFF'
-                        }}
-                      />
-                    </div>
-                    <div>
-                      <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '6px' }}>
-                        Nomor WhatsApp Aktif
+                        Nomor WhatsApp Aktif (Wajib)
                       </label>
                       <input
                         type="text"
@@ -1877,12 +1955,9 @@ function doPost(e) {
                         }}
                       />
                       <span style={{ fontSize: '0.74rem', color: '#64748B', marginTop: '4px', display: 'block' }}>
-                        Digunakan klien untuk lacak status di /lacak
+                        Kunci identifikasi utama untuk lacak pesanan di /lacak
                       </span>
                     </div>
-                  </div>
-
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                     <div>
                       <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '6px' }}>
                         Email Klien (Opsional)
@@ -1904,31 +1979,32 @@ function doPost(e) {
                         }}
                       />
                     </div>
-                    <div>
-                      <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '6px' }}>
-                        Status Awal Pesanan
-                      </label>
-                      <select
-                        name="statusType"
-                        className="admin-modal-select"
-                        value={newOrderForm.statusType}
-                        onChange={(e) => setNewOrderForm({ ...newOrderForm, statusType: e.target.value })}
-                        style={{
-                          width: '100%',
-                          padding: '11px 13px',
-                          borderRadius: '7px',
-                          border: '1px solid #CBD5E1',
-                          background: '#FFFFFF',
-                          fontSize: '0.9rem',
-                          fontWeight: '700',
-                          color: '#0F172A',
-                          cursor: 'pointer'
-                        }}
-                      >
-                        <option value="FIX_ORDER">FIX ORDER (DP 50% Sudah Diterima &amp; Antrean Kerja)</option>
-                        <option value="INQUIRY">INQUIRY (Draf Tanya / Menunggu Bukti Transfer DP)</option>
-                      </select>
-                    </div>
+                  </div>
+
+                  <div>
+                    <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '6px' }}>
+                      Status Awal Pesanan
+                    </label>
+                    <select
+                      name="statusType"
+                      className="admin-modal-select"
+                      value={newOrderForm.statusType}
+                      onChange={(e) => setNewOrderForm({ ...newOrderForm, statusType: e.target.value })}
+                      style={{
+                        width: '100%',
+                        padding: '11px 13px',
+                        borderRadius: '7px',
+                        border: '1px solid #CBD5E1',
+                        background: '#FFFFFF',
+                        fontSize: '0.9rem',
+                        fontWeight: '700',
+                        color: '#0F172A',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      <option value="FIX_ORDER">FIX ORDER (DP 50% Sudah Diterima &amp; Antrean Kerja)</option>
+                      <option value="INQUIRY">INQUIRY (Draf Tanya / Menunggu Bukti Transfer DP)</option>
+                    </select>
                   </div>
                 </div>
 
@@ -2177,6 +2253,184 @@ function doPost(e) {
         </div>
       )}
 
+
+      {/* ─────────────────────────────────────────────────────────────
+          MODAL: CATAT SESI REVISI PROYEK (Executive Anti-Slop Design)
+          ───────────────────────────────────────────────────────────── */}
+      {revisionModalOrder && (
+        <div 
+          style={{ 
+            position: 'fixed', 
+            inset: 0, 
+            background: 'rgba(15, 23, 42, 0.65)', 
+            backdropFilter: 'blur(4px)',
+            WebkitBackdropFilter: 'blur(4px)',
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center', 
+            zIndex: 9999, 
+            padding: '20px' 
+          }}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setRevisionModalOrder(null);
+          }}
+        >
+          <div 
+            style={{ 
+              background: '#FFFFFF', 
+              borderRadius: '16px', 
+              maxWidth: '580px', 
+              width: '100%', 
+              maxHeight: '90vh', 
+              display: 'flex',
+              flexDirection: 'column',
+              boxShadow: '0 20px 40px -15px rgba(15, 23, 42, 0.25)',
+              border: '1px solid #CBD5E1',
+              boxSizing: 'border-box',
+              animation: 'adminModalSlideUp 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
+            }}
+          >
+            {/* Modal Header */}
+            <div style={{ padding: '22px 28px', borderBottom: '1px solid #E2E8F0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: '900', color: '#0F172A', margin: 0, letterSpacing: '-0.01em' }}>
+                  Catat Sesi Revisi Proyek
+                </h3>
+                <p style={{ fontSize: '0.84rem', color: '#64748B', margin: '4px 0 0 0' }}>
+                  Pesanan: <strong>{revisionModalOrder.id}</strong> &bull; Sesi ke-{(revisionModalOrder.revisionQuotaUsed || 0) + 1} dari {revisionModalOrder.revisionQuotaTotal || 3}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setRevisionModalOrder(null)}
+                style={{ 
+                  background: '#F8FAFC', 
+                  border: '1px solid #E2E8F0', 
+                  borderRadius: '8px', 
+                  width: '32px', 
+                  height: '32px', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center', 
+                  cursor: 'pointer', 
+                  color: '#64748B' 
+                }}
+                aria-label="Tutup modal"
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            {/* Form Body */}
+            <form onSubmit={handleSaveRevisionRecord} style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
+              <div style={{ padding: '24px 28px', flex: 1 }}>
+                
+                {/* Info Pill */}
+                <div style={{ background: '#EFF6FF', border: '1px solid #BFDBFE', borderRadius: '8px', padding: '12px 16px', marginBottom: '18px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div>
+                    <span style={{ fontSize: '0.82rem', fontWeight: '800', color: 'var(--prussian-blue)' }}>
+                      Sesi yang akan dicatat: Sesi ke-{(revisionModalOrder.revisionQuotaUsed || 0) + 1}
+                    </span>
+                    <div style={{ fontSize: '0.78rem', color: '#475569', marginTop: '2px' }}>
+                      Sisa kuota revisi SOP setelah sesi ini: {(revisionModalOrder.revisionQuotaTotal || 3) - (revisionModalOrder.revisionQuotaUsed || 0) - 1} sesi
+                    </div>
+                  </div>
+                  <span style={{ fontSize: '0.78rem', background: '#FFFFFF', padding: '4px 8px', borderRadius: '4px', fontWeight: '700', color: '#0F172A', border: '1px solid #CBD5E1' }}>
+                    Hari ini
+                  </span>
+                </div>
+
+                <div style={{ marginBottom: '16px' }}>
+                  <label style={{ fontSize: '0.86rem', fontWeight: '800', color: '#0F172A', display: 'block', marginBottom: '8px' }}>
+                    Rincian Catatan Revisi dari Klien (Wajib):
+                  </label>
+                  <textarea
+                    rows={4}
+                    value={revisionNoteInput}
+                    onChange={(e) => {
+                      setRevisionNoteInput(e.target.value);
+                      if (revisionNoteError) setRevisionNoteError('');
+                    }}
+                    placeholder="Tuliskan secara spesifik apa saja yang direvisi (misal: penyesuaian susunan menu header mobile, revisi warna tombol checkout, perbaikan validasi nomor telepon di form pemesanan)..."
+                    autoFocus
+                    style={{
+                      width: '100%',
+                      boxSizing: 'border-box',
+                      padding: '12px 14px',
+                      borderRadius: '8px',
+                      border: revisionNoteError ? '1.5px solid #DC2626' : '1.5px solid #CBD5E1',
+                      fontSize: '0.9rem',
+                      color: '#0F172A',
+                      fontFamily: 'inherit',
+                      lineHeight: '1.5',
+                      outline: 'none'
+                    }}
+                  />
+                  {revisionNoteError && (
+                    <div style={{ fontSize: '0.82rem', color: '#DC2626', fontWeight: '700', marginTop: '6px' }}>
+                      {revisionNoteError}
+                    </div>
+                  )}
+                  <span style={{ fontSize: '0.76rem', color: '#64748B', marginTop: '6px', display: 'block' }}>
+                    Catatan ini otomatis tampil di pelacak status /lacak klien, tersimpan ke basis data, dan terarsip ke spreadsheet.
+                  </span>
+                </div>
+
+              </div>
+
+              {/* Footer */}
+              <div 
+                style={{ 
+                  background: '#F8FAFC', 
+                  borderTop: '1px solid #E2E8F0', 
+                  padding: '16px 28px', 
+                  display: 'flex', 
+                  justifyContent: 'flex-end', 
+                  gap: '10px',
+                  borderRadius: '0 0 16px 16px'
+                }}
+              >
+                <button
+                  type="button"
+                  onClick={() => setRevisionModalOrder(null)}
+                  style={{
+                    background: '#FFFFFF',
+                    color: '#475569',
+                    border: '1px solid #CBD5E1',
+                    borderRadius: '8px',
+                    padding: '10px 18px',
+                    fontSize: '0.88rem',
+                    fontWeight: '700',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Batal
+                </button>
+                <button
+                  type="submit"
+                  style={{
+                    background: 'var(--prussian-blue)',
+                    color: '#FFFFFF',
+                    border: 'none',
+                    borderRadius: '8px',
+                    padding: '10px 22px',
+                    fontSize: '0.9rem',
+                    fontWeight: '800',
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '8px'
+                  }}
+                >
+                  <Save size={16} />
+                  <span>Simpan Catatan Revisi</span>
+                </button>
+              </div>
+            </form>
+
+          </div>
+        </div>
+      )}
     </div>
   );
 }

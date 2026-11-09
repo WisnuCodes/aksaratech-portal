@@ -17,7 +17,8 @@ import {
   ArrowRight,
   Database,
   Code2,
-  RefreshCw
+  RefreshCw,
+  History
 } from 'lucide-react';
 import PageHeader from '../components/molecules/PageHeader';
 import { formatRupiah } from '../utils/documentEngine';
@@ -295,7 +296,7 @@ export default function OrderTrackerPage() {
                     {activeOrder.projectTitle}
                   </h3>
                   <div style={{ fontSize: '0.9rem', color: '#475569' }}>
-                    Pemesan: <strong>{activeOrder.clientName}</strong> &bull; Paket: <strong>{activeOrder.packageName}</strong>
+                    WhatsApp Terdaftar: <strong>{activeOrder.clientPhone}</strong> &bull; Paket: <strong>{activeOrder.packageName}</strong>
                   </div>
                 </div>
 
@@ -447,6 +448,53 @@ export default function OrderTrackerPage() {
                 })}
               </div>
 
+            </div>
+
+            {/* Log Catatan Sesi Revisi SOP */}
+            <div style={{ background: '#FFFFFF', border: '1.5px solid #CBD5E1', borderRadius: '14px', padding: '28px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '18px', flexWrap: 'wrap', gap: '8px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <History size={20} color="var(--prussian-blue)" />
+                  <h4 style={{ fontSize: '1.15rem', fontWeight: '900', color: '#0F172A', margin: 0 }}>
+                    Log Catatan Sesi Revisi SOP
+                  </h4>
+                </div>
+                <div style={{ fontSize: '0.86rem', fontWeight: '800', color: (activeOrder.revisionQuotaUsed || 0) >= 3 ? '#DC2626' : 'var(--prussian-blue)' }}>
+                  {activeOrder.revisionQuotaUsed || 0} dari {activeOrder.revisionQuotaTotal || 3} Sesi Terpakai
+                </div>
+              </div>
+
+              {activeOrder.revisionHistory && activeOrder.revisionHistory.length > 0 ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  {activeOrder.revisionHistory.map((rev) => (
+                    <div 
+                      key={rev.sessionNumber} 
+                      style={{ 
+                        background: '#F8FAFC', 
+                        border: '1.5px solid #E2E8F0', 
+                        borderRadius: '10px', 
+                        padding: '14px 18px' 
+                      }}
+                    >
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                        <span style={{ fontSize: '0.86rem', fontWeight: '900', color: 'var(--prussian-blue)' }}>
+                          Sesi Revisi ke-{rev.sessionNumber}
+                        </span>
+                        <span style={{ fontSize: '0.78rem', color: '#64748B', fontWeight: '600' }}>
+                          Dicatat pada {rev.date}
+                        </span>
+                      </div>
+                      <p style={{ fontSize: '0.9rem', color: '#334155', margin: 0, lineHeight: '1.5' }}>
+                        "{rev.note}"
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '10px', padding: '16px 20px', color: '#475569', fontSize: '0.9rem', lineHeight: '1.5' }}>
+                  Belum ada sesi revisi yang diajukan untuk proyek ini. Kuota revisi standar Anda masih utuh <strong>{activeOrder.revisionQuotaTotal || 3} dari {activeOrder.revisionQuotaTotal || 3} sesi</strong> (Revisi dilakukan terstruktur per gelombang masukan).
+                </div>
+              )}
             </div>
 
             {/* Developer Notes & Revision Quota Breakdown */}
