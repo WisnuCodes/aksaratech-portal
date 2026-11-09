@@ -425,18 +425,21 @@ export default function AdminDashboardPage() {
   }, [orders, activeTab, searchQuery]);
 
   // Google Apps Script template code
-  const googleAppsScriptCode = `// KODE GOOGLE APPS SCRIPT AKSARA TECH (SINKRONISASI UTUH & AUTO-DELETE)
+  const googleAppsScriptCode = `// KODE GOOGLE APPS SCRIPT EKSEKUTIF AKSARA TECH (SINKRONISASI PENUH & AUTO-DELETE)
 // Tempelkan di Google Spreadsheet: Menu Ekstensi > Apps Script
 
 // 1. Endpoint status untuk pengujian browser langsung
 function doGet(e) {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getActiveSheet();
   var rowCount = Math.max(0, sheet.getLastRow() - 1);
   return ContentService.createTextOutput(JSON.stringify({
     "status": "connected",
-    "spreadsheetName": SpreadsheetApp.getActiveSpreadsheet().getName(),
+    "spreadsheetName": ss.getName(),
+    "spreadsheetUrl": ss.getUrl(),
     "sheetName": sheet.getName(),
     "totalOrdersInSheet": rowCount,
+    "timestamp": new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta" }),
     "message": "Webhook Aksara Tech aktif, terhubung normal, dan siap menerima sinkronisasi."
   })).setMimeType(ContentService.MimeType.JSON);
 }
@@ -469,7 +472,7 @@ function formatOrderRow(data) {
   ];
 }
 
-// 3. Pastikan Header Kolom tersedia dan bergaya navy resmi
+// 3. Pastikan Header Kolom tersedia dan diformat resmi
 function ensureHeader(sheet) {
   if (sheet.getLastRow() === 0) {
     sheet.appendRow([
@@ -490,12 +493,50 @@ function ensureHeader(sheet) {
       "Catatan Pengembang",
       "Waktu Pencatatan"
     ]);
-    sheet.getRange(1, 1, 1, 16).setFontWeight("bold");
-    sheet.getRange(1, 1, 1, 16).setBackground("#0F172A").setFontColor("#FFFFFF");
   }
 }
 
-// 4. Endpoint penerima data otomatis (Sinkronisasi Total, Hapus, Ubah, Tambah)
+// 4. Otomatisasi Desain & Formatting Spreadsheet Profesional
+function applySheetStyling(sheet) {
+  var lastRow = sheet.getLastRow();
+  var lastCol = 16;
+  
+  // Bekukan baris 1 (Header tetap di atas saat di-scroll)
+  sheet.setFrozenRows(1);
+  
+  // Format Header Baris 1
+  var headerRange = sheet.getRange(1, 1, 1, lastCol);
+  headerRange.setFontWeight("bold");
+  headerRange.setBackground("#0F172A");
+  headerRange.setFontColor("#FFFFFF");
+  headerRange.setVerticalAlignment("middle");
+  sheet.setRowHeight(1, 38);
+  
+  // Atur lebar kolom optimal
+  var colWidths = [175, 155, 120, 150, 220, 280, 160, 220, 140, 140, 160, 120, 110, 320, 300, 170];
+  for (var c = 0; c < colWidths.length; c++) {
+    sheet.setColumnWidth(c + 1, colWidths[c]);
+  }
+  
+  // Format baris data
+  if (lastRow > 1) {
+    sheet.getRange(2, 9, lastRow - 1, 2).setNumberFormat('"Rp" #,##0');
+    sheet.getRange(2, 4, lastRow - 1, 1).setNumberFormat("@");
+    sheet.getRange(2, 1, lastRow - 1, lastCol).setVerticalAlignment("middle");
+    
+    for (var r = 2; r <= lastRow; r++) {
+      sheet.setRowHeight(r, 30);
+      var rowRange = sheet.getRange(r, 1, 1, lastCol);
+      if (r % 2 === 0) {
+        rowRange.setBackground("#FFFFFF");
+      } else {
+        rowRange.setBackground("#F8FAFC");
+      }
+    }
+  }
+}
+
+// 5. Endpoint penerima data otomatis (Sinkronisasi Total, Hapus, Ubah, Tambah)
 function doPost(e) {
   try {
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
@@ -510,6 +551,7 @@ function doPost(e) {
       orders.forEach(function(ord) {
         sheet.appendRow(formatOrderRow(ord));
       });
+      applySheetStyling(sheet);
       
       return ContentService.createTextOutput(JSON.stringify({
         "result": "success",
@@ -522,6 +564,7 @@ function doPost(e) {
     if (data.action === "clear_all") {
       sheet.clearContents();
       ensureHeader(sheet);
+      applySheetStyling(sheet);
       return ContentService.createTextOutput(JSON.stringify({
         "result": "success",
         "action": "clear_all"
@@ -542,6 +585,7 @@ function doPost(e) {
           }
         }
       }
+      applySheetStyling(sheet);
       return ContentService.createTextOutput(JSON.stringify({
         "result": "success",
         "action": "delete",
@@ -572,6 +616,7 @@ function doPost(e) {
     if (!updated && targetOrder.id) {
       sheet.appendRow(formatOrderRow(targetOrder));
     }
+    applySheetStyling(sheet);
     
     return ContentService.createTextOutput(JSON.stringify({
       "result": "success",
