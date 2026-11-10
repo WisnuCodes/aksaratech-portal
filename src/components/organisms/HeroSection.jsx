@@ -11,7 +11,9 @@ import {
 
 /* ─────────────────────────────────────────────
    Flat SVG Illustration — Engineering Workspace
-   With subtle, natural CSS animations.
+   Clean developer workstation with natural human animations:
+   typing hands, nodding focus, coffee steam, swaying plant,
+   and live monitor screen activity.
    ───────────────────────────────────────────── */
 function WorkspaceIllustration() {
   return (
@@ -22,115 +24,120 @@ function WorkspaceIllustration() {
       className="hero-illustration"
       aria-hidden="true"
     >
-      {/* ── Background Decorative Shapes ── */}
+      {/* ── Background Ambient Geometric Shapes ── */}
       <circle className="bg-shape-1" cx="440" cy="72" r="64" fill="#F1F5F9" />
       <circle className="bg-shape-2" cx="60" cy="360" r="44" fill="#F8FAFC" />
       <rect className="bg-shape-3" x="20" y="100" width="28" height="28" rx="6" fill="#F1F5F9" opacity="0.7" transform="rotate(12 34 114)" />
       <rect className="bg-shape-4" x="475" y="300" width="20" height="20" rx="4" fill="#F1F5F9" opacity="0.6" transform="rotate(-8 485 310)" />
 
-      {/* ── Desk ── */}
+      {/* ── Desk Structure ── */}
       <rect x="60" y="295" width="400" height="14" rx="5" fill="#003153" />
       <rect x="90" y="309" width="12" height="70" rx="3" fill="#003153" />
       <rect x="418" y="309" width="12" height="70" rx="3" fill="#003153" />
       <rect x="96" y="355" width="328" height="6" rx="3" fill="#002240" />
 
-      {/* ── Monitor ── */}
+      {/* ── Main Monitor Display ── */}
       <rect x="155" y="130" width="210" height="150" rx="10" fill="#0F172A" />
       <rect x="163" y="138" width="194" height="126" rx="6" fill="#F8FAFC" />
-      {/* Monitor stand */}
+      {/* Stand */}
       <rect x="240" y="280" width="40" height="18" rx="2" fill="#0F172A" />
       <rect x="222" y="290" width="76" height="8" rx="4" fill="#0F172A" />
 
-      {/* ── Screen Content ── */}
-      {/* Top nav bar */}
+      {/* ── Screen UI Content ── */}
+      {/* Top window bar */}
       <rect x="171" y="146" width="178" height="14" rx="3" fill="#003153" />
-      <circle cx="182" cy="153" r="3" fill="#38BDF8" />
-      <rect x="192" y="151" width="28" height="4" rx="1" fill="#FFFFFF" opacity="0.5" />
-      <rect x="226" y="151" width="20" height="4" rx="1" fill="#FFFFFF" opacity="0.3" />
-      <rect x="252" y="151" width="24" height="4" rx="1" fill="#FFFFFF" opacity="0.3" />
-      {/* Sidebar */}
+      {/* Live build ping indicator on monitor */}
+      <circle className="screen-live-ping" cx="182" cy="153" r="3" fill="#10B981" />
+      <rect x="192" y="151" width="28" height="4" rx="1" fill="#FFFFFF" opacity="0.6" />
+      <rect x="226" y="151" width="20" height="4" rx="1" fill="#FFFFFF" opacity="0.4" />
+      <rect x="252" y="151" width="24" height="4" rx="1" fill="#FFFFFF" opacity="0.4" />
+
+      {/* Screen Sidebar */}
       <rect x="171" y="164" width="44" height="92" rx="3" fill="#F1F5F9" />
-      <rect x="178" y="172" width="30" height="4" rx="1" fill="#003153" opacity="0.6" />
+      <rect x="178" y="172" width="30" height="4" rx="1" fill="#003153" opacity="0.7" />
       <rect x="178" y="182" width="24" height="3" rx="1" fill="#94A3B8" />
       <rect x="178" y="190" width="28" height="3" rx="1" fill="#94A3B8" />
       <rect x="178" y="198" width="20" height="3" rx="1" fill="#94A3B8" />
-      <rect x="178" y="210" width="30" height="4" rx="1" fill="#003153" opacity="0.6" />
+      <rect x="178" y="210" width="30" height="4" rx="1" fill="#003153" opacity="0.7" />
       <rect x="178" y="220" width="26" height="3" rx="1" fill="#94A3B8" />
       <rect x="178" y="228" width="22" height="3" rx="1" fill="#94A3B8" />
-      <rect x="178" y="240" width="18" height="3" rx="1" fill="#059669" opacity="0.6" />
+      <rect x="178" y="240" width="18" height="3" rx="1" fill="#059669" opacity="0.7" />
 
-      {/* Main content area - cards */}
-      <rect x="222" y="168" width="66" height="42" rx="5" fill="#FFFFFF" stroke="#E2E8F0" strokeWidth="1" />
+      {/* Main Screen Panels / Cards */}
+      <rect x="222" y="168" width="66" height="42" rx="5" fill="#FFFFFF" stroke="#E2E8F0" strokeWidth="1.5" />
       <rect x="230" y="176" width="32" height="4" rx="1" fill="#003153" />
       <rect x="230" y="184" width="50" height="3" rx="1" fill="#CBD5E1" />
       <rect x="230" y="191" width="42" height="3" rx="1" fill="#CBD5E1" />
-      <rect x="230" y="199" width="22" height="7" rx="2.5" fill="#FFC107" />
+      <rect x="230" y="199" width="22" height="7" rx="2.5" fill="#F59E0B" />
 
-      <rect x="294" y="168" width="56" height="42" rx="5" fill="#FFFFFF" stroke="#E2E8F0" strokeWidth="1" />
+      <rect x="294" y="168" width="56" height="42" rx="5" fill="#FFFFFF" stroke="#E2E8F0" strokeWidth="1.5" />
       <rect x="302" y="176" width="28" height="4" rx="1" fill="#003153" />
       <rect x="302" y="184" width="40" height="3" rx="1" fill="#CBD5E1" />
       <rect x="302" y="191" width="32" height="3" rx="1" fill="#CBD5E1" />
       <rect x="302" y="199" width="24" height="7" rx="2.5" fill="#059669" />
 
-      {/* Chart area */}
-      <rect x="222" y="216" width="128" height="36" rx="5" fill="#FFFFFF" stroke="#E2E8F0" strokeWidth="1" />
+      {/* Screen Analytics / Code Execution Chart */}
+      <rect x="222" y="216" width="128" height="36" rx="5" fill="#FFFFFF" stroke="#E2E8F0" strokeWidth="1.5" />
       <rect x="230" y="222" width="38" height="4" rx="1" fill="#003153" />
-      {/* Mini bar chart */}
+      {/* Animated Activity Bars */}
       <rect x="234" y="238" width="8" height="8" rx="1.5" fill="#003153" opacity="0.7" />
       <rect x="246" y="234" width="8" height="12" rx="1.5" fill="#003153" opacity="0.7" />
-      <rect className="chart-bar-accent" x="258" y="230" width="8" height="16" rx="1.5" fill="#FFC107" />
+      <rect className="chart-bar-accent" x="258" y="230" width="8" height="16" rx="1.5" fill="#F59E0B" />
       <rect x="270" y="236" width="8" height="10" rx="1.5" fill="#003153" opacity="0.7" />
-      <rect x="282" y="232" width="8" height="14" rx="1.5" fill="#003153" opacity="0.7" />
+      <rect className="chart-bar-accent-3" x="282" y="232" width="8" height="14" rx="1.5" fill="#1D63FF" />
       <rect className="chart-bar-accent-2" x="294" y="228" width="8" height="18" rx="1.5" fill="#059669" />
       <rect x="306" y="233" width="8" height="13" rx="1.5" fill="#003153" opacity="0.7" />
       <rect x="318" y="236" width="8" height="10" rx="1.5" fill="#003153" opacity="0.5" />
       <rect x="330" y="231" width="8" height="15" rx="1.5" fill="#003153" opacity="0.7" />
 
-      {/* Blinking cursor on screen */}
+      {/* Screen Cursor (Typing Blink) */}
       <rect className="screen-cursor" x="338" y="151" width="2" height="8" rx="0.5" fill="#38BDF8" />
 
-      {/* ── Person (Geometric, Professional) ── */}
-      {/* Chair back */}
+      {/* ── Person: Professional Software Architect ── */}
+      {/* Ergonomic Chair */}
       <rect x="380" y="198" width="56" height="12" rx="6" fill="#475569" />
       <rect x="382" y="210" width="4" height="48" rx="2" fill="#475569" />
       <rect x="430" y="210" width="4" height="48" rx="2" fill="#475569" />
-      {/* Chair seat */}
       <rect x="386" y="255" width="44" height="12" rx="5" fill="#334155" />
       <rect x="404" y="267" width="8" height="30" rx="2" fill="#64748B" />
       <circle cx="396" cy="300" r="5" fill="#475569" />
       <circle cx="420" cy="300" r="5" fill="#475569" />
 
-      {/* Body / Torso */}
+      {/* Developer Body / Torso */}
       <rect x="392" y="210" width="32" height="48" rx="10" fill="#003153" />
-      {/* Collar */}
       <path d="M404 210 L408 220 L412 210" fill="#002240" />
 
-      {/* Head */}
-      <circle cx="408" cy="188" r="24" fill="#F0C8A0" />
-      {/* Hair */}
-      <path d="M384 180 Q392 155 408 152 Q424 155 432 180" fill="#1E293B" />
-      <ellipse cx="408" cy="170" rx="19" ry="7" fill="#1E293B" />
-      {/* Ear */}
-      <ellipse cx="384" cy="190" rx="4" ry="6" fill="#E8B090" />
-      {/* Glasses */}
-      <rect x="395" y="184" width="11" height="9" rx="3.5" fill="none" stroke="#334155" strokeWidth="1.5" />
-      <rect x="410" y="184" width="11" height="9" rx="3.5" fill="none" stroke="#334155" strokeWidth="1.5" />
-      <line x1="406" y1="188" x2="410" y2="188" stroke="#334155" strokeWidth="1" />
-      <line x1="395" y1="188" x2="389" y2="186" stroke="#334155" strokeWidth="1" />
-      {/* Smile */}
-      <path d="M402 197 Q408 201 414 197" stroke="#C08060" strokeWidth="1.2" fill="none" strokeLinecap="round" />
+      {/* Developer Head with Focus Nod Motion */}
+      <g className="dev-head-nod">
+        {/* Head */}
+        <circle cx="408" cy="188" r="24" fill="#F0C8A0" />
+        {/* Hair */}
+        <path d="M384 180 Q392 155 408 152 Q424 155 432 180" fill="#1E293B" />
+        <ellipse cx="408" cy="170" rx="19" ry="7" fill="#1E293B" />
+        {/* Ear */}
+        <ellipse cx="384" cy="190" rx="4" ry="6" fill="#E8B090" />
+        {/* Glasses */}
+        <rect x="395" y="184" width="11" height="9" rx="3.5" fill="none" stroke="#334155" strokeWidth="1.5" />
+        <rect x="410" y="184" width="11" height="9" rx="3.5" fill="none" stroke="#334155" strokeWidth="1.5" />
+        <line x1="406" y1="188" x2="410" y2="188" stroke="#334155" strokeWidth="1" />
+        <line x1="395" y1="188" x2="389" y2="186" stroke="#334155" strokeWidth="1" />
+        {/* Smile */}
+        <path d="M402 197 Q408 201 414 197" stroke="#C08060" strokeWidth="1.2" fill="none" strokeLinecap="round" />
+      </g>
 
-      {/* Arms (reaching toward desk) */}
+      {/* Arms & Sleeves */}
       <path d="M392 224 Q374 244 368 270 Q366 280 372 282" stroke="#F0C8A0" strokeWidth="9" strokeLinecap="round" fill="none" />
       <path d="M424 224 Q436 244 436 270 Q435 280 428 282" stroke="#F0C8A0" strokeWidth="9" strokeLinecap="round" fill="none" />
-      {/* Sleeves */}
       <path d="M392 224 Q380 236 376 244" stroke="#003153" strokeWidth="9" strokeLinecap="round" fill="none" />
       <path d="M424 224 Q432 236 434 244" stroke="#003153" strokeWidth="9" strokeLinecap="round" fill="none" />
-      {/* Hands */}
-      <circle cx="372" cy="283" r="6" fill="#F0C8A0" />
-      <circle cx="428" cy="283" r="6" fill="#F0C8A0" />
 
-      {/* ── Keyboard on desk ── */}
+      {/* Hands with Typing Motion on Keyboard */}
+      <g className="dev-typing-hands">
+        <circle className="hand-left" cx="372" cy="283" r="6" fill="#F0C8A0" />
+        <circle className="hand-right" cx="428" cy="283" r="6" fill="#F0C8A0" />
+      </g>
+
+      {/* Keyboard on Desk */}
       <rect x="350" y="284" width="100" height="10" rx="3" fill="#334155" />
       <rect x="355" y="286" width="90" height="6" rx="2" fill="#475569" />
       {/* Key rows */}
@@ -147,11 +154,11 @@ function WorkspaceIllustration() {
       <rect x="430" y="287" width="4" height="3" rx="0.5" fill="#64748B" />
       <rect x="436" y="287" width="4" height="3" rx="0.5" fill="#64748B" />
 
-      {/* ── Mouse ── */}
-      <ellipse cx="462" cy="288" r="6" ry="8" fill="#334155" stroke="#475569" strokeWidth="1" />
+      {/* Mouse on Desk */}
+      <ellipse cx="462" cy="288" rx="6" ry="8" fill="#334155" stroke="#475569" strokeWidth="1" />
       <line x1="462" y1="282" x2="462" y2="286" stroke="#64748B" strokeWidth="1" />
 
-      {/* ── Documents Stack (left side of desk) ── */}
+      {/* ── Document Architecture Stack ── */}
       <rect x="78" y="256" width="56" height="40" rx="4" fill="#FFFFFF" stroke="#CBD5E1" strokeWidth="1.5" transform="rotate(-3 106 276)" />
       <rect x="82" y="252" width="56" height="40" rx="4" fill="#FFFFFF" stroke="#CBD5E1" strokeWidth="1.5" transform="rotate(2 110 272)" />
       <rect x="80" y="250" width="56" height="40" rx="4" fill="#FFFFFF" stroke="#003153" strokeWidth="1.5" />
@@ -159,20 +166,20 @@ function WorkspaceIllustration() {
       <rect x="88" y="266" width="40" height="2.5" rx="1" fill="#CBD5E1" />
       <rect x="88" y="272" width="34" height="2.5" rx="1" fill="#CBD5E1" />
       <rect x="88" y="278" width="26" height="2.5" rx="1" fill="#CBD5E1" />
-      {/* DOCS Stamp */}
-      <rect x="100" y="282" width="28" height="8" rx="2" fill="#FFC107" stroke="#0F172A" strokeWidth="0.8" />
-      <text x="114" y="288.5" textAnchor="middle" fill="#0F172A" fontSize="5" fontWeight="800" fontFamily="monospace">DOCS</text>
+      {/* SRS Spec Tag */}
+      <rect x="98" y="282" width="32" height="8" rx="2" fill="#F59E0B" stroke="#0F172A" strokeWidth="0.8" />
+      <text x="114" y="288.5" textAnchor="middle" fill="#0F172A" fontSize="5.5" fontWeight="800">SRS SPEC</text>
 
-      {/* ── Coffee Cup ── */}
+      {/* ── Hot Coffee Cup with Rising Steam ── */}
       <rect x="148" y="270" width="22" height="24" rx="5" fill="#FFFFFF" stroke="#003153" strokeWidth="1.5" />
       <path d="M170 276 Q180 282 170 288" stroke="#003153" strokeWidth="1.5" fill="none" />
       <rect x="151" y="280" width="16" height="11" rx="3" fill="#92400E" opacity="0.5" />
-      {/* Steam (animated) */}
-      <path className="steam steam-1" d="M155 267 Q157 258 159 267" stroke="#94A3B8" strokeWidth="1.2" fill="none" />
-      <path className="steam steam-2" d="M161 265 Q163 256 165 265" stroke="#94A3B8" strokeWidth="1.2" fill="none" />
-      <path className="steam steam-3" d="M158 262 Q160 253 162 262" stroke="#94A3B8" strokeWidth="1" fill="none" />
+      {/* Dynamic Animated Steam */}
+      <path className="steam steam-1" d="M155 267 Q157 258 159 267" stroke="#94A3B8" strokeWidth="1.3" fill="none" />
+      <path className="steam steam-2" d="M161 265 Q163 256 165 265" stroke="#94A3B8" strokeWidth="1.3" fill="none" />
+      <path className="steam steam-3" d="M158 262 Q160 253 162 262" stroke="#94A3B8" strokeWidth="1.1" fill="none" />
 
-      {/* ── Plant (small desk plant) ── */}
+      {/* ── Desk Plant with Swaying Leaves ── */}
       <rect x="68" y="272" width="16" height="22" rx="4" fill="#D97706" />
       <rect x="68" y="272" width="16" height="6" rx="3" fill="#92400E" />
       <line x1="76" y1="272" x2="76" y2="252" stroke="#047857" strokeWidth="2" />
@@ -180,43 +187,35 @@ function WorkspaceIllustration() {
       <ellipse className="leaf leaf-2" cx="70" cy="262" rx="8" ry="5" fill="#10B981" transform="rotate(10 70 262)" />
       <ellipse className="leaf leaf-3" cx="84" cy="260" rx="8" ry="5" fill="#10B981" transform="rotate(-10 84 260)" />
 
-      {/* ── Floating Accent Elements ── */}
-      {/* Checkmark badge (gentle float) */}
+      {/* ── Floating Quality & Architecture Badges ── */}
+      {/* Verified Quality Check Badge (Gentle Float) */}
       <g className="float-el float-check">
-        <circle cx="108" cy="148" r="16" fill="#F1F5F9" stroke="#059669" strokeWidth="1.8" />
+        <circle cx="108" cy="148" r="16" fill="#FFFFFF" stroke="#059669" strokeWidth="1.8" />
         <path d="M101 148 L106 153 L116 143" stroke="#059669" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
       </g>
 
-      {/* Gear icon (slow spin) */}
-      <g className="float-el float-gear" style={{ transformOrigin: '460px 126px' }}>
-        <circle cx="460" cy="126" r="16" fill="#F1F5F9" stroke="#003153" strokeWidth="1.8" />
-        <circle cx="460" cy="126" r="5.5" fill="none" stroke="#003153" strokeWidth="1.5" />
-        <line x1="460" y1="112" x2="460" y2="117" stroke="#003153" strokeWidth="2" strokeLinecap="round" />
-        <line x1="460" y1="135" x2="460" y2="140" stroke="#003153" strokeWidth="2" strokeLinecap="round" />
-        <line x1="446" y1="126" x2="451" y2="126" stroke="#003153" strokeWidth="2" strokeLinecap="round" />
-        <line x1="469" y1="126" x2="474" y2="126" stroke="#003153" strokeWidth="2" strokeLinecap="round" />
-        <line x1="450" y1="116" x2="454" y2="120" stroke="#003153" strokeWidth="2" strokeLinecap="round" />
-        <line x1="466" y1="132" x2="470" y2="136" stroke="#003153" strokeWidth="2" strokeLinecap="round" />
-        <line x1="470" y1="116" x2="466" y2="120" stroke="#003153" strokeWidth="2" strokeLinecap="round" />
-        <line x1="454" y1="132" x2="450" y2="136" stroke="#003153" strokeWidth="2" strokeLinecap="round" />
+      {/* Code Architecture Badge (Smooth Float) */}
+      <g className="float-el float-code">
+        <circle cx="460" cy="126" r="17" fill="#FFFFFF" stroke="#1D63FF" strokeWidth="1.8" />
+        {/* Subtle clean code icon inside circle */}
+        <path d="M453 122 L449 126 L453 130" stroke="#1D63FF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+        <path d="M467 122 L471 126 L467 130" stroke="#1D63FF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+        <line x1="462" y1="120" x2="458" y2="132" stroke="#1D63FF" strokeWidth="1.8" strokeLinecap="round" />
       </g>
 
-      {/* Small diamond accent */}
-      <rect className="float-el float-diamond" x="486" y="240" width="12" height="12" rx="2" fill="#FFC107" opacity="0.6" transform="rotate(45 492 246)" />
+      {/* Diamond Accent */}
+      <rect className="float-el float-diamond" x="486" y="240" width="12" height="12" rx="2" fill="#F59E0B" opacity="0.8" transform="rotate(45 492 246)" />
 
-      {/* Small dots pattern */}
-      <circle cx="30" cy="275" r="2.5" fill="#003153" opacity="0.1" />
-      <circle cx="42" cy="275" r="2.5" fill="#003153" opacity="0.1" />
-      <circle cx="54" cy="275" r="2.5" fill="#003153" opacity="0.1" />
-      <circle cx="30" cy="287" r="2.5" fill="#003153" opacity="0.1" />
-      <circle cx="42" cy="287" r="2.5" fill="#003153" opacity="0.1" />
-      <circle cx="54" cy="287" r="2.5" fill="#003153" opacity="0.1" />
-      <circle cx="30" cy="299" r="2.5" fill="#003153" opacity="0.1" />
-      <circle cx="42" cy="299" r="2.5" fill="#003153" opacity="0.1" />
-      <circle cx="54" cy="299" r="2.5" fill="#003153" opacity="0.1" />
-
-      {/* Bracket accent (subtle) */}
-      <text x="480" y="380" fontFamily="monospace" fontSize="18" fill="#003153" opacity="0.08" fontWeight="700">&lt;/&gt;</text>
+      {/* Subtle Dot Matrix Accent */}
+      <circle cx="30" cy="275" r="2.5" fill="#003153" opacity="0.12" />
+      <circle cx="42" cy="275" r="2.5" fill="#003153" opacity="0.12" />
+      <circle cx="54" cy="275" r="2.5" fill="#003153" opacity="0.12" />
+      <circle cx="30" cy="287" r="2.5" fill="#003153" opacity="0.12" />
+      <circle cx="42" cy="287" r="2.5" fill="#003153" opacity="0.12" />
+      <circle cx="54" cy="287" r="2.5" fill="#003153" opacity="0.12" />
+      <circle cx="30" cy="299" r="2.5" fill="#003153" opacity="0.12" />
+      <circle cx="42" cy="299" r="2.5" fill="#003153" opacity="0.12" />
+      <circle cx="54" cy="299" r="2.5" fill="#003153" opacity="0.12" />
     </svg>
   );
 }
@@ -224,25 +223,25 @@ function WorkspaceIllustration() {
 export default function HeroSection() {
   const pillars = [
     {
-      id: 1,
+      id: 'srs',
       icon: FileCode2,
       title: 'Dokumen SRS & SDD Terstruktur',
       desc: 'Dilengkapi pemodelan UML lengkap & basis data terstruktur siap sidang akademik maupun operasional bisnis.'
     },
     {
-      id: 2,
+      id: 'revisi',
       icon: Clock,
       title: 'Kuota Revisi 3x Mutlak',
       desc: 'Kepastian alur kerja transparan pasca tahap preview demi kedisiplinan dan ketepatan jadwal rilis proyek.'
     },
     {
-      id: 3,
+      id: 'privasi',
       icon: ShieldCheck,
       title: 'Kerahasiaan Data 100%',
       desc: 'Jaminan privasi identitas dan protokol pembersihan data berkala setelah serah terima proyek selesai.'
     },
     {
-      id: 4,
+      id: 'modular',
       icon: Layers,
       title: 'Source Code Bersih & Modular',
       desc: 'Arsitektur kode mandiri dan database relasional tanpa ketergantungan sewa server pihak ketiga yang membebani.'
@@ -255,7 +254,7 @@ export default function HeroSection() {
         
         <div className="hero-split-grid">
           
-          {/* LEFT COLUMN */}
+          {/* LEFT COLUMN: Authority Headline, Value Proposition, & Clean Trust Chips */}
           <div className="hero-left-content">
             
             <h1 className="hero-headline">
@@ -269,48 +268,46 @@ export default function HeroSection() {
             <div className="hero-cta-group">
               <Link to="/pesan" className="btn btn-primary hero-btn hero-btn-main">
                 <span>Isi Brief Kebutuhan Proyek</span>
-                </Link>
+              </Link>
               <Link to="/paket" className="btn btn-secondary hero-btn hero-btn-sub">
                 <Code2 size={18} style={{ color: '#0F172A' }} />
                 <span>Katalog 6 Paket &amp; Tarif Resmi</span>
               </Link>
             </div>
 
-            <div className="hero-trust-bar">
-              <div className="trust-item trust-item-status">
-                <span className="status-ping-wrap">
+            {/* Clean, Non-wrapping Trust Chips */}
+            <div className="hero-trust-chips-wrap">
+              <div className="trust-chip trust-chip-status">
+                <span className="status-ping-wrap" aria-hidden="true">
                   <span className="status-ping-ring" />
                   <span className="status-ping-dot" />
                 </span>
                 <span>Kapasitas Pengerjaan Aktif</span>
               </div>
-              <span className="trust-divider" aria-hidden="true">•</span>
-              <div className="trust-item">
-                <CheckCircle2 size={14} className="trust-icon" />
+              <div className="trust-chip">
+                <CheckCircle2 size={13} className="trust-icon" />
                 <span>Kuota Revisi 3x Mutlak</span>
               </div>
-              <span className="trust-divider" aria-hidden="true">•</span>
-              <div className="trust-item">
-                <CheckCircle2 size={14} className="trust-icon" />
+              <div className="trust-chip">
+                <CheckCircle2 size={13} className="trust-icon" />
                 <span>Garansi Bug 1 Minggu</span>
               </div>
-              <span className="trust-divider" aria-hidden="true">•</span>
-              <div className="trust-item">
-                <CheckCircle2 size={14} className="trust-icon" />
+              <div className="trust-chip">
+                <CheckCircle2 size={13} className="trust-icon" />
                 <span>Tarif Mulai Rp 100.000</span>
               </div>
             </div>
 
           </div>
 
-          {/* RIGHT COLUMN: Animated Flat SVG Illustration */}
+          {/* RIGHT COLUMN: Enhanced Animated Workspace Illustration */}
           <div className="hero-right-visual">
             <WorkspaceIllustration />
           </div>
 
         </div>
 
-        {/* 4 PILLARS */}
+        {/* 4 PILLARS OF ENGINEERING QUALITY */}
         <div className="hero-pillars-wrapper">
           <div className="hero-pillars-header">
             <h2 className="pillars-title">4 Pilar Jaminan Mutu Rekayasa</h2>
@@ -321,10 +318,7 @@ export default function HeroSection() {
               const Icon = item.icon;
               return (
                 <div key={item.id} className="neo-card hero-pillar-card">
-                  <div 
-                    className="pillar-icon-box"
-                    
-                  >
+                  <div className="pillar-icon-box">
                     <Icon size={20} />
                   </div>
                   <div className="pillar-content">
@@ -361,12 +355,12 @@ export default function HeroSection() {
         }
 
         /* =======================================================
-           DESKTOP SPLIT GRID (≥ 1024px)
+           DESKTOP SPLIT GRID (>= 1024px)
            ======================================================= */
         @media (min-width: 1024px) {
           .hero-split-grid {
             display: grid;
-            grid-template-columns: 1.1fr 0.9fr;
+            grid-template-columns: 1.05fr 0.95fr;
             gap: 40px;
             align-items: center;
             margin-bottom: 64px;
@@ -377,14 +371,6 @@ export default function HeroSection() {
             flex-direction: column;
             align-items: flex-start;
             text-align: left;
-          }
-
-          .hero-badge-group {
-            display: inline-flex;
-            align-items: center;
-            justify-content: flex-start;
-            gap: 10px;
-            margin-bottom: 22px;
           }
 
           .hero-headline {
@@ -418,16 +404,12 @@ export default function HeroSection() {
             width: 100%;
           }
 
-          .hero-trust-bar {
-            display: inline-flex;
+          .hero-trust-chips-wrap {
+            display: flex;
             align-items: center;
             justify-content: flex-start;
             flex-wrap: wrap;
-            gap: 12px;
-            padding: 8px 16px;
-            background: #F8FAFC;
-            border: 1.5px solid #E2E8F0;
-            border-radius: 9999px;
+            gap: 8px;
           }
 
           .hero-right-visual {
@@ -456,15 +438,6 @@ export default function HeroSection() {
             flex-direction: column;
             align-items: center;
             text-align: center;
-          }
-
-          .hero-badge-group {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 20px;
           }
 
           .hero-headline {
@@ -498,22 +471,18 @@ export default function HeroSection() {
             width: 100%;
           }
 
-          .hero-trust-bar {
-            display: inline-flex;
+          .hero-trust-chips-wrap {
+            display: flex;
             align-items: center;
             justify-content: center;
             flex-wrap: wrap;
-            gap: 10px;
-            padding: 8px 14px;
-            background: #F8FAFC;
-            border: 1.5px solid #E2E8F0;
-            border-radius: 9999px;
+            gap: 8px;
           }
 
           .hero-right-visual {
             position: relative;
             width: 100%;
-            max-width: 440px;
+            max-width: 480px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -531,164 +500,64 @@ export default function HeroSection() {
           }
         }
 
-        /* SVG Illustration */
+        /* SVG Illustration Base */
         .hero-illustration {
           width: 100%;
           height: auto;
           max-width: 520px;
         }
 
-        /* =======================================================
-           SVG ANIMATIONS — Subtle & Natural
-           ======================================================= */
-        /* Blinking cursor on monitor */
-        .screen-cursor {
-          animation: cursorBlink 1.1s steps(2, start) infinite;
-        }
-        @keyframes cursorBlink {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0; }
+        /* Highlight word */
+        .hero-highlight {
+          color: var(--prussian-blue);
+          display: inline;
+          font-weight: 800;
         }
 
-        /* Coffee steam rising */
-        .steam {
-          opacity: 0;
-          animation: steamRise 3s ease-in-out infinite;
+        /* Buttons */
+        .hero-btn {
+          font-family: var(--font-heading);
+          letter-spacing: 0.01em;
+          font-weight: 800;
+          transition: transform 0.18s ease, opacity 0.18s ease, background-color 0.18s ease;
         }
-        .steam-1 { animation-delay: 0s; }
-        .steam-2 { animation-delay: 1s; }
-        .steam-3 { animation-delay: 2s; }
-        @keyframes steamRise {
-          0% { opacity: 0; transform: translateY(0); }
-          30% { opacity: 0.5; }
-          60% { opacity: 0.3; transform: translateY(-6px); }
-          100% { opacity: 0; transform: translateY(-12px); }
-        }
+        .hero-btn-main { padding: 13px 28px; font-size: 0.98rem; }
+        .hero-btn-sub { padding: 13px 24px; font-size: 0.98rem; }
 
-        /* Floating elements — gentle bob */
-        .float-check {
-          animation: floatGentle 5s ease-in-out infinite;
-        }
-        .float-gear {
-          animation: spinSlow 20s linear infinite;
-        }
-        .float-diamond {
-          animation: floatGentle2 6s ease-in-out infinite;
-        }
-        @keyframes floatGentle {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-6px); }
-        }
-        @keyframes floatGentle2 {
-          0%, 100% { transform: rotate(45deg) translateY(0); }
-          50% { transform: rotate(45deg) translateY(-5px); }
-        }
-        @keyframes spinSlow {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-
-        /* Background shapes drift */
-        .bg-shape-1 {
-          animation: bgDrift1 8s ease-in-out infinite;
-        }
-        .bg-shape-2 {
-          animation: bgDrift2 9s ease-in-out infinite;
-        }
-        @keyframes bgDrift1 {
-          0%, 100% { transform: translate(0, 0); }
-          50% { transform: translate(-4px, 3px); }
-        }
-        @keyframes bgDrift2 {
-          0%, 100% { transform: translate(0, 0); }
-          50% { transform: translate(3px, -4px); }
-        }
-
-        /* Leaf sway */
-        .leaf-1 {
-          animation: leafSway1 4s ease-in-out infinite;
-          transform-origin: 76px 260px;
-        }
-        .leaf-2 {
-          animation: leafSway2 5s ease-in-out infinite;
-          transform-origin: 74px 266px;
-        }
-        .leaf-3 {
-          animation: leafSway2 4.5s ease-in-out infinite;
-          transform-origin: 80px 264px;
-        }
-        @keyframes leafSway1 {
-          0%, 100% { transform: rotate(-15deg); }
-          50% { transform: rotate(-12deg); }
-        }
-        @keyframes leafSway2 {
-          0%, 100% { transform: rotate(10deg); }
-          50% { transform: rotate(6deg); }
-        }
-
-        /* Chart bar subtle pulse */
-        .chart-bar-accent {
-          animation: barPulse 3s ease-in-out infinite;
-        }
-        .chart-bar-accent-2 {
-          animation: barPulse 3s ease-in-out infinite 1.5s;
-        }
-        @keyframes barPulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.65; }
-        }
-
-        /* Prefers reduced motion */
-        @media (prefers-reduced-motion: reduce), (max-width: 768px) {
-          .screen-cursor,
-          .steam,
-          .float-check,
-          .float-gear,
-          .float-diamond,
-          .bg-shape-1,
-          .bg-shape-2,
-          .leaf-1,
-          .leaf-2,
-          .leaf-3,
-          .chart-bar-accent,
-          .chart-bar-accent-2 {
-            animation: none !important;
-          }
-        }
-
-        /* =======================================================
-           SHARED ELEMENT STYLES
-           ======================================================= */
-        .hero-status-pill,
-        .hero-standard-pill {
+        /* Trust Chips (Clean, Modular, No Awkward Stretches) */
+        .trust-chip {
           display: inline-flex;
           align-items: center;
-          gap: 8px;
-          background: #FFFFFF;
-          border: 2px solid #0F172A;
-          border-radius: 9999px;
-          padding: 6px 14px;
-          font-size: 0.8rem;
-          font-weight: 800;
-          color: #0F172A;
-          white-space: nowrap;
-        }
-
-        .hero-standard-pill {
-          background: #F8FAFC;
+          gap: 6px;
+          font-size: 0.78rem;
+          font-weight: 700;
           color: #334155;
+          background: #F8FAFC;
+          border: 1.5px solid #CBD5E1;
+          border-radius: 9999px;
+          padding: 6px 12px;
+          white-space: nowrap;
+          transition: border-color 0.15s ease, background-color 0.15s ease;
         }
 
-        .hero-standard-pill .pill-icon {
-          color: var(--prussian-blue);
-          flex-shrink: 0;
+        .trust-chip:hover {
+          border-color: #0F172A;
+          background: #FFFFFF;
         }
+
+        .trust-chip-status {
+          background: #FFFFFF;
+          border-color: #0F172A;
+          color: #0F172A;
+        }
+
+        .trust-icon { color: #0F172A; flex-shrink: 0; }
 
         .status-ping-wrap {
           position: relative;
           display: inline-flex;
-          width: 9px;
-          height: 9px;
+          width: 8px;
+          height: 8px;
           align-items: center;
           justify-content: center;
           flex-shrink: 0;
@@ -706,8 +575,8 @@ export default function HeroSection() {
 
         .status-ping-dot {
           position: relative;
-          width: 7px;
-          height: 7px;
+          width: 6px;
+          height: 6px;
           border-radius: 50%;
           background: #059669;
         }
@@ -719,37 +588,144 @@ export default function HeroSection() {
           }
         }
 
-        .headline-segment { display: inline; }
-        .headline-highlight-wrap { display: inline-block; }
-
-        .hero-highlight {
-          color: var(--prussian-blue);
-          display: inline;
-          font-weight: 800;
+        /* =======================================================
+           RICH, HUMAN-CRAFTED SVG ANIMATIONS
+           ======================================================= */
+        
+        /* 1. Developer Head Subtle Focus Nod */
+        .dev-head-nod {
+          animation: devHeadNod 6s ease-in-out infinite;
+          transform-origin: 408px 210px;
+        }
+        @keyframes devHeadNod {
+          0%, 100% { transform: rotate(0deg); }
+          25% { transform: rotate(1.4deg) translateY(-0.8px); }
+          65% { transform: rotate(-0.8deg) translateY(0.4px); }
         }
 
-        .hero-btn {
-          font-family: var(--font-heading);
-          letter-spacing: 0.01em;
-          font-weight: 800;
-          transition: transform 0.18s ease, opacity 0.18s ease, background-color 0.18s ease;
+        /* 2. Developer Hands Active Typing Motion */
+        .hand-left {
+          animation: handTapLeft 0.75s ease-in-out infinite alternate;
         }
-        .hero-btn-main { padding: 13px 28px; font-size: 0.98rem; }
-        .hero-btn-sub { padding: 13px 24px; font-size: 0.98rem; }
+        .hand-right {
+          animation: handTapRight 0.75s ease-in-out infinite 0.35s alternate;
+        }
+        @keyframes handTapLeft {
+          0% { transform: translateY(0); }
+          100% { transform: translateY(-2.5px); }
+        }
+        @keyframes handTapRight {
+          0% { transform: translateY(0); }
+          100% { transform: translateY(-2.5px); }
+        }
 
-        .trust-item {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          font-size: 0.78rem;
-          font-weight: 700;
-          color: #475569;
+        /* 3. Screen Typing Cursor */
+        .screen-cursor {
+          animation: cursorBlink 1.1s steps(2, start) infinite;
         }
-        .trust-icon { color: #0F172A; flex-shrink: 0; }
-        .trust-divider { color: #CBD5E1; font-size: 0.8rem; }
+        @keyframes cursorBlink {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0; }
+        }
+
+        /* 4. Monitor Live Ping */
+        .screen-live-ping {
+          animation: livePingPulse 2.5s ease-in-out infinite;
+        }
+        @keyframes livePingPulse {
+          0%, 100% { opacity: 1; r: 3; }
+          50% { opacity: 0.45; r: 3.5; }
+        }
+
+        /* 5. Chart Bar Pulses (Dynamic Analytics Activity) */
+        .chart-bar-accent {
+          animation: barPulse 2.8s ease-in-out infinite;
+        }
+        .chart-bar-accent-2 {
+          animation: barPulse 2.8s ease-in-out infinite 1.4s;
+        }
+        .chart-bar-accent-3 {
+          animation: barPulse 2.8s ease-in-out infinite 0.7s;
+        }
+        @keyframes barPulse {
+          0%, 100% { opacity: 1; transform: scaleY(1); }
+          50% { opacity: 0.6; transform: scaleY(0.85); }
+        }
+
+        /* 6. Coffee Steam Rising Naturally */
+        .steam {
+          opacity: 0;
+          animation: steamRise 3.2s ease-in-out infinite;
+        }
+        .steam-1 { animation-delay: 0s; }
+        .steam-2 { animation-delay: 1.1s; }
+        .steam-3 { animation-delay: 2.2s; }
+        @keyframes steamRise {
+          0% { opacity: 0; transform: translateY(0); }
+          30% { opacity: 0.55; }
+          60% { opacity: 0.3; transform: translateY(-7px); }
+          100% { opacity: 0; transform: translateY(-14px); }
+        }
+
+        /* 7. Desk Plant Leaves Swaying in Breeze */
+        .leaf-1 {
+          animation: leafSway1 4.2s ease-in-out infinite;
+          transform-origin: 76px 260px;
+        }
+        .leaf-2 {
+          animation: leafSway2 5s ease-in-out infinite;
+          transform-origin: 74px 266px;
+        }
+        .leaf-3 {
+          animation: leafSway2 4.6s ease-in-out infinite 1s;
+          transform-origin: 80px 264px;
+        }
+        @keyframes leafSway1 {
+          0%, 100% { transform: rotate(-15deg); }
+          50% { transform: rotate(-11deg); }
+        }
+        @keyframes leafSway2 {
+          0%, 100% { transform: rotate(10deg); }
+          50% { transform: rotate(5deg); }
+        }
+
+        /* 8. Floating Quality & Code Badges */
+        .float-check {
+          animation: floatGentle 5s ease-in-out infinite;
+        }
+        .float-code {
+          animation: floatGentle2 5.5s ease-in-out infinite;
+        }
+        .float-diamond {
+          animation: floatGentle 6s ease-in-out infinite 0.5s;
+        }
+        @keyframes floatGentle {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-6px); }
+        }
+        @keyframes floatGentle2 {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(6px); }
+        }
+
+        /* 9. Background Shapes Drift */
+        .bg-shape-1 {
+          animation: bgDrift1 8s ease-in-out infinite;
+        }
+        .bg-shape-2 {
+          animation: bgDrift2 9s ease-in-out infinite;
+        }
+        @keyframes bgDrift1 {
+          0%, 100% { transform: translate(0, 0); }
+          50% { transform: translate(-4px, 3px); }
+        }
+        @keyframes bgDrift2 {
+          0%, 100% { transform: translate(0, 0); }
+          50% { transform: translate(3px, -4px); }
+        }
 
         /* =======================================================
-           PILLARS
+           PILLARS OF QUALITY
            ======================================================= */
         .hero-pillars-wrapper {
           width: 100%;
@@ -761,8 +737,6 @@ export default function HeroSection() {
           margin-bottom: 24px;
           text-align: center;
         }
-
-        .pillars-pretitle { display: none !important; }
 
         .pillars-title {
           font-size: 1.28rem;
@@ -784,27 +758,27 @@ export default function HeroSection() {
           gap: 14px;
           align-items: flex-start;
           background: #FFFFFF;
-          border: 1px solid var(--border-subtle);
+          border: 1.5px solid #CBD5E1;
           border-radius: var(--radius-md);
           transition: transform 0.2s ease, border-color 0.2s ease;
         }
 
         .hero-pillar-card:hover {
           transform: translateY(-2px);
-          border-color: var(--border-main);
+          border-color: #0F172A;
         }
 
         .pillar-icon-box {
-          border: 1px solid var(--border-subtle);
+          border: 1.5px solid #CBD5E1;
           padding: 10px;
-          border-radius: 10px;
+          border-radius: 8px;
           flex-shrink: 0;
           display: flex;
           align-items: center;
           justify-content: center;
-        
           background: #F1F5F9;
-          color: #0F172A;}
+          color: #0F172A;
+        }
 
         .pillar-content { flex: 1; min-width: 0; }
 
@@ -851,6 +825,33 @@ export default function HeroSection() {
           .pillar-card-desc {
             font-size: 0.82rem;
             line-height: 1.55;
+          }
+        }
+
+        /* Prefers reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+          .status-ping-ring,
+          .dev-head-nod,
+          .hand-left,
+          .hand-right,
+          .screen-cursor,
+          .screen-live-ping,
+          .chart-bar-accent,
+          .chart-bar-accent-2,
+          .chart-bar-accent-3,
+          .steam,
+          .leaf-1,
+          .leaf-2,
+          .leaf-3,
+          .float-check,
+          .float-code,
+          .float-diamond,
+          .bg-shape-1,
+          .bg-shape-2 {
+            animation: none !important;
+          }
+          .hero-pillar-card {
+            transition: none !important;
           }
         }
       `}</style>
