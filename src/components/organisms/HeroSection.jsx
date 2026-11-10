@@ -18,7 +18,7 @@ import {
 function WorkspaceIllustration() {
   return (
     <svg
-      viewBox="0 0 520 420"
+      viewBox="0 0 520 395"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className="hero-illustration"
@@ -26,7 +26,7 @@ function WorkspaceIllustration() {
     >
       {/* ── Background Ambient Geometric Shapes ── */}
       <circle className="bg-shape-1" cx="440" cy="72" r="64" fill="#F1F5F9" />
-      <circle className="bg-shape-2" cx="60" cy="360" r="44" fill="#F8FAFC" />
+      <circle className="bg-shape-2" cx="60" cy="350" r="44" fill="#F8FAFC" />
       <rect className="bg-shape-3" x="20" y="100" width="28" height="28" rx="6" fill="#F1F5F9" opacity="0.7" transform="rotate(12 34 114)" />
       <rect className="bg-shape-4" x="475" y="300" width="20" height="20" rx="4" fill="#F1F5F9" opacity="0.6" transform="rotate(-8 485 310)" />
 
@@ -197,7 +197,6 @@ function WorkspaceIllustration() {
       {/* Code Architecture Badge (Smooth Float) */}
       <g className="float-el float-code">
         <circle cx="460" cy="126" r="17" fill="#FFFFFF" stroke="#1D63FF" strokeWidth="1.8" />
-        {/* Subtle clean code icon inside circle */}
         <path d="M453 122 L449 126 L453 130" stroke="#1D63FF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
         <path d="M467 122 L471 126 L467 130" stroke="#1D63FF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
         <line x1="462" y1="120" x2="458" y2="132" stroke="#1D63FF" strokeWidth="1.8" strokeLinecap="round" />
@@ -213,9 +212,6 @@ function WorkspaceIllustration() {
       <circle cx="30" cy="287" r="2.5" fill="#003153" opacity="0.12" />
       <circle cx="42" cy="287" r="2.5" fill="#003153" opacity="0.12" />
       <circle cx="54" cy="287" r="2.5" fill="#003153" opacity="0.12" />
-      <circle cx="30" cy="299" r="2.5" fill="#003153" opacity="0.12" />
-      <circle cx="42" cy="299" r="2.5" fill="#003153" opacity="0.12" />
-      <circle cx="54" cy="299" r="2.5" fill="#003153" opacity="0.12" />
     </svg>
   );
 }
@@ -254,7 +250,7 @@ export default function HeroSection() {
         
         <div className="hero-split-grid">
           
-          {/* LEFT COLUMN: Authority Headline, Value Proposition, & Clean Trust Chips */}
+          {/* LEFT COLUMN: Authority Headline, Value Proposition, & Symmetrical 2x2 Trust Chips */}
           <div className="hero-left-content">
             
             <h1 className="hero-headline">
@@ -275,7 +271,7 @@ export default function HeroSection() {
               </Link>
             </div>
 
-            {/* Clean, Non-wrapping Trust Chips */}
+            {/* Symmetrical 2x2 Trust Chips (Never Wraps Unevenly) */}
             <div className="hero-trust-chips-wrap">
               <div className="trust-chip trust-chip-status">
                 <span className="status-ping-wrap" aria-hidden="true">
@@ -307,7 +303,7 @@ export default function HeroSection() {
 
         </div>
 
-        {/* 4 PILLARS OF ENGINEERING QUALITY */}
+        {/* 4 PILLARS OF ENGINEERING QUALITY (TIGHT, COMPACT, & FULLY VISIBLE IN FOLD) */}
         <div className="hero-pillars-wrapper">
           <div className="hero-pillars-header">
             <h2 className="pillars-title">4 Pilar Jaminan Mutu Rekayasa</h2>
@@ -319,7 +315,7 @@ export default function HeroSection() {
               return (
                 <div key={item.id} className="neo-card hero-pillar-card">
                   <div className="pillar-icon-box">
-                    <Icon size={20} />
+                    <Icon size={18} />
                   </div>
                   <div className="pillar-content">
                     <h3 className="pillar-card-title">
@@ -339,13 +335,13 @@ export default function HeroSection() {
 
       <style>{`
         /* =======================================================
-           HERO SECTION BASE
+           HERO SECTION BASE (TIGHT & BALANCED VERTICAL RHYTHM)
            ======================================================= */
         .hero-section {
           position: relative;
           overflow: hidden;
-          padding-top: 48px;
-          padding-bottom: 72px;
+          padding-top: 24px;
+          padding-bottom: 48px;
           background: transparent;
         }
 
@@ -361,9 +357,9 @@ export default function HeroSection() {
           .hero-split-grid {
             display: grid;
             grid-template-columns: 1.05fr 0.95fr;
-            gap: 40px;
+            gap: 36px;
             align-items: center;
-            margin-bottom: 64px;
+            margin-bottom: 28px;
           }
 
           .hero-left-content {
@@ -374,10 +370,10 @@ export default function HeroSection() {
           }
 
           .hero-headline {
-            font-size: clamp(2.3rem, 3.6vw, 3.4rem);
+            font-size: clamp(2.2rem, 3.4vw, 3.2rem);
             font-weight: 800;
             line-height: 1.15;
-            margin: 0 0 18px 0;
+            margin: 0 0 16px 0;
             letter-spacing: -0.03em;
             color: var(--ink);
             text-align: left;
@@ -385,11 +381,11 @@ export default function HeroSection() {
           }
 
           .hero-subtitle {
-            font-size: 1.06rem;
+            font-size: 1.02rem;
             color: #334155;
-            max-width: 580px;
-            margin: 0 0 28px 0;
-            line-height: 1.7;
+            max-width: 560px;
+            margin: 0 0 24px 0;
+            line-height: 1.65;
             font-weight: 500;
             text-align: left;
           }
@@ -399,17 +395,15 @@ export default function HeroSection() {
             justify-content: flex-start;
             align-items: center;
             flex-wrap: wrap;
-            gap: 16px;
-            margin-bottom: 24px;
+            gap: 14px;
+            margin-bottom: 20px;
             width: 100%;
           }
 
           .hero-trust-chips-wrap {
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            flex-wrap: wrap;
-            gap: 8px;
+            display: inline-grid;
+            grid-template-columns: auto auto;
+            gap: 8px 10px;
           }
 
           .hero-right-visual {
@@ -429,8 +423,8 @@ export default function HeroSection() {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 36px;
-            margin-bottom: 48px;
+            gap: 28px;
+            margin-bottom: 32px;
           }
 
           .hero-left-content {
@@ -441,10 +435,10 @@ export default function HeroSection() {
           }
 
           .hero-headline {
-            font-size: clamp(1.85rem, 5vw, 2.4rem);
+            font-size: clamp(1.85rem, 5vw, 2.3rem);
             font-weight: 900;
             line-height: 1.18;
-            margin: 0 auto 16px auto;
+            margin: 0 auto 14px auto;
             letter-spacing: -0.03em;
             color: #0F172A;
             text-align: center;
@@ -452,11 +446,11 @@ export default function HeroSection() {
           }
 
           .hero-subtitle {
-            font-size: 0.98rem;
+            font-size: 0.95rem;
             color: #334155;
-            max-width: 640px;
-            margin: 0 auto 24px auto;
-            line-height: 1.65;
+            max-width: 620px;
+            margin: 0 auto 20px auto;
+            line-height: 1.6;
             font-weight: 500;
             text-align: center;
           }
@@ -467,7 +461,7 @@ export default function HeroSection() {
             align-items: center;
             flex-wrap: wrap;
             gap: 12px;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
             width: 100%;
           }
 
@@ -482,9 +476,22 @@ export default function HeroSection() {
           .hero-right-visual {
             position: relative;
             width: 100%;
-            max-width: 480px;
+            max-width: 440px;
             display: flex;
             align-items: center;
+            justify-content: center;
+          }
+        }
+
+        @media (max-width: 640px) {
+          .hero-trust-chips-wrap {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            align-items: stretch;
+            gap: 6px;
+          }
+          .trust-chip {
             justify-content: center;
           }
         }
@@ -504,7 +511,7 @@ export default function HeroSection() {
         .hero-illustration {
           width: 100%;
           height: auto;
-          max-width: 520px;
+          max-width: 480px;
         }
 
         /* Highlight word */
@@ -521,21 +528,21 @@ export default function HeroSection() {
           font-weight: 800;
           transition: transform 0.18s ease, opacity 0.18s ease, background-color 0.18s ease;
         }
-        .hero-btn-main { padding: 13px 28px; font-size: 0.98rem; }
-        .hero-btn-sub { padding: 13px 24px; font-size: 0.98rem; }
+        .hero-btn-main { padding: 12px 26px; font-size: 0.95rem; }
+        .hero-btn-sub { padding: 12px 22px; font-size: 0.95rem; }
 
-        /* Trust Chips (Clean, Modular, No Awkward Stretches) */
+        /* Trust Chips (Modular 2x2 Clean Balance) */
         .trust-chip {
           display: inline-flex;
           align-items: center;
           gap: 6px;
-          font-size: 0.78rem;
+          font-size: 0.76rem;
           font-weight: 700;
           color: #334155;
           background: #F8FAFC;
           border: 1.5px solid #CBD5E1;
           border-radius: 9999px;
-          padding: 6px 12px;
+          padding: 5px 11px;
           white-space: nowrap;
           transition: border-color 0.15s ease, background-color 0.15s ease;
         }
@@ -725,7 +732,7 @@ export default function HeroSection() {
         }
 
         /* =======================================================
-           PILLARS OF QUALITY
+           PILLARS OF QUALITY (TIGHT & HARMONIOUS IN FOLD)
            ======================================================= */
         .hero-pillars-wrapper {
           width: 100%;
@@ -734,28 +741,29 @@ export default function HeroSection() {
         }
 
         .hero-pillars-header {
-          margin-bottom: 24px;
+          margin-bottom: 14px;
           text-align: center;
         }
 
         .pillars-title {
-          font-size: 1.28rem;
+          font-size: 1.15rem;
           font-weight: 900;
           color: #0F172A;
           margin: 0;
+          letter-spacing: -0.01em;
         }
 
         .hero-pillars-grid {
           display: grid;
           grid-template-columns: repeat(4, 1fr);
-          gap: 18px;
+          gap: 14px;
         }
 
         .hero-pillar-card {
-          padding: 22px;
+          padding: 14px 16px;
           text-align: left;
           display: flex;
-          gap: 14px;
+          gap: 12px;
           align-items: flex-start;
           background: #FFFFFF;
           border: 1.5px solid #CBD5E1;
@@ -770,8 +778,8 @@ export default function HeroSection() {
 
         .pillar-icon-box {
           border: 1.5px solid #CBD5E1;
-          padding: 10px;
-          border-radius: 8px;
+          padding: 8px;
+          border-radius: 6px;
           flex-shrink: 0;
           display: flex;
           align-items: center;
@@ -783,17 +791,17 @@ export default function HeroSection() {
         .pillar-content { flex: 1; min-width: 0; }
 
         .pillar-card-title {
-          font-size: 0.98rem;
+          font-size: 0.88rem;
           font-weight: 800;
           color: #0F172A;
-          margin-bottom: 6px;
-          line-height: 1.35;
+          margin-bottom: 4px;
+          line-height: 1.3;
         }
 
         .pillar-card-desc {
-          font-size: 0.85rem;
+          font-size: 0.78rem;
           color: #475569;
-          line-height: 1.6;
+          line-height: 1.5;
           margin: 0;
           font-weight: 500;
           word-break: break-word;
@@ -802,29 +810,29 @@ export default function HeroSection() {
         @media (max-width: 1023px) {
           .hero-pillars-grid {
             grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
+            gap: 12px;
           }
         }
 
         @media (max-width: 640px) {
           .hero-pillars-grid {
             grid-template-columns: 1fr;
-            gap: 14px;
+            gap: 10px;
           }
 
           .hero-pillar-card {
-            padding: 16px 14px;
-            gap: 12px;
+            padding: 12px 14px;
+            gap: 10px;
           }
 
           .pillar-card-title {
-            font-size: 0.95rem;
-            margin-bottom: 4px;
+            font-size: 0.86rem;
+            margin-bottom: 3px;
           }
 
           .pillar-card-desc {
-            font-size: 0.82rem;
-            line-height: 1.55;
+            font-size: 0.76rem;
+            line-height: 1.45;
           }
         }
 
