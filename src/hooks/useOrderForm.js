@@ -241,7 +241,7 @@ export function useOrderForm(initialPackageId = null) {
       assetDriveUrl: sanitizeUrl(formData.assetDriveUrl)
     };
 
-    const waUrl = createWhatsAppPayload(sanitizedData, selectedPackage, selectedAddons);
+    const waUrl = createWhatsAppPayload(sanitizedData, selectedPackage, selectedAddons, calculations);
     setIsSubmitted(true);
 
     // Register inquiry to central orderStorage database

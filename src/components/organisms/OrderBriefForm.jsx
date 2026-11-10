@@ -1,14 +1,14 @@
 import React from 'react';
 import { useOrderForm } from '../../hooks/useOrderForm';
 import { PACKAGES, ADDONS } from '../../data/catalogData';
-import { formatRupiah } from '../../utils/documentEngine';
+import { formatRupiah, terbilangRupiah } from '../../utils/documentEngine';
 import StepIndicator from '../molecules/StepIndicator';
 import Input from '../atoms/Input';
 import Button from '../atoms/Button';
 import { 
   FileText, ArrowRight, ArrowLeft, Send, CheckCircle2, 
   Layers, Clock, ShieldCheck, Database, HelpCircle, RotateCcw, Star,
-  Link2, ExternalLink, MessageSquarePlus, MessageCircle, Sparkles, Info
+  Link2, ExternalLink, MessageSquarePlus, MessageCircle, Info, Calculator
 } from 'lucide-react';
 
 const featureOptions = [
@@ -837,55 +837,203 @@ export default function OrderBriefForm({ preselectedPackageId, hideHeader = fals
                     )}
                   </div>
 
-                  {/* Addon breakdown */}
-                  {selectedAddons.length > 0 && (
-                    <div style={{ paddingTop: '16px', borderTop: '1.5px solid #E2E8F0', marginBottom: '16px' }}>
-                      <div style={{ fontSize: '0.82rem', fontWeight: '800', color: '#0F172A', marginBottom: '8px' }}>
-                        Layanan Tambahan (Add-on):
-                      </div>
-                      {selectedAddons.map(a => (
-                        <div key={a.id} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.86rem', color: '#475569', marginBottom: '4px' }}>
-                          <span>&bull; {a.name}</span>
-                          <span style={{ color: '#0F172A', fontWeight: '700' }}>{a.priceDisplay}</span>
-                        </div>
-                      ))}
-
-                      {formData.customModuleRequest && (
-                        <div style={{ background: '#F1F5F9', border: '1px solid var(--border-subtle)', borderRadius: '6px', padding: '10px 12px', marginTop: '8px' }}>
-                          <div style={{ fontSize: '0.78rem', fontWeight: '800', color: '#D97706', marginBottom: '2px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                            <MessageCircle size={14} /> Permintaan Modul Khusus:
-                          </div>
-                          <div style={{ fontSize: '0.85rem', color: '#0F172A', fontWeight: '600' }}>
-                            "{formData.customModuleRequest}"
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  )}
-
-                  {/* Total summary */}
+                  {/* Rincian Total Kalkulasi Investasi & Skema Termin SOP */}
                   <div style={{
-                    paddingTop: '16px',
-                    borderTop: '1px solid var(--border-subtle)',
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    gap: '12px'
+                    marginTop: '20px',
+                    paddingTop: '20px',
+                    borderTop: '2px solid #0F172A'
                   }}>
-                    <div>
-                      <div style={{ fontSize: '0.82rem', color: '#64748B', fontWeight: '700' }}>Estimasi Tarif Referensi:</div>
-                      <div style={{ fontSize: '1.45rem', fontWeight: '900', color: 'var(--prussian-blue)' }}>
-                        {calculations.minPrice === calculations.maxPrice
-                          ? `${formatRupiah(calculations.minPrice)} (Tarif Tetap)`
-                          : `${formatRupiah(calculations.minPrice)} – ${formatRupiah(calculations.maxPrice)}`}
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      flexWrap: 'wrap',
+                      gap: '8px',
+                      marginBottom: '16px'
+                    }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <Calculator size={18} style={{ color: 'var(--prussian-blue)' }} />
+                        <h4 style={{ fontSize: '1rem', fontWeight: '900', color: '#0F172A', margin: 0 }}>
+                          Rincian Kalkulasi Investasi &amp; Skema Termin SOP
+                        </h4>
                       </div>
-                      <div style={{ fontSize: '0.8rem', color: '#475569', fontWeight: '600' }}>
-                        Uang Muka (DP 50%): {calculations.dpMin === calculations.dpMax ? formatRupiah(calculations.dpMin) : `${formatRupiah(calculations.dpMin)} – ${formatRupiah(calculations.dpMax)}`}
+                      <span style={{ fontSize: '0.78rem', fontWeight: '700', color: '#475569', background: '#F1F5F9', padding: '4px 10px', borderRadius: '4px' }}>
+                        Transparan &amp; Tanpa Biaya Tersembunyi
+                      </span>
+                    </div>
+
+                    {/* Breakdown Card */}
+                    <div style={{
+                      background: '#FFFFFF',
+                      border: '1.5px solid #CBD5E1',
+                      borderRadius: '6px',
+                      padding: '16px',
+                      marginBottom: '16px'
+                    }}>
+                      {/* Item 1: Paket Dasar */}
+                      <div style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'flex-start',
+                        paddingBottom: '12px',
+                        borderBottom: '1.5px solid #F1F5F9'
+                      }}>
+                        <div>
+                          <div style={{ fontSize: '0.88rem', fontWeight: '800', color: '#0F172A' }}>
+                            Paket Layanan Dasar: {selectedPackage.name}
+                          </div>
+                          <div style={{ fontSize: '0.78rem', color: '#64748B' }}>
+                            {selectedPackage.systemType} ({selectedPackage.minDays}–{selectedPackage.maxDays} Hari Kerja)
+                          </div>
+                        </div>
+                        <div style={{ fontSize: '0.95rem', fontWeight: '800', color: '#0F172A', whiteSpace: 'nowrap' }}>
+                          {formatRupiah(selectedPackage.minPrice)}
+                        </div>
+                      </div>
+
+                      {/* Item 2: Add-ons */}
+                      <div style={{
+                        paddingTop: '12px',
+                        paddingBottom: '12px',
+                        borderBottom: '2px solid #0F172A'
+                      }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                          <div style={{ fontSize: '0.88rem', fontWeight: '800', color: '#0F172A' }}>
+                            Layanan Tambahan (Add-on) Terpilih ({selectedAddons.length}):
+                          </div>
+                          <div style={{ fontSize: '0.9rem', fontWeight: '800', color: selectedAddons.length > 0 ? '#0F172A' : '#64748B' }}>
+                            {formatRupiah(selectedAddons.reduce((sum, a) => sum + (Number(a.minPrice) || 0), 0))}
+                          </div>
+                        </div>
+
+                        {selectedAddons.length > 0 ? (
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', paddingLeft: '8px' }}>
+                            {selectedAddons.map(a => (
+                              <div key={a.id} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', color: '#475569' }}>
+                                <span>&bull; {a.name}</span>
+                                <span style={{ fontWeight: '700', color: '#0F172A' }}>{formatRupiah(a.minPrice)}</span>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <div style={{ fontSize: '0.8rem', color: '#64748B', fontStyle: 'italic', paddingLeft: '8px' }}>
+                            Hanya paket dasar standar (Tidak ada modul tambahan yang dipilih).
+                          </div>
+                        )}
+
+                        {formData.customModuleRequest && (
+                          <div style={{ background: '#F8FAFC', border: '1.5px solid #E2E8F0', borderRadius: '4px', padding: '10px 12px', marginTop: '10px' }}>
+                            <div style={{ fontSize: '0.78rem', fontWeight: '800', color: '#D97706', marginBottom: '2px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                              <MessageCircle size={14} /> Permintaan Modul Khusus (Chat Request):
+                            </div>
+                            <div style={{ fontSize: '0.84rem', color: '#0F172A', fontWeight: '600' }}>
+                              "{formData.customModuleRequest}"
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Grand Total */}
+                      <div style={{
+                        paddingTop: '16px',
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        justifyContent: 'space-between',
+                        alignItems: 'baseline',
+                        gap: '8px'
+                      }}>
+                        <div>
+                          <div style={{ fontSize: '0.8rem', fontWeight: '800', color: '#64748B', textTransform: 'uppercase' }}>
+                            Total Estimasi Investasi Proyek
+                          </div>
+                          <div style={{ fontSize: '0.82rem', color: '#475569', fontStyle: 'italic', marginTop: '2px' }}>
+                            Terbilang: <strong>{terbilangRupiah(calculations.minPrice)}</strong>
+                          </div>
+                        </div>
+                        <div style={{ fontSize: '1.6rem', fontWeight: '900', color: 'var(--prussian-blue)' }}>
+                          {formatRupiah(calculations.minPrice)}
+                        </div>
                       </div>
                     </div>
-                    <div style={{ fontSize: '0.82rem', color: '#0F172A', background: '#F1F5F9', border: '1px solid var(--border-subtle)', padding: '6px 14px', borderRadius: '4px', fontWeight: '700',  }}>
-                      Kuota Revisi: Maksimal 3x Mutlak
+
+                    {/* Skema Termin SOP (2-Column Cards) */}
+                    <div style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+                      gap: '12px',
+                      marginBottom: '16px'
+                    }}>
+                      <div style={{
+                        background: '#FFFFFF',
+                        border: '1.5px solid #CBD5E1',
+                        borderRadius: '6px',
+                        padding: '14px 16px'
+                      }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                          <span style={{ fontSize: '0.8rem', fontWeight: '800', color: '#0F172A' }}>
+                            Termin 1: Uang Muka (DP 50%)
+                          </span>
+                          <span style={{ fontSize: '0.74rem', fontWeight: '800', color: '#1D63FF', background: '#F1F5F9', padding: '2px 8px', borderRadius: '3px' }}>
+                            Mulai Koding
+                          </span>
+                        </div>
+                        <div style={{ fontSize: '1.25rem', fontWeight: '900', color: '#0F172A', marginBottom: '4px' }}>
+                          {formatRupiah(calculations.dpMin)}
+                        </div>
+                        <div style={{ fontSize: '0.78rem', color: '#475569', lineHeight: '1.4' }}>
+                          Aktivasi antrean kerja resmi, inisialisasi repositori Git, dan arsitektur kode.
+                        </div>
+                      </div>
+
+                      <div style={{
+                        background: '#FFFFFF',
+                        border: '1.5px solid #CBD5E1',
+                        borderRadius: '6px',
+                        padding: '14px 16px'
+                      }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                          <span style={{ fontSize: '0.8rem', fontWeight: '800', color: '#0F172A' }}>
+                            Termin 2: Pelunasan (50%)
+                          </span>
+                          <span style={{ fontSize: '0.74rem', fontWeight: '800', color: '#0F172A', background: '#F1F5F9', padding: '2px 8px', borderRadius: '3px' }}>
+                            Serah Terima
+                          </span>
+                        </div>
+                        <div style={{ fontSize: '1.25rem', fontWeight: '900', color: '#0F172A', marginBottom: '4px' }}>
+                          {formatRupiah(calculations.minPrice - calculations.dpMin)}
+                        </div>
+                        <div style={{ fontSize: '0.78rem', color: '#475569', lineHeight: '1.4' }}>
+                          Dibayarkan setelah peninjauan demo live dan sebelum penyerahan master file (.zip).
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* SOP Badges Strip */}
+                    <div style={{
+                      display: 'flex',
+                      flexWrap: 'wrap',
+                      gap: '10px',
+                      padding: '12px 14px',
+                      background: '#F1F5F9',
+                      borderRadius: '6px',
+                      fontSize: '0.8rem',
+                      color: '#0F172A',
+                      fontWeight: '700'
+                    }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <ShieldCheck size={15} style={{ color: 'var(--prussian-blue)' }} />
+                        <span>Kuota Revisi SOP: <strong>Maksimal 3x Mutlak</strong></span>
+                      </div>
+                      <span style={{ color: '#94A3B8' }}>&bull;</span>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <Clock size={15} style={{ color: 'var(--prussian-blue)' }} />
+                        <span>Garansi Bug Kode: <strong>7 Hari Kalender</strong></span>
+                      </div>
+                      <span style={{ color: '#94A3B8' }}>&bull;</span>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <Info size={15} style={{ color: 'var(--prussian-blue)' }} />
+                        <span>Eksklusi: <strong>Murni Rekayasa Software</strong></span>
+                      </div>
                     </div>
                   </div>
                 </div>
