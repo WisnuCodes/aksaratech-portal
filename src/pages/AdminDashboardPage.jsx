@@ -1,5 +1,34 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
+import {
+  Box,
+  Container,
+  Typography,
+  Button,
+  Paper,
+  Card,
+  CardContent,
+  Chip,
+  Tabs,
+  Tab,
+  TextField,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Stack,
+  IconButton,
+  Tooltip,
+  Divider,
+  Alert,
+  InputAdornment,
+  ThemeProvider,
+  createTheme
+} from '@mui/material';
 import { 
   ShieldCheck, 
   Search, 
@@ -52,6 +81,76 @@ import { formatRupiah, generateInquiryId } from '../utils/documentEngine';
 
 // Default Admin Security PIN
 const DEFAULT_ADMIN_PIN = '2026';
+
+// Executive Material UI Theme (Taste Skill & Anti-Slop Compliant)
+const adminTheme = createTheme({
+  typography: {
+    fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif",
+    button: {
+      textTransform: 'none',
+      fontWeight: 800
+    }
+  },
+  palette: {
+    primary: {
+      main: '#0F172A',
+      dark: '#020617',
+      contrastText: '#FFFFFF'
+    },
+    secondary: {
+      main: '#1D63FF',
+      dark: '#144ECC',
+      contrastText: '#FFFFFF'
+    },
+    background: {
+      default: '#F8FAFC',
+      paper: '#FFFFFF'
+    },
+    text: {
+      primary: '#0F172A',
+      secondary: '#475569'
+    },
+    divider: '#CBD5E1'
+  },
+  components: {
+    MuiButton: {
+      defaultProps: {
+        disableElevation: true
+      },
+      styleOverrides: {
+        root: {
+          textTransform: 'none',
+          boxShadow: 'none',
+          '&:hover': {
+            boxShadow: 'none'
+          }
+        }
+      }
+    },
+    MuiCard: {
+      defaultProps: {
+        elevation: 0
+      },
+      styleOverrides: {
+        root: {
+          boxShadow: 'none',
+          border: '1.5px solid #CBD5E1',
+          borderRadius: 12
+        }
+      }
+    },
+    MuiPaper: {
+      defaultProps: {
+        elevation: 0
+      },
+      styleOverrides: {
+        root: {
+          boxShadow: 'none'
+        }
+      }
+    }
+  }
+});
 
 export default function AdminDashboardPage() {
   // Authentication State
@@ -638,134 +737,229 @@ function doPost(e) {
   // ─────────────────────────────────────────────────────────────
   if (!isAuthenticated) {
     return (
-      <div style={{ minHeight: '100vh', background: '#F8FAFC', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '32px 20px', boxSizing: 'border-box' }}>
-        
-        {/* Status Chip */}
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 14px', borderRadius: '999px', background: '#FFFFFF', border: '1.5px solid #CBD5E1', marginBottom: '24px' }}>
-          <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#22C55E' }} />
-          <span style={{ fontSize: '0.8rem', fontWeight: '800', color: '#0F172A', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
-            Aksara Tech &bull; Restricted Internal Access
-          </span>
-        </div>
+      <ThemeProvider theme={adminTheme}>
+        <Box
+          sx={{
+            minHeight: '100vh',
+            bgcolor: '#F8FAFC',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            p: { xs: 2.5, sm: 4 },
+            boxSizing: 'border-box'
+          }}
+        >
+          {/* Status Chip */}
+          <Chip
+            label="Aksara Tech • Restricted Internal Access"
+            icon={<Box component="span" sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#22C55E', ml: '4px !important' }} />}
+            sx={{
+              bgcolor: '#FFFFFF',
+              border: '1.5px solid #CBD5E1',
+              fontWeight: 800,
+              fontSize: '0.8rem',
+              color: '#0F172A',
+              mb: 3,
+              py: 0.5,
+              px: 1,
+              borderRadius: '999px',
+              letterSpacing: '0.04em'
+            }}
+          />
 
-        {/* Security Card Container */}
-        <div style={{ background: '#FFFFFF', border: '2px solid #0F172A', borderRadius: '16px', maxWidth: '460px', width: '100%', padding: '40px 36px', boxSizing: 'border-box', textAlign: 'center' }}>
-          
-          {/* Security Icon Badge */}
-          <div style={{ width: '56px', height: '56px', borderRadius: '12px', background: '#0F172A', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px auto' }}>
-            <KeyRound size={26} color="#FFFFFF" />
-          </div>
-
-          <h1 style={{ fontSize: '1.5rem', fontWeight: '900', color: '#0F172A', margin: '0 0 10px 0', letterSpacing: '-0.01em', lineHeight: '1.25' }}>
-            Pusat Otentikasi Workspace
-          </h1>
-          <p style={{ fontSize: '0.92rem', color: '#334155', margin: '0 0 28px 0', lineHeight: '1.55' }}>
-            Akses verifikasi pembayaran DP 50%, pembaruan tahapan koding SOP, dan sinkronisasi repositori berkas proyek.
-          </p>
-
-          <form onSubmit={handlePinSubmit}>
-            <div style={{ marginBottom: '24px', textAlign: 'left' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                <label style={{ fontSize: '0.84rem', fontWeight: '800', color: '#0F172A' }}>
-                  PIN Keamanan Pengembang
-                </label>
-                <button
-                  type="button"
-                  onClick={() => setPinInput(DEFAULT_ADMIN_PIN)}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    color: '#1D63FF',
-                    fontSize: '0.78rem',
-                    fontWeight: '800',
-                    cursor: 'pointer',
-                    padding: 0
-                  }}
-                >
-                  Gunakan Default (2026)
-                </button>
-              </div>
-
-              <input
-                type="password"
-                maxLength={8}
-                value={pinInput}
-                onChange={(e) => {
-                  setPinInput(e.target.value);
-                  if (pinError) setPinError('');
-                }}
-                placeholder="••••"
-                autoFocus
-                style={{
-                  width: '100%',
-                  boxSizing: 'border-box',
-                  padding: '16px 20px',
-                  fontSize: '1.5rem',
-                  fontWeight: '900',
-                  textAlign: 'center',
-                  letterSpacing: '0.4em',
-                  background: '#F8FAFC',
-                  border: pinError ? '2px solid #DC2626' : '2px solid #0F172A',
-                  borderRadius: '10px',
-                  outline: 'none',
-                  color: '#0F172A'
-                }}
-              />
-              
-              {pinError && (
-                <div style={{ fontSize: '0.84rem', color: '#DC2626', fontWeight: '800', marginTop: '8px', textAlign: 'center' }}>
-                  {pinError}
-                </div>
-              )}
-            </div>
-
-            <button
-              type="submit"
-              style={{
-                width: '100%',
-                background: '#0F172A',
-                color: '#FFFFFF',
-                border: 'none',
-                borderRadius: '10px',
-                padding: '14px 20px',
-                fontSize: '0.98rem',
-                fontWeight: '800',
-                cursor: 'pointer',
-                display: 'inline-flex',
+          {/* Security Card Container */}
+          <Card
+            sx={{
+              maxWidth: 460,
+              width: '100%',
+              p: { xs: 3.5, sm: 4.5 },
+              border: '2px solid #0F172A',
+              borderRadius: '16px',
+              textAlign: 'center',
+              bgcolor: '#FFFFFF',
+              boxSizing: 'border-box'
+            }}
+          >
+            {/* Security Icon Badge */}
+            <Box
+              sx={{
+                width: 56,
+                height: 56,
+                borderRadius: '12px',
+                bgcolor: '#0F172A',
+                display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '8px',
-                transition: 'background 0.15s, transform 0.1s'
+                mx: 'auto',
+                mb: 2.5
               }}
             >
-              <ShieldCheck size={18} />
-              <span>Buka Akses Workspace</span>
-            </button>
-          </form>
+              <KeyRound size={26} color="#FFFFFF" />
+            </Box>
 
-          {/* Discreet Meta Footnote */}
-          <div style={{ marginTop: '28px', paddingTop: '20px', borderTop: '1.5px solid #E2E8F0', display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.82rem', color: '#64748B' }}>
-            <div>
-              <span>PIN Standar Pengembang: </span>
-              <code style={{ background: '#F1F5F9', padding: '2px 8px', borderRadius: '4px', fontWeight: '800', color: '#0F172A', border: '1.5px solid #CBD5E1' }}>2026</code>
-            </div>
-            <Link
-              to="/"
-              style={{
-                color: '#475569',
-                textDecoration: 'none',
-                fontWeight: '700',
-                marginTop: '4px',
-                display: 'inline-block'
+            <Typography
+              variant="h5"
+              component="h1"
+              sx={{
+                fontWeight: 900,
+                color: '#0F172A',
+                mb: 1,
+                letterSpacing: '-0.01em',
+                lineHeight: 1.25
               }}
             >
-              &larr; Kembali ke Beranda Aksara Tech
-            </Link>
-          </div>
+              Pusat Otentikasi Workspace
+            </Typography>
 
-        </div>
+            <Typography
+              variant="body2"
+              sx={{
+                color: '#334155',
+                mb: 3.5,
+                lineHeight: 1.55,
+                fontSize: '0.92rem'
+              }}
+            >
+              Akses verifikasi pembayaran DP 50%, pembaruan tahapan koding SOP, dan sinkronisasi repositori berkas proyek.
+            </Typography>
 
-      </div>
+            <Box component="form" onSubmit={handlePinSubmit}>
+              <Box sx={{ mb: 3, textAlign: 'left' }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                  <Typography
+                    variant="caption"
+                    component="label"
+                    sx={{ fontSize: '0.84rem', fontWeight: 800, color: '#0F172A' }}
+                  >
+                    PIN Keamanan Pengembang
+                  </Typography>
+                  <Button
+                    type="button"
+                    variant="text"
+                    onClick={() => setPinInput(DEFAULT_ADMIN_PIN)}
+                    sx={{
+                      p: 0,
+                      minWidth: 'auto',
+                      color: '#1D63FF',
+                      fontSize: '0.78rem',
+                      fontWeight: 800,
+                      '&:hover': { bgcolor: 'transparent', textDecoration: 'underline' }
+                    }}
+                  >
+                    Gunakan Default (2026)
+                  </Button>
+                </Box>
+
+                <TextField
+                  fullWidth
+                  type="password"
+                  value={pinInput}
+                  onChange={(e) => {
+                    setPinInput(e.target.value);
+                    if (pinError) setPinError('');
+                  }}
+                  placeholder="••••"
+                  autoFocus
+                  error={Boolean(pinError)}
+                  helperText={pinError}
+                  slotProps={{
+                    htmlInput: {
+                      maxLength: 8,
+                      style: {
+                        textAlign: 'center',
+                        fontSize: '1.5rem',
+                        fontWeight: 900,
+                        letterSpacing: '0.4em',
+                        padding: '14px 16px'
+                      }
+                    }
+                  }}
+                  sx={{
+                    bgcolor: '#F8FAFC',
+                    '& .MuiOutlinedInput-root': {
+                      borderRadius: '10px',
+                      '& fieldset': {
+                        border: pinError ? '2px solid #DC2626' : '2px solid #0F172A'
+                      },
+                      '&:hover fieldset': {
+                        borderColor: pinError ? '#DC2626' : '#0F172A'
+                      },
+                      '&.Mui-focused fieldset': {
+                        borderColor: pinError ? '#DC2626' : '#1D63FF'
+                      }
+                    },
+                    '& .MuiFormHelperText-root': {
+                      textAlign: 'center',
+                      fontWeight: 800,
+                      fontSize: '0.84rem',
+                      color: '#DC2626',
+                      mt: 1
+                    }
+                  }}
+                />
+              </Box>
+
+              <Button
+                type="submit"
+                variant="contained"
+                fullWidth
+                startIcon={<ShieldCheck size={18} />}
+                sx={{
+                  bgcolor: '#0F172A',
+                  color: '#FFFFFF',
+                  py: 1.75,
+                  fontSize: '0.98rem',
+                  fontWeight: 800,
+                  borderRadius: '10px',
+                  '&:hover': { bgcolor: '#1E293B' }
+                }}
+              >
+                Buka Akses Workspace
+              </Button>
+            </Box>
+
+            {/* Discreet Meta Footnote */}
+            <Divider sx={{ my: 3, borderColor: '#E2E8F0', borderWidth: '1.5px' }} />
+
+            <Stack spacing={1} sx={{ fontSize: '0.82rem', color: '#64748B' }}>
+              <Box>
+                <span>PIN Standar Pengembang: </span>
+                <Box
+                  component="code"
+                  sx={{
+                    background: '#F1F5F9',
+                    px: 1,
+                    py: 0.25,
+                    borderRadius: '4px',
+                    fontWeight: 800,
+                    color: '#0F172A',
+                    border: '1.5px solid #CBD5E1'
+                  }}
+                >
+                  2026
+                </Box>
+              </Box>
+              <Button
+                component={Link}
+                to="/"
+                variant="text"
+                sx={{
+                  color: '#475569',
+                  fontWeight: 700,
+                  fontSize: '0.82rem',
+                  p: 0,
+                  minWidth: 'auto',
+                  '&:hover': { bgcolor: 'transparent', textDecoration: 'underline' }
+                }}
+              >
+                &larr; Kembali ke Beranda Aksara Tech
+              </Button>
+            </Stack>
+
+          </Card>
+        </Box>
+      </ThemeProvider>
     );
   }
 
@@ -773,332 +967,354 @@ function doPost(e) {
   // RENDER AUTHENTICATED ADMIN DASHBOARD
   // ─────────────────────────────────────────────────────────────
   return (
-    <div className="admin-page" style={{ background: '#F8FAFC', minHeight: '100vh', paddingBottom: '96px' }}>
-      <style>{`
-        @keyframes adminModalSlideUp {
-          from {
-            opacity: 0;
-            transform: scale(0.97) translateY(12px);
-          }
-          to {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-          }
-        }
-        .admin-modal-input:focus, .admin-modal-select:focus, .admin-modal-textarea:focus {
-          border-color: var(--prussian-blue) !important;
-          outline: 2px solid var(--prussian-blue);
-          outline-offset: -1px;
-        }
-      `}</style>
-      
-      {/* Top Banner Bar */}
-      <header style={{ background: '#0F172A', color: '#FFFFFF', padding: '14px 0', borderBottom: '1.5px solid #1E293B' }}>
-        <div className="container" style={{ maxWidth: '1240px', margin: '0 auto', padding: '0 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px' }}>
-          
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <span style={{ width: '9px', height: '9px', borderRadius: '50%', background: '#22C55E', display: 'inline-block' }} />
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-              <span style={{ fontSize: '1.02rem', fontWeight: '900', letterSpacing: '-0.01em', color: '#FFFFFF' }}>
-                AKSARA TECH
-              </span>
-              <span style={{ color: '#475569', fontWeight: '400' }}>/</span>
-              <span style={{ fontSize: '0.86rem', color: '#CBD5E1', fontWeight: '700' }}>
-                Pusat Kendali Produksi
-              </span>
-            </div>
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-            <Link
-              to="/lacak"
-              target="_blank"
-              style={{
-                background: '#1E293B',
-                color: '#FFFFFF',
-                textDecoration: 'none',
-                fontSize: '0.82rem',
-                fontWeight: '700',
-                padding: '8px 14px',
-                borderRadius: '6px',
-                border: '1.5px solid #334155',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px'
-              }}
-            >
-              <Eye size={14} />
-              <span>Tinjau Pelacak (/lacak)</span>
-            </Link>
-
-            <button
-              type="button"
-              onClick={exportOrdersToExcel}
-              style={{
-                background: '#1E293B',
-                color: '#FFFFFF',
-                border: '1.5px solid #334155',
-                fontSize: '0.82rem',
-                fontWeight: '700',
-                padding: '8px 14px',
-                borderRadius: '6px',
-                cursor: 'pointer',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px'
-              }}
-              title="Unduh format spreadsheet rapi dengan kolom terpisah, warna header, dan penataan nomor telepon"
-            >
-              <FileSpreadsheet size={14} />
-              <span>Ekspor Excel (.xls)</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={exportOrdersToCSV}
-              style={{
-                background: '#1E293B',
-                color: '#CBD5E1',
-                border: '1.5px solid #334155',
-                fontSize: '0.82rem',
-                fontWeight: '700',
-                padding: '8px 12px',
-                borderRadius: '6px',
-                cursor: 'pointer',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px'
-              }}
-              title="Unduh format CSV standar dengan pemisah titik koma"
-            >
-              <span>CSV (.csv)</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={handleLogout}
-              style={{
-                background: 'transparent',
-                color: '#CBD5E1',
-                border: '1.5px solid #475569',
-                fontSize: '0.82rem',
-                fontWeight: '700',
-                padding: '8px 14px',
-                borderRadius: '6px',
-                cursor: 'pointer',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px'
-              }}
-            >
-              <LogOut size={14} />
-              <span>Keluar</span>
-            </button>
-          </div>
-
-        </div>
-      </header>
-
-      {/* Main Container */}
-      <div className="container" style={{ maxWidth: '1240px', margin: '36px auto 0 auto', padding: '0 24px', boxSizing: 'border-box' }}>
+    <ThemeProvider theme={adminTheme}>
+      <Box className="admin-page" sx={{ bgcolor: '#F8FAFC', minHeight: '100vh', pb: 12 }}>
         
-        {/* Success Alert Banner */}
-        {actionSuccessMsg && (
-          <div style={{ background: '#F0FDF4', border: '1.5px solid #22C55E', color: '#166534', padding: '12px 18px', borderRadius: '8px', marginBottom: '24px', fontWeight: '700', fontSize: '0.92rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <CheckCircle2 size={18} color="#16A34A" />
-            <span>{actionSuccessMsg}</span>
-          </div>
-        )}
+        {/* Top Banner Bar */}
+        <Box component="header" sx={{ bgcolor: '#0F172A', color: '#FFFFFF', py: 1.75, borderBottom: '1.5px solid #1E293B' }}>
+          <Container maxWidth="lg" sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
+            
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+              <Box component="span" sx={{ width: 9, height: 9, borderRadius: '50%', bgcolor: '#22C55E', display: 'inline-block' }} />
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
+                <Typography variant="subtitle1" component="span" sx={{ fontWeight: 900, letterSpacing: '-0.01em', color: '#FFFFFF', fontSize: '1.02rem' }}>
+                  AKSARA TECH
+                </Typography>
+                <Typography component="span" sx={{ color: '#475569', fontWeight: 400 }}>/</Typography>
+                <Typography variant="body2" component="span" sx={{ color: '#CBD5E1', fontWeight: 700, fontSize: '0.86rem' }}>
+                  Pusat Kendali Produksi
+                </Typography>
+              </Box>
+            </Box>
 
-        {/* Dashboard Title & Quick Actions */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px', marginBottom: '28px' }}>
-          <div>
-            <h1 style={{ fontSize: 'clamp(1.3rem, 2.2vw, 1.6rem)', fontWeight: '900', color: '#0F172A', letterSpacing: '-0.01em', margin: '0 0 6px 0', lineHeight: '1.25' }}>
-              Pusat Kendali Pesanan &amp; SOP Produksi
-            </h1>
-            <p style={{ fontSize: '0.94rem', color: '#475569', margin: 0, maxWidth: '780px', lineHeight: '1.5' }}>
-              Verifikasi transfer DP 50%, kelola tahapan koding 5-langkah SOP, dan catat pemakaian kuota revisi proyek.
-            </p>
-          </div>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
+              <Button
+                component={Link}
+                to="/lacak"
+                target="_blank"
+                startIcon={<Eye size={14} />}
+                sx={{
+                  bgcolor: '#1E293B',
+                  color: '#FFFFFF',
+                  border: '1.5px solid #334155',
+                  px: 1.75,
+                  py: 0.9,
+                  fontSize: '0.82rem',
+                  fontWeight: 700,
+                  borderRadius: '6px',
+                  '&:hover': { bgcolor: '#334155' }
+                }}
+              >
+                Tinjau Pelacak (/lacak)
+              </Button>
 
-          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
-            <button
-              type="button"
-              onClick={handleClearAllOrders}
-              style={{
-                background: '#FFFFFF',
-                color: '#DC2626',
-                border: '1.5px solid #CBD5E1',
-                borderRadius: '8px',
-                padding: '10px 14px',
-                fontSize: '0.84rem',
-                fontWeight: '700',
-                cursor: 'pointer',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px'
-              }}
-              title="Hapus seluruh data pesanan lokal dan kosongkan pelacak"
-            >
-              <Trash2 size={15} />
-              <span>Kosongkan Data</span>
-            </button>
+              <Button
+                onClick={exportOrdersToExcel}
+                startIcon={<FileSpreadsheet size={14} />}
+                sx={{
+                  bgcolor: '#1E293B',
+                  color: '#FFFFFF',
+                  border: '1.5px solid #334155',
+                  px: 1.75,
+                  py: 0.9,
+                  fontSize: '0.82rem',
+                  fontWeight: 700,
+                  borderRadius: '6px',
+                  '&:hover': { bgcolor: '#334155' }
+                }}
+                title="Unduh format spreadsheet rapi dengan kolom terpisah, warna header, dan penataan nomor telepon"
+              >
+                Ekspor Excel (.xls)
+              </Button>
 
-            <button
-              type="button"
-              onClick={handleResetDemoOrders}
-              style={{
-                background: '#FFFFFF',
-                color: '#0F172A',
-                border: '1.5px solid #CBD5E1',
-                borderRadius: '8px',
-                padding: '10px 14px',
-                fontSize: '0.84rem',
-                fontWeight: '700',
-                cursor: 'pointer',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px'
-              }}
-              title="Muat ulang 4 data contoh awal untuk pengujian"
-            >
-              <RotateCcw size={15} />
-              <span>Muat Ulang Contoh</span>
-            </button>
+              <Button
+                onClick={exportOrdersToCSV}
+                sx={{
+                  bgcolor: '#1E293B',
+                  color: '#CBD5E1',
+                  border: '1.5px solid #334155',
+                  px: 1.5,
+                  py: 0.9,
+                  fontSize: '0.82rem',
+                  fontWeight: 700,
+                  borderRadius: '6px',
+                  '&:hover': { bgcolor: '#334155', color: '#FFFFFF' }
+                }}
+                title="Unduh format CSV standar dengan pemisah titik koma"
+              >
+                CSV (.csv)
+              </Button>
 
-            <button
-              type="button"
-              onClick={handleOpenCreateModal}
-              style={{
-                background: '#1D63FF',
-                color: '#FFFFFF',
-                border: 'none',
-                borderRadius: '8px',
-                padding: '10px 18px',
-                fontSize: '0.88rem',
-                fontWeight: '800',
-                cursor: 'pointer',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px'
-              }}
-            >
-              <Plus size={17} />
-              <span>Tambah Pesanan Manual</span>
-            </button>
-          </div>
-        </div>
+              <Button
+                onClick={handleLogout}
+                startIcon={<LogOut size={14} />}
+                sx={{
+                  bgcolor: 'transparent',
+                  color: '#CBD5E1',
+                  border: '1.5px solid #475569',
+                  px: 1.75,
+                  py: 0.9,
+                  fontSize: '0.82rem',
+                  fontWeight: 700,
+                  borderRadius: '6px',
+                  '&:hover': { borderColor: '#EF4444', color: '#EF4444' }
+                }}
+              >
+                Keluar
+              </Button>
+            </Box>
 
-        {/* 4 Overview Metric Cards */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px', marginBottom: '32px' }}>
+          </Container>
+        </Box>
+
+        {/* Main Container */}
+        <Container maxWidth="lg" sx={{ mt: 4.5, px: { xs: 2.5, sm: 3 } }}>
           
-          <div style={{ background: '#FFFFFF', border: '1.5px solid #CBD5E1', borderRadius: '12px', padding: '20px 22px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <span style={{ fontSize: '0.78rem', color: '#64748B', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                Total Seluruh Pesanan
-              </span>
-              <Database size={16} color="#0F172A" />
-            </div>
-            <div style={{ fontSize: '2.1rem', fontWeight: '900', color: '#0F172A', lineHeight: 1 }}>{metrics.total}</div>
-            <div style={{ fontSize: '0.78rem', color: '#64748B', marginTop: '10px' }}>Tersimpan di database &amp; storage</div>
-          </div>
+          {/* Success Alert Banner */}
+          {actionSuccessMsg && (
+            <Alert
+              icon={<CheckCircle2 size={18} color="#16A34A" />}
+              sx={{
+                bgcolor: '#F0FDF4',
+                border: '1.5px solid #22C55E',
+                color: '#166534',
+                mb: 3,
+                fontWeight: 700,
+                fontSize: '0.92rem',
+                borderRadius: '8px',
+                '& .MuiAlert-message': { display: 'flex', alignItems: 'center' }
+              }}
+            >
+              {actionSuccessMsg}
+            </Alert>
+          )}
 
-          <div style={{ background: '#FFFFFF', border: '1.5px solid #CBD5E1', borderRadius: '12px', padding: '20px 22px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <span style={{ fontSize: '0.78rem', color: '#64748B', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                Inquiry Baru (Menunggu DP)
-              </span>
-              <Clock size={16} color="#D97706" />
-            </div>
-            <div style={{ fontSize: '2.1rem', fontWeight: '900', color: '#D97706', lineHeight: 1 }}>{metrics.inquiries}</div>
-            <div style={{ fontSize: '0.78rem', color: '#64748B', marginTop: '10px' }}>Calon klien konsultasi / belum bayar</div>
-          </div>
+          {/* Dashboard Title & Quick Actions */}
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 2, mb: 3.5 }}>
+            <Box>
+              <Typography
+                variant="h5"
+                component="h1"
+                sx={{
+                  fontSize: 'clamp(1.3rem, 2.2vw, 1.6rem)',
+                  fontWeight: 900,
+                  color: '#0F172A',
+                  letterSpacing: '-0.01em',
+                  mb: 0.75,
+                  lineHeight: 1.25
+                }}
+              >
+                Pusat Kendali Pesanan &amp; SOP Produksi
+              </Typography>
+              <Typography variant="body2" sx={{ color: '#475569', maxWidth: 780, lineHeight: 1.5, fontSize: '0.94rem' }}>
+                Verifikasi transfer DP 50%, kelola tahapan koding 5-langkah SOP, dan catat pemakaian kuota revisi proyek.
+              </Typography>
+            </Box>
 
-          <div style={{ background: '#FFFFFF', border: '1.5px solid #CBD5E1', borderRadius: '12px', padding: '20px 22px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <span style={{ fontSize: '0.78rem', color: '#64748B', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                Fix Order Aktif (Dikoding)
-              </span>
-              <Layers size={16} color="#1D63FF" />
-            </div>
-            <div style={{ fontSize: '2.1rem', fontWeight: '900', color: '#0F172A', lineHeight: 1 }}>{metrics.activeFix}</div>
-            <div style={{ fontSize: '0.78rem', color: '#64748B', marginTop: '10px' }}>DP 50% lunas &amp; masuk antrean kerja</div>
-          </div>
+            <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', alignItems: 'center' }}>
+              <Button
+                variant="outlined"
+                onClick={handleClearAllOrders}
+                startIcon={<Trash2 size={15} />}
+                sx={{
+                  bgcolor: '#FFFFFF',
+                  color: '#DC2626',
+                  borderColor: '#CBD5E1',
+                  border: '1.5px solid #CBD5E1',
+                  borderRadius: '8px',
+                  px: 1.75,
+                  py: 1.25,
+                  fontSize: '0.84rem',
+                  fontWeight: 700,
+                  '&:hover': { bgcolor: '#FEE2E2', borderColor: '#DC2626' }
+                }}
+                title="Hapus seluruh data pesanan lokal dan kosongkan pelacak"
+              >
+                Kosongkan Data
+              </Button>
 
-          <div style={{ background: '#FFFFFF', border: '1.5px solid #CBD5E1', borderRadius: '12px', padding: '20px 22px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <span style={{ fontSize: '0.78rem', color: '#64748B', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                Selesai &amp; Lunas 100%
-              </span>
-              <CheckCircle2 size={16} color="#16A34A" />
-            </div>
-            <div style={{ fontSize: '2.1rem', fontWeight: '900', color: '#16A34A', lineHeight: 1 }}>{metrics.completed}</div>
-            <div style={{ fontSize: '0.78rem', color: '#64748B', marginTop: '10px' }}>Master Code diserahkan &amp; garansi jalan</div>
-          </div>
+              <Button
+                variant="outlined"
+                onClick={handleResetDemoOrders}
+                startIcon={<RotateCcw size={15} />}
+                sx={{
+                  bgcolor: '#FFFFFF',
+                  color: '#0F172A',
+                  borderColor: '#CBD5E1',
+                  border: '1.5px solid #CBD5E1',
+                  borderRadius: '8px',
+                  px: 1.75,
+                  py: 1.25,
+                  fontSize: '0.84rem',
+                  fontWeight: 700,
+                  '&:hover': { bgcolor: '#F1F5F9', borderColor: '#0F172A' }
+                }}
+                title="Muat ulang 4 data contoh awal untuk pengujian"
+              >
+                Muat Ulang Contoh
+              </Button>
 
-        </div>
+              <Button
+                variant="contained"
+                onClick={handleOpenCreateModal}
+                startIcon={<Plus size={17} />}
+                sx={{
+                  bgcolor: '#1D63FF',
+                  color: '#FFFFFF',
+                  borderRadius: '8px',
+                  px: 2.25,
+                  py: 1.25,
+                  fontSize: '0.88rem',
+                  fontWeight: 800,
+                  '&:hover': { bgcolor: '#144ECC' }
+                }}
+              >
+                Tambah Pesanan Manual
+              </Button>
+            </Box>
+          </Box>
 
-        {/* Navigation Tabs & Search Row */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px', marginBottom: '22px' }}>
-          
-          {/* Segmented Filter Tabs */}
-          <div style={{ display: 'inline-flex', background: '#E2E8F0', padding: '4px', borderRadius: '8px', gap: '4px', flexWrap: 'wrap' }}>
-            {[
-              { id: 'ALL', label: `Semua Pesanan (${metrics.total})` },
-              { id: 'INQUIRY', label: `Inquiry (${metrics.inquiries})` },
-              { id: 'FIX_ORDER', label: `Fix Order (${metrics.activeFix})` },
-              { id: 'COMPLETED', label: `Selesai (${metrics.completed})` },
-              { id: 'SPREADSHEET', label: 'Sinkronisasi Spreadsheet' }
-            ].map(tab => {
-              const isActive = activeTab === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  type="button"
-                  onClick={() => setActiveTab(tab.id)}
-                  style={{
-                    background: isActive ? '#0F172A' : 'transparent',
-                    color: isActive ? '#FFFFFF' : '#334155',
-                    fontWeight: isActive ? '800' : '600',
-                    fontSize: '0.84rem',
-                    padding: '8px 14px',
-                    border: 'none',
-                    borderRadius: '6px',
-                    cursor: 'pointer',
-                    transition: 'background 0.15s, color 0.15s'
-                  }}
-                >
-                  {tab.label}
-                </button>
-              );
-            })}
-          </div>
+          {/* 4 Overview Metric Cards */}
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: 'repeat(4, 1fr)' }, gap: 2, mb: 4 }}>
+            
+            <Card sx={{ border: '1.5px solid #CBD5E1', borderRadius: '12px', bgcolor: '#FFFFFF', p: 2.75 }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                <Typography variant="caption" sx={{ fontSize: '0.78rem', color: '#64748B', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                  Total Seluruh Pesanan
+                </Typography>
+                <Database size={16} color="#0F172A" />
+              </Box>
+              <Typography variant="h4" sx={{ fontSize: '2.1rem', fontWeight: 900, color: '#0F172A', lineHeight: 1 }}>
+                {metrics.total}
+              </Typography>
+              <Typography variant="caption" sx={{ fontSize: '0.78rem', color: '#64748B', mt: 1.25, display: 'block' }}>
+                Tersimpan di database &amp; storage
+              </Typography>
+            </Card>
 
-          {/* Search Box */}
-          {activeTab !== 'SPREADSHEET' && (
-            <div style={{ position: 'relative', width: '300px' }}>
-              <input
-                type="text"
+            <Card sx={{ border: '1.5px solid #CBD5E1', borderRadius: '12px', bgcolor: '#FFFFFF', p: 2.75 }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                <Typography variant="caption" sx={{ fontSize: '0.78rem', color: '#64748B', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                  Inquiry Baru (Menunggu DP)
+                </Typography>
+                <Clock size={16} color="#D97706" />
+              </Box>
+              <Typography variant="h4" sx={{ fontSize: '2.1rem', fontWeight: 900, color: '#D97706', lineHeight: 1 }}>
+                {metrics.inquiries}
+              </Typography>
+              <Typography variant="caption" sx={{ fontSize: '0.78rem', color: '#64748B', mt: 1.25, display: 'block' }}>
+                Calon klien konsultasi / belum bayar
+              </Typography>
+            </Card>
+
+            <Card sx={{ border: '1.5px solid #CBD5E1', borderRadius: '12px', bgcolor: '#FFFFFF', p: 2.75 }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                <Typography variant="caption" sx={{ fontSize: '0.78rem', color: '#64748B', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                  Fix Order Aktif (Dikoding)
+                </Typography>
+                <Layers size={16} color="#1D63FF" />
+              </Box>
+              <Typography variant="h4" sx={{ fontSize: '2.1rem', fontWeight: 900, color: '#0F172A', lineHeight: 1 }}>
+                {metrics.activeFix}
+              </Typography>
+              <Typography variant="caption" sx={{ fontSize: '0.78rem', color: '#64748B', mt: 1.25, display: 'block' }}>
+                DP 50% lunas &amp; masuk antrean kerja
+              </Typography>
+            </Card>
+
+            <Card sx={{ border: '1.5px solid #CBD5E1', borderRadius: '12px', bgcolor: '#FFFFFF', p: 2.75 }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                <Typography variant="caption" sx={{ fontSize: '0.78rem', color: '#64748B', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                  Selesai &amp; Lunas 100%
+                </Typography>
+                <CheckCircle2 size={16} color="#16A34A" />
+              </Box>
+              <Typography variant="h4" sx={{ fontSize: '2.1rem', fontWeight: 900, color: '#16A34A', lineHeight: 1 }}>
+                {metrics.completed}
+              </Typography>
+              <Typography variant="caption" sx={{ fontSize: '0.78rem', color: '#64748B', mt: 1.25, display: 'block' }}>
+                Master Code diserahkan &amp; garansi jalan
+              </Typography>
+            </Card>
+
+          </Box>
+
+          {/* Navigation Tabs & Search Row */}
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2, mb: 3 }}>
+            
+            {/* Segmented Filter Tabs */}
+            <Tabs
+              value={activeTab}
+              onChange={(e, val) => setActiveTab(val)}
+              sx={{
+                bgcolor: '#E2E8F0',
+                p: '4px',
+                borderRadius: '8px',
+                minHeight: 'auto',
+                '& .MuiTabs-indicator': { display: 'none' }
+              }}
+            >
+              {[
+                { id: 'ALL', label: `Semua Pesanan (${metrics.total})` },
+                { id: 'INQUIRY', label: `Inquiry (${metrics.inquiries})` },
+                { id: 'FIX_ORDER', label: `Fix Order (${metrics.activeFix})` },
+                { id: 'COMPLETED', label: `Selesai (${metrics.completed})` },
+                { id: 'SPREADSHEET', label: 'Sinkronisasi Spreadsheet' }
+              ].map(tab => {
+                const isActive = activeTab === tab.id;
+                return (
+                  <Tab
+                    key={tab.id}
+                    value={tab.id}
+                    label={tab.label}
+                    sx={{
+                      minHeight: 36,
+                      py: 1,
+                      px: 1.75,
+                      borderRadius: '6px',
+                      fontWeight: isActive ? 800 : 600,
+                      fontSize: '0.84rem',
+                      color: isActive ? '#FFFFFF !important' : '#334155',
+                      bgcolor: isActive ? '#0F172A' : 'transparent',
+                      transition: 'background 0.15s, color 0.15s'
+                    }}
+                  />
+                );
+              })}
+            </Tabs>
+
+            {/* Search Box */}
+            {activeTab !== 'SPREADSHEET' && (
+              <TextField
+                size="small"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Cari ID tiket, judul, atau WhatsApp..."
-                style={{
-                  width: '100%',
-                  boxSizing: 'border-box',
-                  padding: '9px 12px 9px 36px',
-                  fontSize: '0.86rem',
-                  borderRadius: '8px',
-                  border: '1.5px solid #CBD5E1',
-                  background: '#FFFFFF',
-                  outline: 'none',
-                  color: '#0F172A'
+                slotProps={{
+                  input: {
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Search size={16} color="#64748B" />
+                      </InputAdornment>
+                    )
+                  }
+                }}
+                sx={{
+                  width: { xs: '100%', sm: 300 },
+                  bgcolor: '#FFFFFF',
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: '8px',
+                    fontSize: '0.86rem',
+                    color: '#0F172A',
+                    '& fieldset': { border: '1.5px solid #CBD5E1' },
+                    '&:hover fieldset': { borderColor: '#0F172A' },
+                    '&.Mui-focused fieldset': { borderColor: '#1D63FF' }
+                  }
                 }}
               />
-              <Search size={16} color="#64748B" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
-            </div>
-          )}
+            )}
 
-        </div>
+          </Box>
 
         {/* ─────────────────────────────────────────────────────────────
             TAB CONTENT: SPREADSHEET INTEGRATION SETTINGS
@@ -1462,1452 +1678,1494 @@ function doPost(e) {
             TAB CONTENT: ORDERS LIST TABLE
             ───────────────────────────────────────────────────────────── */}
         {activeTab !== 'SPREADSHEET' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <Stack spacing={2.5}>
             
             {filteredOrders.length === 0 ? (
-              <div style={{ background: '#FFFFFF', border: '1.5px solid #CBD5E1', borderRadius: '12px', padding: '48px 24px', textAlign: 'center' }}>
+              <Card sx={{ border: '1.5px solid #CBD5E1', borderRadius: '12px', p: 6, textAlign: 'center', bgcolor: '#FFFFFF' }}>
                 <AlertCircle size={32} color="#64748B" style={{ margin: '0 auto 12px auto' }} />
-                <h3 style={{ fontSize: '1.1rem', fontWeight: '800', color: '#0F172A', margin: '0 0 6px 0' }}>
+                <Typography variant="h6" sx={{ fontWeight: 800, color: '#0F172A', mb: 1 }}>
                   {orders.length === 0 ? 'Seluruh Database Pesanan Sedang Kosong' : 'Tidak Ada Pesanan pada Kategori Ini'}
-                </h3>
-                <p style={{ fontSize: '0.88rem', color: '#64748B', margin: orders.length === 0 ? '0 0 18px 0' : 0 }}>
+                </Typography>
+                <Typography variant="body2" sx={{ color: '#64748B', mb: orders.length === 0 ? 2.5 : 0, maxWidth: 600, mx: 'auto' }}>
                   {orders.length === 0 
                     ? 'Semua pesanan telah dihapus. Halaman pelacak (/lacak) saat ini bersih dan tidak menampilkan order apa pun. Anda dapat menambah pesanan baru atau memuat ulang data contoh.'
                     : 'Gunakan tombol "Tambah Pesanan Manual" di kanan atas jika ada pesanan langsung dari WhatsApp.'}
-                </p>
+                </Typography>
                 {orders.length === 0 && (
-                  <button
-                    type="button"
+                  <Button
+                    variant="outlined"
                     onClick={handleResetDemoOrders}
-                    style={{
-                      background: '#F1F5F9',
+                    startIcon={<RotateCcw size={15} />}
+                    sx={{
+                      bgcolor: '#F1F5F9',
                       color: '#0F172A',
+                      borderColor: '#CBD5E1',
                       border: '1.5px solid #CBD5E1',
                       borderRadius: '6px',
-                      padding: '8px 16px',
+                      px: 2,
+                      py: 1,
                       fontSize: '0.84rem',
-                      fontWeight: '700',
-                      cursor: 'pointer',
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '6px'
+                      fontWeight: 700,
+                      '&:hover': { bgcolor: '#E2E8F0', borderColor: '#0F172A' }
                     }}
                   >
-                    <RotateCcw size={15} />
-                    <span>Muat Ulang 4 Contoh Data Awal</span>
-                  </button>
+                    Muat Ulang 4 Contoh Data Awal
+                  </Button>
                 )}
-              </div>
+              </Card>
             ) : (
               filteredOrders.map(ord => {
                 const isInquiry = ord.statusType === 'INQUIRY';
                 const isCompleted = ord.currentStageNumber === 5;
-                const isFixOrder = !isInquiry && !isCompleted;
 
                 return (
-                  <div
+                  <Card
                     key={ord.id}
-                    style={{
-                      background: '#FFFFFF',
+                    sx={{
                       border: '1.5px solid #CBD5E1',
                       borderRadius: '12px',
-                      padding: '24px',
+                      p: { xs: 2.5, sm: 3 },
+                      bgcolor: '#FFFFFF',
                       display: 'flex',
                       flexDirection: 'column',
-                      gap: '18px'
+                      gap: 2.25
                     }}
                   >
                     {/* Header Row */}
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '14px' }}>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 1.75 }}>
+                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.75 }}>
                         
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
                           {/* Status Badge */}
                           {isInquiry ? (
-                            <span
-                              style={{
-                                fontSize: '0.78rem',
-                                fontWeight: '800',
-                                padding: '4px 10px',
-                                borderRadius: '6px',
-                                background: '#FEF3C7',
+                            <Chip
+                              size="small"
+                              icon={<Clock size={12} color="#92400E" />}
+                              label="INQUIRY • MENUNGGU TRANSFER DP 50%"
+                              sx={{
+                                bgcolor: '#FEF3C7',
                                 color: '#92400E',
                                 border: '1.5px solid #FDE68A',
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                gap: '5px',
+                                fontWeight: 800,
+                                fontSize: '0.78rem',
+                                borderRadius: '6px',
                                 letterSpacing: '0.02em'
                               }}
-                            >
-                              <Clock size={12} />
-                              <span>INQUIRY &bull; MENUNGGU TRANSFER DP 50%</span>
-                            </span>
+                            />
                           ) : isCompleted ? (
-                            <span
-                              style={{
-                                fontSize: '0.78rem',
-                                fontWeight: '800',
-                                padding: '4px 10px',
-                                borderRadius: '6px',
-                                background: '#F0FDF4',
+                            <Chip
+                              size="small"
+                              icon={<CheckCircle2 size={12} color="#166534" />}
+                              label="PROYEK SELESAI • MASTER CODE DISERAHKAN"
+                              sx={{
+                                bgcolor: '#F0FDF4',
                                 color: '#166534',
                                 border: '1.5px solid #BBF7D0',
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                gap: '5px',
+                                fontWeight: 800,
+                                fontSize: '0.78rem',
+                                borderRadius: '6px',
                                 letterSpacing: '0.02em'
                               }}
-                            >
-                              <CheckCircle2 size={12} />
-                              <span>PROYEK SELESAI &bull; MASTER CODE DISERAHKAN</span>
-                            </span>
+                            />
                           ) : (
-                            <span
-                              style={{
-                                fontSize: '0.78rem',
-                                fontWeight: '800',
-                                padding: '4px 10px',
-                                borderRadius: '6px',
-                                background: '#EFF6FF',
+                            <Chip
+                              size="small"
+                              icon={<Layers size={12} color="#1E40AF" />}
+                              label="FIX ORDER AKTIF • PIPELINE KODING"
+                              sx={{
+                                bgcolor: '#EFF6FF',
                                 color: '#1E40AF',
                                 border: '1.5px solid #BFDBFE',
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                gap: '5px',
+                                fontWeight: 800,
+                                fontSize: '0.78rem',
+                                borderRadius: '6px',
                                 letterSpacing: '0.02em'
                               }}
-                            >
-                              <Layers size={12} />
-                              <span>FIX ORDER AKTIF &bull; PIPELINE KODING</span>
-                            </span>
+                            />
                           )}
 
                           {/* Ticket ID & Order Number */}
-                          <code style={{ background: '#F1F5F9', border: '1.5px solid #CBD5E1', padding: '3px 8px', borderRadius: '4px', fontSize: '0.8rem', fontWeight: '800', color: '#0F172A' }}>
+                          <Box component="code" sx={{ bgcolor: '#F1F5F9', border: '1.5px solid #CBD5E1', px: 1, py: 0.35, borderRadius: '4px', fontSize: '0.8rem', fontWeight: 800, color: '#0F172A' }}>
                             {ord.id}
-                          </code>
+                          </Box>
                           
                           {ord.orderNumber && ord.orderNumber !== 'MENUNGGU-DP' && (
-                            <code style={{ background: '#0F172A', color: '#FFFFFF', padding: '3px 8px', borderRadius: '4px', fontSize: '0.8rem', fontWeight: '800' }}>
+                            <Box component="code" sx={{ bgcolor: '#0F172A', color: '#FFFFFF', px: 1, py: 0.35, borderRadius: '4px', fontSize: '0.8rem', fontWeight: 800 }}>
                               {ord.orderNumber}
-                            </code>
+                            </Box>
                           )}
 
-                          <span style={{ fontSize: '0.8rem', color: '#64748B' }}>
+                          <Typography variant="caption" sx={{ fontSize: '0.8rem', color: '#64748B' }}>
                             Daftar: {ord.orderDate}
-                          </span>
-                        </div>
+                          </Typography>
+                        </Box>
 
                         {/* Project Title */}
-                        <h3 style={{ fontSize: '1.25rem', fontWeight: '900', color: '#0F172A', margin: '4px 0 0 0', letterSpacing: '-0.01em', lineHeight: '1.3' }}>
+                        <Typography variant="h6" component="h3" sx={{ fontSize: '1.25rem', fontWeight: 900, color: '#0F172A', mt: 0.5, letterSpacing: '-0.01em', lineHeight: 1.3 }}>
                           {ord.projectTitle}
-                        </h3>
+                        </Typography>
 
-                      </div>
+                      </Box>
 
                       {/* Right Quick Actions Toolbar */}
-                      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
+                      <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', alignItems: 'center' }}>
                         {isInquiry && (
-                          <button
-                            type="button"
+                          <Button
+                            variant="contained"
+                            size="small"
                             onClick={() => handleVerifyDP(ord)}
-                            style={{
-                              background: '#0F172A',
+                            startIcon={<CheckCircle2 size={14} color="#22C55E" />}
+                            sx={{
+                              bgcolor: '#0F172A',
                               color: '#FFFFFF',
-                              border: 'none',
-                              borderRadius: '6px',
-                              padding: '8px 14px',
+                              px: 1.75,
+                              py: 0.85,
                               fontSize: '0.82rem',
-                              fontWeight: '800',
-                              cursor: 'pointer',
-                              display: 'inline-flex',
-                              alignItems: 'center',
-                              gap: '6px'
+                              fontWeight: 800,
+                              borderRadius: '6px',
+                              '&:hover': { bgcolor: '#1E293B' }
                             }}
                           >
-                            <CheckCircle2 size={14} color="#22C55E" />
-                            <span>Verifikasi DP 50%</span>
-                          </button>
+                            Verifikasi DP 50%
+                          </Button>
                         )}
 
-                        <button
-                          type="button"
+                        <Button
+                          variant="outlined"
+                          size="small"
                           onClick={() => setEditingOrder(ord)}
-                          style={{
-                            background: '#FFFFFF',
+                          startIcon={<Edit3 size={14} />}
+                          sx={{
+                            bgcolor: '#FFFFFF',
                             color: '#0F172A',
+                            borderColor: '#CBD5E1',
                             border: '1.5px solid #CBD5E1',
                             borderRadius: '6px',
-                            padding: '8px 12px',
+                            px: 1.5,
+                            py: 0.85,
                             fontSize: '0.82rem',
-                            fontWeight: '700',
-                            cursor: 'pointer',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '5px'
+                            fontWeight: 700,
+                            '&:hover': { bgcolor: '#F8FAFC', borderColor: '#0F172A' }
                           }}
                         >
-                          <Edit3 size={14} />
-                          <span>Edit</span>
-                        </button>
+                          Edit
+                        </Button>
 
-                        <Link
+                        <Button
+                          component={Link}
                           to={`/lacak?kode=${ord.id}`}
                           target="_blank"
-                          style={{
-                            background: '#FFFFFF',
+                          variant="outlined"
+                          size="small"
+                          startIcon={<ExternalLink size={14} />}
+                          sx={{
+                            bgcolor: '#FFFFFF',
                             color: '#0F172A',
+                            borderColor: '#CBD5E1',
                             border: '1.5px solid #CBD5E1',
                             borderRadius: '6px',
-                            padding: '8px 12px',
+                            px: 1.5,
+                            py: 0.85,
                             fontSize: '0.82rem',
-                            fontWeight: '700',
-                            textDecoration: 'none',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '5px'
+                            fontWeight: 700,
+                            '&:hover': { bgcolor: '#F8FAFC', borderColor: '#0F172A' }
                           }}
                         >
-                          <ExternalLink size={14} />
-                          <span>Lihat Pelacak</span>
-                        </Link>
+                          Lihat Pelacak
+                        </Button>
 
-                        <button
-                          type="button"
+                        <IconButton
+                          size="small"
                           onClick={() => handleDeleteOrder(ord)}
                           title="Hapus / Arsipkan"
-                          style={{
-                            background: '#FFFFFF',
+                          sx={{
+                            bgcolor: '#FFFFFF',
                             color: '#DC2626',
                             border: '1.5px solid #CBD5E1',
                             borderRadius: '6px',
-                            padding: '8px 10px',
-                            cursor: 'pointer',
-                            display: 'inline-flex',
-                            alignItems: 'center'
+                            p: 0.85,
+                            '&:hover': { bgcolor: '#FEE2E2', borderColor: '#DC2626' }
                           }}
                         >
                           <Trash2 size={14} />
-                        </button>
-                      </div>
-                    </div>
+                        </IconButton>
+                      </Box>
+                    </Box>
 
                     {/* Metadata Strip */}
-                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
-                      <a
+                    <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', alignItems: 'center' }}>
+                      <Chip
+                        component="a"
                         href={`https://wa.me/${(ord.clientPhone || '').replace(/^0/, '62')}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        style={{
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: '6px',
-                          background: '#F8FAFC',
+                        clickable
+                        icon={<Phone size={13} color="#2563EB" />}
+                        label={ord.clientPhone}
+                        sx={{
+                          bgcolor: '#F8FAFC',
                           border: '1.5px solid #CBD5E1',
-                          padding: '5px 11px',
-                          borderRadius: '6px',
+                          fontWeight: 800,
                           fontSize: '0.82rem',
-                          fontWeight: '800',
                           color: '#0F172A',
-                          textDecoration: 'none'
+                          borderRadius: '6px'
                         }}
-                      >
-                        <Phone size={13} color="#2563EB" />
-                        <span>{ord.clientPhone}</span>
-                      </a>
+                      />
 
-                      <span style={{ background: '#F8FAFC', border: '1.5px solid #CBD5E1', padding: '5px 11px', borderRadius: '6px', fontSize: '0.82rem', color: '#475569' }}>
-                        Paket: <strong style={{ color: '#0F172A' }}>{ord.packageName}</strong>
-                      </span>
+                      <Chip
+                        label={<span>Paket: <strong style={{ color: '#0F172A' }}>{ord.packageName}</strong></span>}
+                        sx={{ bgcolor: '#F8FAFC', border: '1.5px solid #CBD5E1', fontSize: '0.82rem', color: '#475569', borderRadius: '6px' }}
+                      />
 
-                      <span style={{ background: '#F8FAFC', border: '1.5px solid #CBD5E1', padding: '5px 11px', borderRadius: '6px', fontSize: '0.82rem', color: '#475569' }}>
-                        Kategori: <strong style={{ color: '#0F172A' }}>{ord.category}</strong>
-                      </span>
+                      <Chip
+                        label={<span>Kategori: <strong style={{ color: '#0F172A' }}>{ord.category}</strong></span>}
+                        sx={{ bgcolor: '#F8FAFC', border: '1.5px solid #CBD5E1', fontSize: '0.82rem', color: '#475569', borderRadius: '6px' }}
+                      />
 
-                      <span style={{ background: '#F8FAFC', border: '1.5px solid #CBD5E1', padding: '5px 11px', borderRadius: '6px', fontSize: '0.82rem', color: '#475569' }}>
-                        Target Selesai: <strong style={{ color: '#0F172A' }}>{ord.estimatedCompletion || '7 Hari Kerja'}</strong>
-                      </span>
-                    </div>
+                      <Chip
+                        label={<span>Target Selesai: <strong style={{ color: '#0F172A' }}>{ord.estimatedCompletion || '7 Hari Kerja'}</strong></span>}
+                        sx={{ bgcolor: '#F8FAFC', border: '1.5px solid #CBD5E1', fontSize: '0.82rem', color: '#475569', borderRadius: '6px' }}
+                      />
+                    </Box>
 
                     {/* Operational Parameter Controls Row */}
-                    <div style={{ background: '#F8FAFC', border: '1.5px solid #CBD5E1', borderRadius: '10px', padding: '16px 20px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px', alignItems: 'center' }}>
+                    <Paper sx={{ bgcolor: '#F8FAFC', border: '1.5px solid #CBD5E1', borderRadius: '10px', p: { xs: 2, sm: 2.5 }, display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: 2.5, alignItems: 'center' }}>
                       
                       {/* Financial info */}
-                      <div>
-                        <div style={{ fontSize: '0.76rem', color: '#64748B', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                      <Box>
+                        <Typography variant="caption" sx={{ fontSize: '0.76rem', color: '#64748B', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em', display: 'block' }}>
                           Nilai Investasi &amp; DP
-                        </div>
-                        <div style={{ fontSize: '1.15rem', fontWeight: '900', color: '#0F172A', marginTop: '3px' }}>
+                        </Typography>
+                        <Typography variant="h6" sx={{ fontSize: '1.15rem', fontWeight: 900, color: '#0F172A', mt: 0.25 }}>
                           {formatRupiah(ord.totalInvestment)}
-                        </div>
-                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', fontSize: '0.78rem', color: ord.dpStatus.includes('LUNAS') ? '#16A34A' : '#D97706', fontWeight: '800', marginTop: '3px' }}>
+                        </Typography>
+                        <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.75, fontSize: '0.78rem', color: ord.dpStatus.includes('LUNAS') ? '#16A34A' : '#D97706', fontWeight: 800, mt: 0.5 }}>
                           {ord.dpStatus.includes('LUNAS') ? <CheckCircle2 size={13} /> : <Clock size={13} />}
                           <span>{ord.dpStatus}</span>
-                        </div>
-                      </div>
+                        </Box>
+                      </Box>
 
                       {/* Stage SOP Dropdown & Step Indicator */}
-                      <div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                          <span style={{ fontSize: '0.76rem', color: '#64748B', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                      <Box>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.75 }}>
+                          <Typography variant="caption" sx={{ fontSize: '0.76rem', color: '#64748B', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                             Tahap SOP Terkini
-                          </span>
-                          <span style={{ fontSize: '0.76rem', fontWeight: '800', color: '#0F172A' }}>
+                          </Typography>
+                          <Typography variant="caption" sx={{ fontSize: '0.76rem', fontWeight: 800, color: '#0F172A' }}>
                             Tahap {ord.currentStageNumber || 1} / 5
-                          </span>
-                        </div>
+                          </Typography>
+                        </Box>
 
                         {/* Mini 5-stage dots */}
-                        <div style={{ display: 'flex', gap: '4px', marginBottom: '8px' }}>
+                        <Box sx={{ display: 'flex', gap: 0.5, mb: 1 }}>
                           {[1, 2, 3, 4, 5].map((s) => {
                             const isDone = (ord.currentStageNumber || 1) >= s;
                             const isCurrent = (ord.currentStageNumber || 1) === s;
                             return (
-                              <div
+                              <Box
                                 key={s}
-                                style={{
+                                sx={{
                                   flex: 1,
-                                  height: '6px',
-                                  borderRadius: '3px',
-                                  background: isCurrent ? '#1D63FF' : isDone ? '#0F172A' : '#E2E8F0',
+                                  height: 6,
+                                  borderRadius: 1.5,
+                                  bgcolor: isCurrent ? '#1D63FF' : isDone ? '#0F172A' : '#E2E8F0',
                                   transition: 'background 0.2s'
                                 }}
                               />
                             );
                           })}
-                        </div>
+                        </Box>
 
-                        <select
-                          value={ord.currentStageNumber}
-                          onChange={(e) => handleStageChange(ord, e.target.value)}
-                          style={{
-                            width: '100%',
-                            padding: '8px 10px',
-                            borderRadius: '6px',
-                            border: '1.5px solid #CBD5E1',
-                            background: '#FFFFFF',
-                            fontSize: '0.84rem',
-                            fontWeight: '700',
-                            color: '#0F172A',
-                            cursor: 'pointer'
-                          }}
-                        >
-                          <option value={1}>Tahap 1: Verifikasi Brief &amp; DP 50%</option>
-                          <option value={2}>Tahap 2: Setup Database &amp; Skema MySQL</option>
-                          <option value={3}>Tahap 3: Koding Fitur &amp; Antarmuka</option>
-                          <option value={4}>Tahap 4: Pratinjau Siap &amp; Sesi Revisi</option>
-                          <option value={5}>Tahap 5: Selesai &amp; Serah Terima .zip</option>
-                        </select>
-                      </div>
+                        <FormControl size="small" fullWidth sx={{ bgcolor: '#FFFFFF', borderRadius: '6px' }}>
+                          <Select
+                            value={ord.currentStageNumber}
+                            onChange={(e) => handleStageChange(ord, e.target.value)}
+                            sx={{
+                              borderRadius: '6px',
+                              fontSize: '0.84rem',
+                              fontWeight: 700,
+                              color: '#0F172A',
+                              '& fieldset': { border: '1.5px solid #CBD5E1' },
+                              '&:hover fieldset': { borderColor: '#0F172A' },
+                              '&.Mui-focused fieldset': { borderColor: '#1D63FF' }
+                            }}
+                          >
+                            <MenuItem value={1}>Tahap 1: Verifikasi Brief &amp; DP 50%</MenuItem>
+                            <MenuItem value={2}>Tahap 2: Setup Database &amp; Skema MySQL</MenuItem>
+                            <MenuItem value={3}>Tahap 3: Koding Fitur &amp; Antarmuka</MenuItem>
+                            <MenuItem value={4}>Tahap 4: Pratinjau Siap &amp; Sesi Revisi</MenuItem>
+                            <MenuItem value={5}>Tahap 5: Selesai &amp; Serah Terima .zip</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </Box>
 
                       {/* Revision Quota Tracker */}
-                      <div>
-                        <div style={{ fontSize: '0.76rem', color: '#64748B', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '6px' }}>
+                      <Box>
+                        <Typography variant="caption" sx={{ fontSize: '0.76rem', color: '#64748B', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em', mb: 0.75, display: 'block' }}>
                           Kuota Revisi SOP (Maks 3x)
-                        </div>
+                        </Typography>
                         
                         {/* 3 slot badges */}
-                        <div style={{ display: 'flex', gap: '6px', marginBottom: '8px' }}>
+                        <Box sx={{ display: 'flex', gap: 0.75, mb: 1 }}>
                           {[1, 2, 3].map((slotNum) => {
                             const isUsed = (ord.revisionQuotaUsed || 0) >= slotNum;
                             return (
-                              <div
+                              <Box
                                 key={slotNum}
-                                style={{
+                                sx={{
                                   flex: 1,
-                                  padding: '4px 6px',
+                                  py: 0.5,
+                                  px: 0.75,
                                   borderRadius: '4px',
                                   textAlign: 'center',
                                   fontSize: '0.74rem',
-                                  fontWeight: '800',
-                                  background: isUsed ? '#0F172A' : '#FFFFFF',
+                                  fontWeight: 800,
+                                  bgcolor: isUsed ? '#0F172A' : '#FFFFFF',
                                   color: isUsed ? '#FFFFFF' : '#64748B',
                                   border: isUsed ? '1.5px solid #0F172A' : '1.5px dashed #CBD5E1'
                                 }}
                               >
                                 Sesi {slotNum}
-                              </div>
+                              </Box>
                             );
                           })}
-                        </div>
+                        </Box>
 
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
-                          <span style={{ fontSize: '0.84rem', fontWeight: '800', color: (ord.revisionQuotaUsed || 0) >= (ord.revisionQuotaTotal || 3) ? '#DC2626' : '#0F172A' }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1 }}>
+                          <Typography variant="body2" sx={{ fontSize: '0.84rem', fontWeight: 800, color: (ord.revisionQuotaUsed || 0) >= (ord.revisionQuotaTotal || 3) ? '#DC2626' : '#0F172A' }}>
                             {ord.revisionQuotaUsed || 0} / {ord.revisionQuotaTotal || 3} Terpakai
-                          </span>
-                          <button
-                            type="button"
+                          </Typography>
+                          <Button
+                            variant="outlined"
+                            size="small"
                             onClick={() => handleOpenRevisionModal(ord)}
                             disabled={(ord.revisionQuotaUsed || 0) >= (ord.revisionQuotaTotal || 3)}
-                            style={{
-                              background: (ord.revisionQuotaUsed || 0) >= (ord.revisionQuotaTotal || 3) ? '#F1F5F9' : '#FFFFFF',
+                            sx={{
+                              bgcolor: (ord.revisionQuotaUsed || 0) >= (ord.revisionQuotaTotal || 3) ? '#F1F5F9' : '#FFFFFF',
+                              borderColor: '#CBD5E1',
                               border: '1.5px solid #CBD5E1',
                               borderRadius: '6px',
-                              padding: '5px 10px',
+                              px: 1.25,
+                              py: 0.5,
                               fontSize: '0.78rem',
-                              fontWeight: '800',
-                              cursor: (ord.revisionQuotaUsed || 0) >= (ord.revisionQuotaTotal || 3) ? 'not-allowed' : 'pointer',
-                              color: (ord.revisionQuotaUsed || 0) >= (ord.revisionQuotaTotal || 3) ? '#94A3B8' : '#0F172A'
+                              fontWeight: 800,
+                              color: (ord.revisionQuotaUsed || 0) >= (ord.revisionQuotaTotal || 3) ? '#94A3B8' : '#0F172A',
+                              '&:hover': { bgcolor: '#F8FAFC', borderColor: '#0F172A' }
                             }}
                           >
                             + Catat Revisi
-                          </button>
-                        </div>
-                      </div>
+                          </Button>
+                        </Box>
+                      </Box>
 
-                    </div>
+                    </Paper>
 
                     {/* Riwayat Catatan Sesi Revisi Proyek */}
                     {ord.revisionHistory && ord.revisionHistory.length > 0 && (
-                      <div style={{ background: '#F8FAFC', border: '1.5px solid #CBD5E1', borderRadius: '8px', padding: '14px 18px' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                          <div style={{ fontSize: '0.82rem', fontWeight: '800', color: '#0F172A', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <Paper sx={{ bgcolor: '#F8FAFC', border: '1.5px solid #CBD5E1', borderRadius: '8px', p: 2 }}>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1.25 }}>
+                          <Box sx={{ fontSize: '0.82rem', fontWeight: 800, color: '#0F172A', display: 'flex', alignItems: 'center', gap: 0.75 }}>
                             <History size={14} color="#0F172A" />
                             <span>Riwayat Catatan Sesi Revisi ({ord.revisionHistory.length} dari {ord.revisionQuotaTotal || 3} Terpakai):</span>
-                          </div>
-                          <button
-                            type="button"
+                          </Box>
+                          <Button
+                            variant="text"
+                            size="small"
                             onClick={() => handleDeleteLastRevision(ord)}
                             title="Batalkan sesi revisi terakhir jika salah input"
-                            style={{
-                              background: 'transparent',
-                              border: 'none',
+                            sx={{
                               color: '#DC2626',
                               fontSize: '0.76rem',
-                              fontWeight: '700',
-                              cursor: 'pointer',
-                              padding: 0
+                              fontWeight: 700,
+                              p: 0,
+                              minWidth: 'auto',
+                              '&:hover': { bgcolor: 'transparent', textDecoration: 'underline' }
                             }}
                           >
                             Batalkan Sesi Terakhir
-                          </button>
-                        </div>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                          </Button>
+                        </Box>
+                        <Stack spacing={1}>
                           {ord.revisionHistory.map((rev) => (
-                            <div 
+                            <Box 
                               key={rev.sessionNumber} 
-                              style={{ 
-                                background: '#FFFFFF', 
+                              sx={{ 
+                                bgcolor: '#FFFFFF', 
                                 border: '1.5px solid #CBD5E1', 
                                 borderRadius: '6px', 
-                                padding: '10px 14px',
+                                p: 1.5,
                                 fontSize: '0.84rem' 
                               }}
                             >
-                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3px' }}>
-                                <span style={{ fontWeight: '800', color: '#1D63FF' }}>
+                              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}>
+                                <Typography variant="caption" sx={{ fontWeight: 800, color: '#1D63FF' }}>
                                   Sesi {rev.sessionNumber}
-                                </span>
-                                <span style={{ fontSize: '0.76rem', color: '#64748B', fontWeight: '600' }}>
+                                </Typography>
+                                <Typography variant="caption" sx={{ fontSize: '0.76rem', color: '#64748B', fontWeight: 600 }}>
                                   {rev.date}
-                                </span>
-                              </div>
-                              <div style={{ color: '#0F172A', lineHeight: '1.45' }}>
+                                </Typography>
+                              </Box>
+                              <Typography variant="body2" sx={{ color: '#0F172A', lineHeight: 1.45, fontSize: '0.86rem' }}>
                                 "{rev.note}"
-                              </div>
-                            </div>
+                              </Typography>
+                            </Box>
                           ))}
-                        </div>
-                      </div>
+                        </Stack>
+                      </Paper>
                     )}
 
                     {/* Developer Log Snippet */}
-                    <div style={{ fontSize: '0.86rem', color: '#334155', lineHeight: '1.55', background: '#FFFFFF', border: '1.5px solid #CBD5E1', borderLeft: '4px solid #1D63FF', padding: '12px 16px', borderRadius: '6px' }}>
-                      <span style={{ fontWeight: '800', color: '#0F172A' }}>Catatan Pengembang Terakhir (Tampil Langsung di /lacak): </span>
-                      <span style={{ color: '#0F172A' }}>"{ord.developerNotes}"</span>
-                    </div>
+                    <Box sx={{ fontSize: '0.86rem', color: '#334155', lineHeight: 1.55, bgcolor: '#FFFFFF', border: '1.5px solid #CBD5E1', borderLeft: '4px solid #1D63FF', p: 1.75, borderRadius: '6px' }}>
+                      <Typography component="span" sx={{ fontWeight: 800, color: '#0F172A' }}>Catatan Pengembang Terakhir (Tampil Langsung di /lacak): </Typography>
+                      <Typography component="span" sx={{ color: '#0F172A' }}>"{ord.developerNotes}"</Typography>
+                    </Box>
 
-                  </div>
+                  </Card>
                 );
               })
             )}
 
-          </div>
+          </Stack>
         )}
-
-      </div>
+      </Container>
 
       {/* ─────────────────────────────────────────────────────────────
-          MODAL: EDIT ORDER DETAILS (Executive Anti-Slop Design)
+          MODAL: EDIT ORDER DETAILS (Material UI Executive Dialog)
           ───────────────────────────────────────────────────────────── */}
       {editingOrder && (
-        <div 
-          style={{ 
-            position: 'fixed', 
-            inset: 0, 
-            background: 'rgba(15, 23, 42, 0.65)', 
-            backdropFilter: 'blur(4px)',
-            WebkitBackdropFilter: 'blur(4px)',
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'center', 
-            zIndex: 9999, 
-            padding: '20px' 
-          }}
-          onClick={(e) => {
-            if (e.target === e.currentTarget) setEditingOrder(null);
+        <Dialog
+          open={Boolean(editingOrder)}
+          onClose={() => setEditingOrder(null)}
+          maxWidth="md"
+          fullWidth
+          PaperProps={{
+            sx: {
+              borderRadius: '12px',
+              border: '1.5px solid #CBD5E1',
+              bgcolor: '#FFFFFF',
+              boxShadow: '0 20px 40px -15px rgba(15, 23, 42, 0.25)',
+              m: 2
+            }
           }}
         >
-          <div 
-            style={{ 
-              background: '#FFFFFF', 
-              borderRadius: '16px', 
-              maxWidth: '720px', 
-              width: '100%', 
-              maxHeight: '90vh', 
-              display: 'flex',
-              flexDirection: 'column',
-              boxShadow: '0 20px 40px -15px rgba(15, 23, 42, 0.25)',
-              border: '1.5px solid #CBD5E1',
-              boxSizing: 'border-box',
-              animation: 'adminModalSlideUp 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
-            }}
-          >
-            {/* Modal Header */}
-            <div style={{ padding: '22px 28px', borderBottom: '1.5px solid #E2E8F0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: '#EFF6FF', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <Edit3 size={20} color="var(--prussian-blue)" />
-                </div>
-                <div>
-                  <h3 style={{ fontSize: '1.25rem', fontWeight: '900', color: '#0F172A', margin: 0, letterSpacing: '-0.01em' }}>
+          <Box component="form" onSubmit={handleSaveEdit} sx={{ display: 'flex', flexDirection: 'column', m: 0 }}>
+            {/* Dialog Header */}
+            <DialogTitle
+              sx={{
+                p: '20px 24px',
+                borderBottom: '1.5px solid #E2E8F0',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                <Box
+                  sx={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: '8px',
+                    bgcolor: '#F1F5F9',
+                    border: '1.5px solid #CBD5E1',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0
+                  }}
+                >
+                  <Edit3 size={20} color="#0F172A" />
+                </Box>
+                <Box>
+                  <Typography variant="h6" sx={{ fontSize: '1.15rem', fontWeight: 900, color: '#0F172A', letterSpacing: '-0.01em', lineHeight: 1.2 }}>
                     Edit Rincian Pesanan
-                  </h3>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '2px' }}>
-                    <code style={{ background: '#F1F5F9', padding: '2px 6px', borderRadius: '4px', fontSize: '0.8rem', fontWeight: '800', color: '#0F172A' }}>
-                      {editingOrder.id}
-                    </code>
-                    <span style={{ fontSize: '0.8rem', color: '#64748B' }}>
-                      &bull; Terdaftar pada {editingOrder.orderDate}
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => setEditingOrder(null)}
-                style={{ 
-                  background: '#F8FAFC', 
-                  border: '1.5px solid #E2E8F0', 
-                  borderRadius: '8px', 
-                  width: '32px', 
-                  height: '32px', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center', 
-                  cursor: 'pointer', 
-                  color: '#64748B' 
-                }}
-                aria-label="Tutup modal"
-              >
-                <X size={16} />
-              </button>
-            </div>
-
-            {/* Modal Scrollable Body */}
-            <form onSubmit={handleSaveEdit} style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>
-              <div style={{ overflowY: 'auto', padding: '24px 28px', flex: 1 }}>
-                
-                {/* SECTION 1: KONTAK & KOMUNIKASI */}
-                <div style={{ marginBottom: '22px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
-                    <Phone size={15} color="#0F172A" />
-                    <span style={{ fontSize: '0.82rem', fontWeight: '800', color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                      1. Kontak &amp; Saluran Komunikasi
-                    </span>
-                  </div>
-
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
-                    <div>
-                      <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '6px' }}>
-                        Nomor WhatsApp
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        className="admin-modal-input"
-                        value={editingOrder.clientPhone}
-                        onChange={(e) => setEditingOrder({ ...editingOrder, clientPhone: e.target.value })}
-                        style={{
-                          width: '100%',
-                          boxSizing: 'border-box',
-                          padding: '11px 13px',
-                          borderRadius: '7px',
-                          border: '1.5px solid #CBD5E1',
-                          fontSize: '0.9rem',
-                          color: '#0F172A',
-                          background: '#FFFFFF'
-                        }}
-                      />
-                    </div>
-                    <div>
-                      <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '6px' }}>
-                        Email Klien (Opsional)
-                      </label>
-                      <input
-                        type="email"
-                        className="admin-modal-input"
-                        value={editingOrder.clientEmail || ''}
-                        onChange={(e) => setEditingOrder({ ...editingOrder, clientEmail: e.target.value })}
-                        placeholder="klien@email.com"
-                        style={{
-                          width: '100%',
-                          boxSizing: 'border-box',
-                          padding: '11px 13px',
-                          borderRadius: '7px',
-                          border: '1.5px solid #CBD5E1',
-                          fontSize: '0.9rem',
-                          color: '#0F172A',
-                          background: '#FFFFFF'
-                        }}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* SECTION 2: RUANG LINGKUP & STATUS */}
-                <div style={{ marginBottom: '22px', paddingTop: '16px', borderTop: '1.5px solid #F1F5F9' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
-                    <Layers size={15} color="#0F172A" />
-                    <span style={{ fontSize: '0.82rem', fontWeight: '800', color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                      2. Ruang Lingkup Proyek &amp; Tipe Status
-                    </span>
-                  </div>
-
-                  <div style={{ marginBottom: '14px' }}>
-                    <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '6px' }}>
-                      Judul Proyek
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      className="admin-modal-input"
-                      value={editingOrder.projectTitle}
-                      onChange={(e) => setEditingOrder({ ...editingOrder, projectTitle: e.target.value })}
-                      style={{
-                        width: '100%',
-                        boxSizing: 'border-box',
-                        padding: '11px 13px',
-                        borderRadius: '7px',
+                  </Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 0.5 }}>
+                    <Box
+                      component="code"
+                      sx={{
+                        bgcolor: '#F1F5F9',
                         border: '1.5px solid #CBD5E1',
-                        fontSize: '0.9rem',
+                        px: 0.75,
+                        py: 0.2,
+                        borderRadius: '4px',
+                        fontSize: '0.78rem',
+                        fontWeight: 800,
                         color: '#0F172A',
-                        background: '#FFFFFF'
-                      }}
-                    />
-                  </div>
-
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
-                    <div>
-                      <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '6px' }}>
-                        Tipe Status Proyek
-                      </label>
-                      <select
-                        className="admin-modal-select"
-                        value={editingOrder.statusType}
-                        onChange={(e) => setEditingOrder({ ...editingOrder, statusType: e.target.value })}
-                        style={{
-                          width: '100%',
-                          padding: '11px 13px',
-                          borderRadius: '7px',
-                          border: '1.5px solid #CBD5E1',
-                          background: '#FFFFFF',
-                          fontSize: '0.88rem',
-                          fontWeight: '700',
-                          color: '#0F172A',
-                          cursor: 'pointer'
-                        }}
-                      >
-                        <option value="INQUIRY">INQUIRY (Draf Tanya / Belum DP)</option>
-                        <option value="FIX_ORDER">FIX ORDER (DP Lunas &amp; Dikerjakan)</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '6px' }}>
-                        Nomor Order Resmi
-                      </label>
-                      <input
-                        type="text"
-                        className="admin-modal-input"
-                        value={editingOrder.orderNumber || ''}
-                        onChange={(e) => setEditingOrder({ ...editingOrder, orderNumber: e.target.value })}
-                        placeholder="Contoh: ORD-AT-2026-0042"
-                        style={{
-                          width: '100%',
-                          boxSizing: 'border-box',
-                          padding: '11px 13px',
-                          borderRadius: '7px',
-                          border: '1.5px solid #CBD5E1',
-                          fontSize: '0.9rem',
-                          color: '#0F172A',
-                          background: '#FFFFFF'
-                        }}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* SECTION 3: PARAMETER FINANSIAL */}
-                <div style={{ marginBottom: '22px', paddingTop: '16px', borderTop: '1.5px solid #F1F5F9' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
-                    <Calendar size={15} color="#0F172A" />
-                    <span style={{ fontSize: '0.82rem', fontWeight: '800', color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                      3. Nilai Investasi &amp; Status Pembayaran
-                    </span>
-                  </div>
-
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }}>
-                    <div>
-                      <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '6px' }}>
-                        Total Biaya Investasi (Rp)
-                      </label>
-                      <input
-                        type="number"
-                        className="admin-modal-input"
-                        value={editingOrder.totalInvestment}
-                        onChange={(e) => setEditingOrder({ ...editingOrder, totalInvestment: Number(e.target.value) })}
-                        style={{
-                          width: '100%',
-                          boxSizing: 'border-box',
-                          padding: '11px 13px',
-                          borderRadius: '7px',
-                          border: '1.5px solid #CBD5E1',
-                          fontSize: '0.92rem',
-                          fontWeight: '800',
-                          color: 'var(--prussian-blue)',
-                          background: '#FFFFFF'
-                        }}
-                      />
-                    </div>
-                    <div>
-                      <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '6px' }}>
-                        Status Pembayaran DP
-                      </label>
-                      <select
-                        className="admin-modal-select"
-                        value={editingOrder.dpStatus}
-                        onChange={(e) => setEditingOrder({ ...editingOrder, dpStatus: e.target.value })}
-                        style={{
-                          width: '100%',
-                          padding: '11px 13px',
-                          borderRadius: '7px',
-                          border: '1.5px solid #CBD5E1',
-                          background: '#FFFFFF',
-                          fontSize: '0.88rem',
-                          fontWeight: '700',
-                          color: '#0F172A',
-                          cursor: 'pointer'
-                        }}
-                      >
-                        <option value="MENUNGGU TRANSFER DP 50%">MENUNGGU TRANSFER DP 50%</option>
-                        <option value="LUNAS (DP 50%)">LUNAS (DP 50%)</option>
-                        <option value="LUNAS 100% (SELESAI)">LUNAS 100% (SELESAI)</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '6px' }}>
-                      Target Tanggal Selesai
-                    </label>
-                    <input
-                      type="text"
-                      className="admin-modal-input"
-                      value={editingOrder.estimatedCompletion || ''}
-                      onChange={(e) => setEditingOrder({ ...editingOrder, estimatedCompletion: e.target.value })}
-                      placeholder="Contoh: 15 November 2026"
-                      style={{
-                        width: '100%',
-                        boxSizing: 'border-box',
-                        padding: '11px 13px',
-                        borderRadius: '7px',
-                        border: '1.5px solid #CBD5E1',
-                        fontSize: '0.9rem',
-                        color: '#0F172A',
-                        background: '#FFFFFF'
-                      }}
-                    />
-                  </div>
-                </div>
-
-                {/* SECTION 4: LOG PENGEMBANG */}
-                <div style={{ paddingTop: '16px', borderTop: '1.5px solid #F1F5F9' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
-                    <FileText size={15} color="#0F172A" />
-                    <span style={{ fontSize: '0.82rem', fontWeight: '800', color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                      4. Catatan Pengembang untuk Klien (Live Log di /lacak)
-                    </span>
-                  </div>
-
-                  <textarea
-                    rows={3}
-                    className="admin-modal-textarea"
-                    value={editingOrder.developerNotes || ''}
-                    onChange={(e) => setEditingOrder({ ...editingOrder, developerNotes: e.target.value })}
-                    style={{
-                      width: '100%',
-                      boxSizing: 'border-box',
-                      padding: '11px 13px',
-                      borderRadius: '7px',
-                      border: '1.5px solid #CBD5E1',
-                      fontSize: '0.88rem',
-                      color: '#0F172A',
-                      fontFamily: 'inherit',
-                      lineHeight: '1.5'
-                    }}
-                  />
-                  <span style={{ fontSize: '0.74rem', color: '#64748B', marginTop: '4px', display: 'block' }}>
-                    Catatan ini dibaca secara transparan oleh klien di pelacak status proyek.
-                  </span>
-                </div>
-
-              </div>
-
-              {/* Modal Grounded Footer */}
-              <div 
-                style={{ 
-                  background: '#F8FAFC', 
-                  borderTop: '1.5px solid #E2E8F0', 
-                  padding: '16px 28px', 
-                  display: 'flex', 
-                  justifyContent: 'space-between', 
-                  alignItems: 'center', 
-                  borderRadius: '0 0 16px 16px',
-                  gap: '12px',
-                  flexWrap: 'wrap'
-                }}
-              >
-                <div style={{ fontSize: '0.82rem', color: '#64748B' }}>
-                  ID: <strong>{editingOrder.id}</strong>
-                </div>
-                <div style={{ display: 'flex', gap: '10px' }}>
-                  <button
-                    type="button"
-                    onClick={() => setEditingOrder(null)}
-                    style={{
-                      background: '#FFFFFF',
-                      color: '#475569',
-                      border: '1.5px solid #CBD5E1',
-                      borderRadius: '8px',
-                      padding: '10px 18px',
-                      fontSize: '0.88rem',
-                      fontWeight: '700',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    Batal
-                  </button>
-                  <button
-                    type="submit"
-                    style={{
-                      background: 'var(--prussian-blue)',
-                      color: '#FFFFFF',
-                      border: 'none',
-                      borderRadius: '8px',
-                      padding: '10px 22px',
-                      fontSize: '0.9rem',
-                      fontWeight: '800',
-                      cursor: 'pointer',
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '8px'
-                    }}
-                  >
-                    <Save size={16} />
-                    <span>Simpan Perubahan</span>
-                  </button>
-                </div>
-              </div>
-            </form>
-
-          </div>
-        </div>
-      )}
-
-      {/* ─────────────────────────────────────────────────────────────
-          MODAL: CREATE NEW MANUAL ORDER (Executive Anti-Slop Design)
-          ───────────────────────────────────────────────────────────── */}
-      {isCreatingNew && (
-        <div 
-          style={{ 
-            position: 'fixed', 
-            inset: 0, 
-            background: 'rgba(15, 23, 42, 0.65)', 
-            backdropFilter: 'blur(4px)',
-            WebkitBackdropFilter: 'blur(4px)',
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'center', 
-            zIndex: 9999, 
-            padding: '20px' 
-          }}
-          onClick={(e) => {
-            if (e.target === e.currentTarget) setIsCreatingNew(false);
-          }}
-        >
-          <div 
-            style={{ 
-              background: '#FFFFFF', 
-              borderRadius: '16px', 
-              maxWidth: '720px', 
-              width: '100%', 
-              maxHeight: '90vh', 
-              display: 'flex',
-              flexDirection: 'column',
-              boxShadow: '0 20px 40px -15px rgba(15, 23, 42, 0.25)',
-              border: '1.5px solid #CBD5E1',
-              boxSizing: 'border-box',
-              animation: 'adminModalSlideUp 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
-            }}
-          >
-            {/* Modal Header */}
-            <div style={{ padding: '22px 28px', borderBottom: '1.5px solid #E2E8F0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: '#EFF6FF', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <FolderPlus size={20} color="var(--prussian-blue)" />
-                </div>
-                <div>
-                  <h3 style={{ fontSize: '1.25rem', fontWeight: '900', color: '#0F172A', margin: 0, letterSpacing: '-0.01em' }}>
-                    Tambah Pesanan Baru Manual
-                  </h3>
-                  <p style={{ fontSize: '0.84rem', color: '#64748B', margin: '2px 0 0 0' }}>
-                    Registrasi proyek langsung dari kesepakatan WhatsApp atau offline ke antrean kerja sistem.
-                  </p>
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => setIsCreatingNew(false)}
-                style={{ 
-                  background: '#F8FAFC', 
-                  border: '1.5px solid #E2E8F0', 
-                  borderRadius: '8px', 
-                  width: '32px', 
-                  height: '32px', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center', 
-                  cursor: 'pointer', 
-                  color: '#64748B' 
-                }}
-                aria-label="Tutup modal"
-              >
-                <X size={16} />
-              </button>
-            </div>
-
-            {/* Modal Scrollable Body */}
-            <form onSubmit={handleCreateNewOrder} style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>
-              <div style={{ overflowY: 'auto', padding: '24px 28px', flex: 1 }}>
-                
-                {/* SECTION 1: KONTAK & SALURAN KOMUNIKASI */}
-                <div style={{ marginBottom: '22px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
-                    <Phone size={15} color="#0F172A" />
-                    <span style={{ fontSize: '0.82rem', fontWeight: '800', color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                      1. Kontak &amp; Saluran Komunikasi Proyek
-                    </span>
-                  </div>
-
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }}>
-                    <div>
-                      <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '6px' }}>
-                        Nomor WhatsApp Aktif (Wajib)
-                      </label>
-                      <input
-                        type="text"
-                        name="clientPhone"
-                        required
-                        className="admin-modal-input"
-                        placeholder="Contoh: 081234567890"
-                        style={{
-                          width: '100%',
-                          boxSizing: 'border-box',
-                          padding: '11px 13px',
-                          borderRadius: '7px',
-                          border: '1.5px solid #CBD5E1',
-                          fontSize: '0.9rem',
-                          color: '#0F172A',
-                          background: '#FFFFFF'
-                        }}
-                      />
-                      <span style={{ fontSize: '0.74rem', color: '#64748B', marginTop: '4px', display: 'block' }}>
-                        Kunci identifikasi utama untuk lacak pesanan di /lacak
-                      </span>
-                    </div>
-                    <div>
-                      <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '6px' }}>
-                        Email Klien (Opsional)
-                      </label>
-                      <input
-                        type="email"
-                        name="clientEmail"
-                        className="admin-modal-input"
-                        placeholder="klien@email.com"
-                        style={{
-                          width: '100%',
-                          boxSizing: 'border-box',
-                          padding: '11px 13px',
-                          borderRadius: '7px',
-                          border: '1.5px solid #CBD5E1',
-                          fontSize: '0.9rem',
-                          color: '#0F172A',
-                          background: '#FFFFFF'
-                        }}
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '6px' }}>
-                      Status Awal Pesanan
-                    </label>
-                    <select
-                      name="statusType"
-                      className="admin-modal-select"
-                      value={newOrderForm.statusType}
-                      onChange={(e) => setNewOrderForm({ ...newOrderForm, statusType: e.target.value })}
-                      style={{
-                        width: '100%',
-                        padding: '11px 13px',
-                        borderRadius: '7px',
-                        border: '1.5px solid #CBD5E1',
-                        background: '#FFFFFF',
-                        fontSize: '0.9rem',
-                        fontWeight: '700',
-                        color: '#0F172A',
-                        cursor: 'pointer'
+                        fontFamily: 'monospace'
                       }}
                     >
-                      <option value="FIX_ORDER">FIX ORDER (DP 50% Sudah Diterima &amp; Antrean Kerja)</option>
-                      <option value="INQUIRY">INQUIRY (Draf Tanya / Menunggu Bukti Transfer DP)</option>
-                    </select>
-                  </div>
-                </div>
-
-                {/* SECTION 2: SPESIFIKASI PROYEK */}
-                <div style={{ marginBottom: '22px', paddingTop: '16px', borderTop: '1.5px solid #F1F5F9' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
-                    <Layers size={15} color="#0F172A" />
-                    <span style={{ fontSize: '0.82rem', fontWeight: '800', color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                      2. Ruang Lingkup &amp; Paket Layanan
-                    </span>
-                  </div>
-
-                  <div style={{ marginBottom: '14px' }}>
-                    <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '6px' }}>
-                      Judul / Kebutuhan Utama Proyek
-                    </label>
-                    <input
-                      type="text"
-                      name="projectTitle"
-                      required
-                      className="admin-modal-input"
-                      placeholder="Contoh: Website Profil Klinik Gigi &amp; Form Reservasi Direct WhatsApp"
-                      style={{
-                        width: '100%',
-                        boxSizing: 'border-box',
-                        padding: '11px 13px',
-                        borderRadius: '7px',
-                        border: '1.5px solid #CBD5E1',
-                        fontSize: '0.9rem',
-                        color: '#0F172A',
-                        background: '#FFFFFF'
-                      }}
-                    />
-                  </div>
-
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
-                    <div>
-                      <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '6px' }}>
-                        Pilihan Paket Layanan
-                      </label>
-                      <select
-                        name="packageId"
-                        className="admin-modal-select"
-                        value={newOrderForm.packageId}
-                        onChange={(e) => handleNewOrderPackageChange(e.target.value)}
-                        style={{
-                          width: '100%',
-                          padding: '11px 13px',
-                          borderRadius: '7px',
-                          border: '1.5px solid #CBD5E1',
-                          background: '#FFFFFF',
-                          fontSize: '0.88rem',
-                          fontWeight: '700',
-                          color: '#0F172A',
-                          cursor: 'pointer'
-                        }}
-                      >
-                        {PACKAGES.map(p => (
-                          <option key={p.id} value={p.id}>
-                            {p.name} — Rp {p.minPrice.toLocaleString('id-ID')}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div>
-                      <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '6px' }}>
-                        Kategori Segmentasi
-                      </label>
-                      <select
-                        name="category"
-                        className="admin-modal-select"
-                        value={newOrderForm.category}
-                        onChange={(e) => setNewOrderForm({ ...newOrderForm, category: e.target.value })}
-                        style={{
-                          width: '100%',
-                          padding: '11px 13px',
-                          borderRadius: '7px',
-                          border: '1.5px solid #CBD5E1',
-                          background: '#FFFFFF',
-                          fontSize: '0.88rem',
-                          fontWeight: '700',
-                          color: '#0F172A',
-                          cursor: 'pointer'
-                        }}
-                      >
-                        <option value="UMKM & Bisnis">UMKM &amp; Bisnis</option>
-                        <option value="Standard Enterprise">Company Profile Korporat</option>
-                        <option value="Mahasiswa & Akademisi">Tugas Kuliah / Modul Skripsi</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-
-                {/* SECTION 3: KEUANGAN & TARGET SELESAI */}
-                <div style={{ marginBottom: '22px', paddingTop: '16px', borderTop: '1.5px solid #F1F5F9' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
-                    <Calendar size={15} color="#0F172A" />
-                    <span style={{ fontSize: '0.82rem', fontWeight: '800', color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                      3. Nilai Investasi &amp; Target Pengerjaan
-                    </span>
-                  </div>
-
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
-                    <div>
-                      <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '6px' }}>
-                        Total Biaya Disepakati (Rp)
-                      </label>
-                      <input
-                        type="number"
-                        name="totalInvestment"
-                        className="admin-modal-input"
-                        value={newOrderForm.totalInvestment}
-                        onChange={(e) => setNewOrderForm({ ...newOrderForm, totalInvestment: Number(e.target.value) })}
-                        style={{
-                          width: '100%',
-                          boxSizing: 'border-box',
-                          padding: '11px 13px',
-                          borderRadius: '7px',
-                          border: '1.5px solid #CBD5E1',
-                          fontSize: '0.92rem',
-                          fontWeight: '800',
-                          color: 'var(--prussian-blue)',
-                          background: '#FFFFFF'
-                        }}
-                      />
-                      <span style={{ fontSize: '0.74rem', color: '#64748B', marginTop: '4px', display: 'block' }}>
-                        Uang Muka DP 50%: <strong>{formatRupiah(Math.round((newOrderForm.totalInvestment || 0) / 2))}</strong>
-                      </span>
-                    </div>
-                    <div>
-                      <label style={{ fontSize: '0.82rem', fontWeight: '700', color: '#0F172A', display: 'block', marginBottom: '6px' }}>
-                        Target Tanggal Selesai
-                      </label>
-                      <input
-                        type="text"
-                        name="estimatedCompletion"
-                        className="admin-modal-input"
-                        placeholder="Contoh: 18 November 2026 atau 7 Hari Kerja"
-                        defaultValue="7 Hari Kerja"
-                        style={{
-                          width: '100%',
-                          boxSizing: 'border-box',
-                          padding: '11px 13px',
-                          borderRadius: '7px',
-                          border: '1.5px solid #CBD5E1',
-                          fontSize: '0.9rem',
-                          color: '#0F172A',
-                          background: '#FFFFFF'
-                        }}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* SECTION 4: LOG PENGEMBANG AWAL */}
-                <div style={{ paddingTop: '16px', borderTop: '1.5px solid #F1F5F9' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
-                    <FileText size={15} color="#0F172A" />
-                    <span style={{ fontSize: '0.82rem', fontWeight: '800', color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                      4. Catatan Pengembang Awal (Live Log di /lacak)
-                    </span>
-                  </div>
-
-                  <textarea
-                    name="developerNotes"
-                    rows={2}
-                    className="admin-modal-textarea"
-                    defaultValue="Pesanan resmi terdaftar. Menyiapkan repositori kode sumber dan perancangan skema basis data."
-                    style={{
-                      width: '100%',
-                      boxSizing: 'border-box',
-                      padding: '11px 13px',
-                      borderRadius: '7px',
-                      border: '1.5px solid #CBD5E1',
-                      fontSize: '0.88rem',
-                      color: '#0F172A',
-                      fontFamily: 'inherit',
-                      lineHeight: '1.5'
-                    }}
-                  />
-                  <span style={{ fontSize: '0.74rem', color: '#64748B', marginTop: '4px', display: 'block' }}>
-                    Catatan ini akan langsung terlihat oleh klien saat memasukkan nomor tiket di halaman /lacak.
-                  </span>
-                </div>
-
-              </div>
-
-              {/* Modal Grounded Footer */}
-              <div 
-                style={{ 
-                  background: '#F8FAFC', 
-                  borderTop: '1.5px solid #E2E8F0', 
-                  padding: '16px 28px', 
-                  display: 'flex', 
-                  justifyContent: 'space-between', 
-                  alignItems: 'center', 
-                  borderRadius: '0 0 16px 16px',
-                  gap: '12px',
-                  flexWrap: 'wrap'
-                }}
-              >
-                <div style={{ fontSize: '0.82rem', color: '#64748B' }}>
-                  Tersinkronisasi ke <strong>/lacak</strong> &amp; <strong>Spreadsheet</strong>
-                </div>
-                <div style={{ display: 'flex', gap: '10px' }}>
-                  <button
-                    type="button"
-                    onClick={() => setIsCreatingNew(false)}
-                    style={{
-                      background: '#FFFFFF',
-                      color: '#475569',
-                      border: '1.5px solid #CBD5E1',
-                      borderRadius: '8px',
-                      padding: '10px 18px',
-                      fontSize: '0.88rem',
-                      fontWeight: '700',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    Batal
-                  </button>
-                  <button
-                    type="submit"
-                    style={{
-                      background: 'var(--prussian-blue)',
-                      color: '#FFFFFF',
-                      border: 'none',
-                      borderRadius: '8px',
-                      padding: '10px 22px',
-                      fontSize: '0.9rem',
-                      fontWeight: '800',
-                      cursor: 'pointer',
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '8px'
-                    }}
-                  >
-                    <Plus size={16} />
-                    <span>Daftarkan ke Sistem</span>
-                  </button>
-                </div>
-              </div>
-            </form>
-
-          </div>
-        </div>
-      )}
-
-
-      {/* ─────────────────────────────────────────────────────────────
-          MODAL: CATAT SESI REVISI PROYEK (Executive Anti-Slop Design)
-          ───────────────────────────────────────────────────────────── */}
-      {revisionModalOrder && (
-        <div 
-          style={{ 
-            position: 'fixed', 
-            inset: 0, 
-            background: 'rgba(15, 23, 42, 0.65)', 
-            backdropFilter: 'blur(4px)',
-            WebkitBackdropFilter: 'blur(4px)',
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'center', 
-            zIndex: 9999, 
-            padding: '20px' 
-          }}
-          onClick={(e) => {
-            if (e.target === e.currentTarget) setRevisionModalOrder(null);
-          }}
-        >
-          <div 
-            style={{ 
-              background: '#FFFFFF', 
-              borderRadius: '16px', 
-              maxWidth: '580px', 
-              width: '100%', 
-              maxHeight: '90vh', 
-              display: 'flex',
-              flexDirection: 'column',
-              boxShadow: '0 20px 40px -15px rgba(15, 23, 42, 0.25)',
-              border: '1.5px solid #CBD5E1',
-              boxSizing: 'border-box',
-              animation: 'adminModalSlideUp 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
-            }}
-          >
-            {/* Modal Header */}
-            <div style={{ padding: '22px 28px', borderBottom: '1.5px solid #E2E8F0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div>
-                <h3 style={{ fontSize: '1.25rem', fontWeight: '900', color: '#0F172A', margin: 0, letterSpacing: '-0.01em' }}>
-                  Catat Sesi Revisi Proyek
-                </h3>
-                <p style={{ fontSize: '0.84rem', color: '#64748B', margin: '4px 0 0 0' }}>
-                  Pesanan: <strong>{revisionModalOrder.id}</strong> &bull; Sesi ke-{(revisionModalOrder.revisionQuotaUsed || 0) + 1} dari {revisionModalOrder.revisionQuotaTotal || 3}
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() => setRevisionModalOrder(null)}
-                style={{ 
-                  background: '#F8FAFC', 
-                  border: '1.5px solid #E2E8F0', 
-                  borderRadius: '8px', 
-                  width: '32px', 
-                  height: '32px', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center', 
-                  cursor: 'pointer', 
-                  color: '#64748B' 
-                }}
+                      {editingOrder.id}
+                    </Box>
+                    <Typography variant="caption" sx={{ fontSize: '0.78rem', color: '#64748B' }}>
+                      • Terdaftar pada {editingOrder.orderDate}
+                    </Typography>
+                  </Box>
+                </Box>
+              </Box>
+              <IconButton
+                onClick={() => setEditingOrder(null)}
+                size="small"
                 aria-label="Tutup modal"
+                sx={{
+                  bgcolor: '#F8FAFC',
+                  border: '1.5px solid #CBD5E1',
+                  borderRadius: '6px',
+                  color: '#64748B',
+                  p: 0.75,
+                  '&:hover': { bgcolor: '#F1F5F9', color: '#0F172A' }
+                }}
               >
                 <X size={16} />
-              </button>
-            </div>
+              </IconButton>
+            </DialogTitle>
 
-            {/* Form Body */}
-            <form onSubmit={handleSaveRevisionRecord} style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
-              <div style={{ padding: '24px 28px', flex: 1 }}>
-                
-                {/* Info Pill */}
-                <div style={{ background: '#EFF6FF', border: '1.5px solid #BFDBFE', borderRadius: '8px', padding: '12px 16px', marginBottom: '18px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div>
-                    <span style={{ fontSize: '0.82rem', fontWeight: '800', color: 'var(--prussian-blue)' }}>
-                      Sesi yang akan dicatat: Sesi ke-{(revisionModalOrder.revisionQuotaUsed || 0) + 1}
-                    </span>
-                    <div style={{ fontSize: '0.78rem', color: '#475569', marginTop: '2px' }}>
-                      Sisa kuota revisi SOP setelah sesi ini: {(revisionModalOrder.revisionQuotaTotal || 3) - (revisionModalOrder.revisionQuotaUsed || 0) - 1} sesi
-                    </div>
-                  </div>
-                  <span style={{ fontSize: '0.78rem', background: '#FFFFFF', padding: '4px 8px', borderRadius: '4px', fontWeight: '700', color: '#0F172A', border: '1.5px solid #CBD5E1' }}>
-                    Hari ini
-                  </span>
-                </div>
+            {/* Dialog Scrollable Content */}
+            <DialogContent sx={{ p: '24px 28px', maxHeight: 'calc(90vh - 140px)' }}>
+              <Stack spacing={3}>
+                {/* SECTION 1: KONTAK & SALURAN KOMUNIKASI */}
+                <Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
+                    <Phone size={15} color="#0F172A" />
+                    <Typography variant="caption" sx={{ fontSize: '0.8rem', fontWeight: 800, color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                      1. Kontak &amp; Saluran Komunikasi
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2 }}>
+                    <Box>
+                      <Typography variant="caption" sx={{ fontSize: '0.8rem', fontWeight: 700, color: '#0F172A', display: 'block', mb: 0.75 }}>
+                        Nomor WhatsApp
+                      </Typography>
+                      <TextField
+                        fullWidth
+                        size="small"
+                        required
+                        value={editingOrder.clientPhone}
+                        onChange={(e) => setEditingOrder({ ...editingOrder, clientPhone: e.target.value })}
+                        inputProps={{
+                          style: { fontSize: '0.88rem', color: '#0F172A', padding: '10px 12px' }
+                        }}
+                        sx={{
+                          bgcolor: '#FFFFFF',
+                          '& .MuiOutlinedInput-root': {
+                            border: '1.5px solid #CBD5E1',
+                            borderRadius: '6px',
+                            '& fieldset': { border: 'none' },
+                            '&:hover': { borderColor: '#0F172A' },
+                            '&.Mui-focused': { borderColor: '#1D63FF' }
+                          }
+                        }}
+                      />
+                    </Box>
+                    <Box>
+                      <Typography variant="caption" sx={{ fontSize: '0.8rem', fontWeight: 700, color: '#0F172A', display: 'block', mb: 0.75 }}>
+                        Email Klien (Opsional)
+                      </Typography>
+                      <TextField
+                        fullWidth
+                        size="small"
+                        type="email"
+                        placeholder="klien@email.com"
+                        value={editingOrder.clientEmail || ''}
+                        onChange={(e) => setEditingOrder({ ...editingOrder, clientEmail: e.target.value })}
+                        inputProps={{
+                          style: { fontSize: '0.88rem', color: '#0F172A', padding: '10px 12px' }
+                        }}
+                        sx={{
+                          bgcolor: '#FFFFFF',
+                          '& .MuiOutlinedInput-root': {
+                            border: '1.5px solid #CBD5E1',
+                            borderRadius: '6px',
+                            '& fieldset': { border: 'none' },
+                            '&:hover': { borderColor: '#0F172A' },
+                            '&.Mui-focused': { borderColor: '#1D63FF' }
+                          }
+                        }}
+                      />
+                    </Box>
+                  </Box>
+                </Box>
 
-                <div style={{ marginBottom: '16px' }}>
-                  <label style={{ fontSize: '0.86rem', fontWeight: '800', color: '#0F172A', display: 'block', marginBottom: '8px' }}>
-                    Rincian Catatan Revisi dari Klien (Wajib):
-                  </label>
-                  <textarea
-                    rows={4}
-                    value={revisionNoteInput}
-                    onChange={(e) => {
-                      setRevisionNoteInput(e.target.value);
-                      if (revisionNoteError) setRevisionNoteError('');
+                <Divider sx={{ borderColor: '#F1F5F9', borderBottomWidth: '1.5px' }} />
+
+                {/* SECTION 2: RUANG LINGKUP & STATUS */}
+                <Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
+                    <Layers size={15} color="#0F172A" />
+                    <Typography variant="caption" sx={{ fontSize: '0.8rem', fontWeight: 800, color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                      2. Ruang Lingkup Proyek &amp; Tipe Status
+                    </Typography>
+                  </Box>
+                  <Box sx={{ mb: 2 }}>
+                    <Typography variant="caption" sx={{ fontSize: '0.8rem', fontWeight: 700, color: '#0F172A', display: 'block', mb: 0.75 }}>
+                      Judul Proyek
+                    </Typography>
+                    <TextField
+                      fullWidth
+                      size="small"
+                      required
+                      value={editingOrder.projectTitle}
+                      onChange={(e) => setEditingOrder({ ...editingOrder, projectTitle: e.target.value })}
+                      inputProps={{
+                        style: { fontSize: '0.88rem', color: '#0F172A', padding: '10px 12px' }
+                      }}
+                      sx={{
+                        bgcolor: '#FFFFFF',
+                        '& .MuiOutlinedInput-root': {
+                          border: '1.5px solid #CBD5E1',
+                          borderRadius: '6px',
+                          '& fieldset': { border: 'none' },
+                          '&:hover': { borderColor: '#0F172A' },
+                          '&.Mui-focused': { borderColor: '#1D63FF' }
+                        }
+                      }}
+                    />
+                  </Box>
+                  <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2 }}>
+                    <Box>
+                      <Typography variant="caption" sx={{ fontSize: '0.8rem', fontWeight: 700, color: '#0F172A', display: 'block', mb: 0.75 }}>
+                        Tipe Status Proyek
+                      </Typography>
+                      <FormControl fullWidth size="small">
+                        <Select
+                          value={editingOrder.statusType}
+                          onChange={(e) => setEditingOrder({ ...editingOrder, statusType: e.target.value })}
+                          sx={{
+                            bgcolor: '#FFFFFF',
+                            fontSize: '0.88rem',
+                            fontWeight: 700,
+                            color: '#0F172A',
+                            border: '1.5px solid #CBD5E1',
+                            borderRadius: '6px',
+                            '& .MuiOutlinedInput-notchedOutline': { border: 'none' },
+                            '&:hover': { borderColor: '#0F172A' },
+                            '&.Mui-focused': { borderColor: '#1D63FF' }
+                          }}
+                        >
+                          <MenuItem value="INQUIRY" sx={{ fontSize: '0.88rem', fontWeight: 600 }}>INQUIRY (Draf Tanya / Belum DP)</MenuItem>
+                          <MenuItem value="FIX_ORDER" sx={{ fontSize: '0.88rem', fontWeight: 600 }}>FIX ORDER (DP Lunas &amp; Dikerjakan)</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Box>
+                    <Box>
+                      <Typography variant="caption" sx={{ fontSize: '0.8rem', fontWeight: 700, color: '#0F172A', display: 'block', mb: 0.75 }}>
+                        Nomor Order Resmi
+                      </Typography>
+                      <TextField
+                        fullWidth
+                        size="small"
+                        placeholder="Contoh: ORD-AT-2026-0042"
+                        value={editingOrder.orderNumber || ''}
+                        onChange={(e) => setEditingOrder({ ...editingOrder, orderNumber: e.target.value })}
+                        inputProps={{
+                          style: { fontSize: '0.88rem', color: '#0F172A', padding: '10px 12px' }
+                        }}
+                        sx={{
+                          bgcolor: '#FFFFFF',
+                          '& .MuiOutlinedInput-root': {
+                            border: '1.5px solid #CBD5E1',
+                            borderRadius: '6px',
+                            '& fieldset': { border: 'none' },
+                            '&:hover': { borderColor: '#0F172A' },
+                            '&.Mui-focused': { borderColor: '#1D63FF' }
+                          }
+                        }}
+                      />
+                    </Box>
+                  </Box>
+                </Box>
+
+                <Divider sx={{ borderColor: '#F1F5F9', borderBottomWidth: '1.5px' }} />
+
+                {/* SECTION 3: PARAMETER FINANSIAL */}
+                <Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
+                    <Calendar size={15} color="#0F172A" />
+                    <Typography variant="caption" sx={{ fontSize: '0.8rem', fontWeight: 800, color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                      3. Nilai Investasi &amp; Status Pembayaran
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2, mb: 2 }}>
+                    <Box>
+                      <Typography variant="caption" sx={{ fontSize: '0.8rem', fontWeight: 700, color: '#0F172A', display: 'block', mb: 0.75 }}>
+                        Total Biaya Investasi (Rp)
+                      </Typography>
+                      <TextField
+                        fullWidth
+                        size="small"
+                        type="number"
+                        value={editingOrder.totalInvestment}
+                        onChange={(e) => setEditingOrder({ ...editingOrder, totalInvestment: Number(e.target.value) })}
+                        inputProps={{
+                          style: { fontSize: '0.9rem', fontWeight: 800, color: '#1D63FF', padding: '10px 12px' }
+                        }}
+                        sx={{
+                          bgcolor: '#FFFFFF',
+                          '& .MuiOutlinedInput-root': {
+                            border: '1.5px solid #CBD5E1',
+                            borderRadius: '6px',
+                            '& fieldset': { border: 'none' },
+                            '&:hover': { borderColor: '#0F172A' },
+                            '&.Mui-focused': { borderColor: '#1D63FF' }
+                          }
+                        }}
+                      />
+                    </Box>
+                    <Box>
+                      <Typography variant="caption" sx={{ fontSize: '0.8rem', fontWeight: 700, color: '#0F172A', display: 'block', mb: 0.75 }}>
+                        Status Pembayaran DP
+                      </Typography>
+                      <FormControl fullWidth size="small">
+                        <Select
+                          value={editingOrder.dpStatus}
+                          onChange={(e) => setEditingOrder({ ...editingOrder, dpStatus: e.target.value })}
+                          sx={{
+                            bgcolor: '#FFFFFF',
+                            fontSize: '0.88rem',
+                            fontWeight: 700,
+                            color: '#0F172A',
+                            border: '1.5px solid #CBD5E1',
+                            borderRadius: '6px',
+                            '& .MuiOutlinedInput-notchedOutline': { border: 'none' },
+                            '&:hover': { borderColor: '#0F172A' },
+                            '&.Mui-focused': { borderColor: '#1D63FF' }
+                          }}
+                        >
+                          <MenuItem value="MENUNGGU TRANSFER DP 50%" sx={{ fontSize: '0.88rem', fontWeight: 600 }}>MENUNGGU TRANSFER DP 50%</MenuItem>
+                          <MenuItem value="LUNAS (DP 50%)" sx={{ fontSize: '0.88rem', fontWeight: 600 }}>LUNAS (DP 50%)</MenuItem>
+                          <MenuItem value="LUNAS 100% (SELESAI)" sx={{ fontSize: '0.88rem', fontWeight: 600 }}>LUNAS 100% (SELESAI)</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Box>
+                  </Box>
+                  <Box>
+                    <Typography variant="caption" sx={{ fontSize: '0.8rem', fontWeight: 700, color: '#0F172A', display: 'block', mb: 0.75 }}>
+                      Target Tanggal Selesai
+                    </Typography>
+                    <TextField
+                      fullWidth
+                      size="small"
+                      placeholder="Contoh: 15 November 2026"
+                      value={editingOrder.estimatedCompletion || ''}
+                      onChange={(e) => setEditingOrder({ ...editingOrder, estimatedCompletion: e.target.value })}
+                      inputProps={{
+                        style: { fontSize: '0.88rem', color: '#0F172A', padding: '10px 12px' }
+                      }}
+                      sx={{
+                        bgcolor: '#FFFFFF',
+                        '& .MuiOutlinedInput-root': {
+                          border: '1.5px solid #CBD5E1',
+                          borderRadius: '6px',
+                          '& fieldset': { border: 'none' },
+                          '&:hover': { borderColor: '#0F172A' },
+                          '&.Mui-focused': { borderColor: '#1D63FF' }
+                        }
+                      }}
+                    />
+                  </Box>
+                </Box>
+
+                <Divider sx={{ borderColor: '#F1F5F9', borderBottomWidth: '1.5px' }} />
+
+                {/* SECTION 4: LOG PENGEMBANG */}
+                <Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
+                    <FileText size={15} color="#0F172A" />
+                    <Typography variant="caption" sx={{ fontSize: '0.8rem', fontWeight: 800, color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                      4. Catatan Pengembang untuk Klien (Live Log di /lacak)
+                    </Typography>
+                  </Box>
+                  <TextField
+                    fullWidth
+                    multiline
+                    rows={3}
+                    value={editingOrder.developerNotes || ''}
+                    onChange={(e) => setEditingOrder({ ...editingOrder, developerNotes: e.target.value })}
+                    inputProps={{
+                      style: { fontSize: '0.88rem', color: '#0F172A', lineHeight: 1.5 }
                     }}
-                    placeholder="Tuliskan secara spesifik apa saja yang direvisi (misal: penyesuaian susunan menu header mobile, revisi warna tombol checkout, perbaikan validasi nomor telepon di form pemesanan)..."
-                    autoFocus
-                    style={{
-                      width: '100%',
-                      boxSizing: 'border-box',
-                      padding: '12px 14px',
-                      borderRadius: '8px',
-                      border: revisionNoteError ? '1.5px solid #DC2626' : '1.5px solid #CBD5E1',
-                      fontSize: '0.9rem',
-                      color: '#0F172A',
-                      fontFamily: 'inherit',
-                      lineHeight: '1.5',
-                      outline: 'none'
+                    sx={{
+                      bgcolor: '#FFFFFF',
+                      '& .MuiOutlinedInput-root': {
+                        border: '1.5px solid #CBD5E1',
+                        borderRadius: '6px',
+                        '& fieldset': { border: 'none' },
+                        '&:hover': { borderColor: '#0F172A' },
+                        '&.Mui-focused': { borderColor: '#1D63FF' }
+                      }
                     }}
                   />
-                  {revisionNoteError && (
-                    <div style={{ fontSize: '0.82rem', color: '#DC2626', fontWeight: '700', marginTop: '6px' }}>
-                      {revisionNoteError}
-                    </div>
-                  )}
-                  <span style={{ fontSize: '0.76rem', color: '#64748B', marginTop: '6px', display: 'block' }}>
-                    Catatan ini otomatis tampil di pelacak status /lacak klien, tersimpan ke basis data, dan terarsip ke spreadsheet.
-                  </span>
-                </div>
+                  <Typography variant="caption" sx={{ fontSize: '0.74rem', color: '#64748B', mt: 0.75, display: 'block' }}>
+                    Catatan ini dibaca secara transparan oleh klien di pelacak status proyek.
+                  </Typography>
+                </Box>
+              </Stack>
+            </DialogContent>
 
-              </div>
-
-              {/* Footer */}
-              <div 
-                style={{ 
-                  background: '#F8FAFC', 
-                  borderTop: '1.5px solid #E2E8F0', 
-                  padding: '16px 28px', 
-                  display: 'flex', 
-                  justifyContent: 'flex-end', 
-                  gap: '10px',
-                  borderRadius: '0 0 16px 16px'
-                }}
-              >
-                <button
+            {/* Dialog Footer Actions */}
+            <DialogActions
+              sx={{
+                bgcolor: '#F8FAFC',
+                borderTop: '1.5px solid #E2E8F0',
+                px: 3,
+                py: 2,
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                gap: 1.5,
+                flexWrap: 'wrap'
+              }}
+            >
+              <Typography variant="caption" sx={{ fontSize: '0.82rem', color: '#64748B' }}>
+                ID: <Box component="strong" sx={{ color: '#0F172A' }}>{editingOrder.id}</Box>
+              </Typography>
+              <Box sx={{ display: 'flex', gap: 1.5 }}>
+                <Button
                   type="button"
-                  onClick={() => setRevisionModalOrder(null)}
-                  style={{
-                    background: '#FFFFFF',
+                  onClick={() => setEditingOrder(null)}
+                  sx={{
+                    bgcolor: '#FFFFFF',
                     color: '#475569',
                     border: '1.5px solid #CBD5E1',
-                    borderRadius: '8px',
-                    padding: '10px 18px',
-                    fontSize: '0.88rem',
-                    fontWeight: '700',
-                    cursor: 'pointer'
+                    borderRadius: '6px',
+                    px: 2,
+                    py: 0.85,
+                    fontSize: '0.86rem',
+                    fontWeight: 700,
+                    '&:hover': { bgcolor: '#F1F5F9', color: '#0F172A' }
                   }}
                 >
                   Batal
-                </button>
-                <button
+                </Button>
+                <Button
                   type="submit"
-                  style={{
-                    background: 'var(--prussian-blue)',
+                  startIcon={<Save size={16} />}
+                  sx={{
+                    bgcolor: '#0F172A',
                     color: '#FFFFFF',
-                    border: 'none',
-                    borderRadius: '8px',
-                    padding: '10px 22px',
-                    fontSize: '0.9rem',
-                    fontWeight: '800',
-                    cursor: 'pointer',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '8px'
+                    borderRadius: '6px',
+                    px: 2.5,
+                    py: 0.85,
+                    fontSize: '0.88rem',
+                    fontWeight: 800,
+                    '&:hover': { bgcolor: '#1E293B' }
                   }}
                 >
-                  <Save size={16} />
-                  <span>Simpan Catatan Revisi</span>
-                </button>
-              </div>
-            </form>
-
-          </div>
-        </div>
+                  Simpan Perubahan
+                </Button>
+              </Box>
+            </DialogActions>
+          </Box>
+        </Dialog>
       )}
-    </div>
-  );
+
+      {/* ─────────────────────────────────────────────────────────────
+          MODAL: CREATE NEW MANUAL ORDER (Material UI Executive Dialog)
+          ───────────────────────────────────────────────────────────── */}
+      {isCreatingNew && (
+        <Dialog
+          open={isCreatingNew}
+          onClose={() => setIsCreatingNew(false)}
+          maxWidth="md"
+          fullWidth
+          PaperProps={{
+            sx: {
+              borderRadius: '12px',
+              border: '1.5px solid #CBD5E1',
+              bgcolor: '#FFFFFF',
+              boxShadow: '0 20px 40px -15px rgba(15, 23, 42, 0.25)',
+              m: 2
+            }
+          }}
+        >
+          <Box component="form" onSubmit={handleCreateNewOrder} sx={{ display: 'flex', flexDirection: 'column', m: 0 }}>
+            {/* Dialog Header */}
+            <DialogTitle
+              sx={{
+                p: '20px 24px',
+                borderBottom: '1.5px solid #E2E8F0',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                <Box
+                  sx={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: '8px',
+                    bgcolor: '#F1F5F9',
+                    border: '1.5px solid #CBD5E1',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0
+                  }}
+                >
+                  <FolderPlus size={20} color="#0F172A" />
+                </Box>
+                <Box>
+                  <Typography variant="h6" sx={{ fontSize: '1.15rem', fontWeight: 900, color: '#0F172A', letterSpacing: '-0.01em', lineHeight: 1.2 }}>
+                    Tambah Pesanan Baru Manual
+                  </Typography>
+                  <Typography variant="caption" sx={{ fontSize: '0.8rem', color: '#64748B', display: 'block', mt: 0.25 }}>
+                    Registrasi proyek langsung dari kesepakatan WhatsApp atau offline ke antrean kerja sistem.
+                  </Typography>
+                </Box>
+              </Box>
+              <IconButton
+                onClick={() => setIsCreatingNew(false)}
+                size="small"
+                aria-label="Tutup modal"
+                sx={{
+                  bgcolor: '#F8FAFC',
+                  border: '1.5px solid #CBD5E1',
+                  borderRadius: '6px',
+                  color: '#64748B',
+                  p: 0.75,
+                  '&:hover': { bgcolor: '#F1F5F9', color: '#0F172A' }
+                }}
+              >
+                <X size={16} />
+              </IconButton>
+            </DialogTitle>
+
+            {/* Dialog Scrollable Content */}
+            <DialogContent sx={{ p: '24px 28px', maxHeight: 'calc(90vh - 140px)' }}>
+              <Stack spacing={3}>
+                {/* SECTION 1: KONTAK & KOMUNIKASI */}
+                <Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
+                    <Phone size={15} color="#0F172A" />
+                    <Typography variant="caption" sx={{ fontSize: '0.8rem', fontWeight: 800, color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                      1. Kontak &amp; Saluran Komunikasi Proyek
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2, mb: 2 }}>
+                    <Box>
+                      <Typography variant="caption" sx={{ fontSize: '0.8rem', fontWeight: 700, color: '#0F172A', display: 'block', mb: 0.75 }}>
+                        Nomor WhatsApp Aktif (Wajib)
+                      </Typography>
+                      <TextField
+                        fullWidth
+                        size="small"
+                        name="clientPhone"
+                        required
+                        placeholder="Contoh: 081234567890"
+                        inputProps={{
+                          style: { fontSize: '0.88rem', color: '#0F172A', padding: '10px 12px' }
+                        }}
+                        sx={{
+                          bgcolor: '#FFFFFF',
+                          '& .MuiOutlinedInput-root': {
+                            border: '1.5px solid #CBD5E1',
+                            borderRadius: '6px',
+                            '& fieldset': { border: 'none' },
+                            '&:hover': { borderColor: '#0F172A' },
+                            '&.Mui-focused': { borderColor: '#1D63FF' }
+                          }
+                        }}
+                      />
+                      <Typography variant="caption" sx={{ fontSize: '0.74rem', color: '#64748B', mt: 0.5, display: 'block' }}>
+                        Kunci identifikasi utama untuk lacak pesanan di /lacak
+                      </Typography>
+                    </Box>
+                    <Box>
+                      <Typography variant="caption" sx={{ fontSize: '0.8rem', fontWeight: 700, color: '#0F172A', display: 'block', mb: 0.75 }}>
+                        Email Klien (Opsional)
+                      </Typography>
+                      <TextField
+                        fullWidth
+                        size="small"
+                        name="clientEmail"
+                        type="email"
+                        placeholder="klien@email.com"
+                        inputProps={{
+                          style: { fontSize: '0.88rem', color: '#0F172A', padding: '10px 12px' }
+                        }}
+                        sx={{
+                          bgcolor: '#FFFFFF',
+                          '& .MuiOutlinedInput-root': {
+                            border: '1.5px solid #CBD5E1',
+                            borderRadius: '6px',
+                            '& fieldset': { border: 'none' },
+                            '&:hover': { borderColor: '#0F172A' },
+                            '&.Mui-focused': { borderColor: '#1D63FF' }
+                          }
+                        }}
+                      />
+                    </Box>
+                  </Box>
+                  <Box>
+                    <Typography variant="caption" sx={{ fontSize: '0.8rem', fontWeight: 700, color: '#0F172A', display: 'block', mb: 0.75 }}>
+                      Status Awal Pesanan
+                    </Typography>
+                    <FormControl fullWidth size="small">
+                      <Select
+                        name="statusType"
+                        value={newOrderForm.statusType}
+                        onChange={(e) => setNewOrderForm({ ...newOrderForm, statusType: e.target.value })}
+                        sx={{
+                          bgcolor: '#FFFFFF',
+                          fontSize: '0.88rem',
+                          fontWeight: 700,
+                          color: '#0F172A',
+                          border: '1.5px solid #CBD5E1',
+                          borderRadius: '6px',
+                          '& .MuiOutlinedInput-notchedOutline': { border: 'none' },
+                          '&:hover': { borderColor: '#0F172A' },
+                          '&.Mui-focused': { borderColor: '#1D63FF' }
+                        }}
+                      >
+                        <MenuItem value="FIX_ORDER" sx={{ fontSize: '0.88rem', fontWeight: 600 }}>FIX ORDER (DP 50% Sudah Diterima &amp; Antrean Kerja)</MenuItem>
+                        <MenuItem value="INQUIRY" sx={{ fontSize: '0.88rem', fontWeight: 600 }}>INQUIRY (Draf Tanya / Menunggu Bukti Transfer DP)</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Box>
+                </Box>
+
+                <Divider sx={{ borderColor: '#F1F5F9', borderBottomWidth: '1.5px' }} />
+
+                {/* SECTION 2: RUANG LINGKUP & PAKET LAYANAN */}
+                <Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
+                    <Layers size={15} color="#0F172A" />
+                    <Typography variant="caption" sx={{ fontSize: '0.8rem', fontWeight: 800, color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                      2. Ruang Lingkup &amp; Paket Layanan
+                    </Typography>
+                  </Box>
+                  <Box sx={{ mb: 2 }}>
+                    <Typography variant="caption" sx={{ fontSize: '0.8rem', fontWeight: 700, color: '#0F172A', display: 'block', mb: 0.75 }}>
+                      Judul / Kebutuhan Utama Proyek
+                    </Typography>
+                    <TextField
+                      fullWidth
+                      size="small"
+                      name="projectTitle"
+                      required
+                      placeholder="Contoh: Website Profil Klinik Gigi & Form Reservasi Direct WhatsApp"
+                      inputProps={{
+                        style: { fontSize: '0.88rem', color: '#0F172A', padding: '10px 12px' }
+                      }}
+                      sx={{
+                        bgcolor: '#FFFFFF',
+                        '& .MuiOutlinedInput-root': {
+                          border: '1.5px solid #CBD5E1',
+                          borderRadius: '6px',
+                          '& fieldset': { border: 'none' },
+                          '&:hover': { borderColor: '#0F172A' },
+                          '&.Mui-focused': { borderColor: '#1D63FF' }
+                        }
+                      }}
+                    />
+                  </Box>
+                  <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2 }}>
+                    <Box>
+                      <Typography variant="caption" sx={{ fontSize: '0.8rem', fontWeight: 700, color: '#0F172A', display: 'block', mb: 0.75 }}>
+                        Pilihan Paket Layanan
+                      </Typography>
+                      <FormControl fullWidth size="small">
+                        <Select
+                          name="packageId"
+                          value={newOrderForm.packageId}
+                          onChange={(e) => handleNewOrderPackageChange(e.target.value)}
+                          sx={{
+                            bgcolor: '#FFFFFF',
+                            fontSize: '0.88rem',
+                            fontWeight: 700,
+                            color: '#0F172A',
+                            border: '1.5px solid #CBD5E1',
+                            borderRadius: '6px',
+                            '& .MuiOutlinedInput-notchedOutline': { border: 'none' },
+                            '&:hover': { borderColor: '#0F172A' },
+                            '&.Mui-focused': { borderColor: '#1D63FF' }
+                          }}
+                        >
+                          {PACKAGES.map(p => (
+                            <MenuItem key={p.id} value={p.id} sx={{ fontSize: '0.88rem', fontWeight: 600 }}>
+                              {p.name} — Rp {p.minPrice.toLocaleString('id-ID')}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Box>
+                    <Box>
+                      <Typography variant="caption" sx={{ fontSize: '0.8rem', fontWeight: 700, color: '#0F172A', display: 'block', mb: 0.75 }}>
+                        Kategori Segmentasi
+                      </Typography>
+                      <FormControl fullWidth size="small">
+                        <Select
+                          name="category"
+                          value={newOrderForm.category}
+                          onChange={(e) => setNewOrderForm({ ...newOrderForm, category: e.target.value })}
+                          sx={{
+                            bgcolor: '#FFFFFF',
+                            fontSize: '0.88rem',
+                            fontWeight: 700,
+                            color: '#0F172A',
+                            border: '1.5px solid #CBD5E1',
+                            borderRadius: '6px',
+                            '& .MuiOutlinedInput-notchedOutline': { border: 'none' },
+                            '&:hover': { borderColor: '#0F172A' },
+                            '&.Mui-focused': { borderColor: '#1D63FF' }
+                          }}
+                        >
+                          <MenuItem value="UMKM & Bisnis" sx={{ fontSize: '0.88rem', fontWeight: 600 }}>UMKM &amp; Bisnis</MenuItem>
+                          <MenuItem value="Standard Enterprise" sx={{ fontSize: '0.88rem', fontWeight: 600 }}>Company Profile Korporat</MenuItem>
+                          <MenuItem value="Mahasiswa & Akademisi" sx={{ fontSize: '0.88rem', fontWeight: 600 }}>Tugas Kuliah / Modul Skripsi</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Box>
+                  </Box>
+                </Box>
+
+                <Divider sx={{ borderColor: '#F1F5F9', borderBottomWidth: '1.5px' }} />
+
+                {/* SECTION 3: KEUANGAN & TARGET SELESAI */}
+                <Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
+                    <Calendar size={15} color="#0F172A" />
+                    <Typography variant="caption" sx={{ fontSize: '0.8rem', fontWeight: 800, color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                      3. Nilai Investasi &amp; Target Pengerjaan
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2 }}>
+                    <Box>
+                      <Typography variant="caption" sx={{ fontSize: '0.8rem', fontWeight: 700, color: '#0F172A', display: 'block', mb: 0.75 }}>
+                        Total Biaya Disepakati (Rp)
+                      </Typography>
+                      <TextField
+                        fullWidth
+                        size="small"
+                        name="totalInvestment"
+                        type="number"
+                        value={newOrderForm.totalInvestment}
+                        onChange={(e) => setNewOrderForm({ ...newOrderForm, totalInvestment: Number(e.target.value) })}
+                        inputProps={{
+                          style: { fontSize: '0.9rem', fontWeight: 800, color: '#1D63FF', padding: '10px 12px' }
+                        }}
+                        sx={{
+                          bgcolor: '#FFFFFF',
+                          '& .MuiOutlinedInput-root': {
+                            border: '1.5px solid #CBD5E1',
+                            borderRadius: '6px',
+                            '& fieldset': { border: 'none' },
+                            '&:hover': { borderColor: '#0F172A' },
+                            '&.Mui-focused': { borderColor: '#1D63FF' }
+                          }
+                        }}
+                      />
+                      <Typography variant="caption" sx={{ fontSize: '0.74rem', color: '#64748B', mt: 0.5, display: 'block' }}>
+                        Uang Muka DP 50%: <Box component="strong" sx={{ color: '#0F172A' }}>{formatRupiah(Math.round((newOrderForm.totalInvestment || 0) / 2))}</Box>
+                      </Typography>
+                    </Box>
+                    <Box>
+                      <Typography variant="caption" sx={{ fontSize: '0.8rem', fontWeight: 700, color: '#0F172A', display: 'block', mb: 0.75 }}>
+                        Target Tanggal Selesai
+                      </Typography>
+                      <TextField
+                        fullWidth
+                        size="small"
+                        name="estimatedCompletion"
+                        placeholder="Contoh: 18 November 2026 atau 7 Hari Kerja"
+                        defaultValue="7 Hari Kerja"
+                        inputProps={{
+                          style: { fontSize: '0.88rem', color: '#0F172A', padding: '10px 12px' }
+                        }}
+                        sx={{
+                          bgcolor: '#FFFFFF',
+                          '& .MuiOutlinedInput-root': {
+                            border: '1.5px solid #CBD5E1',
+                            borderRadius: '6px',
+                            '& fieldset': { border: 'none' },
+                            '&:hover': { borderColor: '#0F172A' },
+                            '&.Mui-focused': { borderColor: '#1D63FF' }
+                          }
+                        }}
+                      />
+                    </Box>
+                  </Box>
+                </Box>
+
+                <Divider sx={{ borderColor: '#F1F5F9', borderBottomWidth: '1.5px' }} />
+
+                {/* SECTION 4: LOG PENGEMBANG AWAL */}
+                <Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
+                    <FileText size={15} color="#0F172A" />
+                    <Typography variant="caption" sx={{ fontSize: '0.8rem', fontWeight: 800, color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                      4. Catatan Pengembang Awal (Live Log di /lacak)
+                    </Typography>
+                  </Box>
+                  <TextField
+                    fullWidth
+                    multiline
+                    rows={2}
+                    name="developerNotes"
+                    defaultValue="Pesanan resmi terdaftar. Menyiapkan repositori kode sumber dan perancangan skema basis data."
+                    inputProps={{
+                      style: { fontSize: '0.88rem', color: '#0F172A', lineHeight: 1.5 }
+                    }}
+                    sx={{
+                      bgcolor: '#FFFFFF',
+                      '& .MuiOutlinedInput-root': {
+                        border: '1.5px solid #CBD5E1',
+                        borderRadius: '6px',
+                        '& fieldset': { border: 'none' },
+                        '&:hover': { borderColor: '#0F172A' },
+                        '&.Mui-focused': { borderColor: '#1D63FF' }
+                      }
+                    }}
+                  />
+                  <Typography variant="caption" sx={{ fontSize: '0.74rem', color: '#64748B', mt: 0.75, display: 'block' }}>
+                    Catatan ini akan langsung terlihat oleh klien saat memasukkan nomor tiket di halaman /lacak.
+                  </Typography>
+                </Box>
+              </Stack>
+            </DialogContent>
+
+            {/* Dialog Footer Actions */}
+            <DialogActions
+              sx={{
+                bgcolor: '#F8FAFC',
+                borderTop: '1.5px solid #E2E8F0',
+                px: 3,
+                py: 2,
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                gap: 1.5,
+                flexWrap: 'wrap'
+              }}
+            >
+              <Typography variant="caption" sx={{ fontSize: '0.82rem', color: '#64748B' }}>
+                Tersinkronisasi ke <Box component="strong" sx={{ color: '#0F172A' }}>/lacak</Box> &amp; <Box component="strong" sx={{ color: '#0F172A' }}>Spreadsheet</Box>
+              </Typography>
+              <Box sx={{ display: 'flex', gap: 1.5 }}>
+                <Button
+                  type="button"
+                  onClick={() => setIsCreatingNew(false)}
+                  sx={{
+                    bgcolor: '#FFFFFF',
+                    color: '#475569',
+                    border: '1.5px solid #CBD5E1',
+                    borderRadius: '6px',
+                    px: 2,
+                    py: 0.85,
+                    fontSize: '0.86rem',
+                    fontWeight: 700,
+                    '&:hover': { bgcolor: '#F1F5F9', color: '#0F172A' }
+                  }}
+                >
+                  Batal
+                </Button>
+                <Button
+                  type="submit"
+                  startIcon={<Plus size={16} />}
+                  sx={{
+                    bgcolor: '#0F172A',
+                    color: '#FFFFFF',
+                    borderRadius: '6px',
+                    px: 2.5,
+                    py: 0.85,
+                    fontSize: '0.88rem',
+                    fontWeight: 800,
+                    '&:hover': { bgcolor: '#1E293B' }
+                  }}
+                >
+                  Daftarkan ke Sistem
+                </Button>
+              </Box>
+            </DialogActions>
+          </Box>
+        </Dialog>
+      )}
+
+      {/* ─────────────────────────────────────────────────────────────
+          MODAL: CATAT SESI REVISI PROYEK (Material UI Executive Dialog)
+          ───────────────────────────────────────────────────────────── */}
+      {revisionModalOrder && (
+        <Dialog
+          open={Boolean(revisionModalOrder)}
+          onClose={() => setRevisionModalOrder(null)}
+          maxWidth="sm"
+          fullWidth
+          PaperProps={{
+            sx: {
+              borderRadius: '12px',
+              border: '1.5px solid #CBD5E1',
+              bgcolor: '#FFFFFF',
+              boxShadow: '0 20px 40px -15px rgba(15, 23, 42, 0.25)',
+              m: 2
+            }
+          }}
+        >
+          <Box component="form" onSubmit={handleSaveRevisionRecord} sx={{ display: 'flex', flexDirection: 'column', m: 0 }}>
+            {/* Dialog Header */}
+            <DialogTitle
+              sx={{
+                p: '20px 24px',
+                borderBottom: '1.5px solid #E2E8F0',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}
+            >
+              <Box>
+                <Typography variant="h6" sx={{ fontSize: '1.15rem', fontWeight: 900, color: '#0F172A', letterSpacing: '-0.01em', lineHeight: 1.2 }}>
+                  Catat Sesi Revisi Proyek
+                </Typography>
+                <Typography variant="caption" sx={{ fontSize: '0.8rem', color: '#64748B', display: 'block', mt: 0.5 }}>
+                  Pesanan: <Box component="strong" sx={{ color: '#0F172A' }}>{revisionModalOrder.id}</Box> • Sesi ke-{(revisionModalOrder.revisionQuotaUsed || 0) + 1} dari {revisionModalOrder.revisionQuotaTotal || 3}
+                </Typography>
+              </Box>
+              <IconButton
+                onClick={() => setRevisionModalOrder(null)}
+                size="small"
+                aria-label="Tutup modal"
+                sx={{
+                  bgcolor: '#F8FAFC',
+                  border: '1.5px solid #CBD5E1',
+                  borderRadius: '6px',
+                  color: '#64748B',
+                  p: 0.75,
+                  '&:hover': { bgcolor: '#F1F5F9', color: '#0F172A' }
+                }}
+              >
+                <X size={16} />
+              </IconButton>
+            </DialogTitle>
+
+            {/* Dialog Content */}
+            <DialogContent sx={{ p: '24px 28px' }}>
+              {/* Info Box */}
+              <Box
+                sx={{
+                  bgcolor: '#F8FAFC',
+                  border: '1.5px solid #CBD5E1',
+                  borderRadius: '8px',
+                  p: 2,
+                  mb: 2.5,
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center'
+                }}
+              >
+                <Box>
+                  <Typography variant="subtitle2" sx={{ fontSize: '0.84rem', fontWeight: 800, color: '#1D63FF' }}>
+                    Sesi yang akan dicatat: Sesi ke-{(revisionModalOrder.revisionQuotaUsed || 0) + 1}
+                  </Typography>
+                  <Typography variant="caption" sx={{ fontSize: '0.78rem', color: '#475569', display: 'block', mt: 0.25 }}>
+                    Sisa kuota revisi SOP setelah sesi ini: {(revisionModalOrder.revisionQuotaTotal || 3) - (revisionModalOrder.revisionQuotaUsed || 0) - 1} sesi
+                  </Typography>
+                </Box>
+                <Box
+                  sx={{
+                    fontSize: '0.76rem',
+                    bgcolor: '#FFFFFF',
+                    px: 1.25,
+                    py: 0.5,
+                    borderRadius: '4px',
+                    fontWeight: 700,
+                    color: '#0F172A',
+                    border: '1.5px solid #CBD5E1'
+                  }}
+                >
+                  Hari ini
+                </Box>
+              </Box>
+
+              <Box sx={{ mb: 1 }}>
+                <Typography variant="caption" sx={{ fontSize: '0.84rem', fontWeight: 800, color: '#0F172A', display: 'block', mb: 1 }}>
+                  Rincian Catatan Revisi dari Klien (Wajib):
+                </Typography>
+                <TextField
+                  fullWidth
+                  multiline
+                  rows={4}
+                  autoFocus
+                  value={revisionNoteInput}
+                  onChange={(e) => {
+                    setRevisionNoteInput(e.target.value);
+                    if (revisionNoteError) setRevisionNoteError('');
+                  }}
+                  placeholder="Tuliskan secara spesifik apa saja yang direvisi (misal: penyesuaian susunan menu header mobile, revisi warna tombol checkout, perbaikan validasi nomor telepon di form pemesanan)..."
+                  inputProps={{
+                    style: { fontSize: '0.88rem', color: '#0F172A', lineHeight: 1.5 }
+                  }}
+                  sx={{
+                    bgcolor: '#FFFFFF',
+                    '& .MuiOutlinedInput-root': {
+                      border: revisionNoteError ? '1.5px solid #DC2626' : '1.5px solid #CBD5E1',
+                      borderRadius: '6px',
+                      '& fieldset': { border: 'none' },
+                      '&:hover': { borderColor: revisionNoteError ? '#DC2626' : '#0F172A' },
+                      '&.Mui-focused': { borderColor: revisionNoteError ? '#DC2626' : '#1D63FF' }
+                    }
+                  }}
+                />
+                {revisionNoteError && (
+                  <Typography variant="caption" sx={{ fontSize: '0.8rem', color: '#DC2626', fontWeight: 700, mt: 0.75, display: 'block' }}>
+                    {revisionNoteError}
+                  </Typography>
+                )}
+                <Typography variant="caption" sx={{ fontSize: '0.76rem', color: '#64748B', mt: 0.75, display: 'block' }}>
+                  Catatan ini otomatis tampil di pelacak status /lacak klien, tersimpan ke basis data, dan terarsip ke spreadsheet.
+                </Typography>
+              </Box>
+            </DialogContent>
+
+            {/* Dialog Footer Actions */}
+            <DialogActions
+              sx={{
+                bgcolor: '#F8FAFC',
+                borderTop: '1.5px solid #E2E8F0',
+                px: 3,
+                py: 2,
+                display: 'flex',
+                justifyContent: 'flex-end',
+                gap: 1.5
+              }}
+            >
+              <Button
+                type="button"
+                onClick={() => setRevisionModalOrder(null)}
+                sx={{
+                  bgcolor: '#FFFFFF',
+                  color: '#475569',
+                  border: '1.5px solid #CBD5E1',
+                  borderRadius: '6px',
+                  px: 2,
+                  py: 0.85,
+                  fontSize: '0.86rem',
+                  fontWeight: 700,
+                  '&:hover': { bgcolor: '#F1F5F9', color: '#0F172A' }
+                }}
+              >
+                Batal
+              </Button>
+              <Button
+                type="submit"
+                startIcon={<Save size={16} />}
+                sx={{
+                  bgcolor: '#0F172A',
+                  color: '#FFFFFF',
+                  borderRadius: '6px',
+                  px: 2.5,
+                  py: 0.85,
+                  fontSize: '0.88rem',
+                  fontWeight: 800,
+                  '&:hover': { bgcolor: '#1E293B' }
+                }}
+              >
+                Simpan Catatan Revisi
+              </Button>
+            </DialogActions>
+          </Box>
+        </Dialog>
+      )}
+
+    </Box>
+  </ThemeProvider>
+);
 }
