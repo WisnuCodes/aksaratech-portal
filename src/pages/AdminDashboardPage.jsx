@@ -29,7 +29,8 @@ import {
   Layers,
   X,
   History,
-  Phone
+  Phone,
+  KeyRound
 } from 'lucide-react';
 import { 
   getAllOrders, 
@@ -637,48 +638,82 @@ function doPost(e) {
   // ─────────────────────────────────────────────────────────────
   if (!isAuthenticated) {
     return (
-      <div style={{ minHeight: '100vh', background: '#F8FAFC', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px' }}>
-        <div style={{ background: '#FFFFFF', border: '1.5px solid #CBD5E1', borderRadius: '16px', maxWidth: '440px', width: '100%', padding: '36px 32px', textAlign: 'center' }}>
+      <div style={{ minHeight: '100vh', background: '#F8FAFC', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '32px 20px', boxSizing: 'border-box' }}>
+        
+        {/* Status Chip */}
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 14px', borderRadius: '999px', background: '#FFFFFF', border: '1.5px solid #CBD5E1', marginBottom: '24px' }}>
+          <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#22C55E' }} />
+          <span style={{ fontSize: '0.8rem', fontWeight: '800', color: '#0F172A', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
+            Aksara Tech &bull; Restricted Internal Access
+          </span>
+        </div>
+
+        {/* Security Card Container */}
+        <div style={{ background: '#FFFFFF', border: '2px solid #0F172A', borderRadius: '16px', maxWidth: '460px', width: '100%', padding: '40px 36px', boxSizing: 'border-box', textAlign: 'center' }}>
           
-          <div style={{ width: '52px', height: '52px', borderRadius: '50%', background: '#F1F5F9', border: '1.5px solid #CBD5E1', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px auto' }}>
-            <Lock size={24} color="#0F172A" />
+          {/* Security Icon Badge */}
+          <div style={{ width: '56px', height: '56px', borderRadius: '12px', background: '#0F172A', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px auto' }}>
+            <KeyRound size={26} color="#FFFFFF" />
           </div>
 
-          <h1 style={{ fontSize: '1.5rem', fontWeight: '900', color: '#0F172A', margin: '0 0 8px 0', letterSpacing: '-0.01em', lineHeight: '1.25' }}>
-            Panel Admin Aksara Tech
+          <h1 style={{ fontSize: '1.5rem', fontWeight: '900', color: '#0F172A', margin: '0 0 10px 0', letterSpacing: '-0.01em', lineHeight: '1.25' }}>
+            Pusat Otentikasi Workspace
           </h1>
-          <p style={{ fontSize: '0.94rem', color: '#334155', margin: '0 0 24px 0', lineHeight: '1.5' }}>
-            Masukkan PIN Keamanan internal untuk mengelola draf inquiry, verifikasi pembayaran DP, dan tahapan koding klien.
+          <p style={{ fontSize: '0.92rem', color: '#334155', margin: '0 0 28px 0', lineHeight: '1.55' }}>
+            Akses verifikasi pembayaran DP 50%, pembaruan tahapan koding SOP, dan sinkronisasi repositori berkas proyek.
           </p>
 
           <form onSubmit={handlePinSubmit}>
-            <div style={{ marginBottom: '20px', textAlign: 'left' }}>
-              <label style={{ fontSize: '0.86rem', fontWeight: '800', color: '#0F172A', display: 'block', marginBottom: '8px' }}>
-                PIN Keamanan Admin
-              </label>
+            <div style={{ marginBottom: '24px', textAlign: 'left' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                <label style={{ fontSize: '0.84rem', fontWeight: '800', color: '#0F172A' }}>
+                  PIN Keamanan Pengembang
+                </label>
+                <button
+                  type="button"
+                  onClick={() => setPinInput(DEFAULT_ADMIN_PIN)}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: '#1D63FF',
+                    fontSize: '0.78rem',
+                    fontWeight: '800',
+                    cursor: 'pointer',
+                    padding: 0
+                  }}
+                >
+                  Gunakan Default (2026)
+                </button>
+              </div>
+
               <input
                 type="password"
                 maxLength={8}
                 value={pinInput}
-                onChange={(e) => setPinInput(e.target.value)}
-                placeholder="Masukkan 4 digit PIN..."
+                onChange={(e) => {
+                  setPinInput(e.target.value);
+                  if (pinError) setPinError('');
+                }}
+                placeholder="••••"
                 autoFocus
                 style={{
                   width: '100%',
                   boxSizing: 'border-box',
-                  padding: '14px 16px',
-                  fontSize: '1.2rem',
-                  fontWeight: '800',
+                  padding: '16px 20px',
+                  fontSize: '1.5rem',
+                  fontWeight: '900',
                   textAlign: 'center',
-                  letterSpacing: '0.25em',
+                  letterSpacing: '0.4em',
                   background: '#F8FAFC',
-                  border: '1.5px solid #CBD5E1',
-                  borderRadius: '8px',
-                  outline: 'none'
+                  border: pinError ? '2px solid #DC2626' : '2px solid #0F172A',
+                  borderRadius: '10px',
+                  outline: 'none',
+                  color: '#0F172A'
                 }}
               />
+              
               {pinError && (
-                <div style={{ fontSize: '0.84rem', color: '#DC2626', fontWeight: '800', marginTop: '6px' }}>
+                <div style={{ fontSize: '0.84rem', color: '#DC2626', fontWeight: '800', marginTop: '8px', textAlign: 'center' }}>
                   {pinError}
                 </div>
               )}
@@ -688,26 +723,48 @@ function doPost(e) {
               type="submit"
               style={{
                 width: '100%',
-                background: 'var(--prussian-blue)',
+                background: '#0F172A',
                 color: '#FFFFFF',
                 border: 'none',
-                borderRadius: '8px',
-                padding: '14px',
-                fontSize: '1rem',
+                borderRadius: '10px',
+                padding: '14px 20px',
+                fontSize: '0.98rem',
                 fontWeight: '800',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                transition: 'background 0.15s, transform 0.1s'
               }}
             >
-              Masuk Dashboard Admin
+              <ShieldCheck size={18} />
+              <span>Buka Akses Workspace</span>
             </button>
           </form>
 
-          <div style={{ marginTop: '24px', background: '#F8FAFC', padding: '10px 14px', borderRadius: '6px', fontSize: '0.84rem', color: '#475569' }}>
-            <span>PIN Standar Pengembang: </span>
-            <code style={{ background: '#FFFFFF', padding: '2px 8px', borderRadius: '4px', fontWeight: '900', color: '#0F172A', border: '1px solid #CBD5E1' }}>2026</code>
+          {/* Discreet Meta Footnote */}
+          <div style={{ marginTop: '28px', paddingTop: '20px', borderTop: '1.5px solid #E2E8F0', display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.82rem', color: '#64748B' }}>
+            <div>
+              <span>PIN Standar Pengembang: </span>
+              <code style={{ background: '#F1F5F9', padding: '2px 8px', borderRadius: '4px', fontWeight: '800', color: '#0F172A', border: '1.5px solid #CBD5E1' }}>2026</code>
+            </div>
+            <Link
+              to="/"
+              style={{
+                color: '#475569',
+                textDecoration: 'none',
+                fontWeight: '700',
+                marginTop: '4px',
+                display: 'inline-block'
+              }}
+            >
+              &larr; Kembali ke Beranda Aksara Tech
+            </Link>
           </div>
 
         </div>
+
       </div>
     );
   }
@@ -736,48 +793,54 @@ function doPost(e) {
       `}</style>
       
       {/* Top Banner Bar */}
-      <div style={{ background: '#0F172A', color: '#FFFFFF', padding: '16px 0', borderBottom: '1px solid #334155' }}>
+      <header style={{ background: '#0F172A', color: '#FFFFFF', padding: '14px 0', borderBottom: '1.5px solid #1E293B' }}>
         <div className="container" style={{ maxWidth: '1240px', margin: '0 auto', padding: '0 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px' }}>
           
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#22C55E' }} />
-            <div>
-              <span style={{ fontSize: '1.05rem', fontWeight: '900', letterSpacing: '-0.01em' }}>AKSARA TECH &bull; Admin Workspace</span>
-              <span style={{ fontSize: '0.78rem', color: '#94A3B8', marginLeft: '10px' }}>Mode Internal Terotentikasi</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <span style={{ width: '9px', height: '9px', borderRadius: '50%', background: '#22C55E', display: 'inline-block' }} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+              <span style={{ fontSize: '1.02rem', fontWeight: '900', letterSpacing: '-0.01em', color: '#FFFFFF' }}>
+                AKSARA TECH
+              </span>
+              <span style={{ color: '#475569', fontWeight: '400' }}>/</span>
+              <span style={{ fontSize: '0.86rem', color: '#CBD5E1', fontWeight: '700' }}>
+                Pusat Kendali Produksi
+              </span>
             </div>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
             <Link
               to="/lacak"
               target="_blank"
               style={{
-                background: '#334155',
+                background: '#1E293B',
                 color: '#FFFFFF',
                 textDecoration: 'none',
-                fontSize: '0.84rem',
+                fontSize: '0.82rem',
                 fontWeight: '700',
-                padding: '7px 14px',
+                padding: '8px 14px',
                 borderRadius: '6px',
+                border: '1.5px solid #334155',
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '6px'
               }}
             >
-              <Eye size={15} />
-              <span>Buka Tampilan Klien (/lacak)</span>
+              <Eye size={14} />
+              <span>Tinjau Pelacak (/lacak)</span>
             </Link>
 
             <button
               type="button"
               onClick={exportOrdersToExcel}
               style={{
-                background: '#16A34A',
+                background: '#1E293B',
                 color: '#FFFFFF',
-                border: 'none',
-                fontSize: '0.84rem',
-                fontWeight: '800',
-                padding: '7px 14px',
+                border: '1.5px solid #334155',
+                fontSize: '0.82rem',
+                fontWeight: '700',
+                padding: '8px 14px',
                 borderRadius: '6px',
                 cursor: 'pointer',
                 display: 'inline-flex',
@@ -786,8 +849,8 @@ function doPost(e) {
               }}
               title="Unduh format spreadsheet rapi dengan kolom terpisah, warna header, dan penataan nomor telepon"
             >
-              <FileSpreadsheet size={15} />
-              <span>Ekspor Excel Spreadsheet (.xls)</span>
+              <FileSpreadsheet size={14} />
+              <span>Ekspor Excel (.xls)</span>
             </button>
 
             <button
@@ -795,18 +858,18 @@ function doPost(e) {
               onClick={exportOrdersToCSV}
               style={{
                 background: '#1E293B',
-                color: '#FFFFFF',
-                border: '1px solid #475569',
-                fontSize: '0.84rem',
+                color: '#CBD5E1',
+                border: '1.5px solid #334155',
+                fontSize: '0.82rem',
                 fontWeight: '700',
-                padding: '7px 12px',
+                padding: '8px 12px',
                 borderRadius: '6px',
                 cursor: 'pointer',
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '6px'
               }}
-              title="Unduh format CSV standar dengan pemisah titik koma (sep=;)"
+              title="Unduh format CSV standar dengan pemisah titik koma"
             >
               <span>CSV (.csv)</span>
             </button>
@@ -815,12 +878,12 @@ function doPost(e) {
               type="button"
               onClick={handleLogout}
               style={{
-                background: '#475569',
-                color: '#FFFFFF',
-                border: 'none',
-                fontSize: '0.84rem',
+                background: 'transparent',
+                color: '#CBD5E1',
+                border: '1.5px solid #475569',
+                fontSize: '0.82rem',
                 fontWeight: '700',
-                padding: '7px 14px',
+                padding: '8px 14px',
                 borderRadius: '6px',
                 cursor: 'pointer',
                 display: 'inline-flex',
@@ -828,13 +891,13 @@ function doPost(e) {
                 gap: '6px'
               }}
             >
-              <LogOut size={15} />
+              <LogOut size={14} />
               <span>Keluar</span>
             </button>
           </div>
 
         </div>
-      </div>
+      </header>
 
       {/* Main Container */}
       <div className="container" style={{ maxWidth: '1240px', margin: '36px auto 0 auto', padding: '0 24px', boxSizing: 'border-box' }}>
@@ -850,11 +913,11 @@ function doPost(e) {
         {/* Dashboard Title & Quick Actions */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px', marginBottom: '28px' }}>
           <div>
-            <h1 style={{ fontSize: 'clamp(1.25rem, 2vw, 1.5rem)', fontWeight: '900', color: '#0F172A', letterSpacing: '-0.01em', margin: '0 0 6px 0', lineHeight: '1.25' }}>
-              Pusat Kendali Pesanan &amp; Tahapan Koding
+            <h1 style={{ fontSize: 'clamp(1.3rem, 2.2vw, 1.6rem)', fontWeight: '900', color: '#0F172A', letterSpacing: '-0.01em', margin: '0 0 6px 0', lineHeight: '1.25' }}>
+              Pusat Kendali Pesanan &amp; SOP Produksi
             </h1>
             <p style={{ fontSize: '0.94rem', color: '#475569', margin: 0, maxWidth: '780px', lineHeight: '1.5' }}>
-              Verifikasi bukti transfer DP 50%, ubah draf inquiry menjadi pesanan fix, perbarui tahapan koding SOP, dan catat sisa kuota revisi.
+              Verifikasi transfer DP 50%, kelola tahapan koding 5-langkah SOP, dan catat pemakaian kuota revisi proyek.
             </p>
           </div>
 
@@ -863,34 +926,34 @@ function doPost(e) {
               type="button"
               onClick={handleClearAllOrders}
               style={{
-                background: '#FEE2E2',
+                background: '#FFFFFF',
                 color: '#DC2626',
-                border: '1px solid #FECACA',
+                border: '1.5px solid #CBD5E1',
                 borderRadius: '8px',
-                padding: '11px 16px',
-                fontSize: '0.86rem',
-                fontWeight: '800',
+                padding: '10px 14px',
+                fontSize: '0.84rem',
+                fontWeight: '700',
                 cursor: 'pointer',
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '6px'
               }}
-              title="Hapus seluruh data pesanan dari sistem dan kosongkan pelacak"
+              title="Hapus seluruh data pesanan lokal dan kosongkan pelacak"
             >
-              <Trash2 size={16} />
-              <span>Kosongkan Semua Data</span>
+              <Trash2 size={15} />
+              <span>Kosongkan Data</span>
             </button>
 
             <button
               type="button"
               onClick={handleResetDemoOrders}
               style={{
-                background: '#F1F5F9',
+                background: '#FFFFFF',
                 color: '#0F172A',
-                border: '1px solid #CBD5E1',
+                border: '1.5px solid #CBD5E1',
                 borderRadius: '8px',
-                padding: '11px 16px',
-                fontSize: '0.86rem',
+                padding: '10px 14px',
+                fontSize: '0.84rem',
                 fontWeight: '700',
                 cursor: 'pointer',
                 display: 'inline-flex',
@@ -899,7 +962,7 @@ function doPost(e) {
               }}
               title="Muat ulang 4 data contoh awal untuk pengujian"
             >
-              <RotateCcw size={16} />
+              <RotateCcw size={15} />
               <span>Muat Ulang Contoh</span>
             </button>
 
@@ -907,11 +970,11 @@ function doPost(e) {
               type="button"
               onClick={handleOpenCreateModal}
               style={{
-                background: 'var(--prussian-blue)',
+                background: '#1D63FF',
                 color: '#FFFFFF',
                 border: 'none',
                 borderRadius: '8px',
-                padding: '11px 18px',
+                padding: '10px 18px',
                 fontSize: '0.88rem',
                 fontWeight: '800',
                 cursor: 'pointer',
@@ -920,50 +983,70 @@ function doPost(e) {
                 gap: '8px'
               }}
             >
-              <Plus size={18} />
+              <Plus size={17} />
               <span>Tambah Pesanan Manual</span>
             </button>
           </div>
         </div>
 
         {/* 4 Overview Metric Cards */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px', marginBottom: '32px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px', marginBottom: '32px' }}>
           
-          <div style={{ background: '#FFFFFF', border: '1px solid #CBD5E1', borderRadius: '12px', padding: '20px' }}>
-            <div style={{ fontSize: '0.84rem', color: '#64748B', fontWeight: '700' }}>Total Seluruh Pesanan</div>
-            <div style={{ fontSize: '1.8rem', fontWeight: '900', color: '#0F172A', marginTop: '4px' }}>{metrics.total}</div>
-            <div style={{ fontSize: '0.76rem', color: '#64748B', marginTop: '4px' }}>Tersimpan di database &amp; storage</div>
+          <div style={{ background: '#FFFFFF', border: '1.5px solid #CBD5E1', borderRadius: '12px', padding: '20px 22px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+              <span style={{ fontSize: '0.78rem', color: '#64748B', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                Total Seluruh Pesanan
+              </span>
+              <Database size={16} color="#0F172A" />
+            </div>
+            <div style={{ fontSize: '2.1rem', fontWeight: '900', color: '#0F172A', lineHeight: 1 }}>{metrics.total}</div>
+            <div style={{ fontSize: '0.78rem', color: '#64748B', marginTop: '10px' }}>Tersimpan di database &amp; storage</div>
           </div>
 
-          <div style={{ background: '#FFFFFF', border: '1.5px solid #F59E0B', borderRadius: '12px', padding: '20px' }}>
-            <div style={{ fontSize: '0.84rem', color: '#B45309', fontWeight: '700' }}>Inquiry Baru (Menunggu DP)</div>
-            <div style={{ fontSize: '1.8rem', fontWeight: '900', color: '#D97706', marginTop: '4px' }}>{metrics.inquiries}</div>
-            <div style={{ fontSize: '0.76rem', color: '#64748B', marginTop: '4px' }}>Calon klien konsultasi / belum bayar</div>
+          <div style={{ background: '#FFFFFF', border: '1.5px solid #CBD5E1', borderRadius: '12px', padding: '20px 22px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+              <span style={{ fontSize: '0.78rem', color: '#64748B', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                Inquiry Baru (Menunggu DP)
+              </span>
+              <Clock size={16} color="#D97706" />
+            </div>
+            <div style={{ fontSize: '2.1rem', fontWeight: '900', color: '#D97706', lineHeight: 1 }}>{metrics.inquiries}</div>
+            <div style={{ fontSize: '0.78rem', color: '#64748B', marginTop: '10px' }}>Calon klien konsultasi / belum bayar</div>
           </div>
 
-          <div style={{ background: '#FFFFFF', border: '1.5px solid var(--prussian-blue)', borderRadius: '12px', padding: '20px' }}>
-            <div style={{ fontSize: '0.84rem', color: 'var(--prussian-blue)', fontWeight: '700' }}>Fix Order Aktif (Sedang Dikoding)</div>
-            <div style={{ fontSize: '1.8rem', fontWeight: '900', color: '#0F172A', marginTop: '4px' }}>{metrics.activeFix}</div>
-            <div style={{ fontSize: '0.76rem', color: '#64748B', marginTop: '4px' }}>DP 50% Lunas &amp; masuk antrean kerja</div>
+          <div style={{ background: '#FFFFFF', border: '1.5px solid #CBD5E1', borderRadius: '12px', padding: '20px 22px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+              <span style={{ fontSize: '0.78rem', color: '#64748B', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                Fix Order Aktif (Dikoding)
+              </span>
+              <Layers size={16} color="#1D63FF" />
+            </div>
+            <div style={{ fontSize: '2.1rem', fontWeight: '900', color: '#0F172A', lineHeight: 1 }}>{metrics.activeFix}</div>
+            <div style={{ fontSize: '0.78rem', color: '#64748B', marginTop: '10px' }}>DP 50% lunas &amp; masuk antrean kerja</div>
           </div>
 
-          <div style={{ background: '#FFFFFF', border: '1px solid #CBD5E1', borderRadius: '12px', padding: '20px' }}>
-            <div style={{ fontSize: '0.84rem', color: '#16A34A', fontWeight: '700' }}>Selesai &amp; Lunas 100%</div>
-            <div style={{ fontSize: '1.8rem', fontWeight: '900', color: '#16A34A', marginTop: '4px' }}>{metrics.completed}</div>
-            <div style={{ fontSize: '0.76rem', color: '#64748B', marginTop: '4px' }}>Master Code diserahkan &amp; garansi jalan</div>
+          <div style={{ background: '#FFFFFF', border: '1.5px solid #CBD5E1', borderRadius: '12px', padding: '20px 22px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+              <span style={{ fontSize: '0.78rem', color: '#64748B', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                Selesai &amp; Lunas 100%
+              </span>
+              <CheckCircle2 size={16} color="#16A34A" />
+            </div>
+            <div style={{ fontSize: '2.1rem', fontWeight: '900', color: '#16A34A', lineHeight: 1 }}>{metrics.completed}</div>
+            <div style={{ fontSize: '0.78rem', color: '#64748B', marginTop: '10px' }}>Master Code diserahkan &amp; garansi jalan</div>
           </div>
 
         </div>
 
         {/* Navigation Tabs & Search Row */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px', marginBottom: '20px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px', marginBottom: '22px' }}>
           
-          {/* Filter Tabs */}
-          <div style={{ display: 'inline-flex', background: '#E2E8F0', padding: '3px', borderRadius: '8px', gap: '3px', flexWrap: 'wrap' }}>
+          {/* Segmented Filter Tabs */}
+          <div style={{ display: 'inline-flex', background: '#E2E8F0', padding: '4px', borderRadius: '8px', gap: '4px', flexWrap: 'wrap' }}>
             {[
-              { id: 'ALL', label: `Semua (${metrics.total})` },
-              { id: 'INQUIRY', label: `Inquiry / Tanya (${metrics.inquiries})` },
-              { id: 'FIX_ORDER', label: `Fix Order Aktif (${metrics.activeFix})` },
+              { id: 'ALL', label: `Semua Pesanan (${metrics.total})` },
+              { id: 'INQUIRY', label: `Inquiry (${metrics.inquiries})` },
+              { id: 'FIX_ORDER', label: `Fix Order (${metrics.activeFix})` },
               { id: 'COMPLETED', label: `Selesai (${metrics.completed})` },
               { id: 'SPREADSHEET', label: 'Sinkronisasi Spreadsheet' }
             ].map(tab => {
@@ -974,10 +1057,10 @@ function doPost(e) {
                   type="button"
                   onClick={() => setActiveTab(tab.id)}
                   style={{
-                    background: isActive ? '#FFFFFF' : 'transparent',
-                    color: isActive ? '#0F172A' : '#334155',
+                    background: isActive ? '#0F172A' : 'transparent',
+                    color: isActive ? '#FFFFFF' : '#334155',
                     fontWeight: isActive ? '800' : '600',
-                    fontSize: '0.86rem',
+                    fontSize: '0.84rem',
                     padding: '8px 14px',
                     border: 'none',
                     borderRadius: '6px',
@@ -993,24 +1076,25 @@ function doPost(e) {
 
           {/* Search Box */}
           {activeTab !== 'SPREADSHEET' && (
-            <div style={{ position: 'relative', width: '280px' }}>
+            <div style={{ position: 'relative', width: '300px' }}>
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Cari ID, klien, atau WA..."
+                placeholder="Cari ID tiket, judul, atau WhatsApp..."
                 style={{
                   width: '100%',
                   boxSizing: 'border-box',
-                  padding: '9px 12px 9px 34px',
-                  fontSize: '0.88rem',
-                  borderRadius: '6px',
-                  border: '1px solid #CBD5E1',
+                  padding: '9px 12px 9px 36px',
+                  fontSize: '0.86rem',
+                  borderRadius: '8px',
+                  border: '1.5px solid #CBD5E1',
                   background: '#FFFFFF',
-                  outline: 'none'
+                  outline: 'none',
+                  color: '#0F172A'
                 }}
               />
-              <Search size={16} color="#64748B" style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
+              <Search size={16} color="#64748B" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
             </div>
           )}
 
@@ -1140,7 +1224,7 @@ function doPost(e) {
               </div>
 
               {testResult && (
-                <div style={{ background: '#F0FDF4', border: '1px solid #BBF7D0', color: '#166534', padding: '12px 16px', borderRadius: '8px', marginBottom: '16px', fontSize: '0.88rem', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div style={{ background: '#F0FDF4', border: '1.5px solid #BBF7D0', color: '#166534', padding: '12px 16px', borderRadius: '8px', marginBottom: '16px', fontSize: '0.88rem', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <CheckCircle2 size={18} color="#16A34A" />
                   <span>{testResult}</span>
                 </div>
@@ -1174,7 +1258,7 @@ function doPost(e) {
                   style={{
                     background: '#F1F5F9',
                     color: '#0F172A',
-                    border: '1px solid #CBD5E1',
+                    border: '1.5px solid #CBD5E1',
                     borderRadius: '8px',
                     padding: '11px 18px',
                     fontSize: '0.88rem',
@@ -1196,7 +1280,7 @@ function doPost(e) {
                   style={{
                     background: '#F1F5F9',
                     color: '#0F172A',
-                    border: '1px solid #CBD5E1',
+                    border: '1.5px solid #CBD5E1',
                     borderRadius: '8px',
                     padding: '11px 18px',
                     fontSize: '0.88rem',
@@ -1257,9 +1341,9 @@ function doPost(e) {
             </form>
 
             {/* Step-by-step Guide with Visual Clarity */}
-            <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '12px', padding: '24px' }}>
+            <div style={{ background: '#F8FAFC', border: '1.5px solid #E2E8F0', borderRadius: '12px', padding: '24px' }}>
               
-              <div style={{ background: '#FEF3C7', border: '1px solid #FDE68A', color: '#92400E', padding: '12px 16px', borderRadius: '8px', marginBottom: '18px', fontSize: '0.88rem', lineHeight: '1.5' }}>
+              <div style={{ background: '#FEF3C7', border: '1.5px solid #FDE68A', color: '#92400E', padding: '12px 16px', borderRadius: '8px', marginBottom: '18px', fontSize: '0.88rem', lineHeight: '1.5' }}>
                 <strong>PENTING (Jangan Tekan Tombol "Jalankan"):</strong> Tombol <em>"▶ Jalankan"</em> di editor Google Script hanya untuk skrip internal dan akan memunculkan pesan peringatan akses. Untuk mengaktifkan webhook, gunakan tombol biru <strong>"Terapkan"</strong> (Deploy) di pojok kanan atas!
               </div>
 
@@ -1335,12 +1419,12 @@ function doPost(e) {
               </ol>
 
               {/* Guidance: Difference Between Web App & Google Sheet File */}
-              <div style={{ marginTop: '24px', background: '#FFFFFF', border: '1px solid #CBD5E1', borderRadius: '10px', padding: '18px 20px' }}>
+              <div style={{ marginTop: '24px', background: '#FFFFFF', border: '1.5px solid #CBD5E1', borderRadius: '10px', padding: '18px 20px' }}>
                 <h4 style={{ fontSize: '0.98rem', fontWeight: '900', color: '#0F172A', margin: '0 0 10px 0' }}>
                   Panduan: Cara Membuka Berkas Google Sheet &amp; Memeriksa Web App
                 </h4>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '14px', fontSize: '0.86rem', color: '#334155', lineHeight: '1.6' }}>
-                  <div style={{ background: '#F8FAFC', padding: '14px', borderRadius: '8px', border: '1px solid #E2E8F0' }}>
+                  <div style={{ background: '#F8FAFC', padding: '14px', borderRadius: '8px', border: '1.5px solid #E2E8F0' }}>
                     <div style={{ fontWeight: '800', color: '#0F172A', marginBottom: '4px' }}>
                       1. Membuka Berkas Google Spreadsheet
                     </div>
@@ -1349,7 +1433,7 @@ function doPost(e) {
                     </div>
                   </div>
 
-                  <div style={{ background: '#F8FAFC', padding: '14px', borderRadius: '8px', border: '1px solid #E2E8F0' }}>
+                  <div style={{ background: '#F8FAFC', padding: '14px', borderRadius: '8px', border: '1.5px solid #E2E8F0' }}>
                     <div style={{ fontWeight: '800', color: '#0F172A', marginBottom: '4px' }}>
                       2. Memeriksa Status Web App (API)
                     </div>
@@ -1358,7 +1442,7 @@ function doPost(e) {
                     </div>
                   </div>
 
-                  <div style={{ background: '#F8FAFC', padding: '14px', borderRadius: '8px', border: '1px solid #E2E8F0' }}>
+                  <div style={{ background: '#F8FAFC', padding: '14px', borderRadius: '8px', border: '1.5px solid #E2E8F0' }}>
                     <div style={{ fontWeight: '800', color: '#0F172A', marginBottom: '4px' }}>
                       3. Sinkronisasi Otomatis &amp; Auto-Delete
                     </div>
@@ -1381,7 +1465,7 @@ function doPost(e) {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             
             {filteredOrders.length === 0 ? (
-              <div style={{ background: '#FFFFFF', border: '1px solid #CBD5E1', borderRadius: '12px', padding: '48px 24px', textAlign: 'center' }}>
+              <div style={{ background: '#FFFFFF', border: '1.5px solid #CBD5E1', borderRadius: '12px', padding: '48px 24px', textAlign: 'center' }}>
                 <AlertCircle size={32} color="#64748B" style={{ margin: '0 auto 12px auto' }} />
                 <h3 style={{ fontSize: '1.1rem', fontWeight: '800', color: '#0F172A', margin: '0 0 6px 0' }}>
                   {orders.length === 0 ? 'Seluruh Database Pesanan Sedang Kosong' : 'Tidak Ada Pesanan pada Kategori Ini'}
@@ -1398,7 +1482,7 @@ function doPost(e) {
                     style={{
                       background: '#F1F5F9',
                       color: '#0F172A',
-                      border: '1px solid #CBD5E1',
+                      border: '1.5px solid #CBD5E1',
                       borderRadius: '6px',
                       padding: '8px 16px',
                       fontSize: '0.84rem',
@@ -1418,64 +1502,122 @@ function doPost(e) {
               filteredOrders.map(ord => {
                 const isInquiry = ord.statusType === 'INQUIRY';
                 const isCompleted = ord.currentStageNumber === 5;
+                const isFixOrder = !isInquiry && !isCompleted;
 
                 return (
                   <div
                     key={ord.id}
                     style={{
                       background: '#FFFFFF',
-                      border: isInquiry ? '1.5px solid #F59E0B' : isCompleted ? '1px solid #CBD5E1' : '1.5px solid var(--prussian-blue)',
+                      border: '1.5px solid #CBD5E1',
                       borderRadius: '12px',
                       padding: '24px',
                       display: 'flex',
                       flexDirection: 'column',
-                      gap: '16px',
-                      transition: 'border-color 0.15s'
+                      gap: '18px'
                     }}
                   >
                     {/* Header Row */}
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px' }}>
-                      <div>
-                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-                          <span
-                            style={{
-                              fontSize: '0.78rem',
-                              fontWeight: '900',
-                              padding: '3px 8px',
-                              borderRadius: '4px',
-                              background: isInquiry ? '#FEF3C7' : isCompleted ? '#F0FDF4' : '#EFF6FF',
-                              color: isInquiry ? '#B45309' : isCompleted ? '#16A34A' : 'var(--prussian-blue)'
-                            }}
-                          >
-                            {isInquiry ? 'INQUIRY (DRAF TANYA / BELUM DP)' : isCompleted ? 'PROYEK SELESAI & LUNAS' : 'FIX ORDER AKTIF (DP LUNAS)'}
-                          </span>
-                          <span style={{ fontSize: '0.84rem', fontWeight: '800', color: '#0F172A' }}>
-                            {ord.id} {ord.orderNumber && ord.orderNumber !== 'MENUNGGU-DP' && `(${ord.orderNumber})`}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '14px' }}>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                        
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                          {/* Status Badge */}
+                          {isInquiry ? (
+                            <span
+                              style={{
+                                fontSize: '0.78rem',
+                                fontWeight: '800',
+                                padding: '4px 10px',
+                                borderRadius: '6px',
+                                background: '#FEF3C7',
+                                color: '#92400E',
+                                border: '1.5px solid #FDE68A',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '5px',
+                                letterSpacing: '0.02em'
+                              }}
+                            >
+                              <Clock size={12} />
+                              <span>INQUIRY &bull; MENUNGGU TRANSFER DP 50%</span>
+                            </span>
+                          ) : isCompleted ? (
+                            <span
+                              style={{
+                                fontSize: '0.78rem',
+                                fontWeight: '800',
+                                padding: '4px 10px',
+                                borderRadius: '6px',
+                                background: '#F0FDF4',
+                                color: '#166534',
+                                border: '1.5px solid #BBF7D0',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '5px',
+                                letterSpacing: '0.02em'
+                              }}
+                            >
+                              <CheckCircle2 size={12} />
+                              <span>PROYEK SELESAI &bull; MASTER CODE DISERAHKAN</span>
+                            </span>
+                          ) : (
+                            <span
+                              style={{
+                                fontSize: '0.78rem',
+                                fontWeight: '800',
+                                padding: '4px 10px',
+                                borderRadius: '6px',
+                                background: '#EFF6FF',
+                                color: '#1E40AF',
+                                border: '1.5px solid #BFDBFE',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '5px',
+                                letterSpacing: '0.02em'
+                              }}
+                            >
+                              <Layers size={12} />
+                              <span>FIX ORDER AKTIF &bull; PIPELINE KODING</span>
+                            </span>
+                          )}
+
+                          {/* Ticket ID & Order Number */}
+                          <code style={{ background: '#F1F5F9', border: '1.5px solid #CBD5E1', padding: '3px 8px', borderRadius: '4px', fontSize: '0.8rem', fontWeight: '800', color: '#0F172A' }}>
+                            {ord.id}
+                          </code>
+                          
+                          {ord.orderNumber && ord.orderNumber !== 'MENUNGGU-DP' && (
+                            <code style={{ background: '#0F172A', color: '#FFFFFF', padding: '3px 8px', borderRadius: '4px', fontSize: '0.8rem', fontWeight: '800' }}>
+                              {ord.orderNumber}
+                            </code>
+                          )}
+
+                          <span style={{ fontSize: '0.8rem', color: '#64748B' }}>
+                            Daftar: {ord.orderDate}
                           </span>
                         </div>
 
-                        <h3 style={{ fontSize: '1.25rem', fontWeight: '900', color: '#0F172A', margin: '0 0 4px 0' }}>
+                        {/* Project Title */}
+                        <h3 style={{ fontSize: '1.25rem', fontWeight: '900', color: '#0F172A', margin: '4px 0 0 0', letterSpacing: '-0.01em', lineHeight: '1.3' }}>
                           {ord.projectTitle}
                         </h3>
 
-                        <div style={{ fontSize: '0.88rem', color: '#475569' }}>
-                          WhatsApp: <strong>{ord.clientPhone}</strong> &bull; Paket: <strong>{ord.packageName}</strong> &bull; Kategori: <strong>{ord.category}</strong>
-                        </div>
                       </div>
 
-                      {/* Right Quick Actions */}
-                      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                      {/* Right Quick Actions Toolbar */}
+                      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
                         {isInquiry && (
                           <button
                             type="button"
                             onClick={() => handleVerifyDP(ord)}
                             style={{
-                              background: '#16A34A',
+                              background: '#0F172A',
                               color: '#FFFFFF',
                               border: 'none',
                               borderRadius: '6px',
                               padding: '8px 14px',
-                              fontSize: '0.84rem',
+                              fontSize: '0.82rem',
                               fontWeight: '800',
                               cursor: 'pointer',
                               display: 'inline-flex',
@@ -1483,8 +1625,8 @@ function doPost(e) {
                               gap: '6px'
                             }}
                           >
-                            <CheckCircle2 size={16} />
-                            <span>Verifikasi DP &amp; Jadikan Fix Order</span>
+                            <CheckCircle2 size={14} color="#22C55E" />
+                            <span>Verifikasi DP 50%</span>
                           </button>
                         )}
 
@@ -1492,12 +1634,12 @@ function doPost(e) {
                           type="button"
                           onClick={() => setEditingOrder(ord)}
                           style={{
-                            background: '#F1F5F9',
+                            background: '#FFFFFF',
                             color: '#0F172A',
-                            border: '1px solid #CBD5E1',
+                            border: '1.5px solid #CBD5E1',
                             borderRadius: '6px',
                             padding: '8px 12px',
-                            fontSize: '0.84rem',
+                            fontSize: '0.82rem',
                             fontWeight: '700',
                             cursor: 'pointer',
                             display: 'inline-flex',
@@ -1505,7 +1647,7 @@ function doPost(e) {
                             gap: '5px'
                           }}
                         >
-                          <Edit3 size={15} />
+                          <Edit3 size={14} />
                           <span>Edit</span>
                         </button>
 
@@ -1513,12 +1655,12 @@ function doPost(e) {
                           to={`/lacak?kode=${ord.id}`}
                           target="_blank"
                           style={{
-                            background: '#F1F5F9',
+                            background: '#FFFFFF',
                             color: '#0F172A',
-                            border: '1px solid #CBD5E1',
+                            border: '1.5px solid #CBD5E1',
                             borderRadius: '6px',
                             padding: '8px 12px',
-                            fontSize: '0.84rem',
+                            fontSize: '0.82rem',
                             fontWeight: '700',
                             textDecoration: 'none',
                             display: 'inline-flex',
@@ -1526,7 +1668,7 @@ function doPost(e) {
                             gap: '5px'
                           }}
                         >
-                          <ExternalLink size={15} />
+                          <ExternalLink size={14} />
                           <span>Lihat Pelacak</span>
                         </Link>
 
@@ -1535,9 +1677,9 @@ function doPost(e) {
                           onClick={() => handleDeleteOrder(ord)}
                           title="Hapus / Arsipkan"
                           style={{
-                            background: '#FEE2E2',
+                            background: '#FFFFFF',
                             color: '#DC2626',
-                            border: 'none',
+                            border: '1.5px solid #CBD5E1',
                             borderRadius: '6px',
                             padding: '8px 10px',
                             cursor: 'pointer',
@@ -1545,28 +1687,96 @@ function doPost(e) {
                             alignItems: 'center'
                           }}
                         >
-                          <Trash2 size={15} />
+                          <Trash2 size={14} />
                         </button>
                       </div>
                     </div>
 
+                    {/* Metadata Strip */}
+                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
+                      <a
+                        href={`https://wa.me/${(ord.clientPhone || '').replace(/^0/, '62')}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          background: '#F8FAFC',
+                          border: '1.5px solid #CBD5E1',
+                          padding: '5px 11px',
+                          borderRadius: '6px',
+                          fontSize: '0.82rem',
+                          fontWeight: '800',
+                          color: '#0F172A',
+                          textDecoration: 'none'
+                        }}
+                      >
+                        <Phone size={13} color="#2563EB" />
+                        <span>{ord.clientPhone}</span>
+                      </a>
+
+                      <span style={{ background: '#F8FAFC', border: '1.5px solid #CBD5E1', padding: '5px 11px', borderRadius: '6px', fontSize: '0.82rem', color: '#475569' }}>
+                        Paket: <strong style={{ color: '#0F172A' }}>{ord.packageName}</strong>
+                      </span>
+
+                      <span style={{ background: '#F8FAFC', border: '1.5px solid #CBD5E1', padding: '5px 11px', borderRadius: '6px', fontSize: '0.82rem', color: '#475569' }}>
+                        Kategori: <strong style={{ color: '#0F172A' }}>{ord.category}</strong>
+                      </span>
+
+                      <span style={{ background: '#F8FAFC', border: '1.5px solid #CBD5E1', padding: '5px 11px', borderRadius: '6px', fontSize: '0.82rem', color: '#475569' }}>
+                        Target Selesai: <strong style={{ color: '#0F172A' }}>{ord.estimatedCompletion || '7 Hari Kerja'}</strong>
+                      </span>
+                    </div>
+
                     {/* Operational Parameter Controls Row */}
-                    <div style={{ background: '#F8FAFC', borderRadius: '8px', padding: '14px 18px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', alignItems: 'center' }}>
+                    <div style={{ background: '#F8FAFC', border: '1.5px solid #CBD5E1', borderRadius: '10px', padding: '16px 20px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px', alignItems: 'center' }}>
                       
                       {/* Financial info */}
                       <div>
-                        <div style={{ fontSize: '0.78rem', color: '#64748B', fontWeight: '700' }}>Investasi Total:</div>
-                        <div style={{ fontSize: '1.05rem', fontWeight: '900', color: 'var(--prussian-blue)' }}>
+                        <div style={{ fontSize: '0.76rem', color: '#64748B', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                          Nilai Investasi &amp; DP
+                        </div>
+                        <div style={{ fontSize: '1.15rem', fontWeight: '900', color: '#0F172A', marginTop: '3px' }}>
                           {formatRupiah(ord.totalInvestment)}
                         </div>
-                        <div style={{ fontSize: '0.78rem', color: ord.dpStatus.includes('LUNAS') ? '#16A34A' : '#D97706', fontWeight: '700' }}>
-                          {ord.dpStatus}
+                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', fontSize: '0.78rem', color: ord.dpStatus.includes('LUNAS') ? '#16A34A' : '#D97706', fontWeight: '800', marginTop: '3px' }}>
+                          {ord.dpStatus.includes('LUNAS') ? <CheckCircle2 size={13} /> : <Clock size={13} />}
+                          <span>{ord.dpStatus}</span>
                         </div>
                       </div>
 
-                      {/* Stage SOP Dropdown */}
+                      {/* Stage SOP Dropdown & Step Indicator */}
                       <div>
-                        <div style={{ fontSize: '0.78rem', color: '#64748B', fontWeight: '700', marginBottom: '4px' }}>Tahap SOP Terkini:</div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                          <span style={{ fontSize: '0.76rem', color: '#64748B', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                            Tahap SOP Terkini
+                          </span>
+                          <span style={{ fontSize: '0.76rem', fontWeight: '800', color: '#0F172A' }}>
+                            Tahap {ord.currentStageNumber || 1} / 5
+                          </span>
+                        </div>
+
+                        {/* Mini 5-stage dots */}
+                        <div style={{ display: 'flex', gap: '4px', marginBottom: '8px' }}>
+                          {[1, 2, 3, 4, 5].map((s) => {
+                            const isDone = (ord.currentStageNumber || 1) >= s;
+                            const isCurrent = (ord.currentStageNumber || 1) === s;
+                            return (
+                              <div
+                                key={s}
+                                style={{
+                                  flex: 1,
+                                  height: '6px',
+                                  borderRadius: '3px',
+                                  background: isCurrent ? '#1D63FF' : isDone ? '#0F172A' : '#E2E8F0',
+                                  transition: 'background 0.2s'
+                                }}
+                              />
+                            );
+                          })}
+                        </div>
+
                         <select
                           value={ord.currentStageNumber}
                           onChange={(e) => handleStageChange(ord, e.target.value)}
@@ -1574,9 +1784,9 @@ function doPost(e) {
                             width: '100%',
                             padding: '8px 10px',
                             borderRadius: '6px',
-                            border: '1px solid #CBD5E1',
+                            border: '1.5px solid #CBD5E1',
                             background: '#FFFFFF',
-                            fontSize: '0.86rem',
+                            fontSize: '0.84rem',
                             fontWeight: '700',
                             color: '#0F172A',
                             cursor: 'pointer'
@@ -1592,11 +1802,37 @@ function doPost(e) {
 
                       {/* Revision Quota Tracker */}
                       <div>
-                        <div style={{ fontSize: '0.78rem', color: '#64748B', fontWeight: '700', marginBottom: '4px' }}>
-                          Kuota Revisi SOP (Maks 3x):
+                        <div style={{ fontSize: '0.76rem', color: '#64748B', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '6px' }}>
+                          Kuota Revisi SOP (Maks 3x)
                         </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                          <span style={{ fontSize: '0.94rem', fontWeight: '800', color: (ord.revisionQuotaUsed || 0) >= (ord.revisionQuotaTotal || 3) ? '#DC2626' : '#0F172A' }}>
+                        
+                        {/* 3 slot badges */}
+                        <div style={{ display: 'flex', gap: '6px', marginBottom: '8px' }}>
+                          {[1, 2, 3].map((slotNum) => {
+                            const isUsed = (ord.revisionQuotaUsed || 0) >= slotNum;
+                            return (
+                              <div
+                                key={slotNum}
+                                style={{
+                                  flex: 1,
+                                  padding: '4px 6px',
+                                  borderRadius: '4px',
+                                  textAlign: 'center',
+                                  fontSize: '0.74rem',
+                                  fontWeight: '800',
+                                  background: isUsed ? '#0F172A' : '#FFFFFF',
+                                  color: isUsed ? '#FFFFFF' : '#64748B',
+                                  border: isUsed ? '1.5px solid #0F172A' : '1.5px dashed #CBD5E1'
+                                }}
+                              >
+                                Sesi {slotNum}
+                              </div>
+                            );
+                          })}
+                        </div>
+
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
+                          <span style={{ fontSize: '0.84rem', fontWeight: '800', color: (ord.revisionQuotaUsed || 0) >= (ord.revisionQuotaTotal || 3) ? '#DC2626' : '#0F172A' }}>
                             {ord.revisionQuotaUsed || 0} / {ord.revisionQuotaTotal || 3} Terpakai
                           </span>
                           <button
@@ -1605,11 +1841,11 @@ function doPost(e) {
                             disabled={(ord.revisionQuotaUsed || 0) >= (ord.revisionQuotaTotal || 3)}
                             style={{
                               background: (ord.revisionQuotaUsed || 0) >= (ord.revisionQuotaTotal || 3) ? '#F1F5F9' : '#FFFFFF',
-                              border: '1px solid #CBD5E1',
-                              borderRadius: '4px',
-                              padding: '4px 8px',
+                              border: '1.5px solid #CBD5E1',
+                              borderRadius: '6px',
+                              padding: '5px 10px',
                               fontSize: '0.78rem',
-                              fontWeight: '700',
+                              fontWeight: '800',
                               cursor: (ord.revisionQuotaUsed || 0) >= (ord.revisionQuotaTotal || 3) ? 'not-allowed' : 'pointer',
                               color: (ord.revisionQuotaUsed || 0) >= (ord.revisionQuotaTotal || 3) ? '#94A3B8' : '#0F172A'
                             }}
@@ -1623,8 +1859,8 @@ function doPost(e) {
 
                     {/* Riwayat Catatan Sesi Revisi Proyek */}
                     {ord.revisionHistory && ord.revisionHistory.length > 0 && (
-                      <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '8px', padding: '12px 16px' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                      <div style={{ background: '#F8FAFC', border: '1.5px solid #CBD5E1', borderRadius: '8px', padding: '14px 18px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
                           <div style={{ fontSize: '0.82rem', fontWeight: '800', color: '#0F172A', display: 'flex', alignItems: 'center', gap: '6px' }}>
                             <History size={14} color="#0F172A" />
                             <span>Riwayat Catatan Sesi Revisi ({ord.revisionHistory.length} dari {ord.revisionQuotaTotal || 3} Terpakai):</span>
@@ -1637,7 +1873,7 @@ function doPost(e) {
                               background: 'transparent',
                               border: 'none',
                               color: '#DC2626',
-                              fontSize: '0.74rem',
+                              fontSize: '0.76rem',
                               fontWeight: '700',
                               cursor: 'pointer',
                               padding: 0
@@ -1646,27 +1882,27 @@ function doPost(e) {
                             Batalkan Sesi Terakhir
                           </button>
                         </div>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                           {ord.revisionHistory.map((rev) => (
                             <div 
                               key={rev.sessionNumber} 
                               style={{ 
                                 background: '#FFFFFF', 
-                                border: '1px solid #CBD5E1', 
+                                border: '1.5px solid #CBD5E1', 
                                 borderRadius: '6px', 
-                                padding: '8px 12px',
+                                padding: '10px 14px',
                                 fontSize: '0.84rem' 
                               }}
                             >
-                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
-                                <span style={{ fontWeight: '800', color: 'var(--prussian-blue)' }}>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3px' }}>
+                                <span style={{ fontWeight: '800', color: '#1D63FF' }}>
                                   Sesi {rev.sessionNumber}
                                 </span>
-                                <span style={{ fontSize: '0.74rem', color: '#64748B', fontWeight: '600' }}>
+                                <span style={{ fontSize: '0.76rem', color: '#64748B', fontWeight: '600' }}>
                                   {rev.date}
                                 </span>
                               </div>
-                              <div style={{ color: '#334155', lineHeight: '1.4' }}>
+                              <div style={{ color: '#0F172A', lineHeight: '1.45' }}>
                                 "{rev.note}"
                               </div>
                             </div>
@@ -1676,9 +1912,9 @@ function doPost(e) {
                     )}
 
                     {/* Developer Log Snippet */}
-                    <div style={{ fontSize: '0.86rem', color: '#334155', lineHeight: '1.5', background: '#F8FAFC', borderLeft: '3px solid var(--prussian-blue)', padding: '10px 14px', borderRadius: '0 8px 8px 0' }}>
-                      <span style={{ fontWeight: '800', color: '#0F172A' }}>Catatan Pengembang (Live Log di /lacak): </span>
-                      <span>"{ord.developerNotes}"</span>
+                    <div style={{ fontSize: '0.86rem', color: '#334155', lineHeight: '1.55', background: '#FFFFFF', border: '1.5px solid #CBD5E1', borderLeft: '4px solid #1D63FF', padding: '12px 16px', borderRadius: '6px' }}>
+                      <span style={{ fontWeight: '800', color: '#0F172A' }}>Catatan Pengembang Terakhir (Tampil Langsung di /lacak): </span>
+                      <span style={{ color: '#0F172A' }}>"{ord.developerNotes}"</span>
                     </div>
 
                   </div>
@@ -1722,13 +1958,13 @@ function doPost(e) {
               display: 'flex',
               flexDirection: 'column',
               boxShadow: '0 20px 40px -15px rgba(15, 23, 42, 0.25)',
-              border: '1px solid #CBD5E1',
+              border: '1.5px solid #CBD5E1',
               boxSizing: 'border-box',
               animation: 'adminModalSlideUp 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
             }}
           >
             {/* Modal Header */}
-            <div style={{ padding: '22px 28px', borderBottom: '1px solid #E2E8F0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ padding: '22px 28px', borderBottom: '1.5px solid #E2E8F0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: '#EFF6FF', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                   <Edit3 size={20} color="var(--prussian-blue)" />
@@ -1752,7 +1988,7 @@ function doPost(e) {
                 onClick={() => setEditingOrder(null)}
                 style={{ 
                   background: '#F8FAFC', 
-                  border: '1px solid #E2E8F0', 
+                  border: '1.5px solid #E2E8F0', 
                   borderRadius: '8px', 
                   width: '32px', 
                   height: '32px', 
@@ -1797,7 +2033,7 @@ function doPost(e) {
                           boxSizing: 'border-box',
                           padding: '11px 13px',
                           borderRadius: '7px',
-                          border: '1px solid #CBD5E1',
+                          border: '1.5px solid #CBD5E1',
                           fontSize: '0.9rem',
                           color: '#0F172A',
                           background: '#FFFFFF'
@@ -1819,7 +2055,7 @@ function doPost(e) {
                           boxSizing: 'border-box',
                           padding: '11px 13px',
                           borderRadius: '7px',
-                          border: '1px solid #CBD5E1',
+                          border: '1.5px solid #CBD5E1',
                           fontSize: '0.9rem',
                           color: '#0F172A',
                           background: '#FFFFFF'
@@ -1830,7 +2066,7 @@ function doPost(e) {
                 </div>
 
                 {/* SECTION 2: RUANG LINGKUP & STATUS */}
-                <div style={{ marginBottom: '22px', paddingTop: '16px', borderTop: '1px solid #F1F5F9' }}>
+                <div style={{ marginBottom: '22px', paddingTop: '16px', borderTop: '1.5px solid #F1F5F9' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
                     <Layers size={15} color="#0F172A" />
                     <span style={{ fontSize: '0.82rem', fontWeight: '800', color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
@@ -1853,7 +2089,7 @@ function doPost(e) {
                         boxSizing: 'border-box',
                         padding: '11px 13px',
                         borderRadius: '7px',
-                        border: '1px solid #CBD5E1',
+                        border: '1.5px solid #CBD5E1',
                         fontSize: '0.9rem',
                         color: '#0F172A',
                         background: '#FFFFFF'
@@ -1874,7 +2110,7 @@ function doPost(e) {
                           width: '100%',
                           padding: '11px 13px',
                           borderRadius: '7px',
-                          border: '1px solid #CBD5E1',
+                          border: '1.5px solid #CBD5E1',
                           background: '#FFFFFF',
                           fontSize: '0.88rem',
                           fontWeight: '700',
@@ -1901,7 +2137,7 @@ function doPost(e) {
                           boxSizing: 'border-box',
                           padding: '11px 13px',
                           borderRadius: '7px',
-                          border: '1px solid #CBD5E1',
+                          border: '1.5px solid #CBD5E1',
                           fontSize: '0.9rem',
                           color: '#0F172A',
                           background: '#FFFFFF'
@@ -1912,7 +2148,7 @@ function doPost(e) {
                 </div>
 
                 {/* SECTION 3: PARAMETER FINANSIAL */}
-                <div style={{ marginBottom: '22px', paddingTop: '16px', borderTop: '1px solid #F1F5F9' }}>
+                <div style={{ marginBottom: '22px', paddingTop: '16px', borderTop: '1.5px solid #F1F5F9' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
                     <Calendar size={15} color="#0F172A" />
                     <span style={{ fontSize: '0.82rem', fontWeight: '800', color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
@@ -1935,7 +2171,7 @@ function doPost(e) {
                           boxSizing: 'border-box',
                           padding: '11px 13px',
                           borderRadius: '7px',
-                          border: '1px solid #CBD5E1',
+                          border: '1.5px solid #CBD5E1',
                           fontSize: '0.92rem',
                           fontWeight: '800',
                           color: 'var(--prussian-blue)',
@@ -1955,7 +2191,7 @@ function doPost(e) {
                           width: '100%',
                           padding: '11px 13px',
                           borderRadius: '7px',
-                          border: '1px solid #CBD5E1',
+                          border: '1.5px solid #CBD5E1',
                           background: '#FFFFFF',
                           fontSize: '0.88rem',
                           fontWeight: '700',
@@ -1985,7 +2221,7 @@ function doPost(e) {
                         boxSizing: 'border-box',
                         padding: '11px 13px',
                         borderRadius: '7px',
-                        border: '1px solid #CBD5E1',
+                        border: '1.5px solid #CBD5E1',
                         fontSize: '0.9rem',
                         color: '#0F172A',
                         background: '#FFFFFF'
@@ -1995,7 +2231,7 @@ function doPost(e) {
                 </div>
 
                 {/* SECTION 4: LOG PENGEMBANG */}
-                <div style={{ paddingTop: '16px', borderTop: '1px solid #F1F5F9' }}>
+                <div style={{ paddingTop: '16px', borderTop: '1.5px solid #F1F5F9' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
                     <FileText size={15} color="#0F172A" />
                     <span style={{ fontSize: '0.82rem', fontWeight: '800', color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
@@ -2013,7 +2249,7 @@ function doPost(e) {
                       boxSizing: 'border-box',
                       padding: '11px 13px',
                       borderRadius: '7px',
-                      border: '1px solid #CBD5E1',
+                      border: '1.5px solid #CBD5E1',
                       fontSize: '0.88rem',
                       color: '#0F172A',
                       fontFamily: 'inherit',
@@ -2031,7 +2267,7 @@ function doPost(e) {
               <div 
                 style={{ 
                   background: '#F8FAFC', 
-                  borderTop: '1px solid #E2E8F0', 
+                  borderTop: '1.5px solid #E2E8F0', 
                   padding: '16px 28px', 
                   display: 'flex', 
                   justifyContent: 'space-between', 
@@ -2051,7 +2287,7 @@ function doPost(e) {
                     style={{
                       background: '#FFFFFF',
                       color: '#475569',
-                      border: '1px solid #CBD5E1',
+                      border: '1.5px solid #CBD5E1',
                       borderRadius: '8px',
                       padding: '10px 18px',
                       fontSize: '0.88rem',
@@ -2119,13 +2355,13 @@ function doPost(e) {
               display: 'flex',
               flexDirection: 'column',
               boxShadow: '0 20px 40px -15px rgba(15, 23, 42, 0.25)',
-              border: '1px solid #CBD5E1',
+              border: '1.5px solid #CBD5E1',
               boxSizing: 'border-box',
               animation: 'adminModalSlideUp 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
             }}
           >
             {/* Modal Header */}
-            <div style={{ padding: '22px 28px', borderBottom: '1px solid #E2E8F0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ padding: '22px 28px', borderBottom: '1.5px solid #E2E8F0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: '#EFF6FF', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                   <FolderPlus size={20} color="var(--prussian-blue)" />
@@ -2144,7 +2380,7 @@ function doPost(e) {
                 onClick={() => setIsCreatingNew(false)}
                 style={{ 
                   background: '#F8FAFC', 
-                  border: '1px solid #E2E8F0', 
+                  border: '1.5px solid #E2E8F0', 
                   borderRadius: '8px', 
                   width: '32px', 
                   height: '32px', 
@@ -2189,7 +2425,7 @@ function doPost(e) {
                           boxSizing: 'border-box',
                           padding: '11px 13px',
                           borderRadius: '7px',
-                          border: '1px solid #CBD5E1',
+                          border: '1.5px solid #CBD5E1',
                           fontSize: '0.9rem',
                           color: '#0F172A',
                           background: '#FFFFFF'
@@ -2213,7 +2449,7 @@ function doPost(e) {
                           boxSizing: 'border-box',
                           padding: '11px 13px',
                           borderRadius: '7px',
-                          border: '1px solid #CBD5E1',
+                          border: '1.5px solid #CBD5E1',
                           fontSize: '0.9rem',
                           color: '#0F172A',
                           background: '#FFFFFF'
@@ -2235,7 +2471,7 @@ function doPost(e) {
                         width: '100%',
                         padding: '11px 13px',
                         borderRadius: '7px',
-                        border: '1px solid #CBD5E1',
+                        border: '1.5px solid #CBD5E1',
                         background: '#FFFFFF',
                         fontSize: '0.9rem',
                         fontWeight: '700',
@@ -2250,7 +2486,7 @@ function doPost(e) {
                 </div>
 
                 {/* SECTION 2: SPESIFIKASI PROYEK */}
-                <div style={{ marginBottom: '22px', paddingTop: '16px', borderTop: '1px solid #F1F5F9' }}>
+                <div style={{ marginBottom: '22px', paddingTop: '16px', borderTop: '1.5px solid #F1F5F9' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
                     <Layers size={15} color="#0F172A" />
                     <span style={{ fontSize: '0.82rem', fontWeight: '800', color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
@@ -2273,7 +2509,7 @@ function doPost(e) {
                         boxSizing: 'border-box',
                         padding: '11px 13px',
                         borderRadius: '7px',
-                        border: '1px solid #CBD5E1',
+                        border: '1.5px solid #CBD5E1',
                         fontSize: '0.9rem',
                         color: '#0F172A',
                         background: '#FFFFFF'
@@ -2295,7 +2531,7 @@ function doPost(e) {
                           width: '100%',
                           padding: '11px 13px',
                           borderRadius: '7px',
-                          border: '1px solid #CBD5E1',
+                          border: '1.5px solid #CBD5E1',
                           background: '#FFFFFF',
                           fontSize: '0.88rem',
                           fontWeight: '700',
@@ -2323,7 +2559,7 @@ function doPost(e) {
                           width: '100%',
                           padding: '11px 13px',
                           borderRadius: '7px',
-                          border: '1px solid #CBD5E1',
+                          border: '1.5px solid #CBD5E1',
                           background: '#FFFFFF',
                           fontSize: '0.88rem',
                           fontWeight: '700',
@@ -2340,7 +2576,7 @@ function doPost(e) {
                 </div>
 
                 {/* SECTION 3: KEUANGAN & TARGET SELESAI */}
-                <div style={{ marginBottom: '22px', paddingTop: '16px', borderTop: '1px solid #F1F5F9' }}>
+                <div style={{ marginBottom: '22px', paddingTop: '16px', borderTop: '1.5px solid #F1F5F9' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
                     <Calendar size={15} color="#0F172A" />
                     <span style={{ fontSize: '0.82rem', fontWeight: '800', color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
@@ -2364,7 +2600,7 @@ function doPost(e) {
                           boxSizing: 'border-box',
                           padding: '11px 13px',
                           borderRadius: '7px',
-                          border: '1px solid #CBD5E1',
+                          border: '1.5px solid #CBD5E1',
                           fontSize: '0.92rem',
                           fontWeight: '800',
                           color: 'var(--prussian-blue)',
@@ -2390,7 +2626,7 @@ function doPost(e) {
                           boxSizing: 'border-box',
                           padding: '11px 13px',
                           borderRadius: '7px',
-                          border: '1px solid #CBD5E1',
+                          border: '1.5px solid #CBD5E1',
                           fontSize: '0.9rem',
                           color: '#0F172A',
                           background: '#FFFFFF'
@@ -2401,7 +2637,7 @@ function doPost(e) {
                 </div>
 
                 {/* SECTION 4: LOG PENGEMBANG AWAL */}
-                <div style={{ paddingTop: '16px', borderTop: '1px solid #F1F5F9' }}>
+                <div style={{ paddingTop: '16px', borderTop: '1.5px solid #F1F5F9' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
                     <FileText size={15} color="#0F172A" />
                     <span style={{ fontSize: '0.82rem', fontWeight: '800', color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
@@ -2419,7 +2655,7 @@ function doPost(e) {
                       boxSizing: 'border-box',
                       padding: '11px 13px',
                       borderRadius: '7px',
-                      border: '1px solid #CBD5E1',
+                      border: '1.5px solid #CBD5E1',
                       fontSize: '0.88rem',
                       color: '#0F172A',
                       fontFamily: 'inherit',
@@ -2437,7 +2673,7 @@ function doPost(e) {
               <div 
                 style={{ 
                   background: '#F8FAFC', 
-                  borderTop: '1px solid #E2E8F0', 
+                  borderTop: '1.5px solid #E2E8F0', 
                   padding: '16px 28px', 
                   display: 'flex', 
                   justifyContent: 'space-between', 
@@ -2457,7 +2693,7 @@ function doPost(e) {
                     style={{
                       background: '#FFFFFF',
                       color: '#475569',
-                      border: '1px solid #CBD5E1',
+                      border: '1.5px solid #CBD5E1',
                       borderRadius: '8px',
                       padding: '10px 18px',
                       fontSize: '0.88rem',
@@ -2526,13 +2762,13 @@ function doPost(e) {
               display: 'flex',
               flexDirection: 'column',
               boxShadow: '0 20px 40px -15px rgba(15, 23, 42, 0.25)',
-              border: '1px solid #CBD5E1',
+              border: '1.5px solid #CBD5E1',
               boxSizing: 'border-box',
               animation: 'adminModalSlideUp 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
             }}
           >
             {/* Modal Header */}
-            <div style={{ padding: '22px 28px', borderBottom: '1px solid #E2E8F0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ padding: '22px 28px', borderBottom: '1.5px solid #E2E8F0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div>
                 <h3 style={{ fontSize: '1.25rem', fontWeight: '900', color: '#0F172A', margin: 0, letterSpacing: '-0.01em' }}>
                   Catat Sesi Revisi Proyek
@@ -2546,7 +2782,7 @@ function doPost(e) {
                 onClick={() => setRevisionModalOrder(null)}
                 style={{ 
                   background: '#F8FAFC', 
-                  border: '1px solid #E2E8F0', 
+                  border: '1.5px solid #E2E8F0', 
                   borderRadius: '8px', 
                   width: '32px', 
                   height: '32px', 
@@ -2567,7 +2803,7 @@ function doPost(e) {
               <div style={{ padding: '24px 28px', flex: 1 }}>
                 
                 {/* Info Pill */}
-                <div style={{ background: '#EFF6FF', border: '1px solid #BFDBFE', borderRadius: '8px', padding: '12px 16px', marginBottom: '18px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ background: '#EFF6FF', border: '1.5px solid #BFDBFE', borderRadius: '8px', padding: '12px 16px', marginBottom: '18px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div>
                     <span style={{ fontSize: '0.82rem', fontWeight: '800', color: 'var(--prussian-blue)' }}>
                       Sesi yang akan dicatat: Sesi ke-{(revisionModalOrder.revisionQuotaUsed || 0) + 1}
@@ -2576,7 +2812,7 @@ function doPost(e) {
                       Sisa kuota revisi SOP setelah sesi ini: {(revisionModalOrder.revisionQuotaTotal || 3) - (revisionModalOrder.revisionQuotaUsed || 0) - 1} sesi
                     </div>
                   </div>
-                  <span style={{ fontSize: '0.78rem', background: '#FFFFFF', padding: '4px 8px', borderRadius: '4px', fontWeight: '700', color: '#0F172A', border: '1px solid #CBD5E1' }}>
+                  <span style={{ fontSize: '0.78rem', background: '#FFFFFF', padding: '4px 8px', borderRadius: '4px', fontWeight: '700', color: '#0F172A', border: '1.5px solid #CBD5E1' }}>
                     Hari ini
                   </span>
                 </div>
@@ -2623,7 +2859,7 @@ function doPost(e) {
               <div 
                 style={{ 
                   background: '#F8FAFC', 
-                  borderTop: '1px solid #E2E8F0', 
+                  borderTop: '1.5px solid #E2E8F0', 
                   padding: '16px 28px', 
                   display: 'flex', 
                   justifyContent: 'flex-end', 
@@ -2637,7 +2873,7 @@ function doPost(e) {
                   style={{
                     background: '#FFFFFF',
                     color: '#475569',
-                    border: '1px solid #CBD5E1',
+                    border: '1.5px solid #CBD5E1',
                     borderRadius: '8px',
                     padding: '10px 18px',
                     fontSize: '0.88rem',
