@@ -65,6 +65,7 @@ import {
   getSheetConfig, 
   saveSheetConfig,
   syncOrderToSheet,
+  syncDeleteOrderFromSheet,
   syncAllOrdersToSheet 
 } from '../utils/orderStorage';
 import { PACKAGES } from '../data/catalogData';
@@ -219,7 +220,7 @@ export default function AdminDashboardPage() {
   };
 
   // 1-Click Convert Inquiry to Confirmed Fix Order
-  const handleVerifyDP = (order) => {
+  const handleVerifyDP = async (order) => {
     const nextOrderNumber = `ORD-AT-2026-${String(Math.floor(Math.random() * 900) + 100)}`;
     const updated = {
       ...order,
@@ -232,7 +233,15 @@ export default function AdminDashboardPage() {
 
     updateOrder(updated);
     setOrders(getAllOrders());
-    triggerSuccess(`Inquiry ${order.id} berhasil diverifikasi menjadi Fix Order (${nextOrderNumber})!`);
+
+    const config = getSheetConfig();
+    const hasSheet = config?.webhookUrl && config.webhookUrl.trim().startsWith('http');
+    if (hasSheet) {
+      await syncOrderToSheet(updated, 'update');
+      triggerSuccess(`Inquiry ${order.id} berhasil diverifikasi menjadi Fix Order (${nextOrderNumber}) dan otomatis disinkronkan ke Google Spreadsheet!`);
+    } else {
+      triggerSuccess(`Inquiry ${order.id} berhasil diverifikasi menjadi Fix Order (${nextOrderNumber})!`);
+    }
   };
 
   // Revision Quota & Notes Handlers
@@ -246,7 +255,7 @@ export default function AdminDashboardPage() {
     setRevisionNoteError('');
   };
 
-  const handleSaveRevisionRecord = (e) => {
+  const handleSaveRevisionRecord = async (e) => {
     e.preventDefault();
     if (!revisionModalOrder) return;
     if (!revisionNoteInput.trim()) {
@@ -273,14 +282,22 @@ export default function AdminDashboardPage() {
       developerNotes: `Sesi revisi ke-${nextSessionNum} (${todayFormatted}): ${revisionNoteInput.trim()}`
     };
 
-    updateOrder(updated);
-    setOrders(getAllOrders());
     setRevisionModalOrder(null);
     setRevisionNoteInput('');
-    triggerSuccess(`Catatan Sesi Revisi ke-${nextSessionNum} untuk pesanan ${updated.id} berhasil disimpan!`);
+    updateOrder(updated);
+    setOrders(getAllOrders());
+
+    const config = getSheetConfig();
+    const hasSheet = config?.webhookUrl && config.webhookUrl.trim().startsWith('http');
+    if (hasSheet) {
+      await syncOrderToSheet(updated, 'update');
+      triggerSuccess(`Catatan Sesi Revisi ke-${nextSessionNum} untuk pesanan ${updated.id} berhasil disimpan dan disinkronkan ke Google Spreadsheet!`);
+    } else {
+      triggerSuccess(`Catatan Sesi Revisi ke-${nextSessionNum} untuk pesanan ${updated.id} berhasil disimpan!`);
+    }
   };
 
-  const handleDeleteLastRevision = (order) => {
+  const handleDeleteLastRevision = async (order) => {
     if (!order.revisionHistory || order.revisionHistory.length === 0) return;
     const lastSession = order.revisionHistory[order.revisionHistory.length - 1];
     if (window.confirm(`Batalkan / hapus catatan Sesi Revisi ke-${lastSession.sessionNumber} ("${lastSession.note}")? Kuota terpakai akan berkurang 1.`)) {
@@ -300,12 +317,20 @@ export default function AdminDashboardPage() {
 
       updateOrder(updated);
       setOrders(getAllOrders());
-      triggerSuccess(`Catatan Sesi Revisi ke-${lastSession.sessionNumber} berhasil dibatalkan.`);
+
+      const config = getSheetConfig();
+      const hasSheet = config?.webhookUrl && config.webhookUrl.trim().startsWith('http');
+      if (hasSheet) {
+        await syncOrderToSheet(updated, 'update');
+        triggerSuccess(`Catatan Sesi Revisi ke-${lastSession.sessionNumber} berhasil dibatalkan dan disinkronkan ke Google Spreadsheet.`);
+      } else {
+        triggerSuccess(`Catatan Sesi Revisi ke-${lastSession.sessionNumber} berhasil dibatalkan.`);
+      }
     }
   };
 
   // Update Stage Number Handler
-  const handleStageChange = (order, newStage) => {
+  const handleStageChange = async (order, newStage) => {
     const updated = {
       ...order,
       currentStageNumber: Number(newStage),
@@ -313,45 +338,97 @@ export default function AdminDashboardPage() {
     };
     updateOrder(updated);
     setOrders(getAllOrders());
-    triggerSuccess(`Tahap SOP pesanan ${order.id} diperbarui ke Tahap ${newStage}.`);
+
+    const config = getSheetConfig();
+    const hasSheet = config?.webhookUrl && config.webhookUrl.trim().startsWith('http');
+    if (hasSheet) {
+      await syncOrderToSheet(updated, 'update');
+      triggerSuccess(`Tahap SOP pesanan ${order.id} diperbarui ke Tahap ${newStage} dan otomatis disinkronkan ke Google Spreadsheet.`);
+    } else {
+      triggerSuccess(`Tahap SOP pesanan ${order.id} diperbarui ke Tahap ${newStage}.`);
+    }
   };
 
-  // Delete Order Handler
-  const handleDeleteOrder = (order) => {
-    if (window.confirm(`Hapus catatan pesanan ${order.id} (${order.projectTitle})? Data akan dihapus secara permanen dari sistem dan pelacak.`)) {
-      deleteOrder(order.id);
+  // Delete Order Handler (Auto-Delete across local storage and Google Spreadsheet)
+  const handleDeleteOrder = async (order) => {
+    const config = getSheetConfig();
+    const hasSheet = config?.webhookUrl && config.webhookUrl.trim().startsWith('http');
+    const confirmMsg = hasSheet
+      ? `Hapus catatan pesanan ${order.id} (${order.projectTitle})?\n\n• Data akan dihapus dari sistem lokal.\n• Baris pesanan di Google Spreadsheet yang terhubung akan OTOMATIS DIHAPUS langsung melalui Web App tanpa perlu menghapus manual!`
+      : `Hapus catatan pesanan ${order.id} (${order.projectTitle})?\n\nData akan dihapus secara permanen dari sistem dan pelacak.`;
+
+    if (window.confirm(confirmMsg)) {
+      triggerSuccess(`Sedang menghapus pesanan ${order.id}${hasSheet ? ' & menghapus baris di Google Spreadsheet...' : '...'}`);
+      if (hasSheet) {
+        await syncDeleteOrderFromSheet(order);
+      }
+      deleteOrder(order);
       setOrders(getAllOrders());
-      triggerSuccess(`Pesanan ${order.id} berhasil dihapus permanen.`);
+      if (hasSheet) {
+        triggerSuccess(`Pesanan ${order.id} berhasil dihapus permanen dari sistem dan baris Google Spreadsheet telah dihapus otomatis!`);
+      } else {
+        triggerSuccess(`Pesanan ${order.id} berhasil dihapus permanen dari sistem lokal.`);
+      }
     }
   };
 
   // Clear All Orders Handler
-  const handleClearAllOrders = () => {
-    if (window.confirm('PERINGATAN: Apakah Anda yakin ingin MENGHAPUS SEMUA DATA PESANAN secara permanen?\n\nSemua data inquiry, pesanan fix, dan draf brief lokal di browser akan dibersihkan total. Tampilan pelacak (/lacak) akan bersih dan kosong.')) {
+  const handleClearAllOrders = async () => {
+    const config = getSheetConfig();
+    const hasSheet = config?.webhookUrl && config.webhookUrl.trim().startsWith('http');
+    const confirmMsg = hasSheet
+      ? 'PERINGATAN: Apakah Anda yakin ingin MENGHAPUS SEMUA DATA PESANAN secara permanen?\n\n• Semua data di sistem lokal dan pelacak akan dibersihkan total.\n• Seluruh baris di Google Spreadsheet juga akan OTOMATIS DIHAPUS (header tabel tetap rapi).'
+      : 'PERINGATAN: Apakah Anda yakin ingin MENGHAPUS SEMUA DATA PESANAN secara permanen?\n\nSemua data inquiry, pesanan fix, dan draf brief lokal di browser akan dibersihkan total. Tampilan pelacak (/lacak) akan bersih dan kosong.';
+
+    if (window.confirm(confirmMsg)) {
+      triggerSuccess(`Mengosongkan database pesanan${hasSheet ? ' & Google Spreadsheet...' : '...'}`);
       clearAllOrders();
       setOrders([]);
-      triggerSuccess('Seluruh database pesanan dan draf brief lokal berhasil dikosongkan.');
+      if (hasSheet) {
+        await syncAllOrdersToSheet();
+        triggerSuccess('Seluruh database pesanan dan Google Spreadsheet berhasil dikosongkan total.');
+      } else {
+        triggerSuccess('Seluruh database pesanan dan draf brief lokal berhasil dikosongkan.');
+      }
     }
   };
 
   // Reset Demo Orders Handler
-  const handleResetDemoOrders = () => {
-    if (window.confirm('Muat ulang 4 data contoh pesanan awal untuk pengujian sistem?')) {
+  const handleResetDemoOrders = async () => {
+    if (window.confirm('Muat ulang 4 data contoh pesanan awal untuk pengujian sistem?\n\nJika Google Spreadsheet terhubung, data contoh akan otomatis disinkronkan ke spreadsheet.')) {
       const restored = resetToDefaultOrders();
       setOrders(restored);
-      triggerSuccess('Data contoh awal berhasil dimuat kembali ke sistem.');
+      const config = getSheetConfig();
+      const hasSheet = config?.webhookUrl && config.webhookUrl.trim().startsWith('http');
+      if (hasSheet) {
+        await syncAllOrdersToSheet();
+        triggerSuccess('Data contoh awal berhasil dimuat kembali dan disinkronkan ke Google Spreadsheet.');
+      } else {
+        triggerSuccess('Data contoh awal berhasil dimuat kembali ke sistem.');
+      }
     }
   };
 
-  // Save Edit Order Form
-  const handleSaveEdit = (e) => {
+  // Save Edit Order Form (Auto-Update Google Spreadsheet)
+  const handleSaveEdit = async (e) => {
     e.preventDefault();
     if (!editingOrder) return;
 
-    updateOrder(editingOrder);
-    setOrders(getAllOrders());
+    const target = { ...editingOrder };
     setEditingOrder(null);
-    triggerSuccess(`Perubahan pesanan ${editingOrder.id} berhasil disimpan.`);
+    triggerSuccess(`Menyimpan perubahan pesanan ${target.id} & menyinkronkan ke Google Spreadsheet...`);
+
+    updateOrder(target);
+    setOrders(getAllOrders());
+
+    const config = getSheetConfig();
+    const hasSheet = config?.webhookUrl && config.webhookUrl.trim().startsWith('http');
+    if (hasSheet) {
+      await syncOrderToSheet(target, 'update');
+      triggerSuccess(`Perubahan pesanan ${target.id} berhasil disimpan dan otomatis diperbarui di Google Spreadsheet!`);
+    } else {
+      triggerSuccess(`Perubahan pesanan ${target.id} berhasil disimpan.`);
+    }
   };
 
   // Open Create Order Modal Helper
@@ -378,8 +455,8 @@ export default function AdminDashboardPage() {
     }
   };
 
-  // Save New Manual Order Form (Tanpa kolom Nama Klien)
-  const handleCreateNewOrder = (e) => {
+  // Save New Manual Order Form (Auto-Append to Google Spreadsheet)
+  const handleCreateNewOrder = async (e) => {
     e.preventDefault();
     const form = e.target;
     const selectedPkg = PACKAGES.find(p => p.id === form.packageId.value) || PACKAGES[1];
@@ -414,7 +491,15 @@ export default function AdminDashboardPage() {
     createOrder(newOrder);
     setOrders(getAllOrders());
     setIsCreatingNew(false);
-    triggerSuccess(`Pesanan baru ${newOrder.id} (${newOrder.projectTitle}) berhasil ditambahkan ke sistem!`);
+
+    const config = getSheetConfig();
+    const hasSheet = config?.webhookUrl && config.webhookUrl.trim().startsWith('http');
+    if (hasSheet) {
+      await syncOrderToSheet(newOrder, 'append');
+      triggerSuccess(`Pesanan baru ${newOrder.id} (${newOrder.projectTitle}) berhasil didaftarkan dan langsung masuk ke Google Spreadsheet!`);
+    } else {
+      triggerSuccess(`Pesanan baru ${newOrder.id} (${newOrder.projectTitle}) berhasil ditambahkan ke sistem!`);
+    }
   };
 
   // Save Sheet Config Handler
@@ -516,7 +601,7 @@ export default function AdminDashboardPage() {
   }, [orders, activeTab, searchQuery]);
 
   // Google Apps Script template code
-  const googleAppsScriptCode = `// KODE GOOGLE APPS SCRIPT EKSEKUTIF AKSARA TECH (SINKRONISASI PENUH & AUTO-DELETE)
+  const googleAppsScriptCode = `// KODE GOOGLE APPS SCRIPT EKSEKUTIF AKSARA TECH (LIVE AUTO-SYNC & AUTO-DELETE v2.2)
 // Tempelkan di Google Spreadsheet: Menu Ekstensi > Apps Script
 
 // 1. Endpoint status untuk pengujian browser langsung
@@ -531,7 +616,7 @@ function doGet(e) {
     "sheetName": sheet.getName(),
     "totalOrdersInSheet": rowCount,
     "timestamp": new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta" }),
-    "message": "Webhook Aksara Tech aktif, terhubung normal, dan siap menerima sinkronisasi."
+    "message": "Webhook Aksara Tech aktif, terhubung normal, dan siap menerima sinkronisasi otomatis (Tambah, Edit, Hapus, Kosongkan)."
   })).setMimeType(ContentService.MimeType.JSON);
 }
 
@@ -631,7 +716,16 @@ function applySheetStyling(sheet) {
 function doPost(e) {
   try {
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-    var data = JSON.parse(e.postData.contents);
+    var data = {};
+    if (e.postData && e.postData.contents) {
+      try {
+        data = JSON.parse(e.postData.contents);
+      } catch (jsonErr) {
+        data = e.parameter || {};
+      }
+    } else if (e.parameter) {
+      data = e.parameter;
+    }
     
     // AKSI 1: SINKRONISASI PENUH / REWRITE (Menyesuaikan dengan database lokal, hapus data usang)
     if (data.action === "sync_all" || Array.isArray(data.orders)) {
@@ -662,17 +756,32 @@ function doPost(e) {
       })).setMimeType(ContentService.MimeType.JSON);
     }
     
-    // AKSI 3: HAPUS 1 PESANAN (Cari baris berdasarkan ID Tiket dan hapus baris tersebut)
-    if (data.action === "delete" && data.id) {
+    // AKSI 3: HAPUS 1 PESANAN (Otomatis hapus baris saat Admin klik tombol Hapus di web)
+    if (data.action === "delete") {
       ensureHeader(sheet);
       var lastRow = sheet.getLastRow();
+      var targetId = String(data.id || data.orderId || "").trim();
+      var targetOrderNo = String(data.orderNumber || "").trim();
       var deleted = false;
-      if (lastRow > 1) {
-        var ids = sheet.getRange(2, 1, lastRow - 1, 1).getValues();
-        for (var i = ids.length - 1; i >= 0; i--) {
-          if (ids[i][0] == data.id) {
+      var deletedCount = 0;
+
+      if (lastRow > 1 && (targetId || targetOrderNo)) {
+        var range = sheet.getRange(2, 1, lastRow - 1, 2).getValues();
+        for (var i = range.length - 1; i >= 0; i--) {
+          var rowId = String(range[i][0] || "").trim();
+          var rowOrderNo = String(range[i][1] || "").trim();
+
+          var isMatch = false;
+          if (targetId && (rowId === targetId || rowOrderNo === targetId)) {
+            isMatch = true;
+          } else if (targetOrderNo && targetOrderNo !== "-" && targetOrderNo !== "MENUNGGU-DP" && (rowOrderNo === targetOrderNo || rowId === targetOrderNo)) {
+            isMatch = true;
+          }
+
+          if (isMatch) {
             sheet.deleteRow(i + 2);
             deleted = true;
+            deletedCount++;
           }
         }
       }
@@ -681,20 +790,34 @@ function doPost(e) {
         "result": "success",
         "action": "delete",
         "deleted": deleted,
-        "id": data.id
+        "deletedCount": deletedCount,
+        "id": targetId,
+        "orderNumber": targetOrderNo
       })).setMimeType(ContentService.MimeType.JSON);
     }
     
-    // AKSI 4: UPDATE ATAU TAMBAH PESANAN TUNGGAL
+    // AKSI 4: UPDATE ATAU TAMBAH PESANAN TUNGGAL (Edit rincian, ubah status DP, atau ganti tahap)
     var targetOrder = data.order || data;
     ensureHeader(sheet);
     var lastRow = sheet.getLastRow();
     var updated = false;
+    var targetId = String(targetOrder.id || "").trim();
+    var targetOrderNo = String(targetOrder.orderNumber || "").trim();
     
-    if (lastRow > 1 && targetOrder.id) {
-      var idList = sheet.getRange(2, 1, lastRow - 1, 1).getValues();
+    if (lastRow > 1 && (targetId || targetOrderNo)) {
+      var idList = sheet.getRange(2, 1, lastRow - 1, 2).getValues();
       for (var r = 0; r < idList.length; r++) {
-        if (idList[r][0] == targetOrder.id) {
+        var rowId = String(idList[r][0] || "").trim();
+        var rowOrderNo = String(idList[r][1] || "").trim();
+
+        var isMatch = false;
+        if (targetId && (rowId === targetId || rowOrderNo === targetId)) {
+          isMatch = true;
+        } else if (targetOrderNo && targetOrderNo !== "-" && targetOrderNo !== "MENUNGGU-DP" && (rowOrderNo === targetOrderNo || rowId === targetOrderNo)) {
+          isMatch = true;
+        }
+
+        if (isMatch) {
           var rowIdx = r + 2;
           sheet.getRange(rowIdx, 1, 1, 16).setValues([formatOrderRow(targetOrder)]);
           updated = true;
@@ -975,6 +1098,41 @@ function doPost(e) {
                 <Typography variant="body2" component="span" sx={{ color: '#CBD5E1', fontWeight: 700, fontSize: '0.86rem' }}>
                   Pusat Kendali Produksi
                 </Typography>
+                {sheetConfig.webhookUrl && sheetConfig.webhookUrl.trim().startsWith('http') ? (
+                  <Chip
+                    size="small"
+                    label="Live Sheet: Terhubung Otomatis"
+                    onClick={() => setActiveTab('SPREADSHEET')}
+                    sx={{
+                      ml: 1,
+                      height: 22,
+                      bgcolor: '#064E3B',
+                      color: '#6EE7B7',
+                      border: '1.5px solid #059669',
+                      fontWeight: 800,
+                      fontSize: '0.72rem',
+                      cursor: 'pointer',
+                      '&:hover': { bgcolor: '#047857' }
+                    }}
+                  />
+                ) : (
+                  <Chip
+                    size="small"
+                    label="Live Sheet: Belum Terhubung"
+                    onClick={() => setActiveTab('SPREADSHEET')}
+                    sx={{
+                      ml: 1,
+                      height: 22,
+                      bgcolor: '#78350F',
+                      color: '#FDE68A',
+                      border: '1.5px solid #D97706',
+                      fontWeight: 800,
+                      fontSize: '0.72rem',
+                      cursor: 'pointer',
+                      '&:hover': { bgcolor: '#92400E' }
+                    }}
+                  />
+                )}
               </Box>
             </Box>
 
@@ -1319,9 +1477,22 @@ function doPost(e) {
                 Koneksi Google Spreadsheet &amp; Ekspor Data
               </h2>
             </div>
-            <p style={{ fontSize: '0.94rem', color: '#475569', margin: '0 0 24px 0', lineHeight: '1.5' }}>
-              Hubungkan portal Aksara Tech dengan Google Spreadsheet Anda untuk pencatatan otomatis tanpa memerlukan biaya sewa server basis data bulanan.
+            <p style={{ fontSize: '0.94rem', color: '#475569', margin: '0 0 20px 0', lineHeight: '1.5' }}>
+              Hubungkan portal Aksara Tech dengan Google Spreadsheet Anda untuk sinkronisasi otomatis dua arah tanpa memerlukan biaya sewa server bulanan.
             </p>
+
+            {/* Live Auto-Sync & Auto-Delete Callout */}
+            <div style={{ background: '#F0FDF4', border: '1.5px solid #86EFAC', borderRadius: '10px', padding: '16px 20px', marginBottom: '24px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                <CheckCircle2 size={18} color="#16A34A" />
+                <span style={{ fontSize: '0.92rem', fontWeight: '800', color: '#166534' }}>
+                  Fitur Live Auto-Sync, Auto-Edit &amp; Auto-Delete Aktif
+                </span>
+              </div>
+              <p style={{ margin: 0, fontSize: '0.85rem', color: '#166534', lineHeight: '1.6' }}>
+                Setiap tindakan di dashboard admin (<strong>Hapus Pesanan</strong>, <strong>Edit Rincian</strong>, <strong>Verifikasi DP 50%</strong>, atau <strong>Ubah Tahap SOP</strong>) sekarang <strong>langsung terhubung dan otomatis memperbarui Google Spreadsheet</strong> secara instan. Anda tidak perlu lagi repot menghapus atau mengubah baris secara manual di Google Sheets.
+              </p>
+            </div>
 
             <form onSubmit={handleSaveSheetConfig} style={{ marginBottom: '28px' }}>
               {/* Field 1: Webhook URL */}
@@ -2507,7 +2678,7 @@ function doPost(e) {
               }}
             >
               <Typography variant="caption" sx={{ fontSize: '0.82rem', color: '#64748B' }}>
-                ID: <Box component="strong" sx={{ color: '#0F172A' }}>{editingOrder.id}</Box>
+                ID: <Box component="strong" sx={{ color: '#0F172A' }}>{editingOrder.id}</Box> • Otomatis sinkron ke Spreadsheet
               </Typography>
               <Box sx={{ display: 'flex', gap: 1.5 }}>
                 <Button

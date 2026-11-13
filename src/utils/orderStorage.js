@@ -213,7 +213,7 @@ export function findOrderByQuery(rawQuery) {
 }
 
 /**
- * Update an existing order
+ * Update an existing order and sync to Google Spreadsheet Web App
  */
 export function updateOrder(updatedOrder) {
   const orders = getAllOrders();
@@ -224,19 +224,7 @@ export function updateOrder(updatedOrder) {
 
     // Sync updated order to Google Sheet Webhook if configured
     try {
-      const config = getSheetConfig();
-      if (config?.webhookUrl && config.webhookUrl.trim().startsWith('http')) {
-        fetch(config.webhookUrl.trim(), {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            action: 'update',
-            order: orders[index],
-            ...orders[index]
-          })
-        }).catch(() => {});
-      }
+      syncOrderToSheet(orders[index], 'update');
     } catch (e) {}
 
     return true;
@@ -245,7 +233,7 @@ export function updateOrder(updatedOrder) {
 }
 
 /**
- * Add a new order
+ * Add a new order and sync to Google Spreadsheet Web App
  */
 export function createOrder(newOrder) {
   const orders = getAllOrders();
@@ -262,42 +250,25 @@ export function createOrder(newOrder) {
 
   // Background sync to Google Sheet Webhook if configured
   try {
-    const config = getSheetConfig();
-    if (config?.webhookUrl && config.webhookUrl.trim().startsWith('http')) {
-      fetch(config.webhookUrl.trim(), {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newOrder)
-      }).catch(() => {});
-    }
+    syncOrderToSheet(newOrder, 'append');
   } catch (e) {}
 
   return newOrder;
 }
 
 /**
- * Delete an order by ID completely across all storage
+ * Delete an order by ID or order object completely across local storage & Google Spreadsheet
  */
-export function deleteOrder(id) {
+export function deleteOrder(orderOrId) {
+  const id = typeof orderOrId === 'string' ? orderOrId : (orderOrId?.id || '');
   const orders = getAllOrders();
+  const targetOrder = orders.find(o => o.id === id) || (typeof orderOrId === 'object' ? orderOrId : null);
   const filtered = orders.filter(o => o.id !== id);
   saveAllOrders(filtered);
 
-  // Sync deletion to Google Sheet Webhook if configured
+  // Sync deletion directly to Google Sheet Webhook if configured
   try {
-    const config = getSheetConfig();
-    if (config?.webhookUrl && config.webhookUrl.trim().startsWith('http')) {
-      fetch(config.webhookUrl.trim(), {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          action: 'delete',
-          id: id
-        })
-      }).catch(() => {});
-    }
+    syncDeleteOrderFromSheet(targetOrder || id);
   } catch (e) {}
 
   // Also purge from brief cache if matching or if database becomes empty
@@ -320,6 +291,8 @@ export function deleteOrder(id) {
   if (typeof window !== 'undefined') {
     window.dispatchEvent(new Event('aksara_orders_updated'));
   }
+
+  return true;
 }
 
 /**
@@ -385,13 +358,50 @@ export function saveSheetConfig(config) {
 }
 
 /**
- * Send a single order to Google Spreadsheet via Webhook
+ * Send a single order to Google Spreadsheet via Webhook (Update or Append)
  */
-export async function syncOrderToSheet(order) {
+export async function syncOrderToSheet(order, action = 'update') {
   const config = getSheetConfig();
   if (!config.webhookUrl || !config.webhookUrl.trim().startsWith('http')) {
     return { success: false, message: 'URL Webhook Google Apps Script belum diisi.' };
   }
+
+  try {
+    const payload = {
+      action: action,
+      id: order.id,
+      orderNumber: order.orderNumber,
+      clientPhone: order.clientPhone,
+      order: order,
+      ...order
+    };
+
+    await fetch(config.webhookUrl.trim(), {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+    return { success: true, message: 'Data berhasil disinkronkan ke Google Spreadsheet.' };
+  } catch (err) {
+    return { success: false, message: 'Gagal menghubungi server Webhook: ' + err.message };
+  }
+}
+
+/**
+ * Send a delete command for an order to Google Spreadsheet via Webhook
+ */
+export async function syncDeleteOrderFromSheet(orderOrId) {
+  const config = getSheetConfig();
+  if (!config.webhookUrl || !config.webhookUrl.trim().startsWith('http')) {
+    return { success: false, message: 'URL Webhook Google Apps Script belum diisi.' };
+  }
+
+  const id = typeof orderOrId === 'string' ? orderOrId : (orderOrId?.id || '');
+  const orderNumber = typeof orderOrId === 'object' ? (orderOrId?.orderNumber || '') : '';
+  const clientPhone = typeof orderOrId === 'object' ? (orderOrId?.clientPhone || '') : '';
 
   try {
     await fetch(config.webhookUrl.trim(), {
@@ -400,9 +410,14 @@ export async function syncOrderToSheet(order) {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(order)
+      body: JSON.stringify({
+        action: 'delete',
+        id: id,
+        orderNumber: orderNumber,
+        clientPhone: clientPhone
+      })
     });
-    return { success: true, message: 'Data berhasil dikirim ke Google Spreadsheet.' };
+    return { success: true, message: 'Perintah hapus berhasil dikirim ke Google Spreadsheet.' };
   } catch (err) {
     return { success: false, message: 'Gagal menghubungi server Webhook: ' + err.message };
   }
