@@ -334,93 +334,100 @@ export default function PackagesPage({ onSelectPackage }) {
             <div className="pkg-cards-list">
               {filteredPackages.map((pkg) => {
                 const isExpanded = !!expandedListPkg[pkg.id];
-                const isAcademic = [5, 6].includes(pkg.number);
                 return (
                   <div 
                     key={pkg.id} 
                     data-ui="true"
-                    className={`pkg-list-row ${isAcademic ? 'academic-accent' : 'business-accent'}`}
+                    className="pkg-list-item"
                   >
-                    <div className="pkg-row-top">
-                      <div className="pkg-row-badges">
-                        <span className="pkg-row-num">PAKET {pkg.number}</span>
-                        <span className="pkg-row-cat">{pkg.category}</span>
+                    {/* Header: Meta & Timeline */}
+                    <div className="pkg-item-header">
+                      <div className="pkg-item-meta">
+                        <span className="pkg-item-pill">PAKET {pkg.number}</span>
+                        <span className="pkg-item-cat">{pkg.category}</span>
                         {pkg.badge && (
-                          <span className="pkg-row-tag">{pkg.badge}</span>
+                          <span className="pkg-item-badge">{pkg.badge}</span>
                         )}
                       </div>
-                      <div className="pkg-row-timeline">
-                        <Clock size={13} style={{ color: '#0F172A', flexShrink: 0 }} />
-                        <span>{pkg.minDays}–{pkg.maxDays} Hari</span>
+                      <div className="pkg-item-time">
+                        <Clock size={12} style={{ color: '#0F172A', flexShrink: 0 }} />
+                        <span>{pkg.minDays}–{pkg.maxDays} Hari Kerja</span>
                       </div>
                     </div>
 
-                    <div className="pkg-row-body">
-                      <div className="pkg-row-main-info">
-                        <h3 className="pkg-row-title">{pkg.name}</h3>
-                        <p className="pkg-row-desc">{pkg.recommendedFor || pkg.description}</p>
-                      </div>
+                    {/* Headline Block */}
+                    <div className="pkg-item-headline-block">
+                      <h3 className="pkg-item-title">{pkg.name}</h3>
+                      <p className="pkg-item-lead">{pkg.recommendedFor || pkg.description}</p>
+                    </div>
 
-                      <div className="pkg-row-chips">
-                        <span className="pkg-row-chip">
-                          <Layers size={12} style={{ color: '#0F172A', flexShrink: 0 }} />
-                          <span>{pkg.pages}</span>
-                        </span>
-                        <span className="pkg-row-chip">
-                          <FileCode2 size={12} style={{ color: '#0F172A', flexShrink: 0 }} />
-                          <span>{pkg.docsSummary}</span>
-                        </span>
-                        <span className="pkg-row-chip">
-                          <Shield size={12} style={{ color: '#0F172A', flexShrink: 0 }} />
-                          <span>Garansi 1 Minggu</span>
-                        </span>
+                    {/* Structured Technical Datasheet (NO pill soup, real clean table-like rows) */}
+                    <div className="pkg-item-datasheet">
+                      <div className="pkg-ds-row">
+                        <div className="pkg-ds-label">
+                          <Layers size={13} style={{ color: '#0F172A', flexShrink: 0 }} />
+                          <span>Ruang Lingkup</span>
+                        </div>
+                        <div className="pkg-ds-val">{pkg.pages}</div>
+                      </div>
+                      <div className="pkg-ds-row">
+                        <div className="pkg-ds-label">
+                          <FileCode2 size={13} style={{ color: '#0F172A', flexShrink: 0 }} />
+                          <span>Dokumen SRS/SDD</span>
+                        </div>
+                        <div className="pkg-ds-val">{pkg.docsSummary}</div>
+                      </div>
+                      <div className="pkg-ds-row">
+                        <div className="pkg-ds-label">
+                          <Shield size={13} style={{ color: '#0F172A', flexShrink: 0 }} />
+                          <span>Garansi & Revisi</span>
+                        </div>
+                        <div className="pkg-ds-val">Garansi Bug 1 Minggu (7 Hari) & Kuota 3× Revisi Mutlak</div>
                       </div>
                     </div>
 
                     {/* Deliverables Accordion */}
-                    <div className="pkg-row-accordion">
+                    <div className="pkg-item-accordion-wrap">
                       <button
                         type="button"
-                        className="pkg-row-toggle-btn"
+                        className="pkg-item-expand-link"
                         onClick={() => toggleExpandPkg(pkg.id)}
                         aria-expanded={isExpanded}
                       >
-                        <span>{isExpanded ? 'Tutup Rincian' : `Lihat Rincian ${pkg.deliverables.length} Deliverables & Garansi`}</span>
+                        <span>{isExpanded ? 'Tutup Rincian Deliverables' : `Lihat Rincian ${pkg.deliverables.length} Deliverables Termasuk`}</span>
                         {isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
                       </button>
 
                       {isExpanded && (
-                        <div className="pkg-row-expanded-panel">
-                          <div className="pkg-row-del-list">
+                        <div className="pkg-item-deliverables-panel">
+                          <div className="pkg-del-panel-heading">Daftar Serah Terima Master Source Code:</div>
+                          <ul className="pkg-del-panel-list">
                             {pkg.deliverables.map((d, i) => (
-                              <div key={i} className="pkg-row-del-item">
+                              <li key={i} className="pkg-del-panel-item">
                                 <CheckCircle2 size={14} style={{ color: '#0F172A', flexShrink: 0, marginTop: '2px' }} />
                                 <span>{d}</span>
-                              </div>
+                              </li>
                             ))}
-                          </div>
-                          <div className="pkg-row-del-note">
-                            <span><strong>Dokumen:</strong> {pkg.docsSummary}</span> • <span><strong>Garansi:</strong> 1 Minggu + Kuota 3x Revisi</span>
-                          </div>
+                          </ul>
                         </div>
                       )}
                     </div>
 
-                    {/* Price & CTA Action Bar */}
-                    <div className="pkg-row-action-bar">
-                      <div className="pkg-row-pricing">
-                        <span className="pkg-row-price-label">Tarif Resmi</span>
-                        <div className="pkg-row-price-val">
+                    {/* Bottom Price & Action Row */}
+                    <div className="pkg-item-footer">
+                      <div className="pkg-item-price-block">
+                        <span className="pkg-item-price-sub">Tarif Referensi Resmi</span>
+                        <div className="pkg-item-price-main">
                           {pkg.minPrice === pkg.maxPrice ? (
                             <div className="pkg-price-flat">
-                              <span className="pkg-row-amount">{formatRupiah(pkg.minPrice)}</span>
-                              <span className="pkg-flat-tag">Tetap</span>
+                              <span className="pkg-item-amount">{formatRupiah(pkg.minPrice)}</span>
+                              <span className="pkg-flat-tag">Tarif Tetap</span>
                             </div>
                           ) : (
                             <div className="pkg-price-range-sm">
-                              <span className="pkg-row-amount">{formatRupiah(pkg.minPrice)}</span>
+                              <span className="pkg-item-amount">{formatRupiah(pkg.minPrice)}</span>
                               <span className="pkg-sep">–</span>
-                              <span className="pkg-row-amount">{formatRupiah(pkg.maxPrice)}</span>
+                              <span className="pkg-item-amount">{formatRupiah(pkg.maxPrice)}</span>
                             </div>
                           )}
                         </div>
@@ -428,10 +435,10 @@ export default function PackagesPage({ onSelectPackage }) {
 
                       <Button
                         variant="primary"
-                        className="pkg-row-btn"
+                        className="pkg-item-cta-btn"
                         onClick={() => handleChoosePackage(pkg.id)}
                       >
-                        <span>Pilih Paket</span>
+                        <span>Pilih Paket Ini</span>
                         <ChevronRight size={14} />
                       </Button>
                     </div>
@@ -887,40 +894,31 @@ export default function PackagesPage({ onSelectPackage }) {
         }
 
         /* =======================================================
-           LIST VIEW MODE - EXECUTIVE TECHNICAL LEDGER
+           LIST VIEW MODE - ARCHITECTURAL SPECIFICATION DATASHEET
            ======================================================= */
         .pkg-cards-list {
           display: flex;
           flex-direction: column;
-          gap: 14px;
+          gap: 16px;
           margin-bottom: 72px;
         }
 
-        .pkg-list-row {
+        .pkg-list-item {
           background: #FFFFFF;
           border: 1.5px solid #CBD5E1;
           border-radius: var(--radius-md);
-          padding: 18px 22px;
+          padding: 22px 24px;
           display: flex;
           flex-direction: column;
-          gap: 12px;
-          transition: border-color 0.18s ease, transform 0.18s ease;
+          gap: 14px;
+          transition: border-color 0.18s ease;
         }
 
-        .pkg-list-row.business-accent {
-          border-left: 4px solid var(--prussian-blue);
-        }
-
-        .pkg-list-row.academic-accent {
-          border-left: 4px solid #0F172A;
-        }
-
-        .pkg-list-row:hover {
+        .pkg-list-item:hover {
           border-color: #0F172A;
-          transform: translateY(-1px);
         }
 
-        .pkg-row-top {
+        .pkg-item-header {
           display: flex;
           align-items: center;
           justify-content: space-between;
@@ -928,15 +926,15 @@ export default function PackagesPage({ onSelectPackage }) {
           flex-wrap: wrap;
         }
 
-        .pkg-row-badges {
+        .pkg-item-meta {
           display: flex;
           align-items: center;
-          gap: 6px;
+          gap: 8px;
           flex-wrap: wrap;
         }
 
-        .pkg-row-num {
-          font-size: 0.72rem;
+        .pkg-item-pill {
+          font-size: 0.7rem;
           font-weight: 800;
           color: #FFFFFF;
           background: #0F172A;
@@ -945,126 +943,142 @@ export default function PackagesPage({ onSelectPackage }) {
           letter-spacing: -0.01em;
         }
 
-        .pkg-row-cat {
-          font-size: 0.74rem;
-          font-weight: 700;
-          color: #475569;
+        .pkg-item-cat {
+          font-size: 0.76rem;
+          font-weight: 600;
+          color: #64748B;
         }
 
-        .pkg-row-tag {
-          font-size: 0.72rem;
+        .pkg-item-badge {
+          font-size: 0.7rem;
           font-weight: 700;
           color: #0F172A;
           background: #F1F5F9;
-          border: 1.5px solid #CBD5E1;
-          padding: 2px 7px;
           border-radius: 4px;
+          padding: 2px 7px;
         }
 
-        .pkg-row-timeline {
+        .pkg-item-time {
           display: inline-flex;
           align-items: center;
           gap: 5px;
-          font-size: 0.78rem;
+          font-size: 0.76rem;
           font-weight: 700;
-          color: #1E293B;
+          color: #0F172A;
           background: #F8FAFC;
           padding: 3px 8px;
           border-radius: 6px;
         }
 
-        .pkg-row-body {
+        .pkg-item-headline-block {
           display: flex;
-          align-items: flex-start;
-          justify-content: space-between;
-          gap: 20px;
+          flex-direction: column;
+          gap: 4px;
         }
 
-        .pkg-row-main-info {
-          flex: 1;
-          min-width: 0;
-        }
-
-        .pkg-row-title {
-          font-size: 1.15rem;
+        .pkg-item-title {
+          font-size: 1.25rem;
           font-weight: 800;
           color: #0F172A;
-          margin: 0 0 4px;
+          margin: 0;
           line-height: 1.3;
         }
 
-        .pkg-row-desc {
-          font-size: 0.84rem;
+        .pkg-item-lead {
+          font-size: 0.86rem;
           color: #475569;
-          line-height: 1.5;
+          line-height: 1.55;
           margin: 0;
-          max-width: 720px;
+          max-width: 760px;
         }
 
-        .pkg-row-chips {
+        /* Technical Datasheet (Table-like, clean key-value rows) */
+        .pkg-item-datasheet {
+          background: #F8FAFC;
+          border-radius: 8px;
+          padding: 14px 16px;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+
+        .pkg-ds-row {
+          display: flex;
+          align-items: flex-start;
+          justify-content: space-between;
+          gap: 16px;
+          font-size: 0.84rem;
+          line-height: 1.45;
+        }
+
+        .pkg-ds-label {
           display: flex;
           align-items: center;
-          gap: 8px;
-          flex-wrap: wrap;
-          flex-shrink: 0;
-        }
-
-        .pkg-row-chip {
-          display: inline-flex;
-          align-items: center;
-          gap: 5px;
+          gap: 7px;
+          color: #64748B;
+          font-weight: 700;
           font-size: 0.76rem;
-          font-weight: 600;
-          color: #334155;
-          background: #F8FAFC;
-          border: 1.5px solid #CBD5E1;
-          border-radius: 6px;
-          padding: 4px 9px;
+          flex-shrink: 0;
+          width: 140px;
         }
 
-        /* Accordion in list row */
-        .pkg-row-accordion {
+        .pkg-ds-val {
+          color: #0F172A;
+          font-weight: 600;
+          text-align: right;
+          flex: 1;
+        }
+
+        /* Accordion */
+        .pkg-item-accordion-wrap {
           display: flex;
           flex-direction: column;
         }
 
-        .pkg-row-toggle-btn {
+        .pkg-item-expand-link {
           display: inline-flex;
           align-items: center;
           gap: 6px;
           background: transparent;
           border: none;
-          padding: 4px 0;
-          color: var(--prussian-blue);
+          padding: 2px 0;
           font-size: 0.8rem;
           font-weight: 700;
+          color: var(--prussian-blue);
           cursor: pointer;
           align-self: flex-start;
           transition: color 0.15s ease;
         }
 
-        .pkg-row-toggle-btn:hover {
+        .pkg-item-expand-link:hover {
           color: #0F172A;
           text-decoration: underline;
         }
 
-        .pkg-row-expanded-panel {
-          margin-top: 8px;
-          padding: 12px 14px;
-          background: #F8FAFC;
+        .pkg-item-deliverables-panel {
+          margin-top: 10px;
+          background: #F1F5F9;
           border-radius: 8px;
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
+          padding: 12px 16px;
         }
 
-        .pkg-row-del-list {
+        .pkg-del-panel-heading {
+          font-size: 0.76rem;
+          font-weight: 800;
+          color: #0F172A;
+          margin-bottom: 8px;
+        }
+
+        .pkg-del-panel-list {
+          list-style: none;
+          padding: 0;
+          margin: 0;
           display: flex;
           flex-direction: column;
           gap: 6px;
         }
 
-        .pkg-row-del-item {
+        .pkg-del-panel-item {
           display: flex;
           align-items: flex-start;
           gap: 8px;
@@ -1073,47 +1087,47 @@ export default function PackagesPage({ onSelectPackage }) {
           line-height: 1.4;
         }
 
-        .pkg-row-del-note {
-          padding-top: 6px;
-          font-size: 0.76rem;
-          color: #64748B;
-        }
-
-        /* Action bar: Price + CTA */
-        .pkg-row-action-bar {
+        /* Footer: Price + Action */
+        .pkg-item-footer {
           display: flex;
           align-items: center;
           justify-content: space-between;
           gap: 16px;
-          padding: 12px 16px;
-          background: #F8FAFC;
-          border-radius: 8px;
+          padding-top: 14px;
+          border-top: 1.5px solid #F1F5F9;
         }
 
-        .pkg-row-pricing {
+        .pkg-item-price-block {
           display: flex;
-          align-items: baseline;
-          gap: 10px;
-          flex-wrap: wrap;
+          flex-direction: column;
+          gap: 2px;
         }
 
-        .pkg-row-price-label {
-          font-size: 0.72rem;
+        .pkg-item-price-sub {
+          font-size: 0.7rem;
           font-weight: 700;
           color: #64748B;
+          text-transform: uppercase;
+          letter-spacing: 0.02em;
         }
 
-        .pkg-row-amount {
-          font-size: 1.25rem;
+        .pkg-item-price-main {
+          display: flex;
+          align-items: baseline;
+          gap: 8px;
+        }
+
+        .pkg-item-amount {
+          font-size: 1.35rem;
           font-weight: 800;
           color: var(--prussian-blue);
           letter-spacing: -0.02em;
         }
 
-        .pkg-row-btn {
-          min-height: 40px;
-          padding: 8px 18px;
-          font-size: 0.88rem;
+        .pkg-item-cta-btn {
+          min-height: 44px;
+          padding: 10px 22px;
+          font-size: 0.92rem;
           border-radius: 6px;
           display: inline-flex;
           align-items: center;
@@ -1677,71 +1691,96 @@ export default function PackagesPage({ onSelectPackage }) {
             justify-content: center !important;
           }
 
-          /* List View on Mobile: Executive Compact Ledger Row */
+          /* List View on Mobile: Architectural Datasheet (NO pill soup) */
           .pkg-cards-list {
-            gap: 10px !important;
+            gap: 12px !important;
             margin-bottom: 48px !important;
           }
 
-          .pkg-list-row {
-            padding: 12px 14px !important;
+          .pkg-list-item {
+            padding: 14px 14px !important;
             gap: 10px !important;
             border-radius: 10px !important;
           }
 
-          .pkg-row-top {
+          .pkg-item-header {
             gap: 6px !important;
+            margin-bottom: 4px !important;
           }
 
-          .pkg-row-title {
-            font-size: 1rem !important;
+          .pkg-item-title {
+            font-size: 1.05rem !important;
             line-height: 1.25 !important;
-            margin-bottom: 2px !important;
           }
 
-          .pkg-row-desc {
-            font-size: 0.78rem !important;
+          .pkg-item-lead {
+            font-size: 0.8rem !important;
             line-height: 1.45 !important;
-            color: #475569 !important;
+            margin-bottom: 8px !important;
           }
 
-          .pkg-row-body {
-            flex-direction: column !important;
-            gap: 8px !important;
-          }
-
-          .pkg-row-chips {
-            gap: 5px !important;
-          }
-
-          .pkg-row-chip {
-            font-size: 0.7rem !important;
-            padding: 3px 7px !important;
-          }
-
-          .pkg-row-toggle-btn {
-            font-size: 0.76rem !important;
-            padding: 6px 8px !important;
-            background: #F1F5F9 !important;
-            border-radius: 6px !important;
-            width: 100% !important;
-            justify-content: space-between !important;
-            color: #0F172A !important;
-          }
-
-          .pkg-row-action-bar {
+          .pkg-item-datasheet {
             padding: 10px 12px !important;
+            gap: 8px !important;
+            margin-bottom: 8px !important;
+          }
+
+          .pkg-ds-row {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 2px !important;
+          }
+
+          .pkg-ds-label {
+            width: auto !important;
+            font-size: 0.7rem !important;
+            color: #64748B !important;
+          }
+
+          .pkg-ds-val {
+            text-align: left !important;
+            font-size: 0.8rem !important;
+            color: #1E293B !important;
+            padding-left: 20px !important;
+            font-weight: 600 !important;
+          }
+
+          .pkg-item-expand-link {
+            font-size: 0.76rem !important;
+            padding: 4px 0 !important;
+            margin-bottom: 8px !important;
+          }
+
+          .pkg-item-deliverables-panel {
+            padding: 10px 12px !important;
+            margin-top: 6px !important;
+            margin-bottom: 10px !important;
+          }
+
+          .pkg-item-footer {
+            flex-direction: column !important;
+            align-items: stretch !important;
             gap: 10px !important;
+            padding-top: 10px !important;
           }
 
-          .pkg-row-amount {
-            font-size: 1.15rem !important;
+          .pkg-item-price-block {
+            flex-direction: row !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            width: 100% !important;
           }
 
-          .pkg-row-btn {
-            min-height: 38px !important;
-            padding: 6px 14px !important;
-            font-size: 0.84rem !important;
+          .pkg-item-amount {
+            font-size: 1.2rem !important;
+          }
+
+          .pkg-item-cta-btn {
+            width: 100% !important;
+            justify-content: center !important;
+            min-height: 48px !important;
+            font-size: 0.94rem !important;
+            border-radius: 8px !important;
           }
 
           /* Comparison Matrix Table on Mobile */
