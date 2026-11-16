@@ -6,15 +6,15 @@ import PageHeader from '../components/molecules/PageHeader';
 import Button from '../components/atoms/Button';
 import InstantPriceEstimator from '../components/organisms/InstantPriceEstimator';
 import { 
-  Package, Clock, CheckCircle2, XCircle, ArrowRight, Star, 
-  FileCode2, Shield, Layers, HelpCircle, Code2, Sparkles,
-  ChevronRight, Check
+  Package, Clock, CheckCircle2, FileCode2, Shield, Layers, 
+  ChevronRight, LayoutGrid, List
 } from 'lucide-react';
 
 export default function PackagesPage({ onSelectPackage }) {
   const navigate = useNavigate();
   const [activeCategoryFilter, setActiveCategoryFilter] = useState('ALL');
   const [activeAddonFilter, setActiveAddonFilter] = useState('All');
+  const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'list'
 
   const handleChoosePackage = (pkgId) => {
     if (onSelectPackage) {
@@ -122,38 +122,38 @@ export default function PackagesPage({ onSelectPackage }) {
         highlightText="Layanan Resmi"
         description="Seluruh paket dibangun dengan arsitektur teruji, fasilitas kuota revisi maksimal 3 kali mutlak, estimasi 1–10 hari kerja, dan plafon tarif transparan tanpa biaya tersembunyi (maks Rp 500.000)."
         action={
-          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-            <a href="#kalkulator" className="btn btn-secondary page-header-cta" style={{ background: '#FFFFFF', color: '#0F172A', border: '1.5px solid #CBD5E1' }}>
+          <div className="pkg-header-actions">
+            <a href="#kalkulator" className="btn btn-secondary page-header-cta pkg-hdr-btn" style={{ background: '#FFFFFF', color: '#0F172A', border: '1.5px solid #CBD5E1' }}>
               <span>Simulasi Anggaran</span>
             </a>
-            <Link to="/pesan" className="btn btn-primary page-header-cta">
+            <Link to="/pesan" className="btn btn-primary page-header-cta pkg-hdr-btn">
               <span>Isi Lembar Kebutuhan</span>
             </Link>
           </div>
         }
       />
 
-      {/* Trust Proof Banner (Mobile & Desktop Friendly) */}
+      {/* Trust Proof Strip */}
       <div className="pkg-trust-strip">
         <div className="container">
           <div className="pkg-trust-items">
             <div className="pkg-trust-item">
-              <CheckCircle2 size={15} style={{ color: "#0F172A" }} />
+              <CheckCircle2 size={14} style={{ color: "#0F172A", flexShrink: 0 }} />
               <span>6 Paket Spesifik &amp; Teruji</span>
             </div>
             <span className="pkg-trust-sep">•</span>
             <div className="pkg-trust-item">
-              <CheckCircle2 size={15} style={{ color: "#0F172A" }} />
-              <span>Plafon Resmi Max Rp 500.000</span>
+              <CheckCircle2 size={14} style={{ color: "#0F172A", flexShrink: 0 }} />
+              <span>Plafon Maks Rp 500.000</span>
             </div>
             <span className="pkg-trust-sep">•</span>
             <div className="pkg-trust-item">
-              <CheckCircle2 size={15} style={{ color: "#0F172A" }} />
+              <CheckCircle2 size={14} style={{ color: "#0F172A", flexShrink: 0 }} />
               <span>Garansi Bug 1 Minggu</span>
             </div>
             <span className="pkg-trust-sep">•</span>
             <div className="pkg-trust-item">
-              <CheckCircle2 size={15} style={{ color: "#0F172A" }} />
+              <CheckCircle2 size={14} style={{ color: "#0F172A", flexShrink: 0 }} />
               <span>Kuota 3x Revisi Mutlak</span>
             </div>
           </div>
@@ -164,134 +164,237 @@ export default function PackagesPage({ onSelectPackage }) {
       <section className="section-padding" style={{ background: '#FFFFFF', borderBottom: 'none' }}>
         <div className="container">
 
-          {/* Quick Segment Filter Bar */}
+          {/* Quick Segment Filter & View Switcher */}
           <div className="pkg-segment-bar">
             <div className="pkg-segment-info">
-              <span className="pkg-segment-count">Menampilkan {filteredPackages.length} dari 6 Paket</span>
+              <span className="pkg-segment-count">
+                Menampilkan <strong>{filteredPackages.length}</strong> dari 6 Paket
+              </span>
             </div>
 
-            <div className="pkg-category-tabs">
-              <button
-                type="button"
-                onClick={() => setActiveCategoryFilter('ALL')}
-                className={`pkg-cat-btn ${activeCategoryFilter === 'ALL' ? 'active' : ''}`}
-              >
-                <span>Semua Paket (6)</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setActiveCategoryFilter('BUSINESS')}
-                className={`pkg-cat-btn ${activeCategoryFilter === 'BUSINESS' ? 'active' : ''}`}
-              >
-                <span>Bisnis &amp; UMKM (4)</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setActiveCategoryFilter('ACADEMIC')}
-                className={`pkg-cat-btn ${activeCategoryFilter === 'ACADEMIC' ? 'active' : ''}`}
-              >
-                <span>Tugas Kuliah &amp; Skripsi (2)</span>
-              </button>
+            <div className="pkg-segment-controls">
+              {/* Category Filter Tabs */}
+              <div className="pkg-category-tabs">
+                <button
+                  type="button"
+                  onClick={() => setActiveCategoryFilter('ALL')}
+                  className={`pkg-cat-btn ${activeCategoryFilter === 'ALL' ? 'active' : ''}`}
+                >
+                  <span>Semua ({PACKAGES.length})</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveCategoryFilter('BUSINESS')}
+                  className={`pkg-cat-btn ${activeCategoryFilter === 'BUSINESS' ? 'active' : ''}`}
+                >
+                  <span>Bisnis (4)</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveCategoryFilter('ACADEMIC')}
+                  className={`pkg-cat-btn ${activeCategoryFilter === 'ACADEMIC' ? 'active' : ''}`}
+                >
+                  <span>Akademik (2)</span>
+                </button>
+              </div>
+
+              {/* View Switcher: Grid vs List */}
+              <div className="pkg-view-switcher" role="radiogroup" aria-label="Mode Tampilan Katalog">
+                <button
+                  type="button"
+                  onClick={() => setViewMode('grid')}
+                  className={`pkg-view-btn ${viewMode === 'grid' ? 'active' : ''}`}
+                  aria-label="Tampilan Grid"
+                  title="Tampilan Grid"
+                >
+                  <LayoutGrid size={15} />
+                  <span className="view-btn-text">Grid</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setViewMode('list')}
+                  className={`pkg-view-btn ${viewMode === 'list' ? 'active' : ''}`}
+                  aria-label="Tampilan List"
+                  title="Tampilan List"
+                >
+                  <List size={15} />
+                  <span className="view-btn-text">List</span>
+                </button>
+              </div>
             </div>
           </div>
 
-          {/* 6 Packages Grid */}
-          <div className="pkg-cards-grid">
-            {filteredPackages.map((pkg) => (
-              <div
-                key={pkg.id}
-                className="neo-card pkg-card"
-              >
-                {/* Card Header */}
-                <div className="pkg-card-head">
-                  <div className="pkg-meta-row">
-                    <div className="category-pill">
-                      <span className="package-num">PAKET {pkg.number}</span>
-                      <span className="divider">/</span>
-                      <span className="cat-name">{pkg.category}</span>
-                    </div>
-
-                    {pkg.badge && (
-                      <div className="badge badge-neutral">
-                        <span>{pkg.badge}</span>
+          {/* Main Packages Section: Grid vs List */}
+          {viewMode === 'grid' ? (
+            <div className="pkg-cards-grid">
+              {filteredPackages.map((pkg) => (
+                <div
+                  key={pkg.id}
+                  className="neo-card pkg-card"
+                >
+                  {/* Card Header */}
+                  <div className="pkg-card-head">
+                    <div className="pkg-meta-row">
+                      <div className="category-pill">
+                        <span className="package-num">PAKET {pkg.number}</span>
+                        <span className="divider">/</span>
+                        <span className="cat-name">{pkg.category}</span>
                       </div>
-                    )}
-                  </div>
 
-                  <h2 className="pkg-card-title">{pkg.name}</h2>
-                  <p className="pkg-card-desc">{pkg.description}</p>
-                </div>
-
-                {/* Price Box */}
-                <div className="pkg-price-box">
-                  <div className="pkg-price-header">
-                    <div className="pkg-price-label">Tarif Referensi Resmi</div>
-                    <div className="pkg-price-value">
-                      {pkg.minPrice === pkg.maxPrice ? (
-                        <div className="pkg-price-flat">
-                          <span className="pkg-amount">{formatRupiah(pkg.minPrice)}</span>
-                          <span className="pkg-flat-tag">Tarif Tetap</span>
-                        </div>
-                      ) : (
-                        <div className="pkg-price-range">
-                          <span className="pkg-amount">{formatRupiah(pkg.minPrice)}</span>
-                          <span className="pkg-sep">–</span>
-                          <span className="pkg-amount">{formatRupiah(pkg.maxPrice)}</span>
+                      {pkg.badge && (
+                        <div className="badge badge-neutral">
+                          <span>{pkg.badge}</span>
                         </div>
                       )}
                     </div>
+
+                    <h2 className="pkg-card-title">{pkg.name}</h2>
+                    <p className="pkg-card-desc">{pkg.description}</p>
                   </div>
 
-                  <div className="pkg-meta-stack">
-                    <div className="pkg-meta-item">
-                      <Clock size={14} style={{ color: '#0F172A', flexShrink: 0 }} />
-                      <span className="pkg-meta-text">Estimasi: <strong>{pkg.minDays}–{pkg.maxDays} Hari Kerja</strong></span>
-                    </div>
-                    <div className="pkg-meta-item">
-                      <Layers size={14} style={{ color: '#0F172A', flexShrink: 0 }} />
-                      <span className="pkg-meta-text">{pkg.pages}</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Deliverables */}
-                <div className="pkg-deliverables">
-                  <div className="pkg-del-label">Deliverables Termasuk</div>
-                  <div className="pkg-del-list">
-                    {pkg.deliverables.map((d, i) => (
-                      <div key={i} className="pkg-del-item">
-                        <FileCode2 size={15} style={{ color: '#0F172A', marginTop: '2px', flexShrink: 0 }} />
-                        <span>{d}</span>
+                  {/* Price Box */}
+                  <div className="pkg-price-box">
+                    <div className="pkg-price-header">
+                      <div className="pkg-price-label">Tarif Referensi Resmi</div>
+                      <div className="pkg-price-value">
+                        {pkg.minPrice === pkg.maxPrice ? (
+                          <div className="pkg-price-flat">
+                            <span className="pkg-amount">{formatRupiah(pkg.minPrice)}</span>
+                            <span className="pkg-flat-tag">Tarif Tetap</span>
+                          </div>
+                        ) : (
+                          <div className="pkg-price-range">
+                            <span className="pkg-amount">{formatRupiah(pkg.minPrice)}</span>
+                            <span className="pkg-sep">–</span>
+                            <span className="pkg-amount">{formatRupiah(pkg.maxPrice)}</span>
+                          </div>
+                        )}
                       </div>
-                    ))}
+                    </div>
+
+                    <div className="pkg-meta-stack">
+                      <div className="pkg-meta-item">
+                        <Clock size={14} style={{ color: '#0F172A', flexShrink: 0 }} />
+                        <span className="pkg-meta-text">Estimasi: <strong>{pkg.minDays}–{pkg.maxDays} Hari Kerja</strong></span>
+                      </div>
+                      <div className="pkg-meta-item">
+                        <Layers size={14} style={{ color: '#0F172A', flexShrink: 0 }} />
+                        <span className="pkg-meta-text">{pkg.pages}</span>
+                      </div>
+                    </div>
                   </div>
 
-                  {/* Unified Specifications & Warranty Card (No Pastel AI Slop) */}
-                  <div className="pkg-specs-summary-card">
-                    <div className="pkg-spec-row">
-                      <FileCode2 size={14} style={{ color: '#0F172A', flexShrink: 0, marginTop: '2px' }} />
-                      <span>{pkg.docsSummary}</span>
+                  {/* Deliverables */}
+                  <div className="pkg-deliverables">
+                    <div className="pkg-del-label">Deliverables Termasuk</div>
+                    <div className="pkg-del-list">
+                      {pkg.deliverables.map((d, i) => (
+                        <div key={i} className="pkg-del-item">
+                          <FileCode2 size={15} style={{ color: '#0F172A', marginTop: '2px', flexShrink: 0 }} />
+                          <span>{d}</span>
+                        </div>
+                      ))}
                     </div>
-                    <div className="pkg-spec-row">
-                      <Shield size={14} style={{ color: '#0F172A', flexShrink: 0, marginTop: '2px' }} />
-                      <span>Garansi Bug Kode 1 Minggu (7 Hari)</span>
+
+                    {/* Unified Specifications & Warranty Card */}
+                    <div className="pkg-specs-summary-card">
+                      <div className="pkg-spec-row">
+                        <FileCode2 size={14} style={{ color: '#0F172A', flexShrink: 0, marginTop: '2px' }} />
+                        <span>{pkg.docsSummary}</span>
+                      </div>
+                      <div className="pkg-spec-row">
+                        <Shield size={14} style={{ color: '#0F172A', flexShrink: 0, marginTop: '2px' }} />
+                        <span>Garansi Bug Kode 1 Minggu (7 Hari)</span>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                {/* CTA Footer */}
-                <div className="pkg-card-footer">
-                  <Button
-                    variant="primary"
-                    style={{ width: '100%', justifyContent: 'center' }}
-                    onClick={() => handleChoosePackage(pkg.id)}
-                  >
-                    Pilih Paket Ini
-                  </Button>
+                  {/* CTA Footer */}
+                  <div className="pkg-card-footer">
+                    <Button
+                      variant="primary"
+                      style={{ width: '100%', justifyContent: 'center' }}
+                      onClick={() => handleChoosePackage(pkg.id)}
+                    >
+                      Pilih Paket Ini
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className="pkg-cards-list">
+              {filteredPackages.map((pkg) => (
+                <div key={pkg.id} className="neo-card pkg-list-card">
+                  <div className="pkg-list-main">
+                    <div className="pkg-list-meta-row">
+                      <div className="category-pill">
+                        <span className="package-num">PAKET {pkg.number}</span>
+                        <span className="divider">/</span>
+                        <span className="cat-name">{pkg.category}</span>
+                      </div>
+                      {pkg.badge && (
+                        <div className="badge badge-neutral">
+                          <span>{pkg.badge}</span>
+                        </div>
+                      )}
+                    </div>
+
+                    <h2 className="pkg-list-title">{pkg.name}</h2>
+                    <p className="pkg-list-desc">{pkg.description}</p>
+
+                    <div className="pkg-list-chips">
+                      <div className="pkg-list-chip">
+                        <Clock size={13} style={{ color: '#0F172A', flexShrink: 0 }} />
+                        <span>{pkg.minDays}–{pkg.maxDays} Hari</span>
+                      </div>
+                      <div className="pkg-list-chip">
+                        <Layers size={13} style={{ color: '#0F172A', flexShrink: 0 }} />
+                        <span>{pkg.pages}</span>
+                      </div>
+                      <div className="pkg-list-chip">
+                        <FileCode2 size={13} style={{ color: '#0F172A', flexShrink: 0 }} />
+                        <span>{pkg.docsSummary}</span>
+                      </div>
+                      <div className="pkg-list-chip">
+                        <Shield size={13} style={{ color: '#0F172A', flexShrink: 0 }} />
+                        <span>Garansi 1 Minggu</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="pkg-list-side">
+                    <div className="pkg-list-price-block">
+                      <span className="pkg-list-price-label">Tarif Resmi</span>
+                      <div className="pkg-list-price-val">
+                        {pkg.minPrice === pkg.maxPrice ? (
+                          <div className="pkg-price-flat">
+                            <span className="pkg-amount-sm">{formatRupiah(pkg.minPrice)}</span>
+                            <span className="pkg-flat-tag">Tetap</span>
+                          </div>
+                        ) : (
+                          <div className="pkg-price-range-sm">
+                            <span className="pkg-amount-sm">{formatRupiah(pkg.minPrice)}</span>
+                            <span className="pkg-sep">–</span>
+                            <span className="pkg-amount-sm">{formatRupiah(pkg.maxPrice)}</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    <Button
+                      variant="primary"
+                      className="pkg-list-btn"
+                      onClick={() => handleChoosePackage(pkg.id)}
+                    >
+                      <span>Pilih Paket</span>
+                      <ChevronRight size={15} />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
 
           {/* Comparative Matrix Section */}
           <div className="pkg-matrix-section">
@@ -358,6 +461,7 @@ export default function PackagesPage({ onSelectPackage }) {
                   return (
                     <button
                       key={cat}
+                      type="button"
                       onClick={() => setActiveAddonFilter(cat)}
                       className={`pkg-filter-btn ${isSelected ? 'active' : ''}`}
                     >
@@ -381,7 +485,7 @@ export default function PackagesPage({ onSelectPackage }) {
                     <span className="addon-price">{addon.priceDisplay}</span>
                     <Link to="/pesan" className="btn btn-secondary btn-sm addon-cta">
                       <span>Minta via Brief</span>
-                      </Link>
+                    </Link>
                   </div>
                 </div>
               ))}
@@ -402,6 +506,7 @@ export default function PackagesPage({ onSelectPackage }) {
         .pkg-trust-strip {
           background: #FFFFFF;
           padding: 12px 0;
+          border-bottom: 1.5px solid #E2E8F0;
         }
 
         .pkg-trust-items {
@@ -425,10 +530,14 @@ export default function PackagesPage({ onSelectPackage }) {
           color: #CBD5E1;
         }
 
-        
+        .pkg-header-actions {
+          display: flex;
+          gap: 10px;
+          flex-wrap: wrap;
+        }
 
         /* =======================================================
-           SEGMENT FILTER BAR
+           SEGMENT FILTER BAR & VIEW SWITCHER
            ======================================================= */
         .pkg-segment-bar {
           display: flex;
@@ -437,13 +546,25 @@ export default function PackagesPage({ onSelectPackage }) {
           flex-wrap: wrap;
           gap: 14px;
           margin-bottom: 32px;
-          padding-bottom: 20px;
-          }
+          padding-bottom: 18px;
+        }
 
         .pkg-segment-count {
           font-size: 0.88rem;
-          font-weight: 700;
+          font-weight: 600;
           color: #475569;
+        }
+
+        .pkg-segment-count strong {
+          color: #0F172A;
+          font-weight: 800;
+        }
+
+        .pkg-segment-controls {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          flex-wrap: wrap;
         }
 
         .pkg-category-tabs {
@@ -451,8 +572,8 @@ export default function PackagesPage({ onSelectPackage }) {
           align-items: center;
           gap: 6px;
           background: #F1F5F9;
-          border: 1px solid var(--border-subtle);
-          padding: 4px;
+          border: 1.5px solid #CBD5E1;
+          padding: 3px;
           border-radius: 8px;
         }
 
@@ -460,8 +581,8 @@ export default function PackagesPage({ onSelectPackage }) {
           background: transparent;
           border: 1px solid transparent;
           border-radius: 6px;
-          padding: 7px 16px;
-          font-size: 0.84rem;
+          padding: 6px 14px;
+          font-size: 0.82rem;
           font-weight: 600;
           color: #475569;
           cursor: pointer;
@@ -472,8 +593,45 @@ export default function PackagesPage({ onSelectPackage }) {
         .pkg-cat-btn.active {
           background: #FFFFFF;
           color: #0F172A;
-          border-color: var(--border-main);
+          border-color: #CBD5E1;
+          font-weight: 800;
+        }
+
+        /* View Switcher: Grid vs List */
+        .pkg-view-switcher {
+          display: inline-flex;
+          align-items: center;
+          gap: 2px;
+          background: #F1F5F9;
+          border: 1.5px solid #CBD5E1;
+          border-radius: 8px;
+          padding: 3px;
+        }
+
+        .pkg-view-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 5px;
+          padding: 6px 11px;
+          border-radius: 6px;
+          font-size: 0.8rem;
           font-weight: 700;
+          color: #475569;
+          background: transparent;
+          border: 1px solid transparent;
+          cursor: pointer;
+          transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+        }
+
+        .pkg-view-btn:hover:not(.active) {
+          color: #0F172A;
+          background: #E2E8F0;
+        }
+
+        .pkg-view-btn.active {
+          background: #FFFFFF;
+          color: #0F172A;
+          border-color: #CBD5E1;
         }
 
         /* =======================================================
@@ -495,14 +653,14 @@ export default function PackagesPage({ onSelectPackage }) {
           overflow: hidden;
           position: relative;
           background: #FFFFFF;
-          border: 1px solid var(--border-subtle);
+          border: 1.5px solid #CBD5E1;
           border-radius: var(--radius-md);
-          transition: transform 0.2s ease, border-color 0.2s ease;
+          transition: transform 0.18s ease, border-color 0.18s ease;
         }
 
         .pkg-card:hover {
           transform: translateY(-2px);
-          border-color: var(--border-main);
+          border-color: #0F172A;
         }
 
         .pkg-card-head {
@@ -565,10 +723,6 @@ export default function PackagesPage({ onSelectPackage }) {
           letter-spacing: -0.01em;
         }
 
-        .pkg-price-value {
-          margin-bottom: 0;
-        }
-
         .pkg-price-flat,
         .pkg-price-range {
           display: flex;
@@ -596,7 +750,7 @@ export default function PackagesPage({ onSelectPackage }) {
           color: #0F172A;
           padding: 2px 8px;
           border-radius: 4px;
-          border: 1px solid var(--border-subtle);
+          border: 1.5px solid #CBD5E1;
           font-weight: 700;
         }
 
@@ -661,7 +815,7 @@ export default function PackagesPage({ onSelectPackage }) {
         .pkg-specs-summary-card {
           margin-top: auto;
           background: #F8FAFC;
-          border: 1px solid var(--border-subtle);
+          border: 1.5px solid #CBD5E1;
           border-radius: 8px;
           padding: 12px 14px;
           display: flex;
@@ -682,10 +836,130 @@ export default function PackagesPage({ onSelectPackage }) {
         }
 
         .pkg-card-footer {
-          padding: 18px 24px;
+          padding: 16px 24px 24px;
           margin-top: auto;
           background: #FFFFFF;
-          padding: 16px 24px 24px;
+        }
+
+        /* =======================================================
+           LIST VIEW MODE - EDITORIAL ROW FORMAT
+           ======================================================= */
+        .pkg-cards-list {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+          margin-bottom: 72px;
+        }
+
+        .pkg-list-card {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 24px 28px;
+          background: #FFFFFF;
+          border: 1.5px solid #CBD5E1;
+          border-radius: var(--radius-md);
+          gap: 24px;
+          transition: border-color 0.18s ease, transform 0.18s ease;
+        }
+
+        .pkg-list-card:hover {
+          border-color: #0F172A;
+          transform: translateY(-1px);
+        }
+
+        .pkg-list-main {
+          flex: 1;
+          min-width: 0;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+
+        .pkg-list-meta-row {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          flex-wrap: wrap;
+        }
+
+        .pkg-list-title {
+          font-size: 1.25rem;
+          font-weight: 800;
+          color: #0F172A;
+          margin: 0;
+          line-height: 1.3;
+        }
+
+        .pkg-list-desc {
+          font-size: 0.88rem;
+          color: #475569;
+          line-height: 1.55;
+          margin: 0;
+          max-width: 720px;
+        }
+
+        .pkg-list-chips {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          flex-wrap: wrap;
+          margin-top: 4px;
+        }
+
+        .pkg-list-chip {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 0.76rem;
+          font-weight: 700;
+          color: #334155;
+          background: #F8FAFC;
+          border: 1.5px solid #CBD5E1;
+          border-radius: 6px;
+          padding: 3px 9px;
+        }
+
+        .pkg-list-side {
+          display: flex;
+          align-items: center;
+          gap: 24px;
+          flex-shrink: 0;
+        }
+
+        .pkg-list-price-block {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          gap: 2px;
+          min-width: 140px;
+        }
+
+        .pkg-list-price-label {
+          font-size: 0.72rem;
+          font-weight: 700;
+          color: #64748B;
+        }
+
+        .pkg-amount-sm {
+          font-size: 1.25rem;
+          font-weight: 800;
+          color: var(--prussian-blue);
+          letter-spacing: -0.02em;
+        }
+
+        .pkg-price-range-sm {
+          display: flex;
+          align-items: baseline;
+          gap: 4px;
+        }
+
+        .pkg-list-btn {
+          min-height: 44px;
+          padding: 10px 20px;
+          font-size: 0.92rem;
+          white-space: nowrap;
+          border-radius: 8px;
         }
 
         /* =======================================================
@@ -723,7 +997,7 @@ export default function PackagesPage({ onSelectPackage }) {
           font-weight: 600;
           color: #475569;
           background: #F1F5F9;
-          border: 1px solid var(--border-subtle);
+          border: 1.5px solid #CBD5E1;
           border-radius: 6px;
           padding: 6px 12px;
           margin-bottom: 12px;
@@ -731,7 +1005,7 @@ export default function PackagesPage({ onSelectPackage }) {
 
         .pkg-matrix-table-wrap {
           background: #FFFFFF;
-          border: 1px solid var(--border-subtle);
+          border: 1.5px solid #CBD5E1;
           border-radius: var(--radius-md);
           overflow-x: auto;
           -webkit-overflow-scrolling: touch;
@@ -814,7 +1088,7 @@ export default function PackagesPage({ onSelectPackage }) {
           color: #0F172A;
           padding: 3px 10px;
           border-radius: 4px;
-          border: 1px solid var(--border-subtle);
+          border: 1.5px solid #CBD5E1;
           font-weight: 700;
           font-size: 0.8rem;
           display: inline-block;
@@ -877,7 +1151,7 @@ export default function PackagesPage({ onSelectPackage }) {
           background: #FFFFFF;
           padding: 4px;
           border-radius: 6px;
-          border: 1px solid var(--border-subtle);
+          border: 1.5px solid #CBD5E1;
           flex-wrap: wrap;
         }
 
@@ -918,14 +1192,14 @@ export default function PackagesPage({ onSelectPackage }) {
           flex-direction: column;
           height: 100%;
           background: #FFFFFF;
-          border: 1px solid var(--border-subtle);
+          border: 1.5px solid #CBD5E1;
           border-radius: var(--radius-md);
-          transition: transform 0.2s ease, border-color 0.2s ease;
+          transition: transform 0.18s ease, border-color 0.18s ease;
         }
 
         .pkg-addon-card:hover {
           transform: translateY(-2px);
-          border-color: var(--border-main);
+          border-color: #0F172A;
         }
 
         .addon-top-row {
@@ -944,7 +1218,7 @@ export default function PackagesPage({ onSelectPackage }) {
         .addon-type-tag {
           font-size: 0.74rem;
           background: #F1F5F9;
-          border: 1px solid var(--border-subtle);
+          border: 1.5px solid #CBD5E1;
           padding: 2px 8px;
           border-radius: 4px;
           color: #0F172A;
@@ -1006,13 +1280,31 @@ export default function PackagesPage({ onSelectPackage }) {
            MOBILE RESPONSIVENESS (max-width: 640px)
            ======================================================= */
         @media (max-width: 640px) {
+          .pkg-header-actions {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            gap: 10px;
+          }
+
+          .pkg-hdr-btn {
+            width: 100% !important;
+            justify-content: center !important;
+            text-align: center !important;
+            min-height: 48px !important;
+            border-radius: 8px !important;
+            font-size: 0.94rem !important;
+          }
+
           .pkg-trust-strip {
-            padding: 8px 0;
+            padding: 10px 0;
           }
 
           .pkg-trust-items {
-            font-size: 0.74rem;
-            gap: 8px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px;
+            font-size: 0.72rem;
           }
 
           .pkg-trust-sep {
@@ -1020,25 +1312,40 @@ export default function PackagesPage({ onSelectPackage }) {
           }
 
           .pkg-trust-item {
-            background: #F8FAFC;
-            border: 1px solid var(--border-subtle);
-            padding: 4px 8px;
-            border-radius: 6px;
+            background: #FFFFFF;
+            border: 1.5px solid #CBD5E1;
+            padding: 6px 8px;
+            border-radius: 8px;
+            justify-content: center;
+            text-align: center;
+            min-height: 36px;
           }
 
           .pkg-segment-bar {
             flex-direction: column;
             align-items: stretch;
             gap: 12px;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
+            padding-bottom: 14px;
+          }
+
+          .pkg-segment-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            width: 100%;
           }
 
           .pkg-category-tabs {
-            width: 100%;
+            flex: 1;
+            min-width: 0;
+            display: flex;
             overflow-x: auto;
             scrollbar-width: none;
             -webkit-overflow-scrolling: touch;
             padding: 3px;
+            gap: 4px;
           }
 
           .pkg-category-tabs::-webkit-scrollbar {
@@ -1047,23 +1354,38 @@ export default function PackagesPage({ onSelectPackage }) {
 
           .pkg-cat-btn {
             flex: 1;
-            padding: 8px 10px;
+            padding: 7px 8px;
             font-size: 0.76rem;
             text-align: center;
+            white-space: nowrap;
           }
 
+          .pkg-view-switcher {
+            flex-shrink: 0;
+          }
+
+          .view-btn-text {
+            display: none;
+          }
+
+          .pkg-view-btn {
+            padding: 7px 9px;
+          }
+
+          /* Grid View on Mobile */
           .pkg-cards-grid {
             grid-template-columns: 1fr;
-            gap: 18px;
+            gap: 16px;
             margin-bottom: 48px;
           }
 
           .pkg-card-head {
-            padding: 20px 20px 16px;
+            padding: 18px 18px 14px;
+            min-height: auto;
           }
 
           .pkg-card-title {
-            font-size: 1.18rem;
+            font-size: 1.15rem;
             min-height: auto;
           }
 
@@ -1074,7 +1396,7 @@ export default function PackagesPage({ onSelectPackage }) {
           }
 
           .pkg-price-box {
-            padding: 16px 20px;
+            padding: 14px 18px;
             min-height: auto;
           }
 
@@ -1083,7 +1405,7 @@ export default function PackagesPage({ onSelectPackage }) {
           }
 
           .pkg-deliverables {
-            padding: 18px 20px;
+            padding: 16px 18px;
           }
 
           .pkg-del-list {
@@ -1095,16 +1417,81 @@ export default function PackagesPage({ onSelectPackage }) {
           }
 
           .pkg-card-footer {
-            padding: 16px 20px;
+            padding: 14px 18px 20px;
+          }
+
+          .pkg-card-footer .btn {
+            min-height: 48px;
+            font-size: 0.94rem;
+            border-radius: 8px;
+          }
+
+          /* List View on Mobile */
+          .pkg-cards-list {
+            gap: 12px;
+            margin-bottom: 48px;
+          }
+
+          .pkg-list-card {
+            flex-direction: column !important;
+            align-items: stretch !important;
+            padding: 16px !important;
+            gap: 12px !important;
+            border-radius: 10px !important;
+          }
+
+          .pkg-list-title {
+            font-size: 1.1rem !important;
+          }
+
+          .pkg-list-desc {
+            font-size: 0.82rem !important;
+            line-height: 1.5 !important;
+          }
+
+          .pkg-list-chips {
+            gap: 6px !important;
+          }
+
+          .pkg-list-chip {
+            font-size: 0.72rem !important;
+            padding: 2px 7px !important;
+          }
+
+          .pkg-list-side {
+            flex-direction: column !important;
+            align-items: stretch !important;
+            gap: 12px !important;
+            padding-top: 12px !important;
+            border-top: 1.5px solid #F1F5F9 !important;
+          }
+
+          .pkg-list-price-block {
+            flex-direction: row !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            width: 100% !important;
+          }
+
+          .pkg-amount-sm {
+            font-size: 1.2rem !important;
+          }
+
+          .pkg-list-btn {
+            width: 100% !important;
+            justify-content: center !important;
+            min-height: 48px !important;
+            font-size: 0.94rem !important;
+            border-radius: 8px !important;
           }
 
           /* Comparison Matrix Table on Mobile */
           .pkg-matrix-section {
-            margin-bottom: 52px;
+            margin-bottom: 48px;
           }
 
           .pkg-matrix-title {
-            font-size: 1.35rem;
+            font-size: 1.3rem;
           }
 
           .pkg-matrix-desc {
@@ -1112,39 +1499,39 @@ export default function PackagesPage({ onSelectPackage }) {
           }
 
           .matrix-th-label {
-            width: 140px;
-            min-width: 140px;
-            padding: 12px 14px;
-            font-size: 0.8rem;
+            width: 130px;
+            min-width: 130px;
+            padding: 12px 10px;
+            font-size: 0.78rem;
           }
 
           .matrix-td-label {
-            padding: 12px 14px;
-            font-size: 0.8rem;
-            width: 140px;
-            min-width: 140px;
+            padding: 12px 10px;
+            font-size: 0.78rem;
+            width: 130px;
+            min-width: 130px;
           }
 
           .matrix-th-pkg {
-            min-width: 110px;
-            padding: 12px 10px;
+            min-width: 100px;
+            padding: 12px 8px;
           }
 
           .matrix-td-value {
-            padding: 12px 10px;
-            font-size: 0.8rem;
+            padding: 12px 8px;
+            font-size: 0.78rem;
           }
 
           /* Add-ons mobile */
           .pkg-addons-header {
             flex-direction: column;
             align-items: stretch;
-            gap: 14px;
-            margin-bottom: 20px;
+            gap: 12px;
+            margin-bottom: 18px;
           }
 
           .pkg-addons-title {
-            font-size: 1.35rem;
+            font-size: 1.3rem;
           }
 
           .pkg-addons-desc {
@@ -1157,7 +1544,8 @@ export default function PackagesPage({ onSelectPackage }) {
             flex-wrap: nowrap;
             scrollbar-width: none;
             -webkit-overflow-scrolling: touch;
-            padding: 4px;
+            padding: 3px;
+            gap: 4px;
           }
 
           .pkg-filter-tabs::-webkit-scrollbar {
@@ -1166,17 +1554,48 @@ export default function PackagesPage({ onSelectPackage }) {
 
           .pkg-filter-btn {
             flex: 0 0 auto;
-            padding: 7px 12px;
+            padding: 6px 10px;
             font-size: 0.76rem;
+            border-radius: 6px;
           }
 
           .pkg-addons-grid {
             grid-template-columns: 1fr;
-            gap: 14px;
+            gap: 12px;
           }
 
           .pkg-addon-card {
-            padding: 18px;
+            padding: 16px;
+            border: 1.5px solid #CBD5E1;
+            border-radius: 10px;
+          }
+
+          .addon-title {
+            font-size: 1rem;
+          }
+
+          .addon-desc {
+            font-size: 0.82rem;
+            line-height: 1.5;
+            margin-bottom: 12px;
+          }
+
+          .addon-footer {
+            padding-top: 12px;
+          }
+
+          .addon-price {
+            font-size: 0.94rem;
+          }
+
+          .addon-cta {
+            min-height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 16px;
+            font-size: 0.82rem;
+            border-radius: 6px;
           }
         }
       `}</style>
