@@ -484,26 +484,98 @@ export default function HeroSection() {
         }
 
         @media (max-width: 640px) {
-          .hero-trust-chips-wrap {
+          .hero-section {
+            padding-top: 14px;
+            padding-bottom: 28px;
+          }
+
+          .hero-split-grid {
+            gap: 16px;
+            margin-bottom: 20px;
+          }
+
+          .hero-headline {
+            font-size: clamp(1.52rem, 6.2vw, 1.92rem) !important;
+            line-height: 1.2 !important;
+            letter-spacing: -0.025em !important;
+            margin: 0 auto 12px auto !important;
+            max-width: 380px;
+          }
+
+          .hero-subtitle {
+            font-size: 0.88rem !important;
+            line-height: 1.55 !important;
+            color: #475569 !important;
+            margin: 0 auto 16px auto !important;
+            max-width: 380px;
+            padding: 0 4px;
+          }
+
+          /* Full-width, cohesive dual CTAs on mobile */
+          .hero-cta-group {
             display: flex;
             flex-direction: column;
             width: 100%;
-            align-items: stretch;
-            gap: 6px;
+            max-width: 360px;
+            margin: 0 auto 16px auto;
+            gap: 10px;
           }
+
+          .hero-btn {
+            width: 100% !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            text-align: center !important;
+            padding: 13px 20px !important;
+            font-size: 0.94rem !important;
+            border-radius: 8px !important;
+            min-height: 48px !important; /* 48px touch target */
+          }
+
+          /* Symmetrical 2x2 Trust Matrix on mobile (Never stacks into 4 giant lines) */
+          .hero-trust-chips-wrap {
+            display: grid !important;
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 8px !important;
+            width: 100% !important;
+            max-width: 360px !important;
+            margin: 0 auto !important;
+          }
+
           .trust-chip {
-            justify-content: center;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 6px !important;
+            padding: 8px 6px !important;
+            min-height: 40px !important;
+            font-size: 0.72rem !important;
+            font-weight: 700 !important;
+            border-radius: 8px !important;
+            text-align: center !important;
+            white-space: normal !important;
+            line-height: 1.25 !important;
+            background: #FFFFFF !important;
+            border: 1.5px solid #CBD5E1 !important;
+          }
+
+          .hero-right-visual {
+            width: 100% !important;
+            max-width: 320px !important;
+            margin: 8px auto 0 auto !important;
+          }
+
+          .hero-illustration {
+            max-height: 240px !important;
           }
         }
 
         @media (max-width: 480px) {
           .hero-headline {
-            font-size: clamp(1.48rem, 6.4vw, 1.78rem) !important;
-            line-height: 1.18 !important;
+            font-size: clamp(1.48rem, 6.4vw, 1.82rem) !important;
+            line-height: 1.2 !important;
             letter-spacing: -0.025em !important;
-          }
-          .hero-right-visual {
-            max-width: 320px;
           }
         }
 
@@ -815,24 +887,49 @@ export default function HeroSection() {
         }
 
         @media (max-width: 640px) {
+          .hero-pillars-wrapper {
+            margin-top: 28px;
+            padding-top: 0;
+          }
+
+          .hero-pillars-header {
+            margin-bottom: 12px;
+          }
+
+          .pillars-title {
+            font-size: 1.05rem;
+          }
+
           .hero-pillars-grid {
             grid-template-columns: 1fr;
-            gap: 10px;
+            gap: 8px;
           }
 
           .hero-pillar-card {
-            padding: 12px 14px;
-            gap: 10px;
+            padding: 11px 14px;
+            gap: 12px;
+            align-items: center;
+            background: #FFFFFF;
+            border: 1.5px solid #CBD5E1;
+            border-radius: 8px;
+          }
+
+          .pillar-icon-box {
+            width: 36px;
+            height: 36px;
+            padding: 7px;
+            border-radius: 6px;
+            flex-shrink: 0;
           }
 
           .pillar-card-title {
-            font-size: 0.86rem;
-            margin-bottom: 3px;
+            font-size: 0.85rem;
+            margin-bottom: 2px;
           }
 
           .pillar-card-desc {
-            font-size: 0.76rem;
-            line-height: 1.45;
+            font-size: 0.75rem;
+            line-height: 1.4;
           }
         }
 
