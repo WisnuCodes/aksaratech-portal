@@ -7,7 +7,7 @@ import Button from '../components/atoms/Button';
 import InstantPriceEstimator from '../components/organisms/InstantPriceEstimator';
 import { 
   Package, Clock, CheckCircle2, FileCode2, Shield, Layers, 
-  ChevronRight, LayoutGrid, List
+  ChevronRight, ChevronDown, ChevronUp, LayoutGrid, List
 } from 'lucide-react';
 
 export default function PackagesPage({ onSelectPackage }) {
@@ -15,6 +15,14 @@ export default function PackagesPage({ onSelectPackage }) {
   const [activeCategoryFilter, setActiveCategoryFilter] = useState('ALL');
   const [activeAddonFilter, setActiveAddonFilter] = useState('All');
   const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'list'
+  const [expandedListPkg, setExpandedListPkg] = useState({});
+
+  const toggleExpandPkg = (pkgId) => {
+    setExpandedListPkg(prev => ({
+      ...prev,
+      [pkgId]: !prev[pkgId]
+    }));
+  };
 
   const handleChoosePackage = (pkgId) => {
     if (onSelectPackage) {
@@ -324,75 +332,112 @@ export default function PackagesPage({ onSelectPackage }) {
             </div>
           ) : (
             <div className="pkg-cards-list">
-              {filteredPackages.map((pkg) => (
-                <div key={pkg.id} className="neo-card pkg-list-card">
-                  <div className="pkg-list-main">
-                    <div className="pkg-list-meta-row">
-                      <div className="category-pill">
-                        <span className="package-num">PAKET {pkg.number}</span>
-                        <span className="divider">/</span>
-                        <span className="cat-name">{pkg.category}</span>
+              {filteredPackages.map((pkg) => {
+                const isExpanded = !!expandedListPkg[pkg.id];
+                const isAcademic = [5, 6].includes(pkg.number);
+                return (
+                  <div 
+                    key={pkg.id} 
+                    data-ui="true"
+                    className={`pkg-list-row ${isAcademic ? 'academic-accent' : 'business-accent'}`}
+                  >
+                    <div className="pkg-row-top">
+                      <div className="pkg-row-badges">
+                        <span className="pkg-row-num">PAKET {pkg.number}</span>
+                        <span className="pkg-row-cat">{pkg.category}</span>
+                        {pkg.badge && (
+                          <span className="pkg-row-tag">{pkg.badge}</span>
+                        )}
                       </div>
-                      {pkg.badge && (
-                        <div className="badge badge-neutral">
-                          <span>{pkg.badge}</span>
+                      <div className="pkg-row-timeline">
+                        <Clock size={13} style={{ color: '#0F172A', flexShrink: 0 }} />
+                        <span>{pkg.minDays}–{pkg.maxDays} Hari</span>
+                      </div>
+                    </div>
+
+                    <div className="pkg-row-body">
+                      <div className="pkg-row-main-info">
+                        <h3 className="pkg-row-title">{pkg.name}</h3>
+                        <p className="pkg-row-desc">{pkg.recommendedFor || pkg.description}</p>
+                      </div>
+
+                      <div className="pkg-row-chips">
+                        <span className="pkg-row-chip">
+                          <Layers size={12} style={{ color: '#0F172A', flexShrink: 0 }} />
+                          <span>{pkg.pages}</span>
+                        </span>
+                        <span className="pkg-row-chip">
+                          <FileCode2 size={12} style={{ color: '#0F172A', flexShrink: 0 }} />
+                          <span>{pkg.docsSummary}</span>
+                        </span>
+                        <span className="pkg-row-chip">
+                          <Shield size={12} style={{ color: '#0F172A', flexShrink: 0 }} />
+                          <span>Garansi 1 Minggu</span>
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Deliverables Accordion */}
+                    <div className="pkg-row-accordion">
+                      <button
+                        type="button"
+                        className="pkg-row-toggle-btn"
+                        onClick={() => toggleExpandPkg(pkg.id)}
+                        aria-expanded={isExpanded}
+                      >
+                        <span>{isExpanded ? 'Tutup Rincian' : `Lihat Rincian ${pkg.deliverables.length} Deliverables & Garansi`}</span>
+                        {isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                      </button>
+
+                      {isExpanded && (
+                        <div className="pkg-row-expanded-panel">
+                          <div className="pkg-row-del-list">
+                            {pkg.deliverables.map((d, i) => (
+                              <div key={i} className="pkg-row-del-item">
+                                <CheckCircle2 size={14} style={{ color: '#0F172A', flexShrink: 0, marginTop: '2px' }} />
+                                <span>{d}</span>
+                              </div>
+                            ))}
+                          </div>
+                          <div className="pkg-row-del-note">
+                            <span><strong>Dokumen:</strong> {pkg.docsSummary}</span> • <span><strong>Garansi:</strong> 1 Minggu + Kuota 3x Revisi</span>
+                          </div>
                         </div>
                       )}
                     </div>
 
-                    <h2 className="pkg-list-title">{pkg.name}</h2>
-                    <p className="pkg-list-desc">{pkg.description}</p>
+                    {/* Price & CTA Action Bar */}
+                    <div className="pkg-row-action-bar">
+                      <div className="pkg-row-pricing">
+                        <span className="pkg-row-price-label">Tarif Resmi</span>
+                        <div className="pkg-row-price-val">
+                          {pkg.minPrice === pkg.maxPrice ? (
+                            <div className="pkg-price-flat">
+                              <span className="pkg-row-amount">{formatRupiah(pkg.minPrice)}</span>
+                              <span className="pkg-flat-tag">Tetap</span>
+                            </div>
+                          ) : (
+                            <div className="pkg-price-range-sm">
+                              <span className="pkg-row-amount">{formatRupiah(pkg.minPrice)}</span>
+                              <span className="pkg-sep">–</span>
+                              <span className="pkg-row-amount">{formatRupiah(pkg.maxPrice)}</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
 
-                    <div className="pkg-list-chips">
-                      <div className="pkg-list-chip">
-                        <Clock size={13} style={{ color: '#0F172A', flexShrink: 0 }} />
-                        <span>{pkg.minDays}–{pkg.maxDays} Hari</span>
-                      </div>
-                      <div className="pkg-list-chip">
-                        <Layers size={13} style={{ color: '#0F172A', flexShrink: 0 }} />
-                        <span>{pkg.pages}</span>
-                      </div>
-                      <div className="pkg-list-chip">
-                        <FileCode2 size={13} style={{ color: '#0F172A', flexShrink: 0 }} />
-                        <span>{pkg.docsSummary}</span>
-                      </div>
-                      <div className="pkg-list-chip">
-                        <Shield size={13} style={{ color: '#0F172A', flexShrink: 0 }} />
-                        <span>Garansi 1 Minggu</span>
-                      </div>
+                      <Button
+                        variant="primary"
+                        className="pkg-row-btn"
+                        onClick={() => handleChoosePackage(pkg.id)}
+                      >
+                        <span>Pilih Paket</span>
+                        <ChevronRight size={14} />
+                      </Button>
                     </div>
                   </div>
-
-                  <div className="pkg-list-side">
-                    <div className="pkg-list-price-block">
-                      <span className="pkg-list-price-label">Tarif Resmi</span>
-                      <div className="pkg-list-price-val">
-                        {pkg.minPrice === pkg.maxPrice ? (
-                          <div className="pkg-price-flat">
-                            <span className="pkg-amount-sm">{formatRupiah(pkg.minPrice)}</span>
-                            <span className="pkg-flat-tag">Tetap</span>
-                          </div>
-                        ) : (
-                          <div className="pkg-price-range-sm">
-                            <span className="pkg-amount-sm">{formatRupiah(pkg.minPrice)}</span>
-                            <span className="pkg-sep">–</span>
-                            <span className="pkg-amount-sm">{formatRupiah(pkg.maxPrice)}</span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    <Button
-                      variant="primary"
-                      className="pkg-list-btn"
-                      onClick={() => handleChoosePackage(pkg.id)}
-                    >
-                      <span>Pilih Paket</span>
-                      <ChevronRight size={15} />
-                    </Button>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
 
@@ -842,124 +887,237 @@ export default function PackagesPage({ onSelectPackage }) {
         }
 
         /* =======================================================
-           LIST VIEW MODE - EDITORIAL ROW FORMAT
+           LIST VIEW MODE - EXECUTIVE TECHNICAL LEDGER
            ======================================================= */
         .pkg-cards-list {
           display: flex;
           flex-direction: column;
-          gap: 16px;
+          gap: 14px;
           margin-bottom: 72px;
         }
 
-        .pkg-list-card {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 24px 28px;
+        .pkg-list-row {
           background: #FFFFFF;
           border: 1.5px solid #CBD5E1;
           border-radius: var(--radius-md);
-          gap: 24px;
+          padding: 18px 22px;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
           transition: border-color 0.18s ease, transform 0.18s ease;
         }
 
-        .pkg-list-card:hover {
+        .pkg-list-row.business-accent {
+          border-left: 4px solid var(--prussian-blue);
+        }
+
+        .pkg-list-row.academic-accent {
+          border-left: 4px solid #0F172A;
+        }
+
+        .pkg-list-row:hover {
           border-color: #0F172A;
           transform: translateY(-1px);
         }
 
-        .pkg-list-main {
-          flex: 1;
-          min-width: 0;
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
-        }
-
-        .pkg-list-meta-row {
+        .pkg-row-top {
           display: flex;
           align-items: center;
-          gap: 8px;
+          justify-content: space-between;
+          gap: 10px;
           flex-wrap: wrap;
         }
 
-        .pkg-list-title {
-          font-size: 1.25rem;
+        .pkg-row-badges {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          flex-wrap: wrap;
+        }
+
+        .pkg-row-num {
+          font-size: 0.72rem;
+          font-weight: 800;
+          color: #FFFFFF;
+          background: #0F172A;
+          padding: 2px 7px;
+          border-radius: 4px;
+          letter-spacing: -0.01em;
+        }
+
+        .pkg-row-cat {
+          font-size: 0.74rem;
+          font-weight: 700;
+          color: #475569;
+        }
+
+        .pkg-row-tag {
+          font-size: 0.72rem;
+          font-weight: 700;
+          color: #0F172A;
+          background: #F1F5F9;
+          border: 1.5px solid #CBD5E1;
+          padding: 2px 7px;
+          border-radius: 4px;
+        }
+
+        .pkg-row-timeline {
+          display: inline-flex;
+          align-items: center;
+          gap: 5px;
+          font-size: 0.78rem;
+          font-weight: 700;
+          color: #1E293B;
+          background: #F8FAFC;
+          padding: 3px 8px;
+          border-radius: 6px;
+        }
+
+        .pkg-row-body {
+          display: flex;
+          align-items: flex-start;
+          justify-content: space-between;
+          gap: 20px;
+        }
+
+        .pkg-row-main-info {
+          flex: 1;
+          min-width: 0;
+        }
+
+        .pkg-row-title {
+          font-size: 1.15rem;
           font-weight: 800;
           color: #0F172A;
-          margin: 0;
+          margin: 0 0 4px;
           line-height: 1.3;
         }
 
-        .pkg-list-desc {
-          font-size: 0.88rem;
+        .pkg-row-desc {
+          font-size: 0.84rem;
           color: #475569;
-          line-height: 1.55;
+          line-height: 1.5;
           margin: 0;
           max-width: 720px;
         }
 
-        .pkg-list-chips {
+        .pkg-row-chips {
           display: flex;
           align-items: center;
           gap: 8px;
           flex-wrap: wrap;
-          margin-top: 4px;
+          flex-shrink: 0;
         }
 
-        .pkg-list-chip {
+        .pkg-row-chip {
           display: inline-flex;
           align-items: center;
-          gap: 6px;
+          gap: 5px;
           font-size: 0.76rem;
-          font-weight: 700;
+          font-weight: 600;
           color: #334155;
           background: #F8FAFC;
           border: 1.5px solid #CBD5E1;
           border-radius: 6px;
-          padding: 3px 9px;
+          padding: 4px 9px;
         }
 
-        .pkg-list-side {
-          display: flex;
-          align-items: center;
-          gap: 24px;
-          flex-shrink: 0;
-        }
-
-        .pkg-list-price-block {
+        /* Accordion in list row */
+        .pkg-row-accordion {
           display: flex;
           flex-direction: column;
-          align-items: flex-end;
-          gap: 2px;
-          min-width: 140px;
         }
 
-        .pkg-list-price-label {
+        .pkg-row-toggle-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          background: transparent;
+          border: none;
+          padding: 4px 0;
+          color: var(--prussian-blue);
+          font-size: 0.8rem;
+          font-weight: 700;
+          cursor: pointer;
+          align-self: flex-start;
+          transition: color 0.15s ease;
+        }
+
+        .pkg-row-toggle-btn:hover {
+          color: #0F172A;
+          text-decoration: underline;
+        }
+
+        .pkg-row-expanded-panel {
+          margin-top: 8px;
+          padding: 12px 14px;
+          background: #F8FAFC;
+          border-radius: 8px;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+
+        .pkg-row-del-list {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
+
+        .pkg-row-del-item {
+          display: flex;
+          align-items: flex-start;
+          gap: 8px;
+          font-size: 0.82rem;
+          color: #334155;
+          line-height: 1.4;
+        }
+
+        .pkg-row-del-note {
+          padding-top: 6px;
+          font-size: 0.76rem;
+          color: #64748B;
+        }
+
+        /* Action bar: Price + CTA */
+        .pkg-row-action-bar {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 16px;
+          padding: 12px 16px;
+          background: #F8FAFC;
+          border-radius: 8px;
+        }
+
+        .pkg-row-pricing {
+          display: flex;
+          align-items: baseline;
+          gap: 10px;
+          flex-wrap: wrap;
+        }
+
+        .pkg-row-price-label {
           font-size: 0.72rem;
           font-weight: 700;
           color: #64748B;
         }
 
-        .pkg-amount-sm {
+        .pkg-row-amount {
           font-size: 1.25rem;
           font-weight: 800;
           color: var(--prussian-blue);
           letter-spacing: -0.02em;
         }
 
-        .pkg-price-range-sm {
-          display: flex;
-          align-items: baseline;
-          gap: 4px;
-        }
-
-        .pkg-list-btn {
-          min-height: 44px;
-          padding: 10px 20px;
-          font-size: 0.92rem;
-          white-space: nowrap;
-          border-radius: 8px;
+        .pkg-row-btn {
+          min-height: 40px;
+          padding: 8px 18px;
+          font-size: 0.88rem;
+          border-radius: 6px;
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
         }
 
         /* =======================================================
@@ -1362,127 +1520,228 @@ export default function PackagesPage({ onSelectPackage }) {
 
           .pkg-view-switcher {
             flex-shrink: 0;
+            padding: 2px;
           }
 
           .view-btn-text {
-            display: none;
+            display: inline-block;
+            font-size: 0.74rem;
+            font-weight: 700;
           }
 
           .pkg-view-btn {
-            padding: 7px 9px;
+            padding: 6px 9px;
+            gap: 4px;
+            font-size: 0.76rem;
           }
 
-          /* Grid View on Mobile */
+          .pkg-view-btn.active {
+            background: #0F172A;
+            color: #FFFFFF;
+            border-color: #0F172A;
+          }
+
+          /* Grid View on Mobile: True 2-Column Responsive Symmetrical Grid */
           .pkg-cards-grid {
-            grid-template-columns: 1fr;
-            gap: 16px;
-            margin-bottom: 48px;
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 10px !important;
+            margin-bottom: 48px !important;
+            align-items: stretch !important;
+          }
+
+          .pkg-card {
+            border-radius: 10px !important;
+            display: flex !important;
+            flex-direction: column !important;
           }
 
           .pkg-card-head {
-            padding: 18px 18px 14px;
-            min-height: auto;
+            padding: 12px 10px 8px !important;
+            min-height: auto !important;
+          }
+
+          .pkg-meta-row {
+            margin-bottom: 6px !important;
+            min-height: auto !important;
+            gap: 4px !important;
+          }
+
+          .category-pill {
+            font-size: 0.65rem !important;
+            padding: 2px 6px !important;
+          }
+
+          .category-pill .divider,
+          .category-pill .cat-name {
+            display: none !important;
           }
 
           .pkg-card-title {
-            font-size: 1.15rem;
-            min-height: auto;
+            font-size: 0.88rem !important;
+            line-height: 1.25 !important;
+            min-height: 38px !important;
+            display: -webkit-box !important;
+            -webkit-line-clamp: 2 !important;
+            -webkit-box-orient: vertical !important;
+            overflow: hidden !important;
+            margin-bottom: 0 !important;
           }
 
           .pkg-card-desc {
-            font-size: 0.84rem;
-            min-height: auto;
-            margin-bottom: 0;
+            display: none !important;
           }
 
           .pkg-price-box {
-            padding: 14px 18px;
-            min-height: auto;
+            padding: 8px 10px !important;
+            min-height: auto !important;
+            gap: 4px !important;
+          }
+
+          .pkg-price-label {
+            font-size: 0.68rem !important;
           }
 
           .pkg-amount {
-            font-size: 1.35rem;
+            font-size: 1.05rem !important;
+            letter-spacing: -0.02em !important;
+          }
+
+          .pkg-sep {
+            font-size: 0.8rem !important;
+          }
+
+          .pkg-flat-tag {
+            font-size: 0.68rem !important;
+            padding: 1px 5px !important;
+          }
+
+          .pkg-meta-stack {
+            gap: 3px !important;
+          }
+
+          .pkg-meta-item {
+            font-size: 0.7rem !important;
+            gap: 5px !important;
           }
 
           .pkg-deliverables {
-            padding: 16px 18px;
+            padding: 8px 10px !important;
+            flex: 1 !important;
+          }
+
+          .pkg-del-label {
+            font-size: 0.7rem !important;
+            margin-bottom: 6px !important;
           }
 
           .pkg-del-list {
-            min-height: auto;
+            min-height: auto !important;
+            gap: 5px !important;
+            margin-bottom: 6px !important;
+          }
+
+          .pkg-del-item {
+            font-size: 0.7rem !important;
+            line-height: 1.25 !important;
+            gap: 5px !important;
+          }
+
+          .pkg-del-item:nth-child(n+3) {
+            display: none !important;
           }
 
           .pkg-specs-summary-card {
-            min-height: auto;
+            padding: 6px 8px !important;
+            min-height: auto !important;
+            gap: 4px !important;
+            margin-top: 4px !important;
+          }
+
+          .pkg-spec-row {
+            font-size: 0.68rem !important;
+            line-height: 1.2 !important;
+            gap: 5px !important;
           }
 
           .pkg-card-footer {
-            padding: 14px 18px 20px;
+            padding: 6px 10px 12px !important;
+            margin-top: auto !important;
           }
 
           .pkg-card-footer .btn {
-            min-height: 48px;
-            font-size: 0.94rem;
-            border-radius: 8px;
+            min-height: 40px !important;
+            padding: 8px 6px !important;
+            font-size: 0.82rem !important;
+            border-radius: 6px !important;
+            width: 100% !important;
+            justify-content: center !important;
           }
 
-          /* List View on Mobile */
+          /* List View on Mobile: Executive Compact Ledger Row */
           .pkg-cards-list {
-            gap: 12px;
-            margin-bottom: 48px;
+            gap: 10px !important;
+            margin-bottom: 48px !important;
           }
 
-          .pkg-list-card {
-            flex-direction: column !important;
-            align-items: stretch !important;
-            padding: 16px !important;
-            gap: 12px !important;
+          .pkg-list-row {
+            padding: 12px 14px !important;
+            gap: 10px !important;
             border-radius: 10px !important;
           }
 
-          .pkg-list-title {
-            font-size: 1.1rem !important;
-          }
-
-          .pkg-list-desc {
-            font-size: 0.82rem !important;
-            line-height: 1.5 !important;
-          }
-
-          .pkg-list-chips {
+          .pkg-row-top {
             gap: 6px !important;
           }
 
-          .pkg-list-chip {
-            font-size: 0.72rem !important;
-            padding: 2px 7px !important;
+          .pkg-row-title {
+            font-size: 1rem !important;
+            line-height: 1.25 !important;
+            margin-bottom: 2px !important;
           }
 
-          .pkg-list-side {
+          .pkg-row-desc {
+            font-size: 0.78rem !important;
+            line-height: 1.45 !important;
+            color: #475569 !important;
+          }
+
+          .pkg-row-body {
             flex-direction: column !important;
-            align-items: stretch !important;
-            gap: 12px !important;
-            padding-top: 12px !important;
-            border-top: 1.5px solid #F1F5F9 !important;
+            gap: 8px !important;
           }
 
-          .pkg-list-price-block {
-            flex-direction: row !important;
+          .pkg-row-chips {
+            gap: 5px !important;
+          }
+
+          .pkg-row-chip {
+            font-size: 0.7rem !important;
+            padding: 3px 7px !important;
+          }
+
+          .pkg-row-toggle-btn {
+            font-size: 0.76rem !important;
+            padding: 6px 8px !important;
+            background: #F1F5F9 !important;
+            border-radius: 6px !important;
+            width: 100% !important;
             justify-content: space-between !important;
-            align-items: center !important;
-            width: 100% !important;
+            color: #0F172A !important;
           }
 
-          .pkg-amount-sm {
-            font-size: 1.2rem !important;
+          .pkg-row-action-bar {
+            padding: 10px 12px !important;
+            gap: 10px !important;
           }
 
-          .pkg-list-btn {
-            width: 100% !important;
-            justify-content: center !important;
-            min-height: 48px !important;
-            font-size: 0.94rem !important;
-            border-radius: 8px !important;
+          .pkg-row-amount {
+            font-size: 1.15rem !important;
+          }
+
+          .pkg-row-btn {
+            min-height: 38px !important;
+            padding: 6px 14px !important;
+            font-size: 0.84rem !important;
           }
 
           /* Comparison Matrix Table on Mobile */
