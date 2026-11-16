@@ -289,6 +289,10 @@ export default function PackagesPage({ onSelectPackage }) {
                         <Layers size={14} style={{ color: '#0F172A', flexShrink: 0 }} />
                         <span className="pkg-meta-text">{pkg.pages}</span>
                       </div>
+                      <div className="pkg-meta-item">
+                        <Shield size={14} style={{ color: '#0F172A', flexShrink: 0 }} />
+                        <span className="pkg-meta-text">Garansi Bug 1 Minggu & 3× Revisi</span>
+                      </div>
                     </div>
                   </div>
 
@@ -1555,34 +1559,52 @@ export default function PackagesPage({ onSelectPackage }) {
             border-color: #0F172A;
           }
 
-          /* Grid View on Mobile: True 2-Column Responsive Symmetrical Grid */
+          /* Grid View on Mobile: Spacious 2-Column Product Cards (NO mepet) */
           .pkg-cards-grid {
             grid-template-columns: repeat(2, 1fr) !important;
-            gap: 10px !important;
+            gap: 12px !important;
             margin-bottom: 48px !important;
             align-items: stretch !important;
           }
 
           .pkg-card {
-            border-radius: 10px !important;
+            border-radius: 12px !important;
             display: flex !important;
             flex-direction: column !important;
+            background: #FFFFFF !important;
+            border: 1.5px solid #CBD5E1 !important;
+            overflow: hidden !important;
           }
 
           .pkg-card-head {
-            padding: 12px 10px 8px !important;
+            padding: 14px 12px 10px !important;
             min-height: auto !important;
+            display: flex !important;
+            flex-direction: column !important;
           }
 
           .pkg-meta-row {
             margin-bottom: 6px !important;
             min-height: auto !important;
             gap: 4px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
           }
 
           .category-pill {
             font-size: 0.65rem !important;
             padding: 2px 6px !important;
+            background: #0F172A !important;
+            color: #FFFFFF !important;
+            border-radius: 4px !important;
+            border: none !important;
+            font-weight: 800 !important;
+          }
+
+          .category-pill .package-num {
+            color: #FFFFFF !important;
+            font-weight: 800 !important;
           }
 
           .category-pill .divider,
@@ -1590,15 +1612,22 @@ export default function PackagesPage({ onSelectPackage }) {
             display: none !important;
           }
 
+          .pkg-card .badge {
+            font-size: 0.65rem !important;
+            padding: 2px 6px !important;
+            border-radius: 4px !important;
+          }
+
           .pkg-card-title {
-            font-size: 0.88rem !important;
-            line-height: 1.25 !important;
-            min-height: 38px !important;
+            font-size: 0.94rem !important;
+            line-height: 1.28 !important;
+            min-height: 42px !important;
             display: -webkit-box !important;
             -webkit-line-clamp: 2 !important;
             -webkit-box-orient: vertical !important;
             overflow: hidden !important;
-            margin-bottom: 0 !important;
+            margin: 4px 0 0 !important;
+            color: #0F172A !important;
           }
 
           .pkg-card-desc {
@@ -1606,86 +1635,81 @@ export default function PackagesPage({ onSelectPackage }) {
           }
 
           .pkg-price-box {
-            padding: 8px 10px !important;
+            padding: 10px 12px !important;
+            background: #F8FAFC !important;
+            border-radius: 8px !important;
+            margin: 0 10px 10px !important;
             min-height: auto !important;
-            gap: 4px !important;
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 8px !important;
+          }
+
+          .pkg-price-header {
+            gap: 2px !important;
           }
 
           .pkg-price-label {
             font-size: 0.68rem !important;
+            color: #64748B !important;
+            font-weight: 700 !important;
           }
 
           .pkg-amount {
-            font-size: 1.05rem !important;
+            font-size: 1.15rem !important;
+            font-weight: 800 !important;
+            color: var(--prussian-blue) !important;
             letter-spacing: -0.02em !important;
           }
 
           .pkg-sep {
-            font-size: 0.8rem !important;
+            font-size: 0.78rem !important;
           }
 
           .pkg-flat-tag {
-            font-size: 0.68rem !important;
+            font-size: 0.66rem !important;
             padding: 1px 5px !important;
+            border-radius: 4px !important;
           }
 
           .pkg-meta-stack {
-            gap: 3px !important;
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 5px !important;
+            padding-top: 6px !important;
+            border-top: 1.5px solid #EEF2F6 !important;
           }
 
           .pkg-meta-item {
-            font-size: 0.7rem !important;
-            gap: 5px !important;
+            font-size: 0.72rem !important;
+            color: #334155 !important;
+            gap: 6px !important;
+            display: flex !important;
+            align-items: center !important;
+            line-height: 1.3 !important;
           }
 
+          .pkg-meta-text {
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+          }
+
+          /* Hide the heavy multiline deliverables list on 2-column mobile grid */
           .pkg-deliverables {
-            padding: 8px 10px !important;
-            flex: 1 !important;
-          }
-
-          .pkg-del-label {
-            font-size: 0.7rem !important;
-            margin-bottom: 6px !important;
-          }
-
-          .pkg-del-list {
-            min-height: auto !important;
-            gap: 5px !important;
-            margin-bottom: 6px !important;
-          }
-
-          .pkg-del-item {
-            font-size: 0.7rem !important;
-            line-height: 1.25 !important;
-            gap: 5px !important;
-          }
-
-          .pkg-del-item:nth-child(n+3) {
             display: none !important;
           }
 
-          .pkg-specs-summary-card {
-            padding: 6px 8px !important;
-            min-height: auto !important;
-            gap: 4px !important;
-            margin-top: 4px !important;
-          }
-
-          .pkg-spec-row {
-            font-size: 0.68rem !important;
-            line-height: 1.2 !important;
-            gap: 5px !important;
-          }
-
           .pkg-card-footer {
-            padding: 6px 10px 12px !important;
+            padding: 0 10px 12px !important;
             margin-top: auto !important;
+            background: transparent !important;
           }
 
           .pkg-card-footer .btn {
-            min-height: 40px !important;
-            padding: 8px 6px !important;
-            font-size: 0.82rem !important;
+            min-height: 42px !important;
+            padding: 8px 10px !important;
+            font-size: 0.86rem !important;
             border-radius: 6px !important;
             width: 100% !important;
             justify-content: center !important;
