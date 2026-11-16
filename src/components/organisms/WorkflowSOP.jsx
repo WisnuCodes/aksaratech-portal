@@ -1,44 +1,47 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Layers, FileCheck, FileCode, Clock, ShieldCheck, CheckCircle2, ArrowRight, ChevronRight, Sparkles } from 'lucide-react';
-import SectionBadge from '../atoms/SectionBadge';
+import { Layers, FileCheck, FileCode, ShieldCheck, ChevronRight, ChevronLeft } from 'lucide-react';
 
 export default function WorkflowSOP() {
   const [activeStepIdx, setActiveStepIdx] = useState(0);
 
   const detailedSteps = [
     {
-      num: "1",
+      step: 1,
+      shortTitle: "Pilih Paket",
       title: "Jelajahi Paket & Plafon Tarif",
       badge: "Transparansi Biaya",
-      desc: "Calon Klien memilih 1 dari 5 paket utama (Rp 120rb – Rp 650rb) dengan estimasi pengerjaan disiplin 3–10 hari kerja tanpa risiko pembengkakan biaya tersembunyi.",
+      desc: "Calon Klien memilih 1 dari 6 klasifikasi paket resmi (Rp 100.000 – Rp 500.000) dengan estimasi pengerjaan disiplin 1–10 hari kerja tanpa risiko lonjakan biaya di tengah jalan.",
       icon: Layers
     },
     {
-      num: "2",
+      step: 2,
+      shortTitle: "Isi Brief",
       title: "Pengisian Brief Kebutuhan Terstruktur",
       badge: "Formulir Cerdas Web",
-      desc: "Mengisi spesifikasi teknis (database MySQL, modul CRUD, dokumen SRS/SDD formal, diagram UML, preferensi visual) melalui sistem formulir terstruktur website.",
+      desc: "Mengisi spesifikasi teknis (database MySQL, modul CRUD, dokumen SRS/SDD formal, diagram UML, preferensi visual) melalui sistem formulir website.",
       icon: FileCheck
     },
     {
-      num: "3",
+      step: 3,
+      shortTitle: "Penawaran",
       title: "Analisis Teknis & Surat Penawaran Resmi",
       badge: "Nomor Dokumen Valid",
-      desc: "Aksara Tech menerbitkan Surat Penawaran Harga resmi [OFFER-AT-2026-____] via WhatsApp 085600386692 memuat ruang lingkup, jadwal, dan syarat DP min 50%.",
+      desc: "Aksara Tech menerbitkan Surat Penawaran Harga resmi [OFFER-AT-2026-____] via WhatsApp 085600386692 memuat ruang lingkup kerja, jadwal rilis, dan syarat DP min 50%.",
       icon: FileCode
     },
     {
-      num: "4",
+      step: 4,
+      shortTitle: "Koding & Rilis",
       title: "Pengerjaan, Kuota 3x Revisi & Serah Terima",
       badge: "Disiplin & Terpercaya",
-      desc: "Penulisan kode dimulai pasca DP. Tersedia fasilitas MAKSIMAL 3 KALI REVISI mutlak pasca Preview 1. Pelunasan 50% sebelum serah terima master (.zip, .sql, PDF) & Data Cleansing.",
+      desc: "Penulisan kode dimulai pasca verifikasi DP. Tersedia fasilitas MAKSIMAL 3 KALI REVISI mutlak pasca Preview 1. Pelunasan 50% sebelum serah terima master (.zip, .sql, PDF) & garansi bug 1 minggu.",
       icon: ShieldCheck
     }
   ];
 
   return (
-    <section id="alur" className="section-padding workflow-sop-section" style={{ background: '#F1F5F9', borderTop: '1px solid var(--border-subtle)', borderBottom: '1px solid var(--border-subtle)' }}>
+    <section id="alur" className="section-padding workflow-sop-section" style={{ background: '#F8FAFC', borderTop: '1px solid var(--border-subtle)', borderBottom: '1px solid var(--border-subtle)' }}>
       <div className="container">
         
         {/* Section Header */}
@@ -60,8 +63,10 @@ export default function WorkflowSOP() {
                 type="button"
                 onClick={() => setActiveStepIdx(idx)}
                 className={`sop-mobile-pill ${activeStepIdx === idx ? 'active' : ''}`}
+                aria-label={`Buka Tahap ${idx + 1}: ${step.shortTitle}`}
               >
-                <span className="sop-pill-title">{step.title.split(' ')[0]} {step.title.split(' ')[1]}</span>
+                <span className="sop-pill-num">{idx + 1}.</span>
+                <span className="sop-pill-title">{step.shortTitle}</span>
               </button>
             ))}
           </div>
@@ -80,8 +85,9 @@ export default function WorkflowSOP() {
                 <div>
                   <div className="sop-card-top">
                     <div className="sop-icon-wrap">
-                      <Icon size={22} />
+                      <Icon size={20} />
                     </div>
+                    <span className="sop-step-tag">Tahap {idx + 1}</span>
                   </div>
 
                   <div className="sop-badge-wrap">
@@ -101,7 +107,30 @@ export default function WorkflowSOP() {
                   <span className="sop-step-indicator">
                     Tahap {idx + 1} dari 4
                   </span>
-                  
+
+                  {/* Mobile Stepper Controls */}
+                  <div className="sop-mobile-card-nav">
+                    <button
+                      type="button"
+                      onClick={() => setActiveStepIdx(Math.max(0, activeStepIdx - 1))}
+                      disabled={activeStepIdx === 0}
+                      className="sop-nav-btn"
+                      aria-label="Tahap Sebelumnya"
+                    >
+                      <ChevronLeft size={15} />
+                      <span>Sebelumnya</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setActiveStepIdx(Math.min(detailedSteps.length - 1, activeStepIdx + 1))}
+                      disabled={activeStepIdx === detailedSteps.length - 1}
+                      className="sop-nav-btn sop-nav-btn-primary"
+                      aria-label="Tahap Selanjutnya"
+                    >
+                      <span>Selanjutnya</span>
+                      <ChevronRight size={15} />
+                    </button>
+                  </div>
                 </div>
               </div>
             );
@@ -115,11 +144,11 @@ export default function WorkflowSOP() {
               Pemberlakuan Kuota Maksimal 3x Revisi Resmi
             </h3>
             <p className="callout-desc">
-              Penghitungan kuota dimulai setelah Klien menerima Preview 1. Seluruh koreksi wajib dikumpulkan secara tertulis dalam satu daftar poin (*bullet points*) lengkap per siklus demi menjaga target rilis 3–10 hari kerja.
+              Penghitungan kuota dimulai setelah Klien menerima Preview 1. Seluruh koreksi wajib dikumpulkan secara tertulis dalam satu daftar poin (<em>bullet points</em>) lengkap per siklus demi menjaga target rilis 1–10 hari kerja.
             </p>
           </div>
           <div className="callout-right">
-            <Link to="/alur-sop" className="btn btn-primary" style={{ padding: '14px 24px', whiteSpace: 'nowrap' }}>
+            <Link to="/alur-sop" className="btn btn-primary sop-callout-btn">
               <span>Lihat Detail Alur SOP</span>
             </Link>
           </div>
@@ -136,82 +165,92 @@ export default function WorkflowSOP() {
         .sop-steps-grid {
           display: grid;
           grid-template-columns: repeat(4, 1fr);
-          gap: 24px;
-          margin-bottom: 48px;
+          gap: 20px;
+          margin-bottom: 36px;
         }
 
         .sop-step-card {
-          padding: 28px 24px;
+          padding: 24px 20px;
           position: relative;
           display: flex;
           flex-direction: column;
           justify-content: space-between;
           background: #FFFFFF;
-          border: 1px solid var(--border-subtle);
+          border: 1.5px solid #CBD5E1;
+          border-radius: var(--radius-md);
+          transition: border-color 0.18s ease, transform 0.18s ease;
+        }
+
+        .sop-step-card:hover {
+          border-color: #0F172A;
+          transform: translateY(-2px);
         }
 
         .sop-card-top {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          margin-bottom: 20px;
+          margin-bottom: 16px;
         }
 
-        .sop-step-number {
-          font-family: var(--font-heading);
-          font-size: 2.4rem;
-          font-weight: 900;
-          color: #CBD5E1;
-          letter-spacing: -0.04em;
+        .sop-step-tag {
+          font-size: 0.76rem;
+          font-weight: 800;
+          color: var(--prussian-blue);
+          background: #EFF6FF;
+          padding: 3px 9px;
+          border-radius: 6px;
+          letter-spacing: 0.02em;
         }
 
         .sop-icon-wrap {
-          width: 44px;
-          height: 44px;
+          width: 40px;
+          height: 40px;
           border-radius: 8px;
           background: #F8FAFC;
-          border: 1px solid var(--border-subtle);
+          border: 1.5px solid #CBD5E1;
           display: flex;
           align-items: center;
           justify-content: center;
-        
-          color: #0F172A;}
+          color: #0F172A;
+        }
 
         .sop-badge-wrap {
-          margin-bottom: 12px;
+          margin-bottom: 10px;
         }
 
         .sop-card-badge {
           font-size: 0.72rem;
           font-weight: 700;
-          padding: 2px 7px;
+          padding: 2px 8px;
           border-radius: 4px;
           background: #F1F5F9;
-          border: 1px solid var(--border-subtle);
+          border: 1.5px solid #CBD5E1;
           color: #0F172A;
+          display: inline-block;
         }
 
         .sop-card-title {
-          font-size: 1.15rem;
+          font-size: 1.05rem;
           font-weight: 800;
           color: #0F172A;
-          margin-bottom: 10px;
+          margin-bottom: 8px;
           line-height: 1.35;
         }
 
         .sop-card-desc {
-          font-size: 0.86rem;
+          font-size: 0.85rem;
           color: #475569;
           line-height: 1.6;
-          margin-bottom: 24px;
+          margin-bottom: 20px;
         }
 
         .sop-card-footer {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          padding-top: 16px;
-          
+          margin-top: auto;
+          padding-top: 14px;
         }
 
         .sop-step-indicator {
@@ -221,93 +260,133 @@ export default function WorkflowSOP() {
           font-family: var(--font-body);
         }
 
-        .sop-next-arrow {
-          color: #94A3B8;
+        .sop-mobile-card-nav {
+          display: none;
         }
 
+        /* SOP Callout Card */
         .sop-callout-card {
           background: #FFFFFF;
-          border: 1px solid var(--border-subtle);
+          border: 1.5px solid #CBD5E1;
           border-radius: var(--radius-md);
-          padding: 32px 36px;
+          padding: 28px 32px;
           display: flex;
           align-items: center;
           justify-content: space-between;
-          gap: 32px;
+          gap: 28px;
         }
 
         .callout-left {
+          flex: 1;
+          min-width: 0;
           max-width: 720px;
         }
 
-        
-
         .callout-title {
-          font-size: 1.35rem;
-          font-weight: 900;
+          font-size: 1.25rem;
+          font-weight: 800;
           color: #0F172A;
-          margin-bottom: 8px;
+          margin-bottom: 6px;
+          line-height: 1.3;
         }
 
         .callout-desc {
-          font-size: 0.92rem;
+          font-size: 0.9rem;
           color: #334155;
-          line-height: 1.65;
+          line-height: 1.6;
           margin: 0;
         }
 
-        /* Responsive */
+        .callout-right {
+          flex-shrink: 0;
+        }
+
+        .sop-callout-btn {
+          padding: 13px 26px;
+          font-size: 0.95rem;
+          font-weight: 800;
+          border-radius: 8px;
+          white-space: nowrap;
+          transition: transform 0.18s ease, background-color 0.18s ease;
+        }
+
+        .sop-callout-btn:hover {
+          transform: translateY(-1px);
+        }
+
+        /* Tablet Responsive (< 1040px) */
         @media (max-width: 1040px) {
           .sop-steps-grid {
             grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
           }
         }
 
+        /* Mobile Responsive (< 768px) */
         @media (max-width: 768px) {
+          .workflow-sop-section {
+            padding-top: 40px !important;
+            padding-bottom: 48px !important;
+          }
+
           .sop-mobile-tab-bar {
             display: block;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
-            padding-bottom: 6px;
+            padding-bottom: 4px;
+            scrollbar-width: none;
+          }
+
+          .sop-mobile-tab-bar::-webkit-scrollbar {
+            display: none;
           }
 
           .sop-mobile-tabs {
             display: flex;
             gap: 8px;
-            min-width: max-content;
+            width: 100%;
           }
 
           .sop-mobile-pill {
+            flex: 1;
+            min-width: 0;
             display: flex;
             align-items: center;
-            gap: 6px;
-            padding: 8px 14px;
+            justify-content: center;
+            gap: 5px;
+            padding: 8px 6px;
             background: #FFFFFF;
-            border: 1px solid var(--border-subtle);
-            border-radius: 6px;
-            font-size: 0.8rem;
-            font-weight: 800;
-            color: #0F172A;
+            border: 1.5px solid #CBD5E1;
+            border-radius: 8px;
+            font-size: 0.74rem;
+            font-weight: 700;
+            color: #475569;
             cursor: pointer;
             white-space: nowrap;
+            transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
           }
 
           .sop-mobile-pill .sop-pill-num {
             color: var(--prussian-blue);
-            font-family: var(--font-body);
+            font-weight: 800;
+            font-size: 0.72rem;
           }
 
           .sop-mobile-pill.active {
-            background: #F1F5F9;
-            border-color: var(--border-main);
-            color: #0F172A;
+            background: #0F172A;
+            border-color: #0F172A;
+            color: #FFFFFF;
+          }
+
+          .sop-mobile-pill.active .sop-pill-num {
+            color: #93C5FD;
           }
 
           .sop-steps-grid {
             grid-template-columns: 1fr;
-            gap: 16px;
-            margin-bottom: 32px;
+            gap: 14px;
+            margin-bottom: 24px;
           }
 
           .sop-step-card {
@@ -316,15 +395,110 @@ export default function WorkflowSOP() {
 
           .sop-step-card.mobile-active {
             display: flex;
+            padding: 18px 16px;
+            border-radius: 10px;
           }
 
+          .sop-card-top {
+            margin-bottom: 12px;
+          }
+
+          .sop-card-title {
+            font-size: 1rem;
+            margin-bottom: 6px;
+          }
+
+          .sop-card-desc {
+            font-size: 0.82rem;
+            line-height: 1.55;
+            margin-bottom: 16px;
+          }
+
+          .sop-card-footer {
+            padding-top: 12px;
+          }
+
+          .sop-mobile-card-nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+          }
+
+          .sop-nav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 7px 11px;
+            border-radius: 6px;
+            font-size: 0.76rem;
+            font-weight: 700;
+            cursor: pointer;
+            background: #FFFFFF;
+            border: 1.5px solid #CBD5E1;
+            color: #0F172A;
+            transition: background-color 0.15s ease, border-color 0.15s ease;
+          }
+
+          .sop-nav-btn:hover:not(:disabled) {
+            background: #F1F5F9;
+            border-color: #0F172A;
+          }
+
+          .sop-nav-btn-primary {
+            background: var(--prussian-blue);
+            border-color: var(--prussian-blue);
+            color: #FFFFFF;
+          }
+
+          .sop-nav-btn:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+          }
+
+          /* Callout Card Mobile Stacking */
           .sop-callout-card {
-            padding: 22px;
+            flex-direction: column !important;
+            align-items: stretch !important;
+            gap: 16px !important;
+            padding: 20px 16px !important;
+            text-align: left !important;
+            border-radius: 10px !important;
           }
 
-          .callout-right .btn {
-            width: 100%;
-            justify-content: center;
+          .callout-left {
+            width: 100% !important;
+            max-width: 100% !important;
+          }
+
+          .callout-title {
+            font-size: 1.1rem !important;
+            font-weight: 800 !important;
+            color: #0F172A !important;
+            margin-bottom: 8px !important;
+            line-height: 1.3 !important;
+          }
+
+          .callout-desc {
+            font-size: 0.85rem !important;
+            line-height: 1.55 !important;
+            color: #475569 !important;
+          }
+
+          .callout-right {
+            width: 100% !important;
+          }
+
+          .sop-callout-btn {
+            width: 100% !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            text-align: center !important;
+            padding: 13px 20px !important;
+            font-size: 0.94rem !important;
+            font-weight: 800 !important;
+            border-radius: 8px !important;
+            min-height: 48px !important; /* Accessible 48px tap target */
           }
         }
       `}</style>
