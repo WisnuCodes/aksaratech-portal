@@ -3,13 +3,12 @@ import { Link } from 'react-router-dom';
 import HeroSection from '../components/organisms/HeroSection';
 import WhyChooseUsSection from '../components/organisms/WhyChooseUsSection';
 import PackageShowcase from '../components/organisms/PackageShowcase';
-import InstantPriceEstimator from '../components/organisms/InstantPriceEstimator';
 import TestimonialsSection from '../components/organisms/TestimonialsSection';
 import ServerExclusionBanner from '../components/organisms/ServerExclusionBanner';
 import WorkflowSOP from '../components/organisms/WorkflowSOP';
 import TechStackSection from '../components/organisms/TechStackSection';
 import FAQSection from '../components/organisms/FAQSection';
-import { ArrowRight, FileText, Shield, MessageCircle } from 'lucide-react';
+import { FileText, MessageCircle } from 'lucide-react';
 import { BUSINESS_INFO } from '../data/catalogData';
 
 export default function HomePage({ onSelectPackage }) {
@@ -23,9 +22,6 @@ export default function HomePage({ onSelectPackage }) {
 
       {/* 3. Package Showcase Snapshot */}
       <PackageShowcase onSelectPackage={onSelectPackage} />
-
-      {/* 3.5 Interactive Live Instant Price Estimator */}
-      <InstantPriceEstimator onSelectPackage={onSelectPackage} />
 
       {/* 4. Client Testimonials & Track Record */}
       <TestimonialsSection />
@@ -51,11 +47,8 @@ export default function HomePage({ onSelectPackage }) {
             borderRadius: 'var(--radius-md)',
             padding: '48px 36px',
             textAlign: 'center',
-            
             position: 'relative'
           }}>
-            
-
             <h2 style={{ fontSize: 'clamp(1.5rem, 3.4vw, 2.3rem)', fontWeight: '900', marginBottom: '16px', color: '#0F172A' }}>
               Konsultasi Sistem Bersama <span style={{ color: 'var(--prussian-blue)' }}>Aksara Tech</span>
             </h2>
