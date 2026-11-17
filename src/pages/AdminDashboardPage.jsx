@@ -66,7 +66,8 @@ import {
   saveSheetConfig,
   syncOrderToSheet,
   syncDeleteOrderFromSheet,
-  syncAllOrdersToSheet 
+  syncAllOrdersToSheet,
+  getOrderDevOps
 } from '../utils/orderStorage';
 import { PACKAGES } from '../data/catalogData';
 import { formatRupiah, generateInquiryId } from '../utils/documentEngine';
@@ -1995,7 +1996,7 @@ function doPost(e) {
                         <Button
                           variant="outlined"
                           size="small"
-                          onClick={() => setEditingOrder(ord)}
+                          onClick={() => setEditingOrder({ ...ord, devops: ord.devops || getOrderDevOps(ord) })}
                           startIcon={<Edit3 size={14} />}
                           sx={{
                             bgcolor: '#FFFFFF',
@@ -2660,6 +2661,210 @@ function doPost(e) {
                     Catatan ini dibaca secara transparan oleh klien di pelacak status proyek.
                   </Typography>
                 </Box>
+
+                <Divider sx={{ borderColor: '#F1F5F9', borderBottomWidth: '1.5px' }} />
+
+                {/* SECTION 5: DEVOPS, GIT & STAGING SANDBOX */}
+                <Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
+                    <Code2 size={15} color="#0F172A" />
+                    <Typography variant="caption" sx={{ fontSize: '0.8rem', fontWeight: 800, color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                      5. Telemetri DevOps, Git &amp; Pratinjau Staging Sandbox
+                    </Typography>
+                  </Box>
+
+                  <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2, mb: 2 }}>
+                    <Box>
+                      <Typography variant="caption" sx={{ fontSize: '0.8rem', fontWeight: 700, color: '#0F172A', display: 'block', mb: 0.75 }}>
+                        URL Pratinjau Demo (Staging Live)
+                      </Typography>
+                      <TextField
+                        fullWidth
+                        size="small"
+                        placeholder="https://preview-0042.aksaratech.id"
+                        value={editingOrder.devops?.staging?.url || ''}
+                        onChange={(e) => {
+                          const currentDevops = editingOrder.devops || getOrderDevOps(editingOrder);
+                          setEditingOrder({
+                            ...editingOrder,
+                            devops: {
+                              ...currentDevops,
+                              staging: {
+                                ...currentDevops.staging,
+                                url: e.target.value
+                              }
+                            }
+                          });
+                        }}
+                        inputProps={{
+                          style: { fontSize: '0.88rem', color: '#0F172A', padding: '10px 12px' }
+                        }}
+                        sx={{
+                          bgcolor: '#FFFFFF',
+                          '& .MuiOutlinedInput-root': {
+                            border: '1.5px solid #CBD5E1',
+                            borderRadius: '6px',
+                            '& fieldset': { border: 'none' },
+                            '&:hover': { borderColor: '#0F172A' },
+                            '&.Mui-focused': { borderColor: '#1D63FF' }
+                          }
+                        }}
+                      />
+                    </Box>
+
+                    <Box>
+                      <Typography variant="caption" sx={{ fontSize: '0.8rem', fontWeight: 700, color: '#0F172A', display: 'block', mb: 0.75 }}>
+                        Status Akses Staging
+                      </Typography>
+                      <FormControl fullWidth size="small">
+                        <Select
+                          value={editingOrder.devops?.staging?.status || (Number(editingOrder.currentStageNumber) >= 4 ? 'ACTIVE' : 'PREPARING')}
+                          onChange={(e) => {
+                            const currentDevops = editingOrder.devops || getOrderDevOps(editingOrder);
+                            setEditingOrder({
+                              ...editingOrder,
+                              devops: {
+                                ...currentDevops,
+                                staging: {
+                                ...currentDevops.staging,
+                                status: e.target.value
+                              }
+                            }
+                          });
+                        }}
+                        sx={{
+                          bgcolor: '#FFFFFF',
+                          fontSize: '0.88rem',
+                          fontWeight: 700,
+                          color: '#0F172A',
+                          border: '1.5px solid #CBD5E1',
+                          borderRadius: '6px',
+                          '& fieldset': { border: 'none' }
+                        }}
+                      >
+                        <MenuItem value="PREPARING" sx={{ fontSize: '0.86rem' }}>Sedang Kompilasi (Menunggu Tahap 4)</MenuItem>
+                        <MenuItem value="ACTIVE" sx={{ fontSize: '0.86rem' }}>● LIVE SANDBOX AKTIF (Siap Diuji)</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Box>
+                </Box>
+
+                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2, mb: 2 }}>
+                  <Box>
+                    <Typography variant="caption" sx={{ fontSize: '0.8rem', fontWeight: 700, color: '#0F172A', display: 'block', mb: 0.75 }}>
+                      Akun Pengujian Demo (Username &amp; Password)
+                    </Typography>
+                    <TextField
+                      fullWidth
+                      size="small"
+                      placeholder="admin@demo.test / AksaraDev2026!"
+                      value={editingOrder.devops?.staging?.demoAccount || ''}
+                      onChange={(e) => {
+                        const currentDevops = editingOrder.devops || getOrderDevOps(editingOrder);
+                        setEditingOrder({
+                          ...editingOrder,
+                          devops: {
+                            ...currentDevops,
+                            staging: {
+                              ...currentDevops.staging,
+                              demoAccount: e.target.value
+                            }
+                          }
+                        });
+                      }}
+                      inputProps={{
+                        style: { fontSize: '0.88rem', color: '#0F172A', padding: '10px 12px' }
+                      }}
+                      sx={{
+                        bgcolor: '#FFFFFF',
+                        '& .MuiOutlinedInput-root': {
+                          border: '1.5px solid #CBD5E1',
+                          borderRadius: '6px',
+                          '& fieldset': { border: 'none' },
+                          '&:hover': { borderColor: '#0F172A' },
+                          '&.Mui-focused': { borderColor: '#1D63FF' }
+                        }
+                      }}
+                    />
+                  </Box>
+
+                  <Box>
+                    <Typography variant="caption" sx={{ fontSize: '0.8rem', fontWeight: 700, color: '#0F172A', display: 'block', mb: 0.75 }}>
+                      Branch Git Aktif
+                    </Typography>
+                    <TextField
+                      fullWidth
+                      size="small"
+                      placeholder="main atau release/v1.0"
+                      value={editingOrder.devops?.branch || 'main'}
+                      onChange={(e) => {
+                        const currentDevops = editingOrder.devops || getOrderDevOps(editingOrder);
+                        setEditingOrder({
+                          ...editingOrder,
+                          devops: {
+                            ...currentDevops,
+                            branch: e.target.value
+                          }
+                        });
+                      }}
+                      inputProps={{
+                        style: { fontSize: '0.88rem', color: '#0F172A', padding: '10px 12px' }
+                      }}
+                      sx={{
+                        bgcolor: '#FFFFFF',
+                        '& .MuiOutlinedInput-root': {
+                          border: '1.5px solid #CBD5E1',
+                          borderRadius: '6px',
+                          '& fieldset': { border: 'none' },
+                          '&:hover': { borderColor: '#0F172A' },
+                          '&.Mui-focused': { borderColor: '#1D63FF' }
+                        }
+                      }}
+                    />
+                  </Box>
+                </Box>
+
+                <Box>
+                  <Typography variant="caption" sx={{ fontSize: '0.8rem', fontWeight: 700, color: '#0F172A', display: 'block', mb: 0.75 }}>
+                    Pesan Commit Git Terakhir
+                  </Typography>
+                  <TextField
+                    fullWidth
+                    size="small"
+                    placeholder="feat(auth): implement multi-role session guard"
+                    value={editingOrder.devops?.latestCommit?.message || ''}
+                    onChange={(e) => {
+                      const currentDevops = editingOrder.devops || getOrderDevOps(editingOrder);
+                      setEditingOrder({
+                        ...editingOrder,
+                        devops: {
+                          ...currentDevops,
+                          latestCommit: {
+                            ...currentDevops.latestCommit,
+                            message: e.target.value
+                          }
+                        }
+                      });
+                    }}
+                    inputProps={{
+                      style: { fontSize: '0.88rem', color: '#0F172A', padding: '10px 12px' }
+                    }}
+                    sx={{
+                      bgcolor: '#FFFFFF',
+                      '& .MuiOutlinedInput-root': {
+                        border: '1.5px solid #CBD5E1',
+                        borderRadius: '6px',
+                        '& fieldset': { border: 'none' },
+                        '&:hover': { borderColor: '#0F172A' },
+                        '&.Mui-focused': { borderColor: '#1D63FF' }
+                      }
+                    }}
+                  />
+                  <Typography variant="caption" sx={{ fontSize: '0.74rem', color: '#64748B', mt: 0.75, display: 'block' }}>
+                    Data telemetri ini otomatis ditampilkan pada Konsol DevOps di halaman /lacak proyek klien.
+                  </Typography>
+                </Box>
+              </Box>
               </Stack>
             </DialogContent>
 

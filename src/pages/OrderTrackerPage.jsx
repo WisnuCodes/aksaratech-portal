@@ -24,6 +24,7 @@ import {
   ChevronUp
 } from 'lucide-react';
 import PageHeader from '../components/molecules/PageHeader';
+import DevOpsTelemetryConsole from '../components/organisms/DevOpsTelemetryConsole';
 import { formatRupiah } from '../utils/documentEngine';
 import { findOrderByQuery, getAllOrders } from '../utils/orderStorage';
 
@@ -747,6 +748,9 @@ export default function OrderTrackerPage() {
                 </div>
               )}
             </div>
+
+            {/* Panel Teknis Rekayasa Software & DevOps Telemetry Console */}
+            <DevOpsTelemetryConsole order={activeOrder} />
 
             {/* Developer Notes & Deliverables Vault (2 Columns) */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '18px' }}>

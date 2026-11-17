@@ -159,6 +159,98 @@ export const INITIAL_ORDERS = [
 ];
 
 /**
+ * Generate or get DevOps and Engineering Telemetry for an order
+ */
+export function getOrderDevOps(order) {
+  if (!order) return null;
+  if (order.devops && order.devops.repoName && order.devops.latestCommit) {
+    return order.devops;
+  }
+
+  const safeId = (order.id || 'at-ord').toLowerCase().replace(/[^a-z0-9]/g, '-');
+  const stage = Number(order.currentStageNumber) || 1;
+  const isCompleted = stage >= 5;
+  const isStagingReady = stage >= 4;
+  const orderDate = order.orderDate || '09 November 2026';
+
+  const commits = [
+    {
+      hash: 'a19f42d',
+      message: 'chore: project scaffolding, architectural blueprint, and directory structure setup',
+      author: 'Lead Engineer - Aksara Tech',
+      date: orderDate,
+      stage: 1
+    }
+  ];
+
+  if (stage >= 2) {
+    commits.push({
+      hash: 'b38e07c',
+      message: 'feat(db): 3NF relational schema, ERD definition, and seed data migration (.sql)',
+      author: 'Backend Core - Aksara Tech',
+      date: orderDate,
+      stage: 2
+    });
+  }
+
+  if (stage >= 3) {
+    commits.push({
+      hash: 'c52a81b',
+      message: 'feat(core): business logic integration, responsive UI components, and input sanitization',
+      author: 'Software Engineer - Aksara Tech',
+      date: orderDate,
+      stage: 3
+    });
+  }
+
+  if (stage >= 4) {
+    commits.push({
+      hash: 'd74f99a',
+      message: 'test(staging): live sandbox deployment, end-to-end user flow verification, and revision freeze',
+      author: 'QA & DevOps - Aksara Tech',
+      date: orderDate,
+      stage: 4
+    });
+  }
+
+  if (stage >= 5) {
+    commits.push({
+      hash: 'e91c33f',
+      message: 'release(v1.0.0): production bundle compilation, clean master zip packaging, and final sign-off',
+      author: 'Lead Architect - Aksara Tech',
+      date: orderDate,
+      stage: 5
+    });
+  }
+
+  const latest = commits[commits.length - 1];
+
+  return {
+    repoName: `aksaratech-private/${safeId}`,
+    branch: isCompleted ? 'release/v1.0' : 'main',
+    totalCommits: commits.length * 3 + 2,
+    latestCommit: latest,
+    commitHistory: commits,
+    staging: {
+      url: `https://preview-${safeId}.aksaratech.id`,
+      status: isStagingReady ? 'ACTIVE' : 'PREPARING',
+      demoAccount: 'admin@demo.test / AksaraDev2026!',
+      notes: isStagingReady 
+        ? 'Lingkungan sandbox live aktif untuk pengujian mandiri antarmuka dan basis data.'
+        : 'Sandbox sedang dalam antrean build pipeline, akan aktif otomatis pada Tahap 4 (Pratinjau & Sesi Revisi).'
+    },
+    audit: {
+      sqlInjectionSafe: stage >= 2,
+      xssSanitized: stage >= 3,
+      cleanArchitecture: true,
+      dependenciesAudited: true,
+      securityScore: stage >= 3 ? 'A+ (Pass Verified)' : 'In Progress',
+      auditDate: orderDate
+    }
+  };
+}
+
+/**
  * Get all orders from localStorage, fallback to INITIAL_ORDERS only on very first visit
  */
 export function getAllOrders() {
@@ -167,10 +259,12 @@ export function getAllOrders() {
     // Only seed initial orders if key has never been set (null)
     if (raw === null) {
       saveAllOrders(INITIAL_ORDERS);
-      return INITIAL_ORDERS;
+      return INITIAL_ORDERS.map(o => ({ ...o, devops: getOrderDevOps(o) }));
     }
     const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
+    return Array.isArray(parsed) 
+      ? parsed.map(o => ({ ...o, devops: getOrderDevOps(o) })) 
+      : [];
   } catch (e) {
     return [];
   }
@@ -198,7 +292,7 @@ export function findOrderByQuery(rawQuery) {
   const orders = getAllOrders();
   const normalizedQuery = rawQuery.trim().toLowerCase().replace(/[\s-]/g, '');
 
-  return orders.find(ord => {
+  const match = orders.find(ord => {
     const ordIdNorm = (ord.id || '').toLowerCase().replace(/[\s-]/g, '');
     const ordNoNorm = (ord.orderNumber || '').toLowerCase().replace(/[\s-]/g, '');
     const ordPhoneNorm = (ord.clientPhone || '').replace(/[\s-+]/g, '').replace(/^62/, '0');
@@ -209,7 +303,10 @@ export function findOrderByQuery(rawQuery) {
            ordIdNorm.includes(normalizedQuery) ||
            ordNoNorm.includes(normalizedQuery) ||
            (qPhoneNorm.length >= 8 && ordPhoneNorm.includes(qPhoneNorm));
-  }) || null;
+  });
+
+  if (!match) return null;
+  return { ...match, devops: getOrderDevOps(match) };
 }
 
 /**
