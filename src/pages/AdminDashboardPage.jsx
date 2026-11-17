@@ -74,6 +74,7 @@ import {
 import { PACKAGES } from '../data/catalogData';
 import { formatRupiah, generateInquiryId } from '../utils/documentEngine';
 import { getGitHubToken, saveGitHubToken } from '../utils/githubService';
+import ExecutiveConfirmModal from '../components/molecules/ExecutiveConfirmModal';
 
 // Default Admin Security PIN
 const DEFAULT_ADMIN_PIN = '2026';
@@ -187,6 +188,70 @@ export default function AdminDashboardPage() {
   const [isTestingGitHub, setIsTestingGitHub] = useState(false);
   const [showGithubToken, setShowGithubToken] = useState(false);
 
+  // Executive Confirm / Alert Modal State (Replacing crude browser popups)
+  const [confirmModal, setConfirmModal] = useState({
+    isOpen: false,
+    title: '',
+    subtitle: '',
+    message: '',
+    bulletPoints: [],
+    variant: 'danger', // 'danger' | 'warning' | 'info'
+    confirmLabel: 'Konfirmasi',
+    cancelLabel: 'Batal',
+    onConfirm: null,
+    isLoading: false
+  });
+
+  const showConfirm = ({
+    title,
+    subtitle = '',
+    message,
+    bulletPoints = [],
+    variant = 'danger',
+    confirmLabel = 'Ya, Lanjutkan',
+    cancelLabel = 'Batal',
+    onConfirm
+  }) => {
+    setConfirmModal({
+      isOpen: true,
+      title,
+      subtitle,
+      message,
+      bulletPoints,
+      variant,
+      confirmLabel,
+      cancelLabel,
+      onConfirm,
+      isLoading: false
+    });
+  };
+
+  const showAlert = ({
+    title,
+    subtitle = '',
+    message,
+    bulletPoints = [],
+    variant = 'info',
+    confirmLabel = 'Saya Mengerti'
+  }) => {
+    setConfirmModal({
+      isOpen: true,
+      title,
+      subtitle,
+      message,
+      bulletPoints,
+      variant,
+      confirmLabel,
+      cancelLabel: null,
+      onConfirm: () => setConfirmModal(prev => ({ ...prev, isOpen: false })),
+      isLoading: false
+    });
+  };
+
+  const closeConfirmModal = () => {
+    setConfirmModal(prev => ({ ...prev, isOpen: false, isLoading: false }));
+  };
+
   const handleSaveGitHubToken = (e) => {
     if (e) e.preventDefault();
     saveGitHubToken(githubTokenInput.trim());
@@ -292,7 +357,17 @@ export default function AdminDashboardPage() {
   // Revision Quota & Notes Handlers
   const handleOpenRevisionModal = (order) => {
     if ((order.revisionQuotaUsed || 0) >= (order.revisionQuotaTotal || 3)) {
-      alert(`Kuota revisi standar maksimal (${order.revisionQuotaTotal || 3}x) untuk pesanan ${order.id} telah habis. Silakan tawarkan paket add-on pemeliharaan untuk revisi tambahan.`);
+      showAlert({
+        title: 'Batas Kuota Revisi SOP Tercapai',
+        subtitle: `Pesanan ${order.id} • ${order.projectTitle}`,
+        message: `Kuota revisi standar maksimal (${order.revisionQuotaTotal || 3}x) untuk pesanan ini telah habis terpakai.`,
+        bulletPoints: [
+          'Sesuai ketentuan SOP Aksara Tech, revisi standar pada tahap pratinjau dibatasi maksimal 3 kali mutlak.',
+          'Untuk permintaan modifikasi arsitektur atau fitur tambahan di luar kuota, silakan komunikasikan penawaran paket add-on pemeliharaan.'
+        ],
+        variant: 'info',
+        confirmLabel: 'Saya Mengerti'
+      });
       return;
     }
     setRevisionModalOrder(order);
@@ -342,36 +417,55 @@ export default function AdminDashboardPage() {
     }
   };
 
-  const handleDeleteLastRevision = async (order) => {
+  const handleDeleteLastRevision = (order) => {
     if (!order.revisionHistory || order.revisionHistory.length === 0) return;
     const lastSession = order.revisionHistory[order.revisionHistory.length - 1];
-    if (window.confirm(`Batalkan / hapus catatan Sesi Revisi ke-${lastSession.sessionNumber} ("${lastSession.note}")? Kuota terpakai akan berkurang 1.`)) {
-      const updatedHistory = order.revisionHistory.slice(0, -1);
-      const updatedUsed = Math.max(0, (order.revisionQuotaUsed || 1) - 1);
-      const lastRemaining = updatedHistory[updatedHistory.length - 1];
-      const updatedNotes = lastRemaining 
-        ? `Sesi revisi ke-${lastRemaining.sessionNumber} (${lastRemaining.date}): ${lastRemaining.note}` 
-        : 'Revisi dibatalkan. Menyiapkan repositori kode sumber dan antrean pengerjaan.';
 
-      const updated = {
-        ...order,
-        revisionQuotaUsed: updatedUsed,
-        revisionHistory: updatedHistory,
-        developerNotes: updatedNotes
-      };
+    showConfirm({
+      title: `Batalkan Sesi Revisi ke-${lastSession.sessionNumber}?`,
+      subtitle: `Pesanan ${order.id} • ${order.projectTitle}`,
+      message: `Catatan sesi yang akan dibatalkan: "${lastSession.note}"`,
+      bulletPoints: [
+        'Catatan sesi revisi ini akan dihapus dari riwayat pengerjaan proyek.',
+        'Kuota revisi terpakai klien akan berkurang 1 sesi (dikembalikan ke sisa kuota).',
+        'Status dan riwayat di Google Spreadsheet akan otomatis disinkronkan.'
+      ],
+      variant: 'warning',
+      confirmLabel: 'Batalkan Sesi',
+      cancelLabel: 'Kembali',
+      onConfirm: async () => {
+        setConfirmModal(prev => ({ ...prev, isLoading: true }));
+        try {
+          const updatedHistory = order.revisionHistory.slice(0, -1);
+          const updatedUsed = Math.max(0, (order.revisionQuotaUsed || 1) - 1);
+          const lastRemaining = updatedHistory[updatedHistory.length - 1];
+          const updatedNotes = lastRemaining 
+            ? `Sesi revisi ke-${lastRemaining.sessionNumber} (${lastRemaining.date}): ${lastRemaining.note}` 
+            : 'Revisi dibatalkan. Menyiapkan repositori kode sumber dan antrean pengerjaan.';
 
-      updateOrder(updated);
-      setOrders(getAllOrders());
+          const updated = {
+            ...order,
+            revisionQuotaUsed: updatedUsed,
+            revisionHistory: updatedHistory,
+            developerNotes: updatedNotes
+          };
 
-      const config = getSheetConfig();
-      const hasSheet = config?.webhookUrl && config.webhookUrl.trim().startsWith('http');
-      if (hasSheet) {
-        await syncOrderToSheet(updated, 'update');
-        triggerSuccess(`Catatan Sesi Revisi ke-${lastSession.sessionNumber} berhasil dibatalkan dan disinkronkan ke Google Spreadsheet.`);
-      } else {
-        triggerSuccess(`Catatan Sesi Revisi ke-${lastSession.sessionNumber} berhasil dibatalkan.`);
+          updateOrder(updated);
+          setOrders(getAllOrders());
+
+          const config = getSheetConfig();
+          const hasSheet = config?.webhookUrl && config.webhookUrl.trim().startsWith('http');
+          if (hasSheet) {
+            await syncOrderToSheet(updated, 'update');
+            triggerSuccess(`Catatan Sesi Revisi ke-${lastSession.sessionNumber} berhasil dibatalkan dan disinkronkan ke Google Spreadsheet.`);
+          } else {
+            triggerSuccess(`Catatan Sesi Revisi ke-${lastSession.sessionNumber} berhasil dibatalkan.`);
+          }
+        } finally {
+          closeConfirmModal();
+        }
       }
-    }
+    });
   };
 
   // Update Stage Number Handler
@@ -395,63 +489,116 @@ export default function AdminDashboardPage() {
   };
 
   // Delete Order Handler (Auto-Delete across local storage and Google Spreadsheet)
-  const handleDeleteOrder = async (order) => {
+  const handleDeleteOrder = (order) => {
     const config = getSheetConfig();
     const hasSheet = config?.webhookUrl && config.webhookUrl.trim().startsWith('http');
-    const confirmMsg = hasSheet
-      ? `Hapus catatan pesanan ${order.id} (${order.projectTitle})?\n\n• Data akan dihapus dari sistem lokal.\n• Baris pesanan di Google Spreadsheet yang terhubung akan OTOMATIS DIHAPUS langsung melalui Web App tanpa perlu menghapus manual!`
-      : `Hapus catatan pesanan ${order.id} (${order.projectTitle})?\n\nData akan dihapus secara permanen dari sistem dan pelacak.`;
 
-    if (window.confirm(confirmMsg)) {
-      triggerSuccess(`Sedang menghapus pesanan ${order.id}${hasSheet ? ' & menghapus baris di Google Spreadsheet...' : '...'}`);
-      if (hasSheet) {
-        await syncDeleteOrderFromSheet(order);
+    showConfirm({
+      title: `Hapus Pesanan ${order.id}?`,
+      subtitle: `${order.projectTitle} • ${order.clientName || 'Klien'}`,
+      message: 'Apakah Anda yakin ingin menghapus catatan pesanan ini secara permanen?',
+      bulletPoints: hasSheet ? [
+        'Data pesanan akan dihapus permanen dari sistem lokal dan pelacak publik (/lacak).',
+        'Baris pesanan di Google Spreadsheet yang terhubung akan OTOMATIS DIHAPUS langsung melalui Web App.'
+      ] : [
+        'Data pesanan akan dihapus secara permanen dari sistem lokal dan pelacak publik (/lacak).'
+      ],
+      variant: 'danger',
+      confirmLabel: 'Hapus Pesanan',
+      cancelLabel: 'Batal',
+      onConfirm: async () => {
+        setConfirmModal(prev => ({ ...prev, isLoading: true }));
+        try {
+          triggerSuccess(`Sedang menghapus pesanan ${order.id}${hasSheet ? ' & menghapus baris di Google Spreadsheet...' : '...'}`);
+          if (hasSheet) {
+            await syncDeleteOrderFromSheet(order);
+          }
+          deleteOrder(order);
+          setOrders(getAllOrders());
+          if (hasSheet) {
+            triggerSuccess(`Pesanan ${order.id} berhasil dihapus permanen dari sistem dan baris Google Spreadsheet telah dihapus otomatis!`);
+          } else {
+            triggerSuccess(`Pesanan ${order.id} berhasil dihapus permanen dari sistem lokal.`);
+          }
+        } finally {
+          closeConfirmModal();
+        }
       }
-      deleteOrder(order);
-      setOrders(getAllOrders());
-      if (hasSheet) {
-        triggerSuccess(`Pesanan ${order.id} berhasil dihapus permanen dari sistem dan baris Google Spreadsheet telah dihapus otomatis!`);
-      } else {
-        triggerSuccess(`Pesanan ${order.id} berhasil dihapus permanen dari sistem lokal.`);
-      }
-    }
+    });
   };
 
   // Clear All Orders Handler
-  const handleClearAllOrders = async () => {
+  const handleClearAllOrders = () => {
     const config = getSheetConfig();
     const hasSheet = config?.webhookUrl && config.webhookUrl.trim().startsWith('http');
-    const confirmMsg = hasSheet
-      ? 'PERINGATAN: Apakah Anda yakin ingin MENGHAPUS SEMUA DATA PESANAN secara permanen?\n\n• Semua data di sistem lokal dan pelacak akan dibersihkan total.\n• Seluruh baris di Google Spreadsheet juga akan OTOMATIS DIHAPUS (header tabel tetap rapi).'
-      : 'PERINGATAN: Apakah Anda yakin ingin MENGHAPUS SEMUA DATA PESANAN secara permanen?\n\nSemua data inquiry, pesanan fix, dan draf brief lokal di browser akan dibersihkan total. Tampilan pelacak (/lacak) akan bersih dan kosong.';
 
-    if (window.confirm(confirmMsg)) {
-      triggerSuccess(`Mengosongkan database pesanan${hasSheet ? ' & Google Spreadsheet...' : '...'}`);
-      clearAllOrders();
-      setOrders([]);
-      if (hasSheet) {
-        await syncAllOrdersToSheet();
-        triggerSuccess('Seluruh database pesanan dan Google Spreadsheet berhasil dikosongkan total.');
-      } else {
-        triggerSuccess('Seluruh database pesanan dan draf brief lokal berhasil dikosongkan.');
+    showConfirm({
+      title: 'Kosongkan Semua Data Pesanan?',
+      subtitle: 'Tindakan ini bersifat permanen dan tidak dapat dibatalkan.',
+      message: 'Apakah Anda yakin ingin menghapus seluruh database pesanan dan draf brief dari sistem?',
+      bulletPoints: hasSheet ? [
+        'Semua data pesanan di sistem lokal browser dan pelacak (/lacak) akan dibersihkan total.',
+        'Seluruh baris transaksi di Google Spreadsheet yang terhubung akan OTOMATIS DIHAPUS (header tabel tetap rapi).'
+      ] : [
+        'Semua data inquiry, pesanan fix, dan draf brief lokal di browser akan dibersihkan total.',
+        'Tampilan publik pelacak pesanan (/lacak) akan bersih dan kosong.'
+      ],
+      variant: 'danger',
+      confirmLabel: 'Ya, Kosongkan Semua',
+      cancelLabel: 'Batal',
+      onConfirm: async () => {
+        setConfirmModal(prev => ({ ...prev, isLoading: true }));
+        try {
+          triggerSuccess(`Mengosongkan database pesanan${hasSheet ? ' & Google Spreadsheet...' : '...'}`);
+          clearAllOrders();
+          setOrders([]);
+          if (hasSheet) {
+            await syncAllOrdersToSheet();
+            triggerSuccess('Seluruh database pesanan dan Google Spreadsheet berhasil dikosongkan total.');
+          } else {
+            triggerSuccess('Seluruh database pesanan dan draf brief lokal berhasil dikosongkan.');
+          }
+        } finally {
+          closeConfirmModal();
+        }
       }
-    }
+    });
   };
 
   // Reset Demo Orders Handler
-  const handleResetDemoOrders = async () => {
-    if (window.confirm('Muat ulang 4 data contoh pesanan awal untuk pengujian sistem?\n\nJika Google Spreadsheet terhubung, data contoh akan otomatis disinkronkan ke spreadsheet.')) {
-      const restored = resetToDefaultOrders();
-      setOrders(restored);
-      const config = getSheetConfig();
-      const hasSheet = config?.webhookUrl && config.webhookUrl.trim().startsWith('http');
-      if (hasSheet) {
-        await syncAllOrdersToSheet();
-        triggerSuccess('Data contoh awal berhasil dimuat kembali dan disinkronkan ke Google Spreadsheet.');
-      } else {
-        triggerSuccess('Data contoh awal berhasil dimuat kembali ke sistem.');
+  const handleResetDemoOrders = () => {
+    const config = getSheetConfig();
+    const hasSheet = config?.webhookUrl && config.webhookUrl.trim().startsWith('http');
+
+    showConfirm({
+      title: 'Muat Ulang Data Contoh Awal?',
+      subtitle: 'Memulihkan 4 data pesanan contoh standar untuk pengujian sistem.',
+      message: 'Apakah Anda ingin memuat kembali data pengujian awal Aksara Tech?',
+      bulletPoints: hasSheet ? [
+        'Data pesanan aktif saat ini akan digantikan dengan 4 transaksi contoh baru.',
+        'Data contoh akan otomatis disinkronkan ke Google Spreadsheet yang terhubung.'
+      ] : [
+        'Data pesanan aktif saat ini akan digantikan dengan 4 transaksi contoh baru untuk pengujian sistem.'
+      ],
+      variant: 'warning',
+      confirmLabel: 'Muat Ulang Contoh',
+      cancelLabel: 'Batal',
+      onConfirm: async () => {
+        setConfirmModal(prev => ({ ...prev, isLoading: true }));
+        try {
+          const restored = resetToDefaultOrders();
+          setOrders(restored);
+          if (hasSheet) {
+            await syncAllOrdersToSheet();
+            triggerSuccess('Data contoh awal berhasil dimuat kembali dan disinkronkan ke Google Spreadsheet.');
+          } else {
+            triggerSuccess('Data contoh awal berhasil dimuat kembali ke sistem.');
+          }
+        } finally {
+          closeConfirmModal();
+        }
       }
-    }
+    });
   };
 
   // Save Edit Order Form (Auto-Update Google Spreadsheet)
@@ -557,7 +704,12 @@ export default function AdminDashboardPage() {
   // Test Webhook Connection Handler
   const handleTestWebhook = async () => {
     if (!sheetConfig.webhookUrl || !sheetConfig.webhookUrl.trim().startsWith('http')) {
-      alert('Silakan masukkan URL Webhook Google Apps Script terlebih dahulu lalu klik Simpan.');
+      showAlert({
+        title: 'URL Webhook Belum Diisi',
+        message: 'Silakan masukkan URL Webhook Google Apps Script terlebih dahulu lalu klik Simpan sebelum menguji koneksi.',
+        variant: 'warning',
+        confirmLabel: 'Tutup'
+      });
       return;
     }
 
@@ -594,7 +746,12 @@ export default function AdminDashboardPage() {
   // Sync All Orders to Google Sheet Handler
   const handleSyncAllOrders = async () => {
     if (!sheetConfig.webhookUrl || !sheetConfig.webhookUrl.trim().startsWith('http')) {
-      alert('Silakan masukkan URL Webhook Google Apps Script terlebih dahulu.');
+      showAlert({
+        title: 'URL Webhook Belum Diisi',
+        message: 'Silakan masukkan URL Webhook Google Apps Script terlebih dahulu sebelum melakukan sinkronisasi massal.',
+        variant: 'warning',
+        confirmLabel: 'Tutup'
+      });
       return;
     }
 
@@ -606,7 +763,12 @@ export default function AdminDashboardPage() {
       triggerSuccess(res.message);
       setTestResult(res.message);
     } else {
-      alert(res.message);
+      showAlert({
+        title: 'Sinkronisasi Spreadsheet Terkendala',
+        message: res.message || 'Gagal menyinkronkan data pesanan ke Google Spreadsheet.',
+        variant: 'warning',
+        confirmLabel: 'Tutup'
+      });
     }
   };
 
@@ -3747,6 +3909,21 @@ function doPost(e) {
           </Box>
         </Dialog>
       )}
+
+      {/* Modern Executive Confirmation & Alert Dialog (Anti-Slop Compliant) */}
+      <ExecutiveConfirmModal
+        isOpen={confirmModal.isOpen}
+        title={confirmModal.title}
+        subtitle={confirmModal.subtitle}
+        message={confirmModal.message}
+        bulletPoints={confirmModal.bulletPoints}
+        variant={confirmModal.variant}
+        confirmLabel={confirmModal.confirmLabel}
+        cancelLabel={confirmModal.cancelLabel}
+        onConfirm={confirmModal.onConfirm}
+        onCancel={closeConfirmModal}
+        isLoading={confirmModal.isLoading}
+      />
 
     </Box>
   </ThemeProvider>
