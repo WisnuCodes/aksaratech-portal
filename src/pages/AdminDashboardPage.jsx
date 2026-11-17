@@ -607,10 +607,15 @@ export default function AdminDashboardPage() {
     const hasSheet = config?.webhookUrl && config.webhookUrl.trim().startsWith('http');
     if (hasSheet) {
       await syncOrderToSheet(updated, 'update');
-      triggerSuccess(`Inquiry ${order.id} berhasil diverifikasi menjadi Fix Order (${nextOrderNumber}) dan otomatis disinkronkan ke Google Spreadsheet!`);
-    } else {
-      triggerSuccess(`Inquiry ${order.id} berhasil diverifikasi menjadi Fix Order (${nextOrderNumber})!`);
     }
+
+    // Automatically open WhatsApp with stage update message for client
+    const waUrl = createClientProgressUpdateWhatsAppPayload(updated);
+    if (typeof window !== 'undefined') {
+      window.open(waUrl, '_blank', 'noopener,noreferrer');
+    }
+
+    triggerSuccess(`Inquiry ${order.id} berhasil diverifikasi menjadi Fix Order (${nextOrderNumber})! Notifikasi WhatsApp otomatis dibuka untuk klien.`);
   };
 
   // Revision Quota & Notes Handlers
@@ -670,10 +675,15 @@ export default function AdminDashboardPage() {
     const hasSheet = config?.webhookUrl && config.webhookUrl.trim().startsWith('http');
     if (hasSheet) {
       await syncOrderToSheet(updated, 'update');
-      triggerSuccess(`Catatan Sesi Revisi ke-${nextSessionNum} untuk pesanan ${updated.id} berhasil disimpan dan disinkronkan ke Google Spreadsheet!`);
-    } else {
-      triggerSuccess(`Catatan Sesi Revisi ke-${nextSessionNum} untuk pesanan ${updated.id} berhasil disimpan!`);
     }
+
+    // Automatically open WhatsApp so client receives revision confirmation
+    const waUrl = createClientProgressUpdateWhatsAppPayload(updated);
+    if (typeof window !== 'undefined') {
+      window.open(waUrl, '_blank', 'noopener,noreferrer');
+    }
+
+    triggerSuccess(`Catatan Sesi Revisi ke-${nextSessionNum} untuk pesanan ${updated.id} berhasil disimpan! Notifikasi WhatsApp otomatis dibuka untuk klien.`);
   };
 
   const handleDeleteLastRevision = (order) => {
@@ -729,10 +739,20 @@ export default function AdminDashboardPage() {
 
   // Update Stage Number Handler
   const handleStageChange = async (order, newStage) => {
+    const stageNum = Number(newStage);
+    const defaultStageNotes = {
+      1: 'Formulir brief teknis diajukan via website. Menunggu verifikasi DP termin 1 (50%).',
+      2: 'Pembayaran DP 50% diverifikasi. Perancangan skema database relasional, ERD, dan struktur awal modul sedang berlangsung.',
+      3: 'Pengembangan logika backend dan komponen antarmuka responsif sedang dikoding aktif di repositori Git.',
+      4: 'Kompilasi build berhasil. Tautan pratinjau sandbox demo live telah aktif untuk pengujian mandiri dan sesi revisi SOP.',
+      5: 'Proyek tuntas 100%. Pelunasan termin 2 diterima, master source code (.zip) dan repositori final resmi diserahterimakan.'
+    };
+
     const updated = {
       ...order,
-      currentStageNumber: Number(newStage),
-      dpStatus: Number(newStage) === 5 ? 'LUNAS 100% (SELESAI)' : order.dpStatus
+      currentStageNumber: stageNum,
+      dpStatus: stageNum === 5 ? 'LUNAS 100% (SELESAI)' : order.dpStatus,
+      developerNotes: defaultStageNotes[stageNum] || order.developerNotes
     };
     updateOrder(updated);
     setOrders(getAllOrders());
@@ -741,10 +761,15 @@ export default function AdminDashboardPage() {
     const hasSheet = config?.webhookUrl && config.webhookUrl.trim().startsWith('http');
     if (hasSheet) {
       await syncOrderToSheet(updated, 'update');
-      triggerSuccess(`Tahap SOP pesanan ${order.id} diperbarui ke Tahap ${newStage} dan otomatis disinkronkan ke Google Spreadsheet.`);
-    } else {
-      triggerSuccess(`Tahap SOP pesanan ${order.id} diperbarui ke Tahap ${newStage}.`);
     }
+
+    // Automatically open WhatsApp with stage update message for client
+    const waUrl = createClientProgressUpdateWhatsAppPayload(updated);
+    if (typeof window !== 'undefined') {
+      window.open(waUrl, '_blank', 'noopener,noreferrer');
+    }
+
+    triggerSuccess(`Tahap SOP pesanan ${order.id} diperbarui ke Tahap ${newStage}! Pesan WhatsApp otomatis dibuka untuk klien.`);
   };
 
   // Delete Order Handler (Auto-Delete across local storage and Google Spreadsheet)
@@ -943,7 +968,7 @@ export default function AdminDashboardPage() {
       orderNumber: 'TEST-ORD-001',
       statusType: 'FIX_ORDER',
       clientName: '-',
-      clientPhone: '081234567890',
+      clientPhone: '085600386692',
       clientEmail: 'test@aksaratech.com',
       projectTitle: 'Uji Konektivitas Google Spreadsheet Webhook',
       category: 'UMKM & Bisnis',
@@ -4260,7 +4285,7 @@ function doPost(e) {
                         size="small"
                         name="clientPhone"
                         required
-                        placeholder="Contoh: 081234567890"
+                        placeholder="Contoh: 085600386692"
                         inputProps={{
                           style: { fontSize: '0.88rem', color: '#0F172A', padding: '10px 12px' }
                         }}
@@ -4856,7 +4881,7 @@ function doPost(e) {
                   multiline
                   rows={8}
                   required
-                  placeholder={'Tempelkan teks pesan WhatsApp klien di sini...\nContoh:\n*SURAT BRIEF TEKNIS & PERMINTAAN PENAWARAN PROYEK*\n*ID Tiket Inquiry :* INQ-AT-20261117-XXXX\n• Nomor WhatsApp : +62 812...\n• Nama Proyek : Website UMKM...'}
+                  placeholder={'Tempelkan teks pesan WhatsApp klien di sini...\nContoh:\n*SURAT BRIEF TEKNIS & PERMINTAAN PENAWARAN PROYEK*\n*ID Tiket Inquiry :* INQ-AT-20261117-XXXX\n• Nomor WhatsApp : +62 856-0038-6692\n• Nama Proyek : Website UMKM...'}
                   value={waImportText}
                   onChange={(e) => {
                     setWaImportText(e.target.value);
