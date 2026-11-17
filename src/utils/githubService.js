@@ -3,7 +3,7 @@
  * Connects directly to GitHub REST API to stream live commits, branches, and CI/CD workflow status.
  */
 
-const CACHE_PREFIX = 'aksara_gh_cache_v1_';
+const CACHE_PREFIX = 'aksara_gh_cache_v2_';
 const CACHE_EXPIRY_MS = 60 * 1000; // 1 minute fresh cache to respect GitHub API rate limits
 const TOKEN_STORAGE_KEY = 'aksara_github_token_v1';
 
@@ -107,9 +107,9 @@ function inferStageFromMessage(msg, fallbackStage = 3) {
 }
 
 /**
- * Fetch live commits directly from GitHub REST API
+ * Fetch live commits directly from GitHub REST API (retrieves full history up to 100 commits per page)
  */
-export async function fetchLiveGitHubCommits(rawRepo, branch = 'main', token = null) {
+export async function fetchLiveGitHubCommits(rawRepo, branch = 'main', token = null, forceRefresh = false) {
   const parsed = parseGitHubRepo(rawRepo);
   if (!parsed) {
     return {
@@ -121,29 +121,31 @@ export async function fetchLiveGitHubCommits(rawRepo, branch = 'main', token = n
 
   const cacheKey = `${CACHE_PREFIX}${parsed.owner}_${parsed.repo}_${branch}`;
 
-  // Check Local Storage Cache first to respect GitHub 60 req/hr rate limit
-  try {
-    const cached = localStorage.getItem(cacheKey);
-    if (cached) {
-      const parsedCache = JSON.parse(cached);
-      if (Date.now() - parsedCache.timestamp < CACHE_EXPIRY_MS) {
-        return {
-          success: true,
-          source: 'cache',
-          repoFullName: parsed.fullName,
-          branch: branch,
-          commits: parsedCache.commits,
-          latestCommit: parsedCache.commits[0] || null,
-          totalCommits: parsedCache.commits.length,
-          lastSynced: new Date(parsedCache.timestamp).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
-        };
+  // Check Local Storage Cache first to respect GitHub 60 req/hr rate limit (unless manual forceRefresh)
+  if (!forceRefresh) {
+    try {
+      const cached = localStorage.getItem(cacheKey);
+      if (cached) {
+        const parsedCache = JSON.parse(cached);
+        if (Date.now() - parsedCache.timestamp < CACHE_EXPIRY_MS) {
+          return {
+            success: true,
+            source: 'cache',
+            repoFullName: parsed.fullName,
+            branch: branch,
+            commits: parsedCache.commits,
+            latestCommit: parsedCache.commits[0] || null,
+            totalCommits: parsedCache.totalCommits || parsedCache.commits.length,
+            lastSynced: new Date(parsedCache.timestamp).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
+          };
+        }
       }
-    }
-  } catch (e) {}
+    } catch (e) {}
+  }
 
-  // Live HTTP Request to GitHub REST API
+  // Live HTTP Request to GitHub REST API with up to 100 commits per fetch
   try {
-    const url = `https://api.github.com/repos/${parsed.owner}/${parsed.repo}/commits?sha=${encodeURIComponent(branch)}&per_page=6`;
+    const url = `https://api.github.com/repos/${parsed.owner}/${parsed.repo}/commits?sha=${encodeURIComponent(branch)}&per_page=100`;
     const headers = {
       'Accept': 'application/vnd.github.v3+json',
       'User-Agent': 'AksaraTech-Engineering-Portal/1.0'
@@ -184,6 +186,16 @@ export async function fetchLiveGitHubCommits(rawRepo, branch = 'main', token = n
       };
     }
 
+    // Determine true total commits from Link header if paginated beyond 100
+    const linkHeader = response.headers.get('link');
+    let totalCommits = rawCommits.length;
+    if (linkHeader) {
+      const match = linkHeader.match(/[?&]page=(\d+)[^>]*>;\s*rel="last"/);
+      if (match) {
+        totalCommits = parseInt(match[1], 10) * 100;
+      }
+    }
+
     const formattedCommits = rawCommits.map((c, idx) => {
       const firstLine = (c.commit?.message || '').split('\n')[0].trim();
       const authorName = c.commit?.author?.name || c.author?.login || 'Aksara Tech Core';
@@ -205,7 +217,8 @@ export async function fetchLiveGitHubCommits(rawRepo, branch = 'main', token = n
     try {
       localStorage.setItem(cacheKey, JSON.stringify({
         timestamp: Date.now(),
-        commits: formattedCommits
+        commits: formattedCommits,
+        totalCommits: totalCommits
       }));
     } catch (e) {}
 
@@ -216,7 +229,7 @@ export async function fetchLiveGitHubCommits(rawRepo, branch = 'main', token = n
       branch: branch,
       commits: formattedCommits,
       latestCommit: formattedCommits[0],
-      totalCommits: formattedCommits.length,
+      totalCommits: totalCommits,
       lastSynced: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
     };
   } catch (err) {

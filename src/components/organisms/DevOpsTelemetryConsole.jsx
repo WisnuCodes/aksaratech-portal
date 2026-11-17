@@ -21,7 +21,8 @@ import {
   CheckCircle,
   MessageCircle,
   RefreshCw,
-  Globe
+  Globe,
+  ChevronDown
 } from 'lucide-react';
 import { getOrderDevOps } from '../../utils/orderStorage';
 import { fetchLiveGitHubCommits, fetchLiveCIStatus, parseGitHubRepo } from '../../utils/githubService';
@@ -33,6 +34,8 @@ export default function DevOpsTelemetryConsole({ order, className = '' }) {
   // Live GitHub State
   const [isSyncing, setIsSyncing] = useState(false);
   const [liveCommits, setLiveCommits] = useState(null);
+  const [totalCount, setTotalCount] = useState(0);
+  const [showAllCommits, setShowAllCommits] = useState(false);
   const [ciStatus, setCiStatus] = useState('CI/CD PIPELINE: PASS');
   const [syncSource, setSyncSource] = useState('internal'); // 'live' | 'cache' | 'internal'
   const [lastSyncTime, setLastSyncTime] = useState('');
@@ -60,24 +63,30 @@ export default function DevOpsTelemetryConsole({ order, className = '' }) {
         setCiStatus(ciRes.label);
       }
 
-      // 2. Fetch live Commits
-      const res = await fetchLiveGitHubCommits(repoName, branchName);
+      // 2. Fetch live Commits with up to 100 history & true total count
+      const res = await fetchLiveGitHubCommits(repoName, branchName, null, isManual);
       if (res && res.success && Array.isArray(res.commits) && res.commits.length > 0) {
         setLiveCommits(res.commits);
+        setTotalCount(res.totalCommits || res.commits.length);
         setSyncSource(res.source === 'live' ? 'live' : 'cache');
         setLastSyncTime(res.lastSynced || new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }));
         if (isManual) {
-          setSyncFeedback(`Stream commit berhasil disinkronkan real-time dari GitHub (${res.commits.length} commit terbaru)!`);
+          setSyncFeedback(`Stream commit berhasil disinkronkan real-time dari GitHub (${res.totalCommits || res.commits.length} commit tercatat)!`);
         }
       } else {
         // Fallback to internal deterministic telemetry
         setSyncSource('internal');
+        setTotalCount(devops.totalCommits || devops.commitHistory?.length || 0);
         if (isManual) {
           setSyncFeedback(res?.message || 'Repositori privat terisolasi, menampilkan telemetri terverifikasi internal.');
         }
       }
     } catch (e) {
       setSyncSource('internal');
+      setTotalCount(devops.totalCommits || devops.commitHistory?.length || 0);
+      if (isManual) {
+        setSyncFeedback('Kendala koneksi ke GitHub API, beralih ke telemetri internal.');
+      }
     } finally {
       setIsSyncing(false);
     }
@@ -152,7 +161,7 @@ export default function DevOpsTelemetryConsole({ order, className = '' }) {
           <div className="devops-meta-item">
             <span className="devops-meta-label">Total Commit:</span>
             <span className="devops-meta-val">
-              {activeCommits.length} Versi {isGitHubConnected ? 'Real-time' : 'Tercatat'}
+              {totalCount || activeCommits.length} Versi {isGitHubConnected ? 'Real-time' : 'Tercatat'}
             </span>
           </div>
           <div className="devops-sync-btn-wrap">
@@ -274,57 +283,82 @@ export default function DevOpsTelemetryConsole({ order, className = '' }) {
 
           {/* Commit History Timeline */}
           <div className="devops-commit-timeline-wrap">
-            <div className="devops-timeline-header-row">
-              <h4 className="devops-subheading">
-                Linimasa Rekayasa Kode Program (Commit Log Real-Time)
-              </h4>
-              <span className="devops-commit-count-tag">
-                {activeCommits.length} Commit Ditampilkan
-              </span>
-            </div>
+            {(() => {
+              const displayedCommits = showAllCommits ? activeCommits : activeCommits.slice(0, 8);
+              return (
+                <>
+                  <div className="devops-timeline-header-row">
+                    <h4 className="devops-subheading">
+                      Linimasa Rekayasa Kode Program (Commit Log Real-Time)
+                    </h4>
+                    <span className="devops-commit-count-tag">
+                      {displayedCommits.length} dari {totalCount || activeCommits.length} Commit Ditampilkan
+                    </span>
+                  </div>
 
-            <div className="devops-timeline-list">
-              {activeCommits.map((item, idx) => (
-                <div key={item.hash || idx} className="devops-timeline-item">
-                  <div className="devops-timeline-node">
-                    <span className="devops-timeline-dot" />
-                    {idx < activeCommits.length - 1 && <span className="devops-timeline-line" />}
-                  </div>
-                  
-                  <div className="devops-commit-card">
-                    <div className="devops-commit-header">
-                      <div className="devops-commit-hash-group">
-                        <code className="devops-commit-hash">{item.hash}</code>
-                        <span className="devops-stage-pill">
-                          Tahap {item.stage || 3} SOP
-                        </span>
-                        {item.url && (
-                          <a
-                            href={item.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="devops-commit-gh-link"
-                            title="Buka commit di GitHub"
-                          >
-                            <span>Lihat di GitHub</span>
-                            <ExternalLink size={12} />
-                          </a>
-                        )}
+                  <div className="devops-timeline-list">
+                    {displayedCommits.map((item, idx) => (
+                      <div key={item.hash || idx} className="devops-timeline-item">
+                        <div className="devops-timeline-node">
+                          <span className="devops-timeline-dot" />
+                          {idx < displayedCommits.length - 1 && <span className="devops-timeline-line" />}
+                        </div>
+                        
+                        <div className="devops-commit-card">
+                          <div className="devops-commit-header">
+                            <div className="devops-commit-hash-group">
+                              <code className="devops-commit-hash">{item.hash}</code>
+                              <span className="devops-stage-pill">
+                                Tahap {item.stage || 3} SOP
+                              </span>
+                              {item.url && (
+                                <a
+                                  href={item.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="devops-commit-gh-link"
+                                  title="Buka commit di GitHub"
+                                >
+                                  <span>Lihat di GitHub</span>
+                                  <ExternalLink size={12} />
+                                </a>
+                              )}
+                            </div>
+                            <span className="devops-commit-date">
+                              {item.date}
+                            </span>
+                          </div>
+                          <div className="devops-commit-message">
+                            {item.message}
+                          </div>
+                          <div className="devops-commit-author">
+                            Engineer: <strong>{item.author}</strong>
+                          </div>
+                        </div>
                       </div>
-                      <span className="devops-commit-date">
-                        {item.date}
-                      </span>
-                    </div>
-                    <div className="devops-commit-message">
-                      {item.message}
-                    </div>
-                    <div className="devops-commit-author">
-                      Engineer: <strong>{item.author}</strong>
-                    </div>
+                    ))}
                   </div>
-                </div>
-              ))}
-            </div>
+
+                  {/* Expand / Collapse Button if commits > 8 */}
+                  {activeCommits.length > 8 && (
+                    <div style={{ textAlign: 'center', marginTop: '16px' }}>
+                      <button
+                        type="button"
+                        onClick={() => setShowAllCommits(!showAllCommits)}
+                        className="devops-expand-btn"
+                      >
+                        <span>
+                          {showAllCommits
+                            ? 'Ciutkan Linimasa (Tampilkan 8 Terbaru)'
+                            : `Tampilkan Seluruh ${totalCount || activeCommits.length} Commit (+${activeCommits.length - 8} lainnya)`}
+                        </span>
+                        <ChevronDown size={15} style={{ transform: showAllCommits ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
+                      </button>
+                    </div>
+                  )}
+                </>
+              );
+            })()}
           </div>
 
           {/* Local Deployment Command Preview */}
@@ -1057,6 +1091,25 @@ export default function DevOpsTelemetryConsole({ order, className = '' }) {
         .devops-commit-author {
           font-size: 0.78rem;
           color: #64748B;
+        }
+        .devops-expand-btn {
+          background-color: #FFFFFF;
+          border: 1.5px solid #CBD5E1;
+          color: #0F172A;
+          font-size: 0.86rem;
+          font-weight: 800;
+          padding: 10px 20px;
+          border-radius: 8px;
+          cursor: pointer;
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          transition: background-color 0.15s, border-color 0.15s;
+          min-height: 44px;
+        }
+        .devops-expand-btn:hover {
+          background-color: #F8FAFC;
+          border-color: #0F172A;
         }
 
         /* Terminal Box */
