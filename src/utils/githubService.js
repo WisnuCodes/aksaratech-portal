@@ -5,6 +5,38 @@
 
 const CACHE_PREFIX = 'aksara_gh_cache_v1_';
 const CACHE_EXPIRY_MS = 60 * 1000; // 1 minute fresh cache to respect GitHub API rate limits
+const TOKEN_STORAGE_KEY = 'aksara_github_token_v1';
+
+/**
+ * Get configured GitHub Personal Access Token (PAT)
+ */
+export function getGitHubToken() {
+  try {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem(TOKEN_STORAGE_KEY);
+      if (stored && stored.trim().length > 0) return stored.trim();
+    }
+    if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_GITHUB_TOKEN) {
+      return import.meta.env.VITE_GITHUB_TOKEN.trim();
+    }
+  } catch (e) {}
+  return '';
+}
+
+/**
+ * Save GitHub Personal Access Token (PAT)
+ */
+export function saveGitHubToken(token) {
+  try {
+    if (typeof window !== 'undefined') {
+      if (!token || token.trim().length === 0) {
+        localStorage.removeItem(TOKEN_STORAGE_KEY);
+      } else {
+        localStorage.setItem(TOKEN_STORAGE_KEY, token.trim());
+      }
+    }
+  } catch (e) {}
+}
 
 /**
  * Cleanly parse repository input into owner and repo name
@@ -117,8 +149,9 @@ export async function fetchLiveGitHubCommits(rawRepo, branch = 'main', token = n
       'User-Agent': 'AksaraTech-Engineering-Portal/1.0'
     };
 
-    if (token && token.trim().length > 0) {
-      headers['Authorization'] = `token ${token.trim()}`;
+    const activeToken = (token && token.trim().length > 0) ? token.trim() : getGitHubToken();
+    if (activeToken) {
+      headers['Authorization'] = `token ${activeToken}`;
     }
 
     const response = await fetch(url, { headers });
@@ -208,7 +241,8 @@ export async function fetchLiveCIStatus(rawRepo, token = null) {
       'Accept': 'application/vnd.github.v3+json',
       'User-Agent': 'AksaraTech-Engineering-Portal/1.0'
     };
-    if (token) headers['Authorization'] = `token ${token.trim()}`;
+    const activeToken = (token && token.trim().length > 0) ? token.trim() : getGitHubToken();
+    if (activeToken) headers['Authorization'] = `token ${activeToken}`;
 
     const res = await fetch(url, { headers });
     if (!res.ok) return { status: 'PASS', label: 'CI/CD PIPELINE: PASS' };

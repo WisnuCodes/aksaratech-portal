@@ -71,6 +71,7 @@ import {
 } from '../utils/orderStorage';
 import { PACKAGES } from '../data/catalogData';
 import { formatRupiah, generateInquiryId } from '../utils/documentEngine';
+import { getGitHubToken, saveGitHubToken } from '../utils/githubService';
 
 // Default Admin Security PIN
 const DEFAULT_ADMIN_PIN = '2026';
@@ -177,6 +178,47 @@ export default function AdminDashboardPage() {
   const [copiedScript, setCopiedScript] = useState(false);
   const [isTestingWebhook, setIsTestingWebhook] = useState(false);
   const [testResult, setTestResult] = useState('');
+
+  // GitHub Integration State
+  const [githubTokenInput, setGithubTokenInput] = useState(getGitHubToken());
+  const [githubTestStatus, setGithubTestStatus] = useState('');
+  const [isTestingGitHub, setIsTestingGitHub] = useState(false);
+  const [showGithubToken, setShowGithubToken] = useState(false);
+
+  const handleSaveGitHubToken = (e) => {
+    if (e) e.preventDefault();
+    saveGitHubToken(githubTokenInput.trim());
+    triggerSuccess('Token GitHub berhasil disimpan ke sistem.');
+  };
+
+  const handleTestGitHubToken = async () => {
+    if (!githubTokenInput || !githubTokenInput.trim()) {
+      setGithubTestStatus('Token masih kosong. Masukkan token GitHub Anda terlebih dahulu.');
+      return;
+    }
+    setIsTestingGitHub(true);
+    setGithubTestStatus('');
+    try {
+      const res = await fetch('https://api.github.com/user', {
+        headers: {
+          'Accept': 'application/vnd.github.v3+json',
+          'Authorization': `token ${githubTokenInput.trim()}`
+        }
+      });
+      if (res.ok) {
+        const user = await res.json();
+        saveGitHubToken(githubTokenInput.trim());
+        setGithubTestStatus(`Koneksi Sukses! Terhubung sebagai @${user.login} (${user.name || 'Developer'}). Repositori privat kini dapat diakses secara real-time.`);
+        triggerSuccess(`Token GitHub diverifikasi untuk akun @${user.login}!`);
+      } else {
+        setGithubTestStatus(`Token tidak valid atau kedaluwarsa (HTTP ${res.status}). Periksa kembali token dari GitHub.`);
+      }
+    } catch (err) {
+      setGithubTestStatus('Gagal menghubungi GitHub API: ' + err.message);
+    } finally {
+      setIsTestingGitHub(false);
+    }
+  };
 
   // Load orders from storage on mount & sync across tabs
   useEffect(() => {
@@ -1718,6 +1760,139 @@ function doPost(e) {
                 </button>
               </div>
             </form>
+
+            {/* GITHUB INTEGRATION & TOKEN CARD */}
+            <div style={{ background: '#FFFFFF', border: '1.5px solid #CBD5E1', borderRadius: '12px', padding: '24px', marginBottom: '28px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                <GitBranch size={20} color="#0F172A" />
+                <h3 style={{ fontSize: '1.18rem', fontWeight: '900', color: '#0F172A', margin: 0 }}>
+                  Integrasi GitHub API &amp; Akses Repositori Privat
+                </h3>
+              </div>
+              <p style={{ fontSize: '0.88rem', color: '#475569', margin: '0 0 20px 0', lineHeight: '1.5', maxWidth: '780px' }}>
+                Hubungkan akun GitHub Anda agar portal Aksara Tech dapat menarik linimasa commit real-time, status CI/CD GitHub Actions, dan branch pengerjaan proyek klien secara langsung.
+              </p>
+
+              <form onSubmit={handleSaveGitHubToken} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.84rem', fontWeight: '700', color: '#0F172A', marginBottom: '6px' }}>
+                    GitHub Personal Access Token (PAT)
+                  </label>
+                  <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                    <div style={{ position: 'relative', flex: 1, minWidth: '280px' }}>
+                      <input
+                        type={showGithubToken ? 'text' : 'password'}
+                        value={githubTokenInput}
+                        onChange={(e) => setGithubTokenInput(e.target.value)}
+                        placeholder="Contoh: ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                        style={{
+                          width: '100%',
+                          boxSizing: 'border-box',
+                          padding: '12px 42px 12px 14px',
+                          fontSize: '0.92rem',
+                          borderRadius: '8px',
+                          border: '1.5px solid #CBD5E1',
+                          background: '#FFFFFF',
+                          outline: 'none',
+                          color: '#0F172A',
+                          fontWeight: '600'
+                        }}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowGithubToken(!showGithubToken)}
+                        style={{
+                          position: 'absolute',
+                          right: '12px',
+                          top: '50%',
+                          transform: 'translateY(-50%)',
+                          background: 'transparent',
+                          border: 'none',
+                          cursor: 'pointer',
+                          color: '#64748B',
+                          display: 'flex',
+                          alignItems: 'center',
+                          padding: 0
+                        }}
+                        title={showGithubToken ? 'Sembunyikan Token' : 'Lihat Token'}
+                        aria-label="Lihat atau sembunyikan token"
+                      >
+                        {showGithubToken ? <Eye size={17} /> : <KeyRound size={17} />}
+                      </button>
+                    </div>
+
+                    <button
+                      type="submit"
+                      style={{
+                        background: '#0F172A',
+                        color: '#FFFFFF',
+                        border: 'none',
+                        borderRadius: '8px',
+                        padding: '11px 20px',
+                        fontSize: '0.88rem',
+                        fontWeight: '800',
+                        cursor: 'pointer',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '6px'
+                      }}
+                    >
+                      <Save size={16} />
+                      <span>Simpan Token GitHub</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={handleTestGitHubToken}
+                      disabled={isTestingGitHub}
+                      style={{
+                        background: '#F1F5F9',
+                        color: '#0F172A',
+                        border: '1.5px solid #CBD5E1',
+                        borderRadius: '8px',
+                        padding: '11px 18px',
+                        fontSize: '0.88rem',
+                        fontWeight: '800',
+                        cursor: isTestingGitHub ? 'wait' : 'pointer',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '6px'
+                      }}
+                    >
+                      <CheckCircle2 size={16} color="var(--prussian-blue)" />
+                      <span>{isTestingGitHub ? 'Menguji API...' : 'Uji Koneksi Token'}</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* GitHub Test Status Banner */}
+                {githubTestStatus && (
+                  <div style={{
+                    padding: '12px 16px',
+                    borderRadius: '8px',
+                    fontSize: '0.86rem',
+                    fontWeight: '700',
+                    lineHeight: '1.45',
+                    background: githubTestStatus.includes('Sukses') ? '#ECFDF5' : '#FEF2F2',
+                    border: githubTestStatus.includes('Sukses') ? '1.5px solid #A7F3D0' : '1.5px solid #FECACA',
+                    color: githubTestStatus.includes('Sukses') ? '#065F46' : '#991B1B'
+                  }}>
+                    {githubTestStatus}
+                  </div>
+                )}
+
+                {/* Quick Guidance Box */}
+                <div style={{ background: '#F8FAFC', border: '1.5px solid #E2E8F0', padding: '14px 16px', borderRadius: '8px', fontSize: '0.84rem', color: '#475569', lineHeight: '1.6' }}>
+                  <div style={{ fontWeight: '800', color: '#0F172A', marginBottom: '4px' }}>
+                    Kapan Token GitHub Ini Dibutuhkan?
+                  </div>
+                  <ul style={{ margin: 0, paddingLeft: '20px' }}>
+                    <li><strong>Repositori Publik:</strong> <em>Tidak butuh token.</em> Sistem web Aksara Tech dapat langsung membaca linimasa commit publik secara otomatis.</li>
+                    <li><strong>Repositori Privat:</strong> <em>Wajib menggunakan token.</em> Buat token gratis di GitHub (<strong>Settings &gt; Developer settings &gt; Personal access tokens &gt; Tokens (classic)</strong>) lalu beri centang pada izin <code>repo</code> (Full control of private repositories) agar sistem Aksara Tech diizinkan membaca commit secara aman.</li>
+                  </ul>
+                </div>
+              </form>
+            </div>
 
             {/* Step-by-step Guide with Visual Clarity */}
             <div style={{ background: '#F8FAFC', border: '1.5px solid #E2E8F0', borderRadius: '12px', padding: '24px' }}>
