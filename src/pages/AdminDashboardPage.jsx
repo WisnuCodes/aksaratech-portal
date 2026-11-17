@@ -2673,6 +2673,45 @@ function doPost(e) {
                     </Typography>
                   </Box>
 
+                  {/* GitHub Repo Input */}
+                  <Box sx={{ mb: 2 }}>
+                    <Typography variant="caption" sx={{ fontSize: '0.8rem', fontWeight: 700, color: '#0F172A', display: 'block', mb: 0.75 }}>
+                      Tautan / Nama Repositori GitHub Proyek Klien
+                    </Typography>
+                    <TextField
+                      fullWidth
+                      size="small"
+                      placeholder="Contoh: https://github.com/WisnuCodes/aksaratech-portal atau WisnuCodes/nama-repo"
+                      value={editingOrder.devops?.repoName || ''}
+                      onChange={(e) => {
+                        const currentDevops = editingOrder.devops || getOrderDevOps(editingOrder);
+                        setEditingOrder({
+                          ...editingOrder,
+                          devops: {
+                            ...currentDevops,
+                            repoName: e.target.value
+                          }
+                        });
+                      }}
+                      inputProps={{
+                        style: { fontSize: '0.88rem', color: '#0F172A', padding: '10px 12px' }
+                      }}
+                      sx={{
+                        bgcolor: '#FFFFFF',
+                        '& .MuiOutlinedInput-root': {
+                          border: '1.5px solid #CBD5E1',
+                          borderRadius: '6px',
+                          '& fieldset': { border: 'none' },
+                          '&:hover': { borderColor: '#0F172A' },
+                          '&.Mui-focused': { borderColor: '#1D63FF' }
+                        }
+                      }}
+                    />
+                    <Typography variant="caption" sx={{ fontSize: '0.74rem', color: '#64748B', mt: 0.5, display: 'block' }}>
+                      Cukup tempelkan link URL repositori GitHub proyek klien ini. Setiap kali Anda melakukan <code>git push</code> dari laptop, seluruh riwayat commit, author, dan timestamp akan otomatis tertarik secara real-time ke halaman /lacak klien!
+                    </Typography>
+                  </Box>
+
                   <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2, mb: 2 }}>
                     <Box>
                       <Typography variant="caption" sx={{ fontSize: '0.8rem', fontWeight: 700, color: '#0F172A', display: 'block', mb: 0.75 }}>
