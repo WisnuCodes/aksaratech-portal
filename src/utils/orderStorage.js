@@ -469,12 +469,23 @@ export function resetToDefaultOrders() {
 }
 
 /**
- * Get Google Sheet Webhook Config
+ * Get Google Sheet Webhook Config with Vite environment variable fallback
  */
 export function getSheetConfig() {
   try {
     const raw = localStorage.getItem(SHEET_CONFIG_KEY);
-    return raw ? JSON.parse(raw) : { webhookUrl: '', spreadsheetUrl: '', sheetName: 'Orders' };
+    const parsed = raw ? JSON.parse(raw) : null;
+    
+    // Check environment variables as global default fallback
+    const envWebhook = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_GOOGLE_SHEET_WEBHOOK_URL) || '';
+    const envSpreadsheet = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_GOOGLE_SPREADSHEET_URL) || '';
+    const envSheetName = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_GOOGLE_SHEET_NAME) || 'Orders';
+
+    return {
+      webhookUrl: (parsed?.webhookUrl || envWebhook || '').trim(),
+      spreadsheetUrl: (parsed?.spreadsheetUrl || envSpreadsheet || '').trim(),
+      sheetName: parsed?.sheetName || envSheetName || 'Orders'
+    };
   } catch (e) {
     return { webhookUrl: '', spreadsheetUrl: '', sheetName: 'Orders' };
   }
@@ -486,7 +497,34 @@ export function getSheetConfig() {
 export function saveSheetConfig(config) {
   try {
     localStorage.setItem(SHEET_CONFIG_KEY, JSON.stringify(config));
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event('aksara_sheet_config_updated'));
+    }
   } catch (e) {}
+}
+
+/**
+ * Pull all orders directly from remote Google Spreadsheet Webhook
+ */
+export async function pullAllOrdersFromRemoteSheet() {
+  const config = getSheetConfig();
+  if (!config?.webhookUrl || !config.webhookUrl.trim().startsWith('http')) {
+    return { success: false, message: 'URL Webhook Google Apps Script belum diisi.' };
+  }
+
+  try {
+    const res = await fetch(`${config.webhookUrl.trim()}?action=get_all`, {
+      method: 'GET'
+    });
+    const data = await res.json();
+    if (data && data.status === 'success' && Array.isArray(data.orders)) {
+      saveAllOrders(data.orders);
+      return { success: true, count: data.orders.length, orders: data.orders };
+    }
+    return { success: false, message: 'Format respon Google Apps Script tidak sesuai (pastikan kode doGet action=get_all telah di-deploy).' };
+  } catch (err) {
+    return { success: false, message: 'Gagal menghubungi Google Apps Script: ' + err.message };
+  }
 }
 
 /**

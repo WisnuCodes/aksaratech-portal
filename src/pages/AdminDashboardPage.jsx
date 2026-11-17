@@ -40,6 +40,7 @@ import {
   ExternalLink, 
   Check, 
   RotateCcw, 
+  RefreshCw,
   AlertCircle,
   FileText,
   Save,
@@ -53,7 +54,14 @@ import {
   Phone,
   KeyRound,
   GitBranch,
-  Code2
+  Code2,
+  MessageCircle,
+  Cloud,
+  CloudOff,
+  Share2,
+  Send,
+  Smartphone,
+  Laptop
 } from 'lucide-react';
 import { 
   getAllOrders, 
@@ -69,6 +77,7 @@ import {
   syncOrderToSheet,
   syncDeleteOrderFromSheet,
   syncAllOrdersToSheet,
+  pullAllOrdersFromRemoteSheet,
   getOrderDevOps,
   calculateOrderFinancials
 } from '../utils/orderStorage';
@@ -78,7 +87,11 @@ import {
   generateInquiryId, 
   createChangeRequestWhatsAppPayload,
   decodeOrderFromUrlParam,
-  parseWhatsAppBriefText
+  parseWhatsAppBriefText,
+  encodeOrdersToUrlParam,
+  decodeOrdersFromUrlParam,
+  createWhatsAppSyncWebhookPayload,
+  createWhatsAppDatabaseTransferPayload
 } from '../utils/documentEngine';
 import { getGitHubToken, saveGitHubToken } from '../utils/githubService';
 import ExecutiveConfirmModal from '../components/molecules/ExecutiveConfirmModal';
@@ -337,8 +350,9 @@ export default function AdminDashboardPage() {
     }
   };
 
-  // Handle cross-device 1-click import from WhatsApp link (?import=...)
+  // Handle cross-device 1-click import (?import=, ?import_all=, ?set_webhook=)
   useEffect(() => {
+    // 1. Single order import
     const importParam = searchParams.get('import');
     if (importParam) {
       try {
@@ -351,7 +365,118 @@ export default function AdminDashboardPage() {
         }
       } catch (e) {}
     }
+
+    // 2. Full database transfer between devices
+    const importAllParam = searchParams.get('import_all');
+    if (importAllParam) {
+      try {
+        const decoded = decodeOrdersFromUrlParam(importAllParam);
+        if (Array.isArray(decoded)) {
+          saveAllOrders(decoded);
+          setOrders(decoded);
+          triggerSuccess(`${decoded.length} pesanan berhasil disinkronkan & diselaraskan dari perangkat lain!`);
+          setSearchParams({});
+        }
+      } catch (e) {}
+    }
+
+    // 3. Webhook URL 1-click activation from WhatsApp / device link
+    const setWebhookParam = searchParams.get('set_webhook');
+    if (setWebhookParam) {
+      try {
+        const decodedUrl = decodeURIComponent(setWebhookParam);
+        if (decodedUrl.startsWith('http')) {
+          const existing = getSheetConfig();
+          const updated = { ...existing, webhookUrl: decodedUrl };
+          saveSheetConfig(updated);
+          setSheetConfig(updated);
+          triggerSuccess('Koneksi Webhook Google Spreadsheet berhasil diaktifkan otomatis pada perangkat ini!');
+          setSearchParams({});
+          // Immediately perform pull sync
+          setTimeout(() => {
+            handlePullOrdersFromSheet(true);
+          }, 350);
+        }
+      } catch (e) {}
+    }
   }, [searchParams, setSearchParams]);
+
+  // Pull all orders from Google Spreadsheet to local memory (authoritative sync)
+  const handlePullOrdersFromSheet = async (isSilent = false) => {
+    const config = getSheetConfig();
+    if (!config.webhookUrl || !config.webhookUrl.trim().startsWith('http')) {
+      if (!isSilent) {
+        showAlert({
+          title: 'URL Webhook Belum Diisi',
+          message: 'Masukkan URL Webhook Google Apps Script pada tab "Sinkronisasi Spreadsheet" terlebih dahulu untuk mengaktifkan sinkronisasi cloud lintas perangkat.',
+          variant: 'warning',
+          confirmLabel: 'Buka Tab Spreadsheet',
+          onConfirm: () => setActiveTab('SPREADSHEET')
+        });
+      }
+      return;
+    }
+
+    if (!isSilent) setIsPullingSheet(true);
+    try {
+      const res = await fetch(`${config.webhookUrl.trim()}?action=get_all`, {
+        method: 'GET'
+      });
+      const data = await res.json();
+      if (data && data.status === 'success' && Array.isArray(data.orders)) {
+        if (data.orders.length === 0) {
+          saveAllOrders([]);
+          setOrders([]);
+          if (!isSilent) {
+            triggerSuccess('Sinkronisasi Sukses: Seluruh data di spreadsheet kosong (0 pesanan). Database lokal telah diselaraskan.');
+          }
+        } else {
+          // Google Sheet is the authoritative central source of truth
+          saveAllOrders(data.orders);
+          setOrders(data.orders);
+          if (!isSilent) {
+            triggerSuccess(`${data.orders.length} pesanan berhasil ditarik dan disinkronkan dari Google Spreadsheet ke perangkat ini!`);
+          }
+        }
+      } else {
+        if (!isSilent) {
+          showAlert({
+            title: 'Format Respon Spreadsheet Belum Mendukung Tarik Data',
+            message: 'Pastikan Anda telah menyalin dan men-deploy kode Google Apps Script versi terbaru (mendukung action=get_all).',
+            variant: 'info',
+            confirmLabel: 'Tutup'
+          });
+        }
+      }
+    } catch (err) {
+      if (!isSilent) {
+        showAlert({
+          title: 'Gagal Menghubungi Google Spreadsheet',
+          message: 'Tidak dapat menarik data dari webhook. Pastikan deployment Apps Script disetel untuk "Anyone / Siapa Saja". Pesan: ' + err.message,
+          variant: 'warning',
+          confirmLabel: 'Tutup'
+        });
+      }
+    } finally {
+      if (!isSilent) setIsPullingSheet(false);
+    }
+  };
+
+  // Background Auto-Sync on Dashboard Mount and Window Focus
+  useEffect(() => {
+    const config = getSheetConfig();
+    if (config?.webhookUrl && config.webhookUrl.trim().startsWith('http')) {
+      handlePullOrdersFromSheet(true);
+    }
+    const onFocus = () => {
+      const currentConfig = getSheetConfig();
+      if (currentConfig?.webhookUrl && currentConfig.webhookUrl.trim().startsWith('http')) {
+        handlePullOrdersFromSheet(true);
+      }
+    };
+    window.addEventListener('focus', onFocus);
+    return () => window.removeEventListener('focus', onFocus);
+  }, []);
 
   // Process text import from WhatsApp brief
   const handleProcessWaImport = (e) => {
@@ -382,60 +507,6 @@ export default function AdminDashboardPage() {
       triggerSuccess(`Pesanan ${parsed.id} (${parsed.projectTitle}) berhasil diimpor ke sistem dari chat WhatsApp!`);
     } catch (err) {
       setWaImportError('Gagal memproses teks: ' + err.message);
-    }
-  };
-
-  // Pull all orders from Google Spreadsheet to local memory
-  const handlePullOrdersFromSheet = async () => {
-    const config = getSheetConfig();
-    if (!config.webhookUrl || !config.webhookUrl.trim().startsWith('http')) {
-      showAlert({
-        title: 'URL Webhook Belum Diisi',
-        message: 'Masukkan URL Webhook Google Apps Script terlebih dahulu lalu simpan.',
-        variant: 'warning',
-        confirmLabel: 'Tutup'
-      });
-      return;
-    }
-
-    setIsPullingSheet(true);
-    try {
-      const res = await fetch(`${config.webhookUrl.trim()}?action=get_all`, {
-        method: 'GET'
-      });
-      const data = await res.json();
-      if (data && data.status === 'success' && Array.isArray(data.orders)) {
-        if (data.orders.length === 0) {
-          triggerSuccess('Koneksi sukses! Spreadsheet masih kosong.');
-        } else {
-          const localOrders = getAllOrders();
-          const localMap = new Map(localOrders.map(o => [o.id, o]));
-          data.orders.forEach(remote => {
-            const existing = localMap.get(remote.id);
-            localMap.set(remote.id, existing ? { ...existing, ...remote } : remote);
-          });
-          const merged = Array.from(localMap.values());
-          saveAllOrders(merged);
-          setOrders(merged);
-          triggerSuccess(`${data.orders.length} pesanan berhasil ditarik dan disinkronkan dari Google Spreadsheet ke laptop!`);
-        }
-      } else {
-        showAlert({
-          title: 'Format Respon Spreadsheet Belum Mendukung Tarik Data',
-          message: 'Pastikan Anda telah menyalin dan men-deploy kode Google Apps Script versi terbaru (mendukung action=get_all).',
-          variant: 'info',
-          confirmLabel: 'Tutup'
-        });
-      }
-    } catch (err) {
-      showAlert({
-        title: 'Gagal Menghubungi Google Spreadsheet',
-        message: 'Tidak dapat menarik data dari webhook. Pastikan deployment Apps Script disetel untuk "Anyone / Siapa Saja". Pesan: ' + err.message,
-        variant: 'warning',
-        confirmLabel: 'Tutup'
-      });
-    } finally {
-      setIsPullingSheet(false);
     }
   };
 
@@ -1688,6 +1759,45 @@ function doPost(e) {
               <Typography variant="body2" sx={{ color: '#475569', maxWidth: 780, lineHeight: 1.5, fontSize: '0.94rem' }}>
                 Verifikasi transfer DP 50%, kelola tahapan koding 5-langkah SOP, dan catat pemakaian kuota revisi proyek.
               </Typography>
+
+              {/* Live Cloud Sync Indicator */}
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mt: 1.25, flexWrap: 'wrap' }}>
+                <Chip
+                  size="small"
+                  icon={
+                    <Box component="span" sx={{
+                      width: 7,
+                      height: 7,
+                      borderRadius: '50%',
+                      bgcolor: (sheetConfig.webhookUrl && sheetConfig.webhookUrl.trim().startsWith('http')) ? '#16A34A' : '#D97706',
+                      ml: '6px !important'
+                    }} />
+                  }
+                  label={
+                    (sheetConfig.webhookUrl && sheetConfig.webhookUrl.trim().startsWith('http'))
+                      ? 'Cloud Sync: Terhubung ke Google Spreadsheet'
+                      : 'Mode Lokal: Belum Terhubung Cloud (Database Disimpan di Browser Ini)'
+                  }
+                  sx={{
+                    bgcolor: (sheetConfig.webhookUrl && sheetConfig.webhookUrl.trim().startsWith('http')) ? '#F0FDF4' : '#FFFBEB',
+                    color: (sheetConfig.webhookUrl && sheetConfig.webhookUrl.trim().startsWith('http')) ? '#166534' : '#B45309',
+                    border: '1px solid',
+                    borderColor: (sheetConfig.webhookUrl && sheetConfig.webhookUrl.trim().startsWith('http')) ? '#BBF7D0' : '#FDE68A',
+                    fontWeight: 700,
+                    fontSize: '0.78rem'
+                  }}
+                />
+                {!(sheetConfig.webhookUrl && sheetConfig.webhookUrl.trim().startsWith('http')) && (
+                  <Button
+                    variant="text"
+                    size="small"
+                    onClick={() => setActiveTab('SPREADSHEET')}
+                    sx={{ p: 0, minWidth: 'auto', fontSize: '0.78rem', fontWeight: 800, color: '#1D63FF', textDecoration: 'underline' }}
+                  >
+                    Tautkan Cloud ke HP / Laptop &rarr;
+                  </Button>
+                )}
+              </Box>
             </Box>
 
             <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', alignItems: 'center' }}>
@@ -1731,6 +1841,28 @@ function doPost(e) {
                 title="Muat ulang 4 data contoh awal untuk pengujian"
               >
                 Muat Ulang Contoh
+              </Button>
+
+              <Button
+                variant="outlined"
+                onClick={() => handlePullOrdersFromSheet(false)}
+                disabled={isPullingSheet}
+                startIcon={<RefreshCw size={15} />}
+                sx={{
+                  bgcolor: (sheetConfig.webhookUrl && sheetConfig.webhookUrl.trim().startsWith('http')) ? '#EFF6FF' : '#FFFFFF',
+                  color: (sheetConfig.webhookUrl && sheetConfig.webhookUrl.trim().startsWith('http')) ? '#1D63FF' : '#475569',
+                  borderColor: (sheetConfig.webhookUrl && sheetConfig.webhookUrl.trim().startsWith('http')) ? '#93C5FD' : '#CBD5E1',
+                  border: '1.5px solid',
+                  borderRadius: '8px',
+                  px: 1.75,
+                  py: 1.25,
+                  fontSize: '0.84rem',
+                  fontWeight: 800,
+                  '&:hover': { bgcolor: '#DBEAFE', borderColor: '#1D63FF' }
+                }}
+                title="Tarik dan selaraskan data terbaru dua arah antara HP & Laptop via Google Spreadsheet"
+              >
+                {isPullingSheet ? 'Menyinkronkan...' : 'Sinkronkan Cloud'}
               </Button>
 
               <Button
@@ -1850,12 +1982,31 @@ function doPost(e) {
             <Tabs
               value={activeTab}
               onChange={(e, val) => setActiveTab(val)}
+              variant="scrollable"
+              scrollButtons="auto"
+              allowScrollButtonsMobile
               sx={{
                 bgcolor: '#E2E8F0',
                 p: '4px',
                 borderRadius: '8px',
                 minHeight: 'auto',
-                '& .MuiTabs-indicator': { display: 'none' }
+                maxWidth: { xs: '100%', md: 'calc(100% - 320px)' },
+                width: { xs: '100%', md: 'auto' },
+                '& .MuiTabs-indicator': { display: 'none' },
+                '& .MuiTabs-scroller': {
+                  overflowX: 'auto !important',
+                  WebkitOverflowScrolling: 'touch',
+                  scrollbarWidth: 'none',
+                  '&::-webkit-scrollbar': { display: 'none' }
+                },
+                '& .MuiTabs-flexContainer': {
+                  gap: '4px'
+                },
+                '& .MuiTabScrollButton-root': {
+                  width: 32,
+                  color: '#0F172A',
+                  '&.Mui-disabled': { opacity: 0.25 }
+                }
               }}
             >
               {[
@@ -1872,15 +2023,18 @@ function doPost(e) {
                     value={tab.id}
                     label={tab.label}
                     sx={{
-                      minHeight: 36,
+                      minHeight: 38,
                       py: 1,
-                      px: 1.75,
+                      px: { xs: 1.5, sm: 2 },
                       borderRadius: '6px',
                       fontWeight: isActive ? 800 : 600,
                       fontSize: '0.84rem',
+                      whiteSpace: 'nowrap',
+                      flexShrink: 0,
                       color: isActive ? '#FFFFFF !important' : '#334155',
                       bgcolor: isActive ? '#0F172A' : 'transparent',
-                      transition: 'background 0.15s, color 0.15s'
+                      transition: 'background 0.15s, color 0.15s',
+                      textTransform: 'none'
                     }}
                   />
                 );
@@ -2195,6 +2349,67 @@ function doPost(e) {
                 </button>
               </div>
             </form>
+
+            {/* Device-to-Device Sync & WhatsApp Link Generator */}
+            <div style={{ background: '#F8FAFC', border: '1.5px solid #CBD5E1', borderRadius: '12px', padding: '20px 22px', marginBottom: '28px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                <Smartphone size={18} color="#0F172A" />
+                <Laptop size={18} color="#0F172A" />
+                <span style={{ fontSize: '0.96rem', fontWeight: '900', color: '#0F172A' }}>
+                  Tautkan &amp; Samakan Data Antara HP dan Laptop
+                </span>
+              </div>
+              <p style={{ margin: 0, fontSize: '0.85rem', color: '#475569', lineHeight: '1.6', marginBottom: '16px' }}>
+                Agar data pesanan di HP dan laptop selalu <strong>saling tersambung otomatis</strong>, pastikan kedua perangkat menggunakan alamat Webhook Google Spreadsheet yang sama. Anda dapat mengirimkan tautan aktivasi instan ke WhatsApp Anda sendiri di bawah ini:
+              </p>
+
+              <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+                <a
+                  href={createWhatsAppSyncWebhookPayload(sheetConfig.webhookUrl, sheetConfig.spreadsheetUrl)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    background: '#166534',
+                    color: '#FFFFFF',
+                    textDecoration: 'none',
+                    borderRadius: '8px',
+                    padding: '11px 18px',
+                    fontSize: '0.86rem',
+                    fontWeight: '800',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '8px'
+                  }}
+                  title="Kirim tautan aktivasi webhook ke WhatsApp agar HP langsung terhubung ke Google Sheet yang sama"
+                >
+                  <MessageCircle size={16} />
+                  <span>Kirim Kunci Cloud ke WhatsApp Admin (Tautkan HP)</span>
+                </a>
+
+                <a
+                  href={createWhatsAppDatabaseTransferPayload(orders, sheetConfig.webhookUrl)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    background: '#FFFFFF',
+                    color: '#0F172A',
+                    border: '1.5px solid #CBD5E1',
+                    textDecoration: 'none',
+                    borderRadius: '8px',
+                    padding: '11px 18px',
+                    fontSize: '0.86rem',
+                    fontWeight: '800',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '8px'
+                  }}
+                  title="Kirim salinan seluruh data pesanan aktif via link WhatsApp agar langsung masuk ke HP / Laptop lain"
+                >
+                  <Share2 size={16} color="#0F172A" />
+                  <span>Transfer Seluruh Database via WhatsApp ({orders.length} Pesanan)</span>
+                </a>
+              </div>
+            </div>
 
             {/* GITHUB INTEGRATION & TOKEN CARD */}
             <div style={{ background: '#FFFFFF', border: '1.5px solid #CBD5E1', borderRadius: '12px', padding: '24px', marginBottom: '28px' }}>

@@ -361,3 +361,96 @@ _Aksara Tech berkomitmen menjunjung tinggi transparansi arsitektur dan akuntabil
 
   return `https://wa.me/${targetPhone}?text=${encodeURIComponent(message)}`;
 }
+
+// Encode all orders into a compressed URL param for seamless 1-click cross-device transfer
+export function encodeOrdersToUrlParam(orders) {
+  try {
+    if (!Array.isArray(orders)) return '';
+    const compact = orders.map(o => ({
+      id: o.id,
+      orderNumber: o.orderNumber,
+      statusType: o.statusType,
+      clientPhone: o.clientPhone,
+      clientEmail: o.clientEmail,
+      projectTitle: o.projectTitle,
+      category: o.category,
+      packageName: o.packageName,
+      packagePrice: o.packagePrice,
+      addons: o.addons || [],
+      changeRequests: o.changeRequests || [],
+      totalInvestment: o.totalInvestment,
+      dpAmount: o.dpAmount,
+      dpStatus: o.dpStatus,
+      orderDate: o.orderDate,
+      estimatedCompletion: o.estimatedCompletion,
+      currentStageNumber: o.currentStageNumber,
+      revisionQuotaTotal: o.revisionQuotaTotal,
+      revisionQuotaUsed: o.revisionQuotaUsed,
+      developerNotes: o.developerNotes,
+      deliverablesPreview: o.deliverablesPreview || []
+    }));
+    return encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify(compact)))));
+  } catch (e) {
+    return '';
+  }
+}
+
+// Decode compressed orders URL param
+export function decodeOrdersFromUrlParam(param) {
+  try {
+    if (!param) return null;
+    const jsonStr = decodeURIComponent(escape(atob(decodeURIComponent(param))));
+    const parsed = JSON.parse(jsonStr);
+    return Array.isArray(parsed) ? parsed : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+// Generate WhatsApp payload for 1-click device link & sync activation
+export function createWhatsAppSyncWebhookPayload(webhookUrl, spreadsheetUrl) {
+  const baseUrl = (typeof window !== 'undefined' && window.location && window.location.origin)
+    ? window.location.origin
+    : 'https://aksaratech.id';
+  
+  const activationUrl = `${baseUrl}/admin?set_webhook=${encodeURIComponent(webhookUrl || '')}`;
+
+  const message =
+`*KUNCI TAUTAN SINKRONISASI CLOUD - AKSARA TECH*
+════════════════════════════════════════
+Buka tautan di bawah ini pada perangkat HP atau Laptop Anda untuk langsung menghubungkan dan menyamakan database secara otomatis:
+
+${activationUrl}
+
+${spreadsheetUrl ? `Google Spreadsheet Target:\n${spreadsheetUrl}\n` : ''}
+_Dengan membuka tautan di atas, perangkat Anda akan langsung tersambung ke database Google Spreadsheet yang sama._`;
+
+  return `https://wa.me/6285600386692?text=${encodeURIComponent(message)}`;
+}
+
+// Generate WhatsApp payload for transferring entire database between HP & Laptop
+export function createWhatsAppDatabaseTransferPayload(orders, webhookUrl) {
+  const baseUrl = (typeof window !== 'undefined' && window.location && window.location.origin)
+    ? window.location.origin
+    : 'https://aksaratech.id';
+  
+  const encodedData = encodeOrdersToUrlParam(orders);
+  let transferUrl = `${baseUrl}/admin?import_all=${encodedData}`;
+  if (webhookUrl && webhookUrl.trim().startsWith('http')) {
+    transferUrl += `&set_webhook=${encodeURIComponent(webhookUrl.trim())}`;
+  }
+
+  const message =
+`*TRANSFER CADANGAN DATABASE LENGKAP - AKSARA TECH*
+════════════════════════════════════════
+Total Pesanan: ${orders.length} Pesanan Aktif
+Waktu Ekspor: ${new Date().toLocaleString('id-ID', { dateStyle: 'full', timeStyle: 'short' })}
+
+Klik tautan berikut pada Laptop atau HP Anda untuk langsung menyelaraskan seluruh data pesanan:
+${transferUrl}
+
+_Peringatan: Tautan ini berisi salinan instan seluruh database pesanan aktif Anda._`;
+
+  return `https://wa.me/6285600386692?text=${encodeURIComponent(message)}`;
+}
+
