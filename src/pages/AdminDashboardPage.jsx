@@ -8,8 +8,6 @@ import {
   Paper,
   Card,
   Chip,
-  Tabs,
-  Tab,
   TextField,
   Select,
   MenuItem,
@@ -375,7 +373,10 @@ export default function AdminDashboardPage() {
         if (Array.isArray(decoded)) {
           saveAllOrders(decoded);
           setOrders(decoded);
-          triggerSuccess(`${decoded.length} pesanan berhasil disinkronkan & diselaraskan dari perangkat lain!`);
+          const msg = decoded.length > 0 
+            ? `${decoded.length} pesanan berhasil disinkronkan & diselaraskan dari perangkat lain!`
+            : 'Database berhasil diselaraskan (database dikosongkan sesuai perangkat pengirim)!';
+          triggerSuccess(msg);
           setSearchParams({});
         }
       } catch (e) {}
@@ -824,8 +825,8 @@ export default function AdminDashboardPage() {
         'Semua data pesanan di sistem lokal browser dan pelacak (/lacak) akan dibersihkan total.',
         'Seluruh baris transaksi di Google Spreadsheet yang terhubung akan OTOMATIS DIHAPUS (header tabel tetap rapi).'
       ] : [
-        'Semua data inquiry, pesanan fix, dan draf brief lokal di browser akan dibersihkan total.',
-        'Tampilan publik pelacak pesanan (/lacak) akan bersih dan kosong.'
+        'Seluruh data pesanan di browser perangkat ini (HP/Laptop) akan dikosongkan total.',
+        'Penyimpanan bersifat lokal per-browser: Untuk mengosongkan di perangkat lain juga, buka portal di perangkat tersebut lalu klik Kosongkan Data, atau gunakan tombol "Tautkan Data HP & Laptop".'
       ],
       variant: 'danger',
       confirmLabel: 'Ya, Kosongkan Semua',
@@ -1807,9 +1808,34 @@ function doPost(e) {
                   fontWeight: 700,
                   '&:hover': { bgcolor: '#FEE2E2', borderColor: '#DC2626' }
                 }}
-                title="Hapus seluruh data pesanan lokal dan kosongkan pelacak"
+                title="Hapus seluruh data pesanan lokal pada browser perangkat ini"
               >
                 Kosongkan Data
+              </Button>
+
+              <Button
+                variant="outlined"
+                component="a"
+                href={createWhatsAppDatabaseTransferPayload(orders, sheetConfig.webhookUrl)}
+                target="_blank"
+                rel="noopener noreferrer"
+                startIcon={<Share2 size={15} />}
+                sx={{
+                  bgcolor: '#F8FAFC',
+                  color: '#0F172A',
+                  borderColor: '#CBD5E1',
+                  border: '1.5px solid #CBD5E1',
+                  borderRadius: '8px',
+                  px: 1.75,
+                  py: 1.25,
+                  fontSize: '0.84rem',
+                  fontWeight: 800,
+                  textDecoration: 'none',
+                  '&:hover': { bgcolor: '#F1F5F9', borderColor: '#0F172A' }
+                }}
+                title="Kirim salinan database via tautan WhatsApp agar data di HP dan Laptop langsung disamakan 100%"
+              >
+                Tautkan Data HP &amp; Laptop
               </Button>
 
               <Button
@@ -1945,36 +1971,37 @@ function doPost(e) {
           </Box>
 
           {/* Navigation Tabs & Search Row */}
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2, mb: 3 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: { xs: 'wrap', md: 'nowrap' }, gap: 2, mb: 3, width: '100%' }}>
             
-            {/* Segmented Filter Tabs */}
-            <Tabs
-              value={activeTab}
-              onChange={(e, val) => setActiveTab(val)}
-              variant="scrollable"
-              scrollButtons="auto"
-              allowScrollButtonsMobile
+            {/* Segmented Filter Tabs (Smooth Native Swipe & Drag on Mobile) */}
+            <Box
+              role="tablist"
+              aria-label="Filter Status Pesanan"
               sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '5px',
                 bgcolor: '#E2E8F0',
                 p: '4px',
                 borderRadius: '8px',
-                minHeight: 'auto',
-                maxWidth: { xs: '100%', md: 'calc(100% - 320px)' },
+                overflowX: 'auto',
+                overflowY: 'hidden',
+                WebkitOverflowScrolling: 'touch',
+                touchAction: 'pan-x',
+                minWidth: 0,
                 width: { xs: '100%', md: 'auto' },
-                '& .MuiTabs-indicator': { display: 'none' },
-                '& .MuiTabs-scroller': {
-                  overflowX: 'auto !important',
-                  WebkitOverflowScrolling: 'touch',
-                  scrollbarWidth: 'none',
-                  '&::-webkit-scrollbar': { display: 'none' }
+                maxWidth: { xs: '100%', md: 'calc(100% - 320px)' },
+                scrollbarWidth: 'thin',
+                '&::-webkit-scrollbar': {
+                  height: '4px'
                 },
-                '& .MuiTabs-flexContainer': {
-                  gap: '4px'
+                '&::-webkit-scrollbar-track': {
+                  bgcolor: '#E2E8F0',
+                  borderRadius: '4px'
                 },
-                '& .MuiTabScrollButton-root': {
-                  width: 32,
-                  color: '#0F172A',
-                  '&.Mui-disabled': { opacity: 0.25 }
+                '&::-webkit-scrollbar-thumb': {
+                  bgcolor: '#94A3B8',
+                  borderRadius: '4px'
                 }
               }}
             >
@@ -1987,28 +2014,45 @@ function doPost(e) {
               ].map(tab => {
                 const isActive = activeTab === tab.id;
                 return (
-                  <Tab
+                  <Box
+                    component="button"
+                    type="button"
                     key={tab.id}
-                    value={tab.id}
-                    label={tab.label}
+                    role="tab"
+                    aria-selected={isActive}
+                    onClick={() => setActiveTab(tab.id)}
                     sx={{
                       minHeight: 38,
                       py: 1,
-                      px: { xs: 1.5, sm: 2 },
+                      px: { xs: 1.75, sm: 2.25 },
                       borderRadius: '6px',
+                      border: 'none',
+                      cursor: 'pointer',
                       fontWeight: isActive ? 800 : 600,
                       fontSize: '0.84rem',
                       whiteSpace: 'nowrap',
                       flexShrink: 0,
-                      color: isActive ? '#FFFFFF !important' : '#334155',
+                      color: isActive ? '#FFFFFF' : '#334155',
                       bgcolor: isActive ? '#0F172A' : 'transparent',
                       transition: 'background 0.15s, color 0.15s',
-                      textTransform: 'none'
+                      textTransform: 'none',
+                      outline: 'none',
+                      userSelect: 'none',
+                      WebkitTapHighlightColor: 'transparent',
+                      '&:hover': {
+                        bgcolor: isActive ? '#0F172A' : '#CBD5E1'
+                      },
+                      '&:focus-visible': {
+                        outline: '2px solid #1D63FF',
+                        outlineOffset: '2px'
+                      }
                     }}
-                  />
+                  >
+                    {tab.label}
+                  </Box>
                 );
               })}
-            </Tabs>
+            </Box>
 
             {/* Search Box */}
             {activeTab !== 'SPREADSHEET' && (
