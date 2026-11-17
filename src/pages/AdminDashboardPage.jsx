@@ -823,42 +823,6 @@ export default function AdminDashboardPage() {
     });
   };
 
-  // Reset Demo Orders Handler
-  const handleResetDemoOrders = () => {
-    const config = getSheetConfig();
-    const hasSheet = config?.webhookUrl && config.webhookUrl.trim().startsWith('http');
-
-    showConfirm({
-      title: 'Muat Ulang Data Contoh Awal?',
-      subtitle: 'Memulihkan 4 data pesanan contoh standar untuk pengujian sistem.',
-      message: 'Apakah Anda ingin memuat kembali data pengujian awal Aksara Tech?',
-      bulletPoints: hasSheet ? [
-        'Data pesanan aktif saat ini akan digantikan dengan 4 transaksi contoh baru.',
-        'Data contoh akan otomatis disinkronkan ke Google Spreadsheet yang terhubung.'
-      ] : [
-        'Data pesanan aktif saat ini akan digantikan dengan 4 transaksi contoh baru untuk pengujian sistem.'
-      ],
-      variant: 'warning',
-      confirmLabel: 'Muat Ulang Contoh',
-      cancelLabel: 'Batal',
-      onConfirm: async () => {
-        setConfirmModal(prev => ({ ...prev, isLoading: true }));
-        try {
-          const restored = resetToDefaultOrders();
-          setOrders(restored);
-          if (hasSheet) {
-            await syncAllOrdersToSheet();
-            triggerSuccess('Data contoh awal berhasil dimuat kembali dan disinkronkan ke Google Spreadsheet.');
-          } else {
-            triggerSuccess('Data contoh awal berhasil dimuat kembali ke sistem.');
-          }
-        } finally {
-          closeConfirmModal();
-        }
-      }
-    });
-  };
-
   // Save Edit Order Form (Auto-Update Google Spreadsheet)
   const handleSaveEdit = async (e) => {
     e.preventDefault();
@@ -1824,27 +1788,6 @@ function doPost(e) {
 
               <Button
                 variant="outlined"
-                onClick={handleResetDemoOrders}
-                startIcon={<RotateCcw size={15} />}
-                sx={{
-                  bgcolor: '#FFFFFF',
-                  color: '#0F172A',
-                  borderColor: '#CBD5E1',
-                  border: '1.5px solid #CBD5E1',
-                  borderRadius: '8px',
-                  px: 1.75,
-                  py: 1.25,
-                  fontSize: '0.84rem',
-                  fontWeight: 700,
-                  '&:hover': { bgcolor: '#F1F5F9', borderColor: '#0F172A' }
-                }}
-                title="Muat ulang 4 data contoh awal untuk pengujian"
-              >
-                Muat Ulang Contoh
-              </Button>
-
-              <Button
-                variant="outlined"
                 onClick={() => handlePullOrdersFromSheet(false)}
                 disabled={isPullingSheet}
                 startIcon={<RefreshCw size={15} />}
@@ -2672,33 +2615,56 @@ function doPost(e) {
               <Card sx={{ border: '1.5px solid #CBD5E1', borderRadius: '12px', p: 6, textAlign: 'center', bgcolor: '#FFFFFF' }}>
                 <AlertCircle size={32} color="#64748B" style={{ margin: '0 auto 12px auto' }} />
                 <Typography variant="h6" sx={{ fontWeight: 800, color: '#0F172A', mb: 1 }}>
-                  {orders.length === 0 ? 'Seluruh Database Pesanan Sedang Kosong' : 'Tidak Ada Pesanan pada Kategori Ini'}
+                  {orders.length === 0 ? 'Belum Ada Pesanan Terdaftar' : 'Tidak Ada Pesanan pada Kategori Ini'}
                 </Typography>
-                <Typography variant="body2" sx={{ color: '#64748B', mb: orders.length === 0 ? 2.5 : 0, maxWidth: 600, mx: 'auto' }}>
+                <Typography variant="body2" sx={{ color: '#64748B', mb: orders.length === 0 ? 3 : 0, maxWidth: 600, mx: 'auto' }}>
                   {orders.length === 0 
-                    ? 'Semua pesanan telah dihapus. Halaman pelacak (/lacak) saat ini bersih dan tidak menampilkan order apa pun. Anda dapat menambah pesanan baru atau memuat ulang data contoh.'
+                    ? 'Database pesanan Anda saat ini bersih tanpa data contoh. Pesanan baru akan langsung masuk saat klien mengisi formulir pemesanan, atau saat Anda mengimpor chat / menambah pesanan manual.'
                     : 'Gunakan tombol "Tambah Pesanan Manual" di kanan atas jika ada pesanan langsung dari WhatsApp.'}
                 </Typography>
                 {orders.length === 0 && (
-                  <Button
-                    variant="outlined"
-                    onClick={handleResetDemoOrders}
-                    startIcon={<RotateCcw size={15} />}
-                    sx={{
-                      bgcolor: '#F1F5F9',
-                      color: '#0F172A',
-                      borderColor: '#CBD5E1',
-                      border: '1.5px solid #CBD5E1',
-                      borderRadius: '6px',
-                      px: 2,
-                      py: 1,
-                      fontSize: '0.84rem',
-                      fontWeight: 700,
-                      '&:hover': { bgcolor: '#E2E8F0', borderColor: '#0F172A' }
-                    }}
-                  >
-                    Muat Ulang 4 Contoh Data Awal
-                  </Button>
+                  <Box sx={{ display: 'flex', gap: 1.5, justifyContent: 'center', flexWrap: 'wrap' }}>
+                    <Button
+                      variant="contained"
+                      onClick={handleOpenCreateModal}
+                      startIcon={<Plus size={16} />}
+                      sx={{
+                        bgcolor: '#1D63FF',
+                        color: '#FFFFFF',
+                        borderRadius: '8px',
+                        px: 2.25,
+                        py: 1,
+                        fontSize: '0.84rem',
+                        fontWeight: 800,
+                        '&:hover': { bgcolor: '#144ECC' }
+                      }}
+                    >
+                      Tambah Pesanan Manual
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      onClick={() => {
+                        setIsImportModalOpen(true);
+                        setWaImportText('');
+                        setWaImportError('');
+                      }}
+                      startIcon={<MessageCircle size={16} />}
+                      sx={{
+                        bgcolor: '#F0FDF4',
+                        color: '#166534',
+                        borderColor: '#86EFAC',
+                        border: '1.5px solid #86EFAC',
+                        borderRadius: '8px',
+                        px: 2,
+                        py: 1,
+                        fontSize: '0.84rem',
+                        fontWeight: 800,
+                        '&:hover': { bgcolor: '#DCFCE7' }
+                      }}
+                    >
+                      Impor dari Chat WA
+                    </Button>
+                  </Box>
                 )}
               </Card>
             ) : (

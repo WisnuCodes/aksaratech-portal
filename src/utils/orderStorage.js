@@ -8,155 +8,16 @@ import { PACKAGES } from '../data/catalogData';
 const STORAGE_KEY = 'aksara_orders_db_v1';
 const SHEET_CONFIG_KEY = 'aksara_sheet_config_v1';
 
-// Seed Initial Orders (used if storage is empty)
-export const INITIAL_ORDERS = [
-  {
-    id: 'INQ-AT-20261109-8F2A',
-    orderNumber: 'ORD-AT-2026-0042',
-    statusType: 'FIX_ORDER', // 'INQUIRY' (hanya tanya/belum DP) vs 'FIX_ORDER' (DP lunas & jalan)
-    clientName: '-',
-    clientPhone: '081234567890',
-    clientEmail: 'budi.santoso@example.com',
-    projectTitle: 'Website Katalog Kopi Nusantara & Direct WhatsApp Order',
-    category: 'UMKM & Bisnis',
-    packageId: 'umkm-katalog',
-    packageName: 'Website UMKM & Katalog Produk Digital',
-    packagePrice: 300000,
-    addons: [
-      { name: 'Integrasi Database MySQL & CRUD', price: 60000 },
-      { name: 'Fitur Multi-Bahasa (Localization)', price: 45000 }
-    ],
-    totalInvestment: 405000,
-    dpAmount: 202500,
-    dpStatus: 'LUNAS (DP 50%)',
-    orderDate: '09 November 2026',
-    estimatedCompletion: '15 November 2026',
-    currentStageNumber: 3,
-    revisionQuotaTotal: 3,
-    revisionQuotaUsed: 0,
-    revisionHistory: [],
-    developerNotes: 'Basis data MySQL dan 4 tabel relasional katalog produk telah siap. Tim saat ini sedang menghubungkan endpoint filter pencarian real-time dan format checkout WhatsApp. Pratinjau pertama dijadwalkan tayang pada Rabu, 12 November.',
-    deliverablesPreview: [
-      'Master Source Code (.zip) Full Stack',
-      'Skema Database MySQL (.sql) dengan data uji produk kopi',
-      'Ringkasan SRS Fungsional & ERD Diagram'
-    ]
-  },
-  {
-    id: 'INQ-AT-20261108-4C91',
-    orderNumber: 'MENUNGGU-DP',
-    statusType: 'INQUIRY',
-    clientName: '-',
-    clientPhone: '082199881122',
-    clientEmail: 'hendra.pratama@gmail.com',
-    projectTitle: 'Toko Ritel Sepatu Olahraga Online',
-    category: 'UMKM & Bisnis',
-    packageId: 'e-commerce',
-    packageName: 'E-Commerce / Toko Daring',
-    packagePrice: 450000,
-    addons: [
-      { name: 'Optimasi SEO On-Page Lanjutan', price: 40000 }
-    ],
-    totalInvestment: 490000,
-    dpAmount: 245000,
-    dpStatus: 'MENUNGGU TRANSFER DP 50%',
-    orderDate: '08 November 2026',
-    estimatedCompletion: 'Menunggu Verifikasi DP',
-    currentStageNumber: 1,
-    revisionQuotaTotal: 3,
-    revisionQuotaUsed: 0,
-    revisionHistory: [],
-    developerNotes: 'Formulir brief telah diterima via WhatsApp. Menunggu konfirmasi bukti transfer uang muka termin 1 (DP 50%) dari calon pemesan untuk memasukkan proyek ke dalam antrean pengerjaan.',
-    deliverablesPreview: [
-      'Master Source Code Toko Daring',
-      'Database Relasional (.sql)'
-    ]
-  },
-  {
-    id: 'ORD-AT-2026-0018',
-    orderNumber: 'ORD-AT-2026-0018',
-    statusType: 'FIX_ORDER',
-    clientName: '-',
-    clientPhone: '085711223344',
-    clientEmail: 'corporate@samuderalogistik.id',
-    projectTitle: 'Portal Company Profile Eksekutif & Formulir Permintaan Penawaran',
-    category: 'Standard Enterprise',
-    packageId: 'company-profile',
-    packageName: 'Company Profile Korporat',
-    packagePrice: 400000,
-    addons: [
-      { name: 'Optimasi SEO On-Page Lanjutan', price: 40000 }
-    ],
-    totalInvestment: 440000,
-    dpAmount: 220000,
-    dpStatus: 'LUNAS (DP 50%)',
-    orderDate: '04 November 2026',
-    estimatedCompletion: '11 November 2026',
-    currentStageNumber: 4,
-    revisionQuotaTotal: 3,
-    revisionQuotaUsed: 1,
-    revisionHistory: [
-      {
-        sessionNumber: 1,
-        date: '06 November 2026',
-        note: 'Penyesuaian tata letak grid foto direksi pada section About Us dan pembaharuan nomor kontak kantor cabang Surabaya.',
-        timestamp: '2026-11-06T10:30:00.000Z'
-      }
-    ],
-    developerNotes: 'Pratinjau pertama telah disampaikan. Sesi revisi ke-1 (penyesuaian tata letak profil direksi dan kontak cabang) selesai diimplementasikan. Menunggu konfirmasi final.',
-    deliverablesPreview: [
-      'Master Source Code Company Profile Korporat 6 Halaman',
-      'Panduan Operasional & Dokumentasi Struktur Kode',
-      'Konfigurasi Meta Tags SEO On-Page'
-    ]
-  },
-  {
-    id: 'ORD-AT-2026-0005',
-    orderNumber: 'ORD-AT-2026-0005',
-    statusType: 'FIX_ORDER',
-    clientName: '-',
-    clientPhone: '089699887766',
-    clientEmail: 'rian.prawira@student.univ.ac.id',
-    projectTitle: 'Sistem Informasi Rekam Medis Klinik berbasis Role Dokter & Pasien',
-    category: 'Mahasiswa & Akademisi',
-    packageId: 'skripsi-akademik',
-    packageName: 'Tugas Kuliah / Project Mahasiswa / Modul Akademik',
-    packagePrice: 500000,
-    addons: [
-      { name: 'Pembuatan Dokumen SRS & SDD Tambahan', price: 50000 },
-      { name: 'Pembuatan UML & Diagram Sistem Lengkap', price: 50000 }
-    ],
-    totalInvestment: 600000,
-    dpAmount: 300000,
-    dpStatus: 'LUNAS 100% (SELESAI)',
-    orderDate: '28 Oktober 2026',
-    estimatedCompletion: '05 November 2026',
-    currentStageNumber: 5,
-    revisionQuotaTotal: 3,
-    revisionQuotaUsed: 2,
-    revisionHistory: [
-      {
-        sessionNumber: 1,
-        date: '01 November 2026',
-        note: 'Penambahan field catatan alergi obat pada form rekam medis dan relasi foreign key tabel pasien.',
-        timestamp: '2026-11-01T14:15:00.000Z'
-      },
-      {
-        sessionNumber: 2,
-        date: '03 November 2026',
-        note: 'Penyesuaian format cetak PDF resep dokter dan perapihan layout login form peran dokter.',
-        timestamp: '2026-11-03T09:45:00.000Z'
-      }
-    ],
-    developerNotes: 'Seluruh tahapan rekayasa telah rampung 100%. Master Source Code (.zip), database .sql dengan dummy data, serta dokumen SRS/SDD dan UML diagram lengkap telah diserahterimakan. Masa garansi bug 1 minggu aktif hingga 12 November 2026.',
-    deliverablesPreview: [
-      'Master Source Code Sistem Web Rekam Medis Siap Run',
-      'Database Relasional (.sql) dengan 60+ data rekam medis dummy',
-      'Dokumen SRS & SDD Standar IEEE Formal Lengkap',
-      'Paket UML Diagrams (Use Case, Activity, Sequence, Class, ERD)'
-    ]
-  }
+// Known sample mock order IDs to permanently purge from all browser storage
+export const MOCK_ORDER_IDS = [
+  'INQ-AT-20261109-8F2A',
+  'INQ-AT-20261108-4C91',
+  'ORD-AT-2026-0018',
+  'ORD-AT-2026-0005'
 ];
+
+// Completely clean initial orders (no mock/sample data)
+export const INITIAL_ORDERS = [];
 
 /**
  * Generate or get DevOps and Engineering Telemetry for an order
@@ -286,20 +147,25 @@ export function calculateOrderFinancials(order) {
 }
 
 /**
- * Get all orders from localStorage, fallback to INITIAL_ORDERS only on very first visit
+ * Get all orders from localStorage (no mock/sample orders)
  */
 export function getAllOrders() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    // Only seed initial orders if key has never been set (null)
     if (raw === null) {
-      saveAllOrders(INITIAL_ORDERS);
-      return INITIAL_ORDERS.map(o => ({ ...o, devops: getOrderDevOps(o) }));
+      saveAllOrders([]);
+      return [];
     }
     const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) 
-      ? parsed.map(o => ({ ...o, devops: getOrderDevOps(o) })) 
-      : [];
+    if (!Array.isArray(parsed)) return [];
+
+    // Automatically purge old mock sample data so user never sees dummy orders
+    const cleaned = parsed.filter(o => !MOCK_ORDER_IDS.includes(o?.id));
+    if (cleaned.length !== parsed.length) {
+      saveAllOrders(cleaned);
+    }
+
+    return cleaned.map(o => ({ ...o, devops: getOrderDevOps(o) }));
   } catch (e) {
     return [];
   }
@@ -458,14 +324,14 @@ export function clearAllOrders() {
 }
 
 /**
- * Reset orders to initial sample demos
+ * Reset orders to empty database
  */
 export function resetToDefaultOrders() {
-  saveAllOrders(INITIAL_ORDERS);
+  saveAllOrders([]);
   if (typeof window !== 'undefined') {
     window.dispatchEvent(new Event('aksara_orders_updated'));
   }
-  return INITIAL_ORDERS;
+  return [];
 }
 
 /**

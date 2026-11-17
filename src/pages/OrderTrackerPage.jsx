@@ -240,7 +240,7 @@ export default function OrderTrackerPage() {
                 type="text"
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
-                placeholder="Contoh: INQ-AT-20261109-8F2A atau 081234567890"
+                placeholder="Masukkan ID Tiket (misal: INQ-AT-...) atau nomor WhatsApp..."
                 style={{
                   width: '100%',
                   boxSizing: 'border-box',
@@ -1088,7 +1088,7 @@ export default function OrderTrackerPage() {
             </h3>
 
             <p style={{ fontSize: '0.9rem', color: '#475569', maxWidth: '580px', margin: '0 auto 20px auto', lineHeight: '1.6' }}>
-              Pastikan Anda mengetikkan format yang sesuai (contoh: <code style={{ fontWeight: '700', color: '#0F172A' }}>INQ-AT-20261109-8F2A</code>) atau gunakan nomor WhatsApp yang sama saat Anda mengisi form di halaman /pesan.
+              Pastikan Anda mengetikkan ID Tiket proyek Anda yang valid (contoh: <code style={{ fontWeight: '700', color: '#0F172A' }}>INQ-AT-202611...</code>) atau nomor WhatsApp yang Anda daftarkan saat memesan.
             </p>
 
             <div style={{ display: 'inline-flex', gap: '10px', flexWrap: 'wrap', justifyContent: 'center' }}>
@@ -1107,7 +1107,7 @@ export default function OrderTrackerPage() {
                     cursor: 'pointer'
                   }}
                 >
-                  Buka Contoh Proyek Aktif ({activeDbOrders[0].id})
+                  Lihat Proyek Terdaftar ({activeDbOrders[0].id})
                 </button>
               )}
 

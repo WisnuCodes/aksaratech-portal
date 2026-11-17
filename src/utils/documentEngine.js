@@ -1,5 +1,17 @@
 // Utility for Indonesian currency formatting, numbers-to-words (Terbilang), and ID generators
 
+export const PRODUCTION_PORTAL_URL = 'https://aksaratech-portal.vercel.app';
+
+export function getPortalBaseUrl() {
+  if (typeof window !== 'undefined' && window.location) {
+    const origin = window.location.origin;
+    if (origin && !origin.includes('localhost') && !origin.includes('127.0.0.1')) {
+      return origin;
+    }
+  }
+  return PRODUCTION_PORTAL_URL;
+}
+
 export function formatRupiah(amount) {
   if (amount === undefined || amount === null || isNaN(amount)) return "Rp 0";
   return new Intl.NumberFormat("id-ID", {
@@ -91,9 +103,7 @@ export function createWhatsAppPayload(formData, selectedPackage, selectedAddons 
     year: "numeric"
   });
 
-  const baseUrl = (typeof window !== "undefined" && window.location && window.location.origin)
-    ? window.location.origin
-    : "https://aksaratech.id";
+  const baseUrl = getPortalBaseUrl();
 
   // Lightweight payload for cross-device sync (HP client -> Laptop admin)
   const payloadForSync = {
@@ -323,9 +333,7 @@ export function createChangeRequestWhatsAppPayload(order) {
     crItemsText = changeRequests.map(cr => `  • ${cr.name} (${cr.category || 'Fitur'}): ${formatRupiah(cr.price)}${cr.notes ? `\n    Catatan: ${cr.notes}` : ''}`).join('\n');
   }
 
-  const baseUrl = (typeof window !== 'undefined' && window.location && window.location.origin)
-    ? window.location.origin
-    : 'https://aksaratech.id';
+  const baseUrl = getPortalBaseUrl();
   const trackingUrl = `${baseUrl}/lacak?kode=${order.id}`;
 
   const message = 
@@ -409,10 +417,7 @@ export function decodeOrdersFromUrlParam(param) {
 
 // Generate WhatsApp payload for 1-click device link & sync activation
 export function createWhatsAppSyncWebhookPayload(webhookUrl, spreadsheetUrl) {
-  const baseUrl = (typeof window !== 'undefined' && window.location && window.location.origin)
-    ? window.location.origin
-    : 'https://aksaratech.id';
-  
+  const baseUrl = getPortalBaseUrl();
   const activationUrl = `${baseUrl}/admin?set_webhook=${encodeURIComponent(webhookUrl || '')}`;
 
   const message =
@@ -430,10 +435,7 @@ _Dengan membuka tautan di atas, perangkat Anda akan langsung tersambung ke datab
 
 // Generate WhatsApp payload for transferring entire database between HP & Laptop
 export function createWhatsAppDatabaseTransferPayload(orders, webhookUrl) {
-  const baseUrl = (typeof window !== 'undefined' && window.location && window.location.origin)
-    ? window.location.origin
-    : 'https://aksaratech.id';
-  
+  const baseUrl = getPortalBaseUrl();
   const encodedData = encodeOrdersToUrlParam(orders);
   let transferUrl = `${baseUrl}/admin?import_all=${encodedData}`;
   if (webhookUrl && webhookUrl.trim().startsWith('http')) {
