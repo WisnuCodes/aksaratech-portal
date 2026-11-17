@@ -167,11 +167,28 @@ export function useOrderForm(initialPackageId = null) {
     return Object.keys(newErrors).length === 0;
   };
 
+  const scrollToFormTop = () => {
+    const performScroll = () => {
+      const card = document.querySelector('.order-brief-card') || document.getElementById('order-form');
+      if (card) {
+        const rect = card.getBoundingClientRect();
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const targetY = Math.max(0, rect.top + scrollTop - 75);
+        window.scrollTo({ top: targetY, behavior: 'smooth' });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    };
+
+    performScroll();
+    setTimeout(performScroll, 50);
+  };
+
   const nextStep = () => {
     if (validateStep(currentStep)) {
       if (currentStep < 7) {
         setCurrentStep(prev => prev + 1);
-        window.scrollTo({ top: document.getElementById('order-form')?.offsetTop - 80 || 0, behavior: 'smooth' });
+        scrollToFormTop();
       }
     } else {
       setTimeout(() => {
@@ -189,14 +206,14 @@ export function useOrderForm(initialPackageId = null) {
   const prevStep = () => {
     if (currentStep > 1) {
       setCurrentStep(prev => prev - 1);
-      window.scrollTo({ top: document.getElementById('order-form')?.offsetTop - 80 || 0, behavior: 'smooth' });
+      scrollToFormTop();
     }
   };
 
   const goToStep = (step) => {
     if (step < currentStep || validateStep(currentStep)) {
       setCurrentStep(step);
-      window.scrollTo({ top: document.getElementById('order-form')?.offsetTop - 80 || 0, behavior: 'smooth' });
+      scrollToFormTop();
     }
   };
 

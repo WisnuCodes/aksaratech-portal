@@ -72,6 +72,16 @@ export default function Navbar() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Instant scroll to top and close mobile menu drawer on navigation
+  const handleNavClick = (targetPath) => {
+    setMobileMenuOpen(false);
+    document.body.style.overflow = '';
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    requestAnimationFrame(() => {
+      window.scrollTo(0, 0);
+    });
+  };
+
   // Lock body scroll when mobile menu is open
   useEffect(() => {
     if (mobileMenuOpen) {
@@ -128,7 +138,12 @@ export default function Navbar() {
       <div className="nav-bar-inner">
         
         {/* Brand Logo */}
-        <Link to="/" className="brand-link" aria-label="Aksara Tech Beranda">
+        <Link 
+          to="/" 
+          className="brand-link" 
+          aria-label="Aksara Tech Beranda"
+          onClick={() => handleNavClick('/')}
+        >
           <div className="brand-icon-box">
             <img 
               src="/brand-icon.png" 
@@ -154,12 +169,14 @@ export default function Navbar() {
           <NavLink 
             to="/paket" 
             className={({ isActive }) => `desktop-nav-link ${isActive ? 'is-active' : ''}`}
+            onClick={() => handleNavClick('/paket')}
           >
             Paket &amp; Harga
           </NavLink>
           <NavLink 
             to="/eksklusi-server" 
             className={({ isActive }) => `desktop-nav-link ${isActive ? 'is-active' : ''}`}
+            onClick={() => handleNavClick('/eksklusi-server')}
           >
             <ShieldRoundedIcon sx={{ fontSize: 16, color: 'var(--prussian-blue)', mr: 0.5 }} />
             <span>Eksklusi Server</span>
@@ -167,18 +184,21 @@ export default function Navbar() {
           <NavLink 
             to="/alur-sop" 
             className={({ isActive }) => `desktop-nav-link ${isActive ? 'is-active' : ''}`}
+            onClick={() => handleNavClick('/alur-sop')}
           >
             Alur SOP
           </NavLink>
           <NavLink 
             to="/faq" 
             className={({ isActive }) => `desktop-nav-link ${isActive ? 'is-active' : ''}`}
+            onClick={() => handleNavClick('/faq')}
           >
             FAQ
           </NavLink>
           <NavLink 
             to="/ketentuan" 
             className={({ isActive }) => `desktop-nav-link ${isActive ? 'is-active' : ''}`}
+            onClick={() => handleNavClick('/ketentuan')}
           >
             <DescriptionRoundedIcon sx={{ fontSize: 16, color: 'var(--prussian-blue)', mr: 0.5 }} />
             <span>Ketentuan &amp; Privasi</span>
@@ -186,6 +206,7 @@ export default function Navbar() {
           <NavLink 
             to="/lacak" 
             className={({ isActive }) => `desktop-nav-link ${isActive ? 'is-active' : ''}`}
+            onClick={() => handleNavClick('/lacak')}
           >
             <SearchRoundedIcon sx={{ fontSize: 16, color: 'var(--prussian-blue)', mr: 0.5 }} />
             <span>Lacak Proyek</span>
@@ -208,9 +229,14 @@ export default function Navbar() {
           </a>
 
           {/* Desktop Order Button */}
-          <Link to="/pesan" className="btn btn-primary btn-sm" id="order-btn-desktop">
+          <Link 
+            to="/pesan" 
+            className="btn btn-primary btn-sm" 
+            id="order-btn-desktop"
+            onClick={() => handleNavClick('/pesan')}
+          >
             <span>Pesan Proyek</span>
-            </Link>
+          </Link>
 
           {/* Mobile WA Quick Button via Material UI IconButton */}
           <IconButton
@@ -372,6 +398,7 @@ export default function Navbar() {
                     component={Link}
                     to={item.to}
                     selected={isActive}
+                    onClick={() => handleNavClick(item.to)}
                     sx={{
                       borderRadius: '10px',
                       py: 0.7,
@@ -471,6 +498,7 @@ export default function Navbar() {
             <MuiButton
               component={Link}
               to="/pesan"
+              onClick={() => handleNavClick('/pesan')}
               variant="contained"
               fullWidth
               sx={{
@@ -483,17 +511,17 @@ export default function Navbar() {
                 py: 1.1,
                 px: 2,
                 borderRadius: '8px',
-                border: '1px solid #CBD5E1',
-                
+                border: '1.5px solid #0F172A',
+                boxShadow: 'none',
                 transition: 'all 0.15s cubic-bezier(0.2, 0, 0, 1)',
                 '&:hover': {
                   bgcolor: 'var(--prussian-blue-dark)',
                   transform: 'translate(-1px, -1px)',
-                  
+                  boxShadow: 'none'
                 },
                 '&:active': {
                   transform: 'translate(1px, 1px)',
-                  
+                  boxShadow: 'none'
                 }
               }}
             >
@@ -507,6 +535,10 @@ export default function Navbar() {
             href={`https://wa.me/${BUSINESS_INFO.waNumber}?text=Halo%20Aksara%20Tech,%20saya%20ingin%20berkonsultasi%20mengenai%20layanan%20rekayasa%20website.`}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => {
+              setMobileMenuOpen(false);
+              document.body.style.overflow = '';
+            }}
             fullWidth
             sx={{
               display: 'flex',

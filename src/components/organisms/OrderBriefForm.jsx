@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useOrderForm } from '../../hooks/useOrderForm';
 import { PACKAGES, ADDONS } from '../../data/catalogData';
 import { formatRupiah, terbilangRupiah } from '../../utils/documentEngine';
@@ -44,6 +44,30 @@ export default function OrderBriefForm({ preselectedPackageId, hideHeader = fals
 
   // Check if Custom Request Add-on (id: 4) is selected
   const isCustomModuleSelected = (formData.selectedAddonIds || []).includes('addon-custom-module');
+
+  // Scroll smoothly to form top on step change (skipping initial mount)
+  const isFirstRender = useRef(true);
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    const scrollToFormTop = () => {
+      const card = document.querySelector('.order-brief-card') || document.getElementById('order-form');
+      if (card) {
+        const rect = card.getBoundingClientRect();
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const targetY = Math.max(0, rect.top + scrollTop - 75);
+        window.scrollTo({ top: targetY, behavior: 'smooth' });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    };
+
+    scrollToFormTop();
+    const timer = setTimeout(scrollToFormTop, 60);
+    return () => clearTimeout(timer);
+  }, [currentStep]);
 
   return (
     <section id="order-form" className="section-padding" style={{ background: '#F8FAFC' }}>
