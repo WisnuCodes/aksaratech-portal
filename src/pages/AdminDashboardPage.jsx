@@ -51,7 +51,9 @@ import {
   X,
   History,
   Phone,
-  KeyRound
+  KeyRound,
+  GitBranch,
+  Code2
 } from 'lucide-react';
 import { 
   getAllOrders, 
