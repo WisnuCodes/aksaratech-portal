@@ -146,7 +146,7 @@ export default function OrderBriefForm({ preselectedPackageId, hideHeader = fals
                     value={formData.clientName || formData.inquiryId}
                     onChange={(e) => updateField('clientName', e.target.value)}
                     error={errors.clientName}
-                    helperText="ID unik otomatis diterbitkan oleh sistem untuk pelacakan brief & penawaran resmi."
+                    helperText="ID unik resmi yang diterbitkan sistem untuk verifikasi brief & penawaran resmi."
                     style={{ background: '#F1F5F9', fontWeight: '800', color: 'var(--prussian-blue)', cursor: 'not-allowed' }}
                   />
 

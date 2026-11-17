@@ -1,5 +1,5 @@
 import React, { useState, useEffect, lazy, Suspense } from 'react';
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Navbar from './components/organisms/Navbar';
 import Footer from './components/organisms/Footer';
 import HomePage from './pages/HomePage';
@@ -14,7 +14,6 @@ const WorkflowPage = lazy(() => import('./pages/WorkflowPage'));
 const OrderBriefPage = lazy(() => import('./pages/OrderBriefPage'));
 const FAQPage = lazy(() => import('./pages/FAQPage'));
 const TermsPrivacyPage = lazy(() => import('./pages/TermsPrivacyPage'));
-const OrderTrackerPage = lazy(() => import('./pages/OrderTrackerPage'));
 const AdminDashboardPage = lazy(() => import('./pages/AdminDashboardPage'));
 const ErrorPage = lazy(() => import('./pages/ErrorPage'));
 
@@ -95,7 +94,6 @@ function AppContent() {
     '/eksklusi-server',
     '/alur-sop',
     '/pesan',
-    '/lacak',
     '/faq',
     '/ketentuan',
     '/admin'
@@ -125,7 +123,7 @@ function AppContent() {
             <Route path="/eksklusi-server" element={<ServerExclusionPage />} />
             <Route path="/alur-sop" element={<WorkflowPage />} />
             <Route path="/pesan" element={<OrderBriefPage preselectedPackageId={selectedPackageId} />} />
-            <Route path="/lacak" element={<OrderTrackerPage />} />
+            <Route path="/lacak" element={<Navigate to="/pesan" replace />} />
             <Route path="/faq" element={<FAQPage />} />
             <Route path="/ketentuan" element={<TermsPrivacyPage />} />
             <Route path="/admin" element={<AdminDashboardPage />} />

@@ -103,40 +103,9 @@ export function createWhatsAppPayload(formData, selectedPackage, selectedAddons 
     year: "numeric"
   });
 
-  const baseUrl = getPortalBaseUrl();
-
-  // Lightweight payload for cross-device sync (HP client -> Laptop admin)
-  const payloadForSync = {
-    id: inquiryId,
-    orderNumber: 'MENUNGGU-DP',
-    statusType: 'INQUIRY',
-    clientName: formData.clientName || inquiryId,
-    clientPhone: (formData.clientPhone || '').replace(/[\s-]/g, ''),
-    clientEmail: formData.clientEmail || '-',
-    projectTitle: formData.projectTitle || 'Proyek Website Kustom Aksara Tech',
-    category: formData.projectCategory || 'UMKM & Bisnis',
-    packageId: selectedPackage?.id || 'umkm-katalog',
-    packageName: selectedPackage?.name || 'Website UMKM & Katalog Produk Digital',
-    packagePrice: packagePrice,
-    addons: (selectedAddons || []).map(a => ({ name: a.name, price: a.minPrice })),
-    changeRequests: [],
-    totalInvestment: totalInvestment,
-    dpAmount: dpAmount,
-    dpStatus: 'MENUNGGU VERIFIKASI DP 50%',
-    orderDate: submissionDate,
-    estimatedCompletion: `${selectedPackage?.minDays || 4}–${selectedPackage?.maxDays || 7} Hari Kerja`,
-    currentStageNumber: 1,
-    revisionQuotaTotal: 3,
-    revisionQuotaUsed: 0,
-    developerNotes: formData.specialNotes || 'Formulir brief teknis diajukan via website.',
-    deliverablesPreview: selectedPackage?.deliverables || ['Master Source Code (.zip)', 'Database Relasional (.sql)']
-  };
-
-  const trackingUrl = `${baseUrl}/lacak?kode=${inquiryId}`;
-
   const message = 
-`*SURAT BRIEF TEKNIS & PERMINTAAN PENAWARAN PROYEK*
-*AKSARA TECH – Enterprise Digital Solutions*
+`*SURAT BRIEF TEKNIS & PERMINTAAN PENAWARAN*
+*AKSARA TECH — Digital Solutions & Software Engineering*
 ════════════════════════════════════════
 *ID Tiket Inquiry :* ${inquiryId}
 *Waktu Pengajuan  :* ${submissionDate}
@@ -152,7 +121,7 @@ export function createWhatsAppPayload(formData, selectedPackage, selectedAddons 
 • Paket Layanan      : ${selectedPackage ? selectedPackage.name : "-"}
 • Arsitektur Sistem  : ${selectedPackage ? selectedPackage.systemType : "-"}
 • Estimasi Waktu     : ${selectedPackage ? `${selectedPackage.minDays} – ${selectedPackage.maxDays} Hari Kerja` : "-"}
-• Garansi Sistem     : 7 Hari Kalender Pasca Serah Terima (Bug/Error)
+• Garansi Sistem     : 7 Hari Kalender Pasca Serah Terima (Bebas Bug Kode)
 • Biaya Paket Dasar  : ${formatRupiah(packagePrice)}
 • Serah Terima Berkas:
 ${deliverablesText}
@@ -185,84 +154,85 @@ _Terbilang : ${terbilangRupiah(totalInvestment)}_
 
 *STRUKTUR TERMIN PEMBAYARAN RESMI (SOP):*
 • *Termin 1 (Uang Muka / DP 50%) :* ${formatRupiah(dpAmount)}
-  _Fungsi: Aktivasi antrean pengerjaan resmi, inisialisasi repositori Git, dan arsitektur kode awal._
+  _(Fungsi: Aktivasi antrean pengerjaan resmi, inisialisasi repositori Git, dan arsitektur kode awal)_
 • *Termin 2 (Pelunasan 50%)      :* ${formatRupiah(settlementAmount)}
-  _Fungsi: Ditransfer pasca peninjauan demo/pratinjau live serta sebelum serah terima master code (.zip)._
+  _(Fungsi: Ditransfer pasca pengujian demo live bersama serta sebelum serah terima master code .zip)_
 
-*VII. KETENTUAN SOP & ALOKASI REVISI:*
+*VII. KETENTUAN SOP & BATASAN REVISI:*
 • Kuota Revisi SOP    : Maksimal 3x Sesi Perbaikan Terstruktur (SOP Mutlak)
 • Garansi Kode        : 7 Hari Kalender Bebas Bug Pasca Serah Terima
 • Eksklusi Server     : Murni Rekayasa Software (Tidak Melayani Sewa Hosting/Domain Fisik)
-• Ketentuan Uang Muka : DP 50% bersifat non-refundable setelah pengerjaan koding dimulai
+• Ketentuan Uang Muka : DP 50% bersifat definitif pasca verifikasi koding dimulai
 • Catatan Tambahan    : ${formData.specialNotes || "Standar spesifikasi paket tanpa catatan khusus."}
 
-*VIII. TAUTAN LACAK STATUS PROYEK LANGSUNG:*
-${trackingUrl}
-
 ════════════════════════════════════════
-_Brief teknis ini dibuat secara otomatis melalui portal resmi Aksara Tech._
-_Mohon konfirmasi ketersediaan antrean dan penerbitan invoice resmi untuk pembayaran Termin 1 (DP 50%). Terima kasih._`;
+_Brief teknis ini dibuat secara resmi melalui portal Aksara Tech (https://aksaratech-portal.vercel.app)._
+_PIC Aksara Tech akan segera meninjau brief Anda dan menerbitkan Surat Penawaran Resmi. Terima kasih._`;
 
   return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
 }
 
-// Generate structured Client Progress Update message for WhatsApp
+// Generate structured Client Progress Update message for WhatsApp (No tracking links, direct reports)
 export function createClientProgressUpdateWhatsAppPayload(order) {
   const rawPhone = (order?.clientPhone || '').replace(/[\s-]/g, '');
   const digitsOnly = rawPhone.replace(/^(?:\+62|62|0)/, '');
   const targetPhone = digitsOnly ? `62${digitsOnly}` : '6285600386692';
 
-  const baseUrl = getPortalBaseUrl();
   const stageNames = [
     'Tahap 1: Pengumpulan Brief & Verifikasi DP 50%',
     'Tahap 2: Perancangan Arsitektur Database & ERD',
     'Tahap 3: Koding Fitur & Antarmuka Utama',
-    'Tahap 4: Pratinjau Demo Live & Sesi Revisi SOP',
+    'Tahap 4: Pratinjau Demo Live Staging & Sesi Revisi SOP',
     'Tahap 5: Pelunasan 100% & Serah Terima Master Code'
   ];
-  const stageNum = Number(order?.currentStageNumber) || 1;
+  const stageNum = Math.min(5, Math.max(1, Number(order?.currentStageNumber) || 1));
   const stageLabel = stageNames[stageNum - 1] || `Tahap ${stageNum} dari 5`;
 
-  // Safely retrieve webhook URL if saved in admin browser to sync client device
-  let hookQuery = '';
-  try {
-    if (typeof localStorage !== 'undefined') {
-      const rawCfg = localStorage.getItem('aksara_sheet_config_v1');
-      if (rawCfg) {
-        const parsed = JSON.parse(rawCfg);
-        if (parsed?.webhookUrl && parsed.webhookUrl.trim().startsWith('http')) {
-          hookQuery = `&hook=${encodeURIComponent(parsed.webhookUrl.trim())}`;
-        }
-      }
-    }
-  } catch (e) {}
+  const quotaTotal = Number(order?.revisionQuotaTotal) || 3;
+  const quotaUsed = Number(order?.revisionQuotaUsed) || 0;
+  const quotaRemaining = Math.max(0, quotaTotal - quotaUsed);
 
-  // Explicit, resilient URL query params + base64 live backup
-  const safeOrderNo = encodeURIComponent(order?.orderNumber || (stageNum >= 2 ? 'ORD-AT-2026-805' : 'MENUNGGU-DP'));
-  const safeStatus = encodeURIComponent(order?.dpStatus || (stageNum >= 2 ? 'LUNAS (DP 50%)' : 'MENUNGGU VERIFIKASI DP 50%'));
-  const encodedLiveSync = encodeOrderToUrlParam(order);
-
-  const liveTrackingUrl = `${baseUrl}/lacak?kode=${order?.id}&stage=${stageNum}&no=${safeOrderNo}&status=${safeStatus}${hookQuery}&live=${encodedLiveSync}`;
+  // Dynamic next step guidance per stage
+  let nextStepText = '';
+  let stagingSection = '';
+  if (stageNum === 1) {
+    nextStepText = 'Memulai perancangan arsitektur basis data relasional (3NF) dan pembuatan diagram ERD.';
+  } else if (stageNum === 2) {
+    nextStepText = 'Melanjutkan koding modul logika bisnis, antarmuka visual responsif, dan sanitasi input.';
+  } else if (stageNum === 3) {
+    nextStepText = 'Menyiapkan deployment ke lingkungan sandbox staging live untuk sesi peninjauan bersama.';
+  } else if (stageNum === 4) {
+    nextStepText = 'Sesi pengujian mandiri bersama klien. Jika terdapat perbaikan tampilan/fungsi, mohon sampaikan pada sesi revisi ini.';
+    const stagingUrl = order?.devops?.staging?.url || `https://preview-${(order?.id || 'proyek').toLowerCase().replace(/[^a-z0-9]/g, '-')}.aksaratech.id`;
+    stagingSection = `\n*TAUTAN PRATINJAU DEMO LIVE (STAGING SANDBOX):*\n${stagingUrl}\n_Akun Uji Demo: admin@demo.test | Sandi: AksaraDev2026!_\n`;
+  } else if (stageNum === 5) {
+    nextStepText = 'Pengerjaan selesai 100%. Pelunasan telah diverifikasi dan seluruh berkas master code lengkap (.zip) serta basis data (.sql) siap diserahterimakan dengan garansi 7 hari.';
+  }
 
   const message =
-`*PEMBARUAN STATUS PROYEK - AKSARA TECH*
-*Transparansi Alur Rekayasa Perangkat Lunak*
+`*LAPORAN RESMI PROGRES PROYEK — AKSARA TECH*
+*Digital Solutions & Software Engineering*
 ════════════════════════════════════════
-Halo! Proyek perangkat lunak Anda telah resmi diperbarui:
+Kepada Yth. Klien Aksara Tech,
+Berikut laporan resmi perkembangan rekayasa perangkat lunak Anda:
 
 *ID Tiket Proyek :* ${order?.id || '-'}
 *Nomor Order     :* ${order?.orderNumber || '-'}
 *Nama Proyek     :* ${order?.projectTitle || '-'}
-*Tahap Terkini   :* ${stageLabel}
-*Status Pembayaran:* ${order?.dpStatus || 'LUNAS (DP 50%)'}
+*Paket Layanan   :* ${order?.packageName || '-'}
+*Tahap Pengerjaan:* ${stageLabel}
+*Status Finansial:* ${order?.dpStatus || 'LUNAS (DP 50%)'}
+*Alokasi Revisi  :* ${quotaUsed} dari ${quotaTotal} Sesi Terpakai (Sisa ${quotaRemaining} Sesi)
 
-*CATATAN TERAKHIR DARI TIM PENGEMBANG:*
-"${order?.developerNotes || 'Pengerjaan modul perangkat lunak sedang berlangsung sesuai SOP.'}"
+*CATATAN RESMI TIM PENGEMBANG:*
+"${order?.developerNotes || 'Pengerjaan modul perangkat lunak sedang berlangsung sesuai jadwal kerja dan standar SOP.'}"
+${stagingSection}
+*LANGKAH PENGERJAAN BERIKUTNYA:*
+• ${nextStepText}
 
-Pantau riwayat pengerjaan, repositori Git, dan demo proyek Anda secara langsung melalui tautan resmi:
-${liveTrackingUrl}
-
-_Terima kasih telah mempercayakan rekayasa teknologi digital Anda kepada Aksara Tech._`;
+════════════════════════════════════════
+_Layanan Bantuan & Konsultasi Langsung: +62 856-0038-6692_
+_Aksara Tech berkomitmen pada transparansi kode, kualitas arsitektur, dan kepatuhan SOP._`;
 
   return `https://wa.me/${targetPhone}?text=${encodeURIComponent(message)}`;
 }
@@ -376,47 +346,43 @@ export function createChangeRequestWhatsAppPayload(order) {
   const changeRequests = order.changeRequests || [];
   const crTotal = changeRequests.reduce((sum, cr) => sum + (Number(cr.price) || 0), 0);
   const finalTotal = basePrice + initialAddonsTotal + crTotal;
-  const dpPaid = order.dpStatus?.includes('LUNAS') ? (order.dpAmount || Math.round(basePrice * 0.5)) : 0;
+  const dpPaid = order.dpStatus?.includes('LUNAS') ? (Number(order.dpAmount) || Math.round(basePrice * 0.5)) : 0;
   const remaining = Math.max(0, finalTotal - dpPaid);
 
-  let crItemsText = '  • Tidak ada item tambahan berjalan';
+  let crItemsText = '  • Tidak ada item perubahan berjalan';
   if (changeRequests.length > 0) {
     crItemsText = changeRequests.map(cr => `  • ${cr.name} (${cr.category || 'Fitur'}): ${formatRupiah(cr.price)}${cr.notes ? `\n    Catatan: ${cr.notes}` : ''}`).join('\n');
   }
 
-  const baseUrl = getPortalBaseUrl();
-  const trackingUrl = `${baseUrl}/lacak?kode=${order.id}`;
-
   const message = 
-`*PEMBERITAHUAN PERUBAHAN FITUR (CHANGE REQUEST) - AKSARA TECH*
-*Transparansi Biaya & Rekapitulasi Investasi Proyek*
+`*PEMBERITAHUAN ADDENDUM & CHANGE REQUEST — AKSARA TECH*
+*Transparansi Biaya & Rekapitulasi Fitur Tambahan*
 ════════════════════════════════════════
 *ID Tiket Proyek :* ${order.id}
 *Nomor Order     :* ${order.orderNumber || '-'}
 *Nama Proyek     :* ${order.projectTitle}
-*Paket Utama     :* ${order.packageName || 'Kustom'} (${formatRupiah(basePrice)})
+*Paket Layanan   :* ${order.packageName || 'Kustom'} (${formatRupiah(basePrice)})
 
-*RINCIAN ITEM PERUBAHAN / ADD-ON TAMBAHAN:*
+*RINCIAN ITEM PERUBAHAN / PENAMBAHAN FITUR:*
 ${crItemsText}
 
 Subtotal Change Request : ${formatRupiah(crTotal)}
 ────────────────────────────────────────
-*STRUKTUR TRANSPARANSI BIAYA AKHIR:*
+*REKAPITULASI INVESTASI AKHIR:*
 • Biaya Paket Dasar      : ${formatRupiah(basePrice)}
 ${initialAddons.length > 0 ? `• Add-on Awal (Brief)     : ${formatRupiah(initialAddonsTotal)}\n` : ''}• Tambahan Change Request : ${formatRupiah(crTotal)}
 ────────────────────────────────────────
-*TOTAL INVESTASI AKHIR   : ${formatRupiah(finalTotal)}*
+*TOTAL INVESTASI FINAL   : ${formatRupiah(finalTotal)}*
 _Terbilang : ${terbilangRupiah(finalTotal)}_
-
+────────────────────────────────────────
 *STATUS TERMIN PEMBAYARAN:*
 • Termin 1 (DP 50% Awal) : ${formatRupiah(dpPaid)} [${order.dpStatus || 'TERCATAT'}]
-• *SISA PELUNASAN TAHAP 5 : ${formatRupiah(remaining)}*
+• *Sisa Pelunasan Tahap 5: ${formatRupiah(remaining)}*
 ────────────────────────────────────────
-
-Seluruh catatan tahapan koding, repositori Git, dan rincian biaya dapat Anda pantau secara transparan melalui tautan resmi pelacak:
-${trackingUrl}
-
-_Aksara Tech berkomitmen menjunjung tinggi transparansi arsitektur dan akuntabilitas biaya tanpa biaya tersembunyi._`;
+_Catatan: Tagihan perubahan fitur ini diakumulasikan ke dalam Invoice Pelunasan Akhir (Tahap 5) sebelum serah terima master code._
+════════════════════════════════════════
+_Layanan Bantuan & Konsultasi Langsung: +62 856-0038-6692_
+_Aksara Tech berkomitmen menjunjung tinggi transparansi arsitektur dan akuntabilitas biaya._`;
 
   return `https://wa.me/${targetPhone}?text=${encodeURIComponent(message)}`;
 }

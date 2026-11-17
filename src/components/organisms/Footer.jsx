@@ -11,8 +11,7 @@ import {
   Clock,
   CheckCircle2,
   Layers,
-  FileCheck,
-  Search
+  FileCheck
 } from 'lucide-react';
 import { BUSINESS_INFO } from '../../data/catalogData';
 
@@ -237,10 +236,6 @@ export default function Footer() {
               <span>Tata Kelola &amp; SOP</span>
             </h4>
             <nav aria-label="Navigasi Tata Kelola Footer" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <Link to="/lacak" className="footer-link-item" style={{ color: 'var(--prussian-blue)', fontWeight: '700' }}>
-                <Search size={14} />
-                <span>Pelacak Status Proyek Mandiri</span>
-              </Link>
               <Link to="/eksklusi-server" className="footer-link-item" style={{ color: 'var(--prussian-blue)', fontWeight: '700' }}>
                 <ShieldCheck size={14} />
                 <span>Batasan Eksklusi Server</span>

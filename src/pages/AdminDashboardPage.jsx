@@ -783,10 +783,10 @@ export default function AdminDashboardPage() {
       subtitle: `${order.projectTitle} • ${order.clientName || 'Klien'}`,
       message: 'Apakah Anda yakin ingin menghapus catatan pesanan ini secara permanen?',
       bulletPoints: hasSheet ? [
-        'Data pesanan akan dihapus permanen dari sistem lokal dan pelacak publik (/lacak).',
+        'Data pesanan akan dihapus permanen dari sistem database lokal.',
         'Baris pesanan di Google Spreadsheet yang terhubung akan OTOMATIS DIHAPUS langsung melalui Web App.'
       ] : [
-        'Data pesanan akan dihapus secara permanen dari sistem lokal dan pelacak publik (/lacak).'
+        'Data pesanan akan dihapus secara permanen dari sistem database lokal.'
       ],
       variant: 'danger',
       confirmLabel: 'Hapus Pesanan',
@@ -822,7 +822,7 @@ export default function AdminDashboardPage() {
       subtitle: 'Tindakan ini bersifat permanen dan tidak dapat dibatalkan.',
       message: 'Apakah Anda yakin ingin menghapus seluruh database pesanan dan draf brief dari sistem?',
       bulletPoints: hasSheet ? [
-        'Semua data pesanan di sistem lokal browser dan pelacak (/lacak) akan dibersihkan total.',
+        'Semua data pesanan di sistem database lokal browser akan dibersihkan total.',
         'Seluruh baris transaksi di Google Spreadsheet yang terhubung akan OTOMATIS DIHAPUS (header tabel tetap rapi).'
       ] : [
         'Seluruh data pesanan di browser perangkat ini (HP/Laptop) akan dikosongkan total.',
@@ -1629,26 +1629,6 @@ function doPost(e) {
             </Box>
 
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
-              <Button
-                component={Link}
-                to="/lacak"
-                target="_blank"
-                startIcon={<Eye size={14} />}
-                sx={{
-                  bgcolor: '#1E293B',
-                  color: '#FFFFFF',
-                  border: '1.5px solid #334155',
-                  px: 1.75,
-                  py: 0.9,
-                  fontSize: '0.82rem',
-                  fontWeight: 700,
-                  borderRadius: '6px',
-                  '&:hover': { bgcolor: '#334155' }
-                }}
-              >
-                Tinjau Pelacak (/lacak)
-              </Button>
-
               <Button
                 onClick={exportOrdersToExcel}
                 startIcon={<FileSpreadsheet size={14} />}
@@ -2876,29 +2856,6 @@ function doPost(e) {
                         </Button>
 
                         <Button
-                          component={Link}
-                          to={`/lacak?kode=${ord.id}`}
-                          target="_blank"
-                          variant="outlined"
-                          size="small"
-                          startIcon={<ExternalLink size={14} />}
-                          sx={{
-                            bgcolor: '#FFFFFF',
-                            color: '#0F172A',
-                            borderColor: '#CBD5E1',
-                            border: '1.5px solid #CBD5E1',
-                            borderRadius: '6px',
-                            px: 1.5,
-                            py: 0.85,
-                            fontSize: '0.82rem',
-                            fontWeight: 700,
-                            '&:hover': { bgcolor: '#F8FAFC', borderColor: '#0F172A' }
-                          }}
-                        >
-                          Lihat Pelacak
-                        </Button>
-
-                        <Button
                           component="a"
                           href={createClientProgressUpdateWhatsAppPayload(ord)}
                           target="_blank"
@@ -3165,7 +3122,7 @@ function doPost(e) {
 
                     {/* Developer Log Snippet */}
                     <Box sx={{ fontSize: '0.86rem', color: '#334155', lineHeight: 1.55, bgcolor: '#FFFFFF', border: '1.5px solid #CBD5E1', borderLeft: '4px solid #1D63FF', p: 1.75, borderRadius: '6px' }}>
-                      <Typography component="span" sx={{ fontWeight: 800, color: '#0F172A' }}>Catatan Pengembang Terakhir (Tampil Langsung di /lacak): </Typography>
+                      <Typography component="span" sx={{ fontWeight: 800, color: '#0F172A' }}>Catatan Pengembang &amp; Progres Sistem: </Typography>
                       <Typography component="span" sx={{ color: '#0F172A' }}>"{ord.developerNotes}"</Typography>
                     </Box>
 
@@ -3906,7 +3863,7 @@ function doPost(e) {
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
                     <FileText size={15} color="#0F172A" />
                     <Typography variant="caption" sx={{ fontSize: '0.8rem', fontWeight: 800, color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                      4. Catatan Pengembang untuk Klien (Live Log di /lacak)
+                      4. Catatan Pengembang &amp; Progres Pengerjaan
                     </Typography>
                   </Box>
                   <TextField
@@ -3930,7 +3887,7 @@ function doPost(e) {
                     }}
                   />
                   <Typography variant="caption" sx={{ fontSize: '0.74rem', color: '#64748B', mt: 0.75, display: 'block' }}>
-                    Catatan ini dibaca secara transparan oleh klien di pelacak status proyek.
+                    Catatan ini tersimpan di sistem dan otomatis terlampir saat Anda menekan tombol "Kirim Progres WA" ke klien.
                   </Typography>
                 </Box>
 
@@ -3980,7 +3937,7 @@ function doPost(e) {
                       }}
                     />
                     <Typography variant="caption" sx={{ fontSize: '0.74rem', color: '#64748B', mt: 0.5, display: 'block' }}>
-                      Cukup tempelkan link URL repositori GitHub proyek klien ini. Setiap kali Anda melakukan <code>git push</code> dari laptop, seluruh riwayat commit, author, dan timestamp akan otomatis tertarik secara real-time ke halaman /lacak klien!
+                      Tempelkan tautan repositori GitHub proyek. Riwayat commit, author, dan status deployment akan tersinkronisasi langsung ke dasbor operasional admin.
                     </Typography>
                   </Box>
 
@@ -4172,7 +4129,7 @@ function doPost(e) {
                     }}
                   />
                   <Typography variant="caption" sx={{ fontSize: '0.74rem', color: '#64748B', mt: 0.75, display: 'block' }}>
-                    Data telemetri ini otomatis ditampilkan pada Konsol DevOps di halaman /lacak proyek klien.
+                    Data telemetri ini otomatis ditampilkan pada konsol internal dan laporan serah terima klien.
                   </Typography>
                 </Box>
               </Box>
@@ -4345,7 +4302,7 @@ function doPost(e) {
                         }}
                       />
                       <Typography variant="caption" sx={{ fontSize: '0.74rem', color: '#64748B', mt: 0.5, display: 'block' }}>
-                        Kunci identifikasi utama untuk lacak pesanan di /lacak
+                        Kunci identifikasi unik pesanan resmi Aksara Tech
                       </Typography>
                     </Box>
                     <Box>
@@ -4572,7 +4529,7 @@ function doPost(e) {
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
                     <FileText size={15} color="#0F172A" />
                     <Typography variant="caption" sx={{ fontSize: '0.8rem', fontWeight: 800, color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                      4. Catatan Pengembang Awal (Live Log di /lacak)
+                      4. Catatan Pengembang &amp; Catatan Awal Sistem
                     </Typography>
                   </Box>
                   <TextField
@@ -4596,7 +4553,7 @@ function doPost(e) {
                     }}
                   />
                   <Typography variant="caption" sx={{ fontSize: '0.74rem', color: '#64748B', mt: 0.75, display: 'block' }}>
-                    Catatan ini akan langsung terlihat oleh klien saat memasukkan nomor tiket di halaman /lacak.
+                    Catatan ini tersimpan di sistem dan dapat dikirimkan kepada klien via WhatsApp laporan progres.
                   </Typography>
                 </Box>
               </Stack>
@@ -4617,7 +4574,7 @@ function doPost(e) {
               }}
             >
               <Typography variant="caption" sx={{ fontSize: '0.82rem', color: '#64748B' }}>
-                Tersinkronisasi ke <Box component="strong" sx={{ color: '#0F172A' }}>/lacak</Box> &amp; <Box component="strong" sx={{ color: '#0F172A' }}>Spreadsheet</Box>
+                Tersinkronisasi ke <Box component="strong" sx={{ color: '#0F172A' }}>Sistem Database</Box> &amp; <Box component="strong" sx={{ color: '#0F172A' }}>Spreadsheet</Box>
               </Typography>
               <Box sx={{ display: 'flex', gap: 1.5 }}>
                 <Button
@@ -4788,7 +4745,7 @@ function doPost(e) {
                   </Typography>
                 )}
                 <Typography variant="caption" sx={{ fontSize: '0.76rem', color: '#64748B', mt: 0.75, display: 'block' }}>
-                  Catatan ini otomatis tampil di pelacak status /lacak klien, tersimpan ke basis data, dan terarsip ke spreadsheet.
+                  Catatan ini otomatis tersimpan ke basis data, disertakan pada laporan WhatsApp progres klien, dan terarsip ke spreadsheet.
                 </Typography>
               </Box>
             </DialogContent>
