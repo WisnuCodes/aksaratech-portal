@@ -2,6 +2,10 @@
 // Centralized configuration for Maintenance Mode, Rate Limiting, and Diagnostic Telemetry
 
 export const SYSTEM_CONFIG = {
+  // Global Google Spreadsheet Webhook URL (shared across all devices & clients)
+  // Fill this with your deployed Google Apps Script URL (ending with /exec)
+  GOOGLE_SHEET_WEBHOOK_URL: "",
+
   // Toggle Maintenance Mode (HTTP 503 Service Unavailable)
   // Set to true during major database migrations or server maintenance
   MAINTENANCE_MODE: false,

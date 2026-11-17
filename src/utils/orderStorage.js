@@ -4,6 +4,7 @@
  */
 
 import { PACKAGES } from '../data/catalogData';
+import { SYSTEM_CONFIG } from '../constants/systemConfig';
 
 const STORAGE_KEY = 'aksara_orders_db_v1';
 const SHEET_CONFIG_KEY = 'aksara_sheet_config_v1';
@@ -342,13 +343,14 @@ export function getSheetConfig() {
     const raw = localStorage.getItem(SHEET_CONFIG_KEY);
     const parsed = raw ? JSON.parse(raw) : null;
     
-    // Check environment variables as global default fallback
+    // Check environment variables or central system config as global default fallback
     const envWebhook = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_GOOGLE_SHEET_WEBHOOK_URL) || '';
+    const systemWebhook = SYSTEM_CONFIG?.GOOGLE_SHEET_WEBHOOK_URL || '';
     const envSpreadsheet = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_GOOGLE_SPREADSHEET_URL) || '';
     const envSheetName = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_GOOGLE_SHEET_NAME) || 'Orders';
 
     return {
-      webhookUrl: (parsed?.webhookUrl || envWebhook || '').trim(),
+      webhookUrl: (parsed?.webhookUrl || envWebhook || systemWebhook || '').trim(),
       spreadsheetUrl: (parsed?.spreadsheetUrl || envSpreadsheet || '').trim(),
       sheetName: parsed?.sheetName || envSheetName || 'Orders'
     };

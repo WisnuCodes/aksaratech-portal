@@ -91,7 +91,8 @@ import {
   encodeOrdersToUrlParam,
   decodeOrdersFromUrlParam,
   createWhatsAppSyncWebhookPayload,
-  createWhatsAppDatabaseTransferPayload
+  createWhatsAppDatabaseTransferPayload,
+  createClientProgressUpdateWhatsAppPayload
 } from '../utils/documentEngine';
 import { getGitHubToken, saveGitHubToken } from '../utils/githubService';
 import ExecutiveConfirmModal from '../components/molecules/ExecutiveConfirmModal';
@@ -2826,6 +2827,31 @@ function doPost(e) {
                           }}
                         >
                           Lihat Pelacak
+                        </Button>
+
+                        <Button
+                          component="a"
+                          href={createClientProgressUpdateWhatsAppPayload(ord)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          variant="outlined"
+                          size="small"
+                          startIcon={<MessageCircle size={14} />}
+                          sx={{
+                            bgcolor: '#F0FDF4',
+                            color: '#166534',
+                            borderColor: '#86EFAC',
+                            border: '1.5px solid #86EFAC',
+                            borderRadius: '6px',
+                            px: 1.5,
+                            py: 0.85,
+                            fontSize: '0.82rem',
+                            fontWeight: 700,
+                            '&:hover': { bgcolor: '#DCFCE7', borderColor: '#166534' }
+                          }}
+                          title="Kirim pesan pemberitahuan progres terkini ke WhatsApp nomor klien"
+                        >
+                          Kirim Progres WA
                         </Button>
 
                         <IconButton

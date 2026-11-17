@@ -132,14 +132,7 @@ export function createWhatsAppPayload(formData, selectedPackage, selectedAddons 
     deliverablesPreview: selectedPackage?.deliverables || ['Master Source Code (.zip)', 'Database Relasional (.sql)']
   };
 
-  const encodedSync = encodeOrderToUrlParam(payloadForSync);
-  const trackingUrl = encodedSync 
-    ? `${baseUrl}/lacak?kode=${inquiryId}&d=${encodedSync}`
-    : `${baseUrl}/lacak?kode=${inquiryId}`;
-
-  const adminImportUrl = encodedSync
-    ? `${baseUrl}/admin?import=${encodedSync}`
-    : `${baseUrl}/admin`;
+  const trackingUrl = `${baseUrl}/lacak?kode=${inquiryId}`;
 
   const message = 
 `*SURAT BRIEF TEKNIS & PERMINTAAN PENAWARAN PROYEK*
@@ -206,14 +199,55 @@ _Terbilang : ${terbilangRupiah(totalInvestment)}_
 *VIII. TAUTAN LACAK STATUS PROYEK LANGSUNG:*
 ${trackingUrl}
 
-*IX. TAUTAN VERIFIKASI ADMIN (1-KLIK MASUK SISTEM LAPTOP/HP):*
-${adminImportUrl}
-
 ════════════════════════════════════════
 _Brief teknis ini dibuat secara otomatis melalui portal resmi Aksara Tech._
 _Mohon konfirmasi ketersediaan antrean dan penerbitan invoice resmi untuk pembayaran Termin 1 (DP 50%). Terima kasih._`;
 
   return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+}
+
+// Generate structured Client Progress Update message for WhatsApp
+export function createClientProgressUpdateWhatsAppPayload(order) {
+  const rawPhone = (order?.clientPhone || '').replace(/[\s-]/g, '');
+  const digitsOnly = rawPhone.replace(/^(?:\+62|62|0)/, '');
+  const targetPhone = digitsOnly ? `62${digitsOnly}` : '6285600386692';
+
+  const baseUrl = getPortalBaseUrl();
+  const stageNames = [
+    'Tahap 1: Pengumpulan Brief & Verifikasi DP 50%',
+    'Tahap 2: Perancangan Arsitektur Database & ERD',
+    'Tahap 3: Koding Fitur & Antarmuka Utama',
+    'Tahap 4: Pratinjau Demo Live & Sesi Revisi SOP',
+    'Tahap 5: Pelunasan 100% & Serah Terima Master Code'
+  ];
+  const stageNum = Number(order?.currentStageNumber) || 1;
+  const stageLabel = stageNames[stageNum - 1] || `Tahap ${stageNum} dari 5`;
+
+  // Encode latest updated order so client phone receives the fresh state instantly
+  const encodedLiveSync = encodeOrderToUrlParam(order);
+  const liveTrackingUrl = `${baseUrl}/lacak?kode=${order?.id}&live=${encodedLiveSync}`;
+
+  const message =
+`*PEMBARUAN STATUS PROYEK - AKSARA TECH*
+*Transparansi Alur Rekayasa Perangkat Lunak*
+════════════════════════════════════════
+Halo! Proyek perangkat lunak Anda telah resmi diperbarui:
+
+*ID Tiket Proyek :* ${order?.id || '-'}
+*Nomor Order     :* ${order?.orderNumber || '-'}
+*Nama Proyek     :* ${order?.projectTitle || '-'}
+*Tahap Terkini   :* ${stageLabel}
+*Status Pembayaran:* ${order?.dpStatus || 'LUNAS (DP 50%)'}
+
+*CATATAN TERAKHIR DARI TIM PENGEMBANG:*
+"${order?.developerNotes || 'Pengerjaan modul perangkat lunak sedang berlangsung sesuai SOP.'}"
+
+Pantau riwayat pengerjaan, repositori Git, dan demo proyek Anda secara langsung melalui tautan resmi:
+${liveTrackingUrl}
+
+_Terima kasih telah mempercayakan rekayasa teknologi digital Anda kepada Aksara Tech._`;
+
+  return `https://wa.me/${targetPhone}?text=${encodeURIComponent(message)}`;
 }
 
 /**

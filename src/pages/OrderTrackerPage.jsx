@@ -21,12 +21,20 @@ import {
   FileText,
   Calendar,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  Cloud
 } from 'lucide-react';
 import PageHeader from '../components/molecules/PageHeader';
 import DevOpsTelemetryConsole from '../components/organisms/DevOpsTelemetryConsole';
 import { formatRupiah, decodeOrderFromUrlParam } from '../utils/documentEngine';
-import { findOrderByQuery, getAllOrders, calculateOrderFinancials, createOrder } from '../utils/orderStorage';
+import { 
+  findOrderByQuery, 
+  getAllOrders, 
+  calculateOrderFinancials, 
+  createOrder,
+  getSheetConfig,
+  pullAllOrdersFromRemoteSheet
+} from '../utils/orderStorage';
 
 // Standard 5-Step SOP Pipeline definition
 const SOP_STAGES = [
@@ -75,6 +83,7 @@ export default function OrderTrackerPage() {
   const [copiedId, setCopiedId] = useState(false);
   const [activeDbOrders, setActiveDbOrders] = useState([]);
   const [showGuide, setShowGuide] = useState(false);
+  const [isSyncingCloud, setIsSyncingCloud] = useState(false);
 
   // Fetch available orders directly from central database
   const refreshDbOrders = () => {
@@ -91,27 +100,33 @@ export default function OrderTrackerPage() {
     refreshDbOrders();
 
     const codeParam = searchParams.get('kode') || searchParams.get('id') || searchParams.get('no') || searchParams.get('ticket');
-    const dataParam = searchParams.get('d') || searchParams.get('data');
+    const dataParam = searchParams.get('live') || searchParams.get('sync') || searchParams.get('d') || searchParams.get('data');
 
-    // Cross-device sync: If order is encoded in URL from WhatsApp, load & auto-register to this device
+    // Cross-device sync: If order is encoded in URL, load & save latest state to this device
+    let initialTargetId = codeParam || '';
     if (dataParam) {
       const decoded = decodeOrderFromUrlParam(dataParam);
       if (decoded && decoded.id) {
+        initialTargetId = decoded.id;
         const existing = findOrderByQuery(decoded.id);
-        if (!existing) {
+        // Only update if incoming has higher or newer stage/order number
+        const incomingStage = Number(decoded.currentStageNumber) || 1;
+        const currentStage = Number(existing?.currentStageNumber) || 1;
+        if (!existing || incomingStage >= currentStage || (decoded.orderNumber && decoded.orderNumber !== 'MENUNGGU-DP' && existing.orderNumber === 'MENUNGGU-DP')) {
           createOrder(decoded);
           refreshDbOrders();
+          setActiveOrder(decoded);
+        } else {
+          setActiveOrder(existing);
         }
         setSearchInput(decoded.id);
-        setActiveOrder(existing || decoded);
         setSearchStatus('found');
-        return;
       }
     }
 
-    if (codeParam) {
-      setSearchInput(codeParam);
-      executeSearch(codeParam);
+    if (initialTargetId) {
+      setSearchInput(initialTargetId);
+      executeSearch(initialTargetId);
     }
 
     const handleStorageSync = () => {
@@ -135,16 +150,40 @@ export default function OrderTrackerPage() {
     };
   }, [searchParams]);
 
-  // Execute lookup logic strictly from unified central database
-  const executeSearch = (rawQuery) => {
+  // Execute lookup logic: instant local display + real-time cloud background sync
+  const executeSearch = async (rawQuery) => {
     const query = (rawQuery || searchInput || '').trim();
     if (!query) return;
 
-    const storedMatch = findOrderByQuery(query);
-    if (storedMatch) {
-      setActiveOrder(storedMatch);
+    // 1. Optimistic lookup from local device database
+    const localMatch = findOrderByQuery(query);
+    if (localMatch) {
+      setActiveOrder(localMatch);
       setSearchStatus('found');
-    } else {
+    }
+
+    // 2. Real-time background sync from Google Spreadsheet Webhook
+    const config = getSheetConfig();
+    if (config?.webhookUrl && config.webhookUrl.trim().startsWith('http')) {
+      setIsSyncingCloud(true);
+      try {
+        const pullRes = await pullAllOrdersFromRemoteSheet();
+        if (pullRes?.success && Array.isArray(pullRes.orders)) {
+          const freshRemoteMatch = findOrderByQuery(query);
+          if (freshRemoteMatch) {
+            setActiveOrder(freshRemoteMatch);
+            setSearchStatus('found');
+          } else if (!localMatch) {
+            setActiveOrder(null);
+            setSearchStatus('not_found');
+          }
+        }
+      } catch (err) {
+        // Fallback silently to local cache if network/offline
+      } finally {
+        setIsSyncingCloud(false);
+      }
+    } else if (!localMatch) {
       setActiveOrder(null);
       setSearchStatus('not_found');
     }
