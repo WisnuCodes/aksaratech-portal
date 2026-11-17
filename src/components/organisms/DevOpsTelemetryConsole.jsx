@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   GitBranch, 
   GitCommit, 
@@ -19,13 +19,24 @@ import {
   Layers,
   FileCheck2,
   CheckCircle,
-  MessageCircle
+  MessageCircle,
+  RefreshCw,
+  Globe
 } from 'lucide-react';
 import { getOrderDevOps } from '../../utils/orderStorage';
+import { fetchLiveGitHubCommits, fetchLiveCIStatus, parseGitHubRepo } from '../../utils/githubService';
 
 export default function DevOpsTelemetryConsole({ order, className = '' }) {
   const [activeTab, setActiveTab] = useState('stream'); // 'stream' | 'staging' | 'audit'
   const [copiedText, setCopiedText] = useState('');
+
+  // Live GitHub State
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [liveCommits, setLiveCommits] = useState(null);
+  const [ciStatus, setCiStatus] = useState('CI/CD PIPELINE: PASS');
+  const [syncSource, setSyncSource] = useState('internal'); // 'live' | 'cache' | 'internal'
+  const [lastSyncTime, setLastSyncTime] = useState('');
+  const [syncFeedback, setSyncFeedback] = useState('');
 
   if (!order) return null;
 
@@ -34,6 +45,52 @@ export default function DevOpsTelemetryConsole({ order, className = '' }) {
 
   const stage = Number(order.currentStageNumber) || 1;
   const isStagingReady = stage >= 4;
+  const repoName = devops.repoName || '';
+  const branchName = devops.branch || 'main';
+
+  // Function to pull live data from GitHub
+  const syncGitHub = async (isManual = false) => {
+    setIsSyncing(true);
+    setSyncFeedback('');
+
+    try {
+      // 1. Fetch live CI/CD Status
+      const ciRes = await fetchLiveCIStatus(repoName);
+      if (ciRes && ciRes.label) {
+        setCiStatus(ciRes.label);
+      }
+
+      // 2. Fetch live Commits
+      const res = await fetchLiveGitHubCommits(repoName, branchName);
+      if (res && res.success && Array.isArray(res.commits) && res.commits.length > 0) {
+        setLiveCommits(res.commits);
+        setSyncSource(res.source === 'live' ? 'live' : 'cache');
+        setLastSyncTime(res.lastSynced || new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }));
+        if (isManual) {
+          setSyncFeedback(`Stream commit berhasil disinkronkan real-time dari GitHub (${res.commits.length} commit terbaru)!`);
+        }
+      } else {
+        // Fallback to internal deterministic telemetry
+        setSyncSource('internal');
+        if (isManual) {
+          setSyncFeedback(res?.message || 'Repositori privat terisolasi, menampilkan telemetri terverifikasi internal.');
+        }
+      }
+    } catch (e) {
+      setSyncSource('internal');
+    } finally {
+      setIsSyncing(false);
+    }
+  };
+
+  // Auto-sync on initial mount
+  useEffect(() => {
+    syncGitHub(false);
+  }, [repoName, branchName]);
+
+  const activeCommits = liveCommits && liveCommits.length > 0 ? liveCommits : devops.commitHistory;
+  const latestCommit = activeCommits[0] || devops.latestCommit;
+  const isGitHubConnected = syncSource === 'live' || syncSource === 'cache';
 
   const handleCopy = (text, label) => {
     if (!text) return;
@@ -59,34 +116,72 @@ export default function DevOpsTelemetryConsole({ order, className = '' }) {
               <Code2 size={13} />
               <span>DevOps Telemetry Console</span>
             </span>
-            <span className="devops-pill devops-pill-status">
+            <span className={`devops-pill ${ciStatus.includes('FAIL') ? 'devops-pill-fail' : 'devops-pill-status'}`}>
               <span className="devops-status-dot" />
-              <span>CI/CD PIPELINE: PASS</span>
+              <span>{ciStatus}</span>
             </span>
+            {isGitHubConnected ? (
+              <span className="devops-pill devops-pill-live">
+                <Globe size={12} />
+                <span>GITHUB LIVE SYNC</span>
+              </span>
+            ) : (
+              <span className="devops-pill devops-pill-internal">
+                <Lock size={12} />
+                <span>TELEMETRI INTERNAL</span>
+              </span>
+            )}
           </div>
           <h3 className="devops-console-title">
             Telemetri Rekayasa &amp; Kendali Versi Git
           </h3>
           <p className="devops-console-subtitle">
-            Transparansi alur kendali versi kode, lingkungan pratinjau live demo, dan verifikasi kepatuhan arsitektur perangkat lunak.
+            Transparansi alur kendali versi kode, lingkungan pratinjau live demo, dan verifikasi kepatuhan arsitektur perangkat lunak secara langsung.
           </p>
         </div>
 
-        {/* Console Branch Metadata */}
+        {/* Console Branch Metadata & Live Sync Action */}
         <div className="devops-meta-box">
           <div className="devops-meta-item">
             <span className="devops-meta-label">Branch Aktif:</span>
             <span className="devops-meta-val">
               <GitBranch size={14} />
-              <code>{devops.branch}</code>
+              <code>{branchName}</code>
             </span>
           </div>
           <div className="devops-meta-item">
             <span className="devops-meta-label">Total Commit:</span>
-            <span className="devops-meta-val">{devops.totalCommits} Versi Tercatat</span>
+            <span className="devops-meta-val">
+              {activeCommits.length} Versi {isGitHubConnected ? 'Real-time' : 'Tercatat'}
+            </span>
+          </div>
+          <div className="devops-sync-btn-wrap">
+            <button
+              type="button"
+              onClick={() => syncGitHub(true)}
+              disabled={isSyncing}
+              className="devops-live-sync-btn"
+              title="Periksa commit terbaru langsung dari server GitHub"
+            >
+              <RefreshCw size={13} className={isSyncing ? 'devops-spin' : ''} />
+              <span>{isSyncing ? 'Memeriksa GitHub...' : 'Tarik Stream GitHub'}</span>
+            </button>
+            {lastSyncTime && (
+              <span className="devops-last-sync-tag">
+                Sinkron {lastSyncTime}
+              </span>
+            )}
           </div>
         </div>
       </div>
+
+      {/* Sync Feedback Alert (if manual refresh clicked) */}
+      {syncFeedback && (
+        <div className="devops-sync-feedback-banner">
+          <CheckCircle2 size={15} color="#065F46" />
+          <span>{syncFeedback}</span>
+        </div>
+      )}
 
       {/* Segmented Tab Navigation */}
       <div className="devops-tab-bar" role="tablist" aria-label="DevOps Tabs">
@@ -99,6 +194,7 @@ export default function DevOpsTelemetryConsole({ order, className = '' }) {
         >
           <GitCommit size={15} />
           <span>Repositori &amp; Git Stream</span>
+          {isGitHubConnected && <span className="devops-tab-chip live">Live</span>}
         </button>
 
         <button
@@ -134,13 +230,13 @@ export default function DevOpsTelemetryConsole({ order, className = '' }) {
             <div className="devops-spec-card">
               <div className="devops-spec-label">
                 <Lock size={13} />
-                <span>Repositori Internal (Privat)</span>
+                <span>Repositori Proyek</span>
               </div>
               <div className="devops-spec-val-row">
-                <code>{devops.repoName}</code>
+                <code>{repoName}</code>
                 <button
                   type="button"
-                  onClick={() => handleCopy(devops.repoName, 'repo')}
+                  onClick={() => handleCopy(repoName, 'repo')}
                   className="devops-copy-btn"
                   title="Salin nama repositori"
                   aria-label="Salin nama repositori"
@@ -149,7 +245,7 @@ export default function DevOpsTelemetryConsole({ order, className = '' }) {
                 </button>
               </div>
               <div className="devops-spec-footnote">
-                Terenkripsi &bull; Akses master code diserahkan penuh pasca-pelunasan.
+                {isGitHubConnected ? 'Terhubung langsung ke repositori GitHub via REST API.' : 'Terenkripsi internal &bull; Akses master code diserahkan penuh pasca-pelunasan.'}
               </div>
             </div>
 
@@ -159,10 +255,10 @@ export default function DevOpsTelemetryConsole({ order, className = '' }) {
                 <span>Commit Milestone Terakhir</span>
               </div>
               <div className="devops-spec-val-row">
-                <code>{devops.latestCommit.hash}</code>
+                <code>{latestCommit?.hash}</code>
                 <button
                   type="button"
-                  onClick={() => handleCopy(devops.latestCommit.hash, 'hash')}
+                  onClick={() => handleCopy(latestCommit?.hash, 'hash')}
                   className="devops-copy-btn"
                   title="Salin commit hash"
                   aria-label="Salin commit hash"
@@ -171,23 +267,28 @@ export default function DevOpsTelemetryConsole({ order, className = '' }) {
                 </button>
               </div>
               <div className="devops-spec-footnote">
-                Oleh {devops.latestCommit.author} &bull; {devops.latestCommit.date}
+                Oleh {latestCommit?.author} &bull; {latestCommit?.date}
               </div>
             </div>
           </div>
 
           {/* Commit History Timeline */}
           <div className="devops-commit-timeline-wrap">
-            <h4 className="devops-subheading">
-              Linimasa Rekayasa Kode Program (Commit Log Milestone)
-            </h4>
+            <div className="devops-timeline-header-row">
+              <h4 className="devops-subheading">
+                Linimasa Rekayasa Kode Program (Commit Log Real-Time)
+              </h4>
+              <span className="devops-commit-count-tag">
+                {activeCommits.length} Commit Ditampilkan
+              </span>
+            </div>
 
             <div className="devops-timeline-list">
-              {devops.commitHistory.map((item, idx) => (
-                <div key={item.hash} className="devops-timeline-item">
+              {activeCommits.map((item, idx) => (
+                <div key={item.hash || idx} className="devops-timeline-item">
                   <div className="devops-timeline-node">
                     <span className="devops-timeline-dot" />
-                    {idx < devops.commitHistory.length - 1 && <span className="devops-timeline-line" />}
+                    {idx < activeCommits.length - 1 && <span className="devops-timeline-line" />}
                   </div>
                   
                   <div className="devops-commit-card">
@@ -195,8 +296,20 @@ export default function DevOpsTelemetryConsole({ order, className = '' }) {
                       <div className="devops-commit-hash-group">
                         <code className="devops-commit-hash">{item.hash}</code>
                         <span className="devops-stage-pill">
-                          Tahap {item.stage} SOP
+                          Tahap {item.stage || 3} SOP
                         </span>
+                        {item.url && (
+                          <a
+                            href={item.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="devops-commit-gh-link"
+                            title="Buka commit di GitHub"
+                          >
+                            <span>Lihat di GitHub</span>
+                            <ExternalLink size={12} />
+                          </a>
+                        )}
                       </div>
                       <span className="devops-commit-date">
                         {item.date}
@@ -225,7 +338,7 @@ export default function DevOpsTelemetryConsole({ order, className = '' }) {
               <span className="devops-terminal-title">Instruksi Eksekusi Master Code Pasca Serah Terima</span>
               <button
                 type="button"
-                onClick={() => handleCopy(`git clone git@aksaratech-private:${devops.repoName}.git\ncd ${order.packageId}\nnpm install && npm run dev`, 'cmd')}
+                onClick={() => handleCopy(`git clone https://github.com/${repoName}.git\ncd ${order.packageId}\nnpm install && npm run dev`, 'cmd')}
                 className="devops-terminal-copy"
                 aria-label="Salin instruksi terminal"
               >
@@ -234,7 +347,7 @@ export default function DevOpsTelemetryConsole({ order, className = '' }) {
               </button>
             </div>
             <pre className="devops-terminal-code">
-              <code>{`# 1. Ekstrak arsip master source code (.zip) atau clone repositori privat\ngit clone git@aksaratech-private:${devops.repoName}.git\n\n# 2. Masuk ke direktori dan pasang dependensi terverifikasi\ncd ${order.packageId}\nnpm install\n\n# 3. Jalankan server lokal mandiri tanpa biaya sewa cloud pihak ketiga\nnpm run dev\n# -> Local server aktif: http://localhost:5173/`}</code>
+              <code>{`# 1. Ekstrak arsip master source code (.zip) atau clone repositori resmi\ngit clone https://github.com/${repoName}.git\n\n# 2. Masuk ke direktori dan pasang dependensi terverifikasi\ncd ${order.packageId}\nnpm install\n\n# 3. Jalankan server lokal mandiri tanpa biaya sewa cloud pihak ketiga\nnpm run dev\n# -> Local server aktif: http://localhost:5173/`}</code>
             </pre>
           </div>
 
@@ -579,6 +692,21 @@ export default function DevOpsTelemetryConsole({ order, className = '' }) {
           color: #A7F3D0;
           border: 1.5px solid #059669;
         }
+        .devops-pill-fail {
+          background-color: #7F1D1D;
+          color: #FECACA;
+          border: 1.5px solid #DC2626;
+        }
+        .devops-pill-live {
+          background-color: #1E3A8A;
+          color: #BFDBFE;
+          border: 1.5px solid #2563EB;
+        }
+        .devops-pill-internal {
+          background-color: #334155;
+          color: #E2E8F0;
+          border: 1.5px solid #475569;
+        }
         .devops-status-dot {
           width: 7px;
           height: 7px;
@@ -603,11 +731,11 @@ export default function DevOpsTelemetryConsole({ order, className = '' }) {
           background-color: #1E293B;
           border: 1.5px solid #334155;
           border-radius: 8px;
-          padding: 10px 14px;
+          padding: 12px 14px;
           display: flex;
           flex-direction: column;
-          gap: 6px;
-          min-width: 220px;
+          gap: 8px;
+          min-width: 240px;
         }
         .devops-meta-item {
           display: flex;
@@ -632,6 +760,59 @@ export default function DevOpsTelemetryConsole({ order, className = '' }) {
           border-radius: 4px;
           color: #38BDF8;
           font-size: 0.82rem;
+        }
+        .devops-sync-btn-wrap {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding-top: 6px;
+          border-top: 1.5px solid #334155;
+          gap: 8px;
+        }
+        .devops-live-sync-btn {
+          background-color: #0F172A;
+          color: #F8FAFC;
+          border: 1.5px solid #334155;
+          border-radius: 4px;
+          padding: 6px 10px;
+          font-size: 0.78rem;
+          font-weight: 700;
+          cursor: pointer;
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          transition: background-color 0.15s;
+        }
+        .devops-live-sync-btn:hover:not(:disabled) {
+          background-color: #334155;
+        }
+        .devops-live-sync-btn:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+        .devops-last-sync-tag {
+          font-size: 0.72rem;
+          color: #94A3B8;
+          font-weight: 600;
+        }
+        .devops-spin {
+          animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+          to { transform: rotate(360deg); }
+        }
+
+        /* Sync Feedback Banner */
+        .devops-sync-feedback-banner {
+          background-color: #ECFDF5;
+          border-bottom: 1.5px solid #A7F3D0;
+          padding: 10px 24px;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          font-size: 0.84rem;
+          font-weight: 700;
+          color: #065F46;
         }
 
         /* Segmented Tabs */
@@ -681,6 +862,9 @@ export default function DevOpsTelemetryConsole({ order, className = '' }) {
           font-weight: 800;
           padding: 1px 6px;
           border-radius: 4px;
+        }
+        .devops-tab-chip.live {
+          background-color: #2563EB;
         }
 
         /* Panel Body */
@@ -754,7 +938,23 @@ export default function DevOpsTelemetryConsole({ order, className = '' }) {
           font-size: 1.05rem;
           font-weight: 800;
           color: #0F172A;
-          margin: 0 0 16px 0;
+          margin: 0;
+        }
+        .devops-timeline-header-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          flex-wrap: wrap;
+          gap: 8px;
+          margin-bottom: 16px;
+        }
+        .devops-commit-count-tag {
+          font-size: 0.76rem;
+          font-weight: 700;
+          color: #64748B;
+          background-color: #F1F5F9;
+          padding: 2px 8px;
+          border-radius: 4px;
         }
 
         /* Commit Timeline */
@@ -811,6 +1011,7 @@ export default function DevOpsTelemetryConsole({ order, className = '' }) {
           display: flex;
           align-items: center;
           gap: 8px;
+          flex-wrap: wrap;
         }
         .devops-commit-hash {
           font-size: 0.82rem;
@@ -828,6 +1029,18 @@ export default function DevOpsTelemetryConsole({ order, className = '' }) {
           border: 1.5px solid #CBD5E1;
           padding: 2px 8px;
           border-radius: 4px;
+        }
+        .devops-commit-gh-link {
+          font-size: 0.74rem;
+          font-weight: 700;
+          color: var(--prussian-blue, #2563EB);
+          text-decoration: none;
+          display: inline-flex;
+          align-items: center;
+          gap: 3px;
+        }
+        .devops-commit-gh-link:hover {
+          text-decoration: underline;
         }
         .devops-commit-date {
           font-size: 0.78rem;
