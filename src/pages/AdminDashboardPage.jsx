@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import {
   Box,
   Container,
@@ -73,7 +73,13 @@ import {
   calculateOrderFinancials
 } from '../utils/orderStorage';
 import { PACKAGES } from '../data/catalogData';
-import { formatRupiah, generateInquiryId, createChangeRequestWhatsAppPayload } from '../utils/documentEngine';
+import { 
+  formatRupiah, 
+  generateInquiryId, 
+  createChangeRequestWhatsAppPayload,
+  decodeOrderFromUrlParam,
+  parseWhatsAppBriefText
+} from '../utils/documentEngine';
 import { getGitHubToken, saveGitHubToken } from '../utils/githubService';
 import ExecutiveConfirmModal from '../components/molecules/ExecutiveConfirmModal';
 
@@ -159,11 +165,16 @@ export default function AdminDashboardPage() {
   const [pinError, setPinError] = useState('');
 
   // Orders State
+  const [searchParams, setSearchParams] = useSearchParams();
   const [orders, setOrders] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('ALL'); // ALL, INQUIRY, FIX_ORDER, COMPLETED, SPREADSHEET
   const [editingOrder, setEditingOrder] = useState(null);
   const [isCreatingNew, setIsCreatingNew] = useState(false);
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+  const [waImportText, setWaImportText] = useState('');
+  const [waImportError, setWaImportError] = useState('');
+  const [isPullingSheet, setIsPullingSheet] = useState(false);
   const [newOrderForm, setNewOrderForm] = useState({
     packageId: 'umkm-katalog',
     totalInvestment: 300000,
@@ -323,6 +334,108 @@ export default function AdminDashboardPage() {
     });
     if (removedItem) {
       triggerSuccess(`Item Change Request "${removedItem.name}" berhasil dihapus dari tagihan.`);
+    }
+  };
+
+  // Handle cross-device 1-click import from WhatsApp link (?import=...)
+  useEffect(() => {
+    const importParam = searchParams.get('import');
+    if (importParam) {
+      try {
+        const decoded = decodeOrderFromUrlParam(importParam);
+        if (decoded && decoded.id) {
+          createOrder(decoded);
+          setOrders(getAllOrders());
+          triggerSuccess(`Pesanan ${decoded.id} (${decoded.projectTitle}) berhasil diimpor otomatis dari tautan WhatsApp!`);
+          setSearchParams({});
+        }
+      } catch (e) {}
+    }
+  }, [searchParams, setSearchParams]);
+
+  // Process text import from WhatsApp brief
+  const handleProcessWaImport = (e) => {
+    e.preventDefault();
+    if (!waImportText.trim()) {
+      setWaImportError('Silakan tempelkan format teks brief WhatsApp klien terlebih dahulu.');
+      return;
+    }
+
+    try {
+      const parsed = parseWhatsAppBriefText(waImportText);
+      if (!parsed || !parsed.id) {
+        setWaImportError('Format pesan WhatsApp tidak terbaca. Pastikan teks menyertakan "ID Tiket Inquiry" atau rincian pemesanan.');
+        return;
+      }
+
+      createOrder(parsed);
+      setOrders(getAllOrders());
+      setIsImportModalOpen(false);
+      setWaImportText('');
+      setWaImportError('');
+
+      const config = getSheetConfig();
+      if (config?.webhookUrl && config.webhookUrl.trim().startsWith('http')) {
+        syncOrderToSheet(parsed, 'append');
+      }
+
+      triggerSuccess(`Pesanan ${parsed.id} (${parsed.projectTitle}) berhasil diimpor ke sistem dari chat WhatsApp!`);
+    } catch (err) {
+      setWaImportError('Gagal memproses teks: ' + err.message);
+    }
+  };
+
+  // Pull all orders from Google Spreadsheet to local memory
+  const handlePullOrdersFromSheet = async () => {
+    const config = getSheetConfig();
+    if (!config.webhookUrl || !config.webhookUrl.trim().startsWith('http')) {
+      showAlert({
+        title: 'URL Webhook Belum Diisi',
+        message: 'Masukkan URL Webhook Google Apps Script terlebih dahulu lalu simpan.',
+        variant: 'warning',
+        confirmLabel: 'Tutup'
+      });
+      return;
+    }
+
+    setIsPullingSheet(true);
+    try {
+      const res = await fetch(`${config.webhookUrl.trim()}?action=get_all`, {
+        method: 'GET'
+      });
+      const data = await res.json();
+      if (data && data.status === 'success' && Array.isArray(data.orders)) {
+        if (data.orders.length === 0) {
+          triggerSuccess('Koneksi sukses! Spreadsheet masih kosong.');
+        } else {
+          const localOrders = getAllOrders();
+          const localMap = new Map(localOrders.map(o => [o.id, o]));
+          data.orders.forEach(remote => {
+            const existing = localMap.get(remote.id);
+            localMap.set(remote.id, existing ? { ...existing, ...remote } : remote);
+          });
+          const merged = Array.from(localMap.values());
+          saveAllOrders(merged);
+          setOrders(merged);
+          triggerSuccess(`${data.orders.length} pesanan berhasil ditarik dan disinkronkan dari Google Spreadsheet ke laptop!`);
+        }
+      } else {
+        showAlert({
+          title: 'Format Respon Spreadsheet Belum Mendukung Tarik Data',
+          message: 'Pastikan Anda telah menyalin dan men-deploy kode Google Apps Script versi terbaru (mendukung action=get_all).',
+          variant: 'info',
+          confirmLabel: 'Tutup'
+        });
+      }
+    } catch (err) {
+      showAlert({
+        title: 'Gagal Menghubungi Google Spreadsheet',
+        message: 'Tidak dapat menarik data dari webhook. Pastikan deployment Apps Script disetel untuk "Anyone / Siapa Saja". Pesan: ' + err.message,
+        variant: 'warning',
+        confirmLabel: 'Tutup'
+      });
+    } finally {
+      setIsPullingSheet(false);
     }
   };
 
@@ -885,11 +998,47 @@ export default function AdminDashboardPage() {
   const googleAppsScriptCode = `// KODE GOOGLE APPS SCRIPT EKSEKUTIF AKSARA TECH (LIVE AUTO-SYNC & AUTO-DELETE v2.2)
 // Tempelkan di Google Spreadsheet: Menu Ekstensi > Apps Script
 
-// 1. Endpoint status untuk pengujian browser langsung
+// 1. Endpoint status untuk pengujian browser langsung & penarikan data lintas perangkat
 function doGet(e) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = ss.getActiveSheet();
   var rowCount = Math.max(0, sheet.getLastRow() - 1);
+
+  // Penarikan seluruh data pesanan ke laptop admin (Two-Way Sync)
+  if (e && e.parameter && e.parameter.action === "get_all") {
+    var data = sheet.getDataRange().getValues();
+    var orders = [];
+    if (data.length > 1) {
+      for (var i = 1; i < data.length; i++) {
+        var row = data[i];
+        if (!row[0] || row[0] === "-" || row[0] === "") continue;
+        orders.push({
+          id: String(row[0]),
+          orderNumber: String(row[1] || "-"),
+          statusType: String(row[2] || "INQUIRY"),
+          clientPhone: String(row[3] || "").replace(/^'/, ""),
+          clientEmail: String(row[4] || "-"),
+          projectTitle: String(row[5] || "-"),
+          category: String(row[6] || "-"),
+          packageName: String(row[7] || "-"),
+          totalInvestment: Number(row[8]) || 0,
+          dpAmount: Number(row[9]) || 0,
+          dpStatus: String(row[10] || "-"),
+          currentStageNumber: parseInt(String(row[11] || "1").replace(/\\D/g, ""), 10) || 1,
+          revisionQuotaTotal: 3,
+          revisionQuotaUsed: parseInt(String(row[12] || "0").split("/")[0], 10) || 0,
+          developerNotes: String(row[14] || "-"),
+          orderDate: String(row[15] || "")
+        });
+      }
+    }
+    return ContentService.createTextOutput(JSON.stringify({
+      "status": "success",
+      "count": orders.length,
+      "orders": orders
+    })).setMimeType(ContentService.MimeType.JSON);
+  }
+
   return ContentService.createTextOutput(JSON.stringify({
     "status": "connected",
     "spreadsheetName": ss.getName(),
@@ -897,7 +1046,7 @@ function doGet(e) {
     "sheetName": sheet.getName(),
     "totalOrdersInSheet": rowCount,
     "timestamp": new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta" }),
-    "message": "Webhook Aksara Tech aktif, terhubung normal, dan siap menerima sinkronisasi otomatis (Tambah, Edit, Hapus, Kosongkan)."
+    "message": "Webhook Aksara Tech aktif, terhubung normal, dan siap menerima sinkronisasi otomatis dua arah."
   })).setMimeType(ContentService.MimeType.JSON);
 }
 
@@ -1585,6 +1734,31 @@ function doPost(e) {
               </Button>
 
               <Button
+                variant="outlined"
+                onClick={() => {
+                  setIsImportModalOpen(true);
+                  setWaImportText('');
+                  setWaImportError('');
+                }}
+                startIcon={<MessageCircle size={16} />}
+                sx={{
+                  bgcolor: '#F0FDF4',
+                  color: '#166534',
+                  borderColor: '#86EFAC',
+                  border: '1.5px solid #86EFAC',
+                  borderRadius: '8px',
+                  px: 2,
+                  py: 1.25,
+                  fontSize: '0.84rem',
+                  fontWeight: 800,
+                  '&:hover': { bgcolor: '#DCFCE7', borderColor: '#166534' }
+                }}
+                title="Impor pesanan baru dari chat WhatsApp klien"
+              >
+                Impor dari Chat WA
+              </Button>
+
+              <Button
                 variant="contained"
                 onClick={handleOpenCreateModal}
                 startIcon={<Plus size={17} />}
@@ -1930,6 +2104,29 @@ function doPost(e) {
                 >
                   <CheckCircle2 size={16} color="var(--prussian-blue)" />
                   <span>{isTestingWebhook ? 'Mengirim data...' : 'Kirim 1 Data Uji Coba'}</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handlePullOrdersFromSheet}
+                  disabled={isPullingSheet}
+                  style={{
+                    background: '#0F172A',
+                    color: '#FFFFFF',
+                    border: 'none',
+                    borderRadius: '8px',
+                    padding: '11px 18px',
+                    fontSize: '0.88rem',
+                    fontWeight: '800',
+                    cursor: isPullingSheet ? 'wait' : 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px'
+                  }}
+                  title="Tarik seluruh data pesanan dari Google Spreadsheet ke laptop ini"
+                >
+                  <RefreshCw size={16} />
+                  <span>{isPullingSheet ? 'Menarik data...' : 'Tarik Data dari Spreadsheet'}</span>
                 </button>
 
                 <button
@@ -4364,6 +4561,167 @@ function doPost(e) {
                 }}
               >
                 Simpan Catatan Revisi
+              </Button>
+            </DialogActions>
+          </Box>
+        </Dialog>
+      )}
+
+      {/* MODAL: IMPOR DARI CHAT WHATSAPP (Sinkronisasi Lintas Perangkat HP -> Laptop) */}
+      {isImportModalOpen && (
+        <Dialog
+          open={isImportModalOpen}
+          onClose={() => setIsImportModalOpen(false)}
+          maxWidth="sm"
+          fullWidth
+          PaperProps={{
+            sx: {
+              borderRadius: '12px',
+              border: '1.5px solid #CBD5E1',
+              bgcolor: '#FFFFFF',
+              boxShadow: '0 20px 40px -15px rgba(15, 23, 42, 0.25)',
+              m: 2
+            }
+          }}
+        >
+          <Box component="form" onSubmit={handleProcessWaImport} sx={{ display: 'flex', flexDirection: 'column', m: 0 }}>
+            {/* Header */}
+            <DialogTitle
+              sx={{
+                p: '20px 24px',
+                borderBottom: '1.5px solid #E2E8F0',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                <Box
+                  sx={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: '8px',
+                    bgcolor: '#F0FDF4',
+                    border: '1.5px solid #86EFAC',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0
+                  }}
+                >
+                  <MessageCircle size={20} color="#166534" />
+                </Box>
+                <Box>
+                  <Typography variant="h6" sx={{ fontSize: '1.12rem', fontWeight: 900, color: '#0F172A', lineHeight: 1.2 }}>
+                    Impor Pesanan dari Chat WhatsApp
+                  </Typography>
+                  <Typography variant="caption" sx={{ fontSize: '0.78rem', color: '#64748B' }}>
+                    Sinkronkan pesanan klien dari HP ke laptop admin dalam 1 detik
+                  </Typography>
+                </Box>
+              </Box>
+              <IconButton
+                onClick={() => setIsImportModalOpen(false)}
+                size="small"
+                aria-label="Tutup modal"
+                sx={{
+                  bgcolor: '#F8FAFC',
+                  border: '1.5px solid #CBD5E1',
+                  borderRadius: '6px',
+                  color: '#64748B',
+                  p: 0.75,
+                  '&:hover': { bgcolor: '#F1F5F9', color: '#0F172A' }
+                }}
+              >
+                <X size={16} />
+              </IconButton>
+            </DialogTitle>
+
+            {/* Content */}
+            <DialogContent sx={{ p: '24px' }}>
+              <Box sx={{ mb: 1 }}>
+                <Typography variant="caption" sx={{ fontSize: '0.82rem', color: '#475569', display: 'block', mb: 1.5, lineHeight: 1.5 }}>
+                  Salin (*copy*) seluruh teks pesan brief pemesanan yang dikirimkan klien di WhatsApp, lalu tempelkan (*paste*) di bawah ini. Sistem cerdas Aksara Tech akan langsung mengekstrak nomor tiket, nomor WA, nama proyek, paket, dan nilai investasinya.
+                </Typography>
+
+                <TextField
+                  fullWidth
+                  multiline
+                  rows={8}
+                  required
+                  placeholder={'Tempelkan teks pesan WhatsApp klien di sini...\nContoh:\n*SURAT BRIEF TEKNIS & PERMINTAAN PENAWARAN PROYEK*\n*ID Tiket Inquiry :* INQ-AT-20261117-XXXX\n• Nomor WhatsApp : +62 812...\n• Nama Proyek : Website UMKM...'}
+                  value={waImportText}
+                  onChange={(e) => {
+                    setWaImportText(e.target.value);
+                    if (waImportError) setWaImportError('');
+                  }}
+                  inputProps={{
+                    style: { fontSize: '0.85rem', color: '#0F172A', lineHeight: 1.5 }
+                  }}
+                  sx={{
+                    bgcolor: '#F8FAFC',
+                    '& .MuiOutlinedInput-root': {
+                      border: '1.5px solid #CBD5E1',
+                      borderRadius: '8px',
+                      '& fieldset': { border: 'none' },
+                      '&:hover': { borderColor: '#0F172A' },
+                      '&.Mui-focused': { borderColor: '#1D63FF', bgcolor: '#FFFFFF' }
+                    }
+                  }}
+                />
+                {waImportError && (
+                  <Typography variant="caption" sx={{ color: '#DC2626', fontWeight: 700, mt: 1, display: 'block' }}>
+                    {waImportError}
+                  </Typography>
+                )}
+              </Box>
+            </DialogContent>
+
+            {/* Actions */}
+            <DialogActions
+              sx={{
+                bgcolor: '#F8FAFC',
+                borderTop: '1.5px solid #E2E8F0',
+                px: 3,
+                py: 2,
+                display: 'flex',
+                justifyContent: 'flex-end',
+                gap: 1.5
+              }}
+            >
+              <Button
+                type="button"
+                onClick={() => setIsImportModalOpen(false)}
+                sx={{
+                  bgcolor: '#FFFFFF',
+                  color: '#475569',
+                  border: '1.5px solid #CBD5E1',
+                  borderRadius: '6px',
+                  px: 2,
+                  py: 0.85,
+                  fontSize: '0.86rem',
+                  fontWeight: 700,
+                  '&:hover': { bgcolor: '#F1F5F9', color: '#0F172A' }
+                }}
+              >
+                Batal
+              </Button>
+              <Button
+                type="submit"
+                disabled={!waImportText.trim()}
+                startIcon={<Check size={16} />}
+                sx={{
+                  bgcolor: '#166534',
+                  color: '#FFFFFF',
+                  borderRadius: '6px',
+                  px: 2.5,
+                  py: 0.85,
+                  fontSize: '0.88rem',
+                  fontWeight: 800,
+                  '&:hover': { bgcolor: '#14532D' }
+                }}
+              >
+                Impor &amp; Daftarkan Pesanan
               </Button>
             </DialogActions>
           </Box>

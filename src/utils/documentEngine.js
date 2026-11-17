@@ -94,7 +94,42 @@ export function createWhatsAppPayload(formData, selectedPackage, selectedAddons 
   const baseUrl = (typeof window !== "undefined" && window.location && window.location.origin)
     ? window.location.origin
     : "https://aksaratech.id";
-  const trackingUrl = `${baseUrl}/lacak?kode=${inquiryId}`;
+
+  // Lightweight payload for cross-device sync (HP client -> Laptop admin)
+  const payloadForSync = {
+    id: inquiryId,
+    orderNumber: 'MENUNGGU-DP',
+    statusType: 'INQUIRY',
+    clientName: formData.clientName || inquiryId,
+    clientPhone: (formData.clientPhone || '').replace(/[\s-]/g, ''),
+    clientEmail: formData.clientEmail || '-',
+    projectTitle: formData.projectTitle || 'Proyek Website Kustom Aksara Tech',
+    category: formData.projectCategory || 'UMKM & Bisnis',
+    packageId: selectedPackage?.id || 'umkm-katalog',
+    packageName: selectedPackage?.name || 'Website UMKM & Katalog Produk Digital',
+    packagePrice: packagePrice,
+    addons: (selectedAddons || []).map(a => ({ name: a.name, price: a.minPrice })),
+    changeRequests: [],
+    totalInvestment: totalInvestment,
+    dpAmount: dpAmount,
+    dpStatus: 'MENUNGGU VERIFIKASI DP 50%',
+    orderDate: submissionDate,
+    estimatedCompletion: `${selectedPackage?.minDays || 4}–${selectedPackage?.maxDays || 7} Hari Kerja`,
+    currentStageNumber: 1,
+    revisionQuotaTotal: 3,
+    revisionQuotaUsed: 0,
+    developerNotes: formData.specialNotes || 'Formulir brief teknis diajukan via website.',
+    deliverablesPreview: selectedPackage?.deliverables || ['Master Source Code (.zip)', 'Database Relasional (.sql)']
+  };
+
+  const encodedSync = encodeOrderToUrlParam(payloadForSync);
+  const trackingUrl = encodedSync 
+    ? `${baseUrl}/lacak?kode=${inquiryId}&d=${encodedSync}`
+    : `${baseUrl}/lacak?kode=${inquiryId}`;
+
+  const adminImportUrl = encodedSync
+    ? `${baseUrl}/admin?import=${encodedSync}`
+    : `${baseUrl}/admin`;
 
   const message = 
 `*SURAT BRIEF TEKNIS & PERMINTAAN PENAWARAN PROYEK*
@@ -161,11 +196,111 @@ _Terbilang : ${terbilangRupiah(totalInvestment)}_
 *VIII. TAUTAN LACAK STATUS PROYEK LANGSUNG:*
 ${trackingUrl}
 
+*IX. TAUTAN VERIFIKASI ADMIN (1-KLIK MASUK SISTEM LAPTOP/HP):*
+${adminImportUrl}
+
 ════════════════════════════════════════
 _Brief teknis ini dibuat secara otomatis melalui portal resmi Aksara Tech._
 _Mohon konfirmasi ketersediaan antrean dan penerbitan invoice resmi untuk pembayaran Termin 1 (DP 50%). Terima kasih._`;
 
   return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+}
+
+/**
+ * Safe cross-device base64 URL encoding for lightweight order sync
+ */
+export function encodeOrderToUrlParam(order) {
+  try {
+    const jsonStr = JSON.stringify(order);
+    return encodeURIComponent(btoa(unescape(encodeURIComponent(jsonStr))));
+  } catch (e) {
+    return '';
+  }
+}
+
+/**
+ * Safe cross-device base64 URL decoding
+ */
+export function decodeOrderFromUrlParam(encodedStr) {
+  try {
+    if (!encodedStr) return null;
+    const jsonStr = decodeURIComponent(escape(atob(decodeURIComponent(encodedStr))));
+    return JSON.parse(jsonStr);
+  } catch (e) {
+    return null;
+  }
+}
+
+/**
+ * Intelligent WhatsApp message text parser
+ * Allows Admin to paste any client brief WhatsApp message and automatically convert it into a database order
+ */
+export function parseWhatsAppBriefText(rawText) {
+  if (!rawText || typeof rawText !== 'string') return null;
+
+  // Extract Inquiry ID
+  const idMatch = rawText.match(/ID Tiket(?:\s+Inquiry)?\s*:\s*(INQ-AT-[\w-]+)/i) ||
+                  rawText.match(/(INQ-AT-\d{8}-[A-Za-z0-9]+)/i);
+  const inquiryId = idMatch ? idMatch[1].trim() : generateInquiryId();
+
+  // Extract Client Phone
+  const phoneMatch = rawText.match(/Nomor WhatsApp\s*:\s*([+\d\s-]+)/i);
+  const clientPhone = phoneMatch ? phoneMatch[1].trim() : '-';
+
+  // Extract Client Email
+  const emailMatch = rawText.match(/Alamat Email\s*:\s*([^\n\r]+)/i);
+  const clientEmail = emailMatch ? emailMatch[1].trim() : '-';
+
+  // Extract Project Title
+  const titleMatch = rawText.match(/Nama Proyek\s*:\s*([^\n\r]+)/i);
+  const projectTitle = titleMatch ? titleMatch[1].trim() : 'Proyek Website Klien Aksara Tech';
+
+  // Extract Category
+  const catMatch = rawText.match(/Kategori Proyek\s*:\s*([^\n\r]+)/i);
+  const category = catMatch ? catMatch[1].trim() : 'UMKM & Bisnis';
+
+  // Extract Package
+  const pkgMatch = rawText.match(/Paket Layanan\s*:\s*([^\n\r]+)/i);
+  const packageName = pkgMatch ? pkgMatch[1].trim() : 'Website UMKM & Katalog Produk Digital';
+
+  // Extract Total Investment
+  const totalMatch = rawText.match(/TOTAL (?:ESTIMASI )?INVESTASI\s*:\s*Rp\s*([\d.]+)/i) ||
+                     rawText.match(/Total Biaya.*?Rp\s*([\d.]+)/i);
+  const totalInvestment = totalMatch ? Number(totalMatch[1].replace(/\./g, '')) : 300000;
+
+  // Extract DP Amount
+  const dpMatch = rawText.match(/Termin 1 \(Uang Muka \/ DP 50%\)\s*:\s*Rp\s*([\d.]+)/i) ||
+                  rawText.match(/DP 50%.*?Rp\s*([\d.]+)/i);
+  const dpAmount = dpMatch ? Number(dpMatch[1].replace(/\./g, '')) : Math.round(totalInvestment * 0.5);
+
+  // Extract Notes
+  const notesMatch = rawText.match(/Catatan Tambahan\s*:\s*([^\n\r]+)/i);
+  const developerNotes = notesMatch ? notesMatch[1].trim() : 'Formulir brief teknis diimpor dari chat WhatsApp Klien.';
+
+  return {
+    id: inquiryId,
+    orderNumber: 'MENUNGGU-DP',
+    statusType: 'INQUIRY',
+    clientName: inquiryId,
+    clientPhone: clientPhone,
+    clientEmail: clientEmail,
+    projectTitle: projectTitle,
+    category: category,
+    packageName: packageName,
+    packagePrice: totalInvestment,
+    addons: [],
+    changeRequests: [],
+    totalInvestment: totalInvestment,
+    dpAmount: dpAmount,
+    dpStatus: 'MENUNGGU VERIFIKASI DP 50%',
+    orderDate: new Date().toLocaleDateString('id-ID', { dateStyle: 'long' }),
+    estimatedCompletion: '5–7 Hari Kerja',
+    currentStageNumber: 1,
+    revisionQuotaTotal: 3,
+    revisionQuotaUsed: 0,
+    developerNotes: developerNotes,
+    deliverablesPreview: ['Master Source Code (.zip)', 'Database Relasional (.sql)']
+  };
 }
 
 // Generate structured Change Request Addendum message for WhatsApp

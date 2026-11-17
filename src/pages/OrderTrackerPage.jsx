@@ -25,8 +25,8 @@ import {
 } from 'lucide-react';
 import PageHeader from '../components/molecules/PageHeader';
 import DevOpsTelemetryConsole from '../components/organisms/DevOpsTelemetryConsole';
-import { formatRupiah } from '../utils/documentEngine';
-import { findOrderByQuery, getAllOrders, calculateOrderFinancials } from '../utils/orderStorage';
+import { formatRupiah, decodeOrderFromUrlParam } from '../utils/documentEngine';
+import { findOrderByQuery, getAllOrders, calculateOrderFinancials, createOrder } from '../utils/orderStorage';
 
 // Standard 5-Step SOP Pipeline definition
 const SOP_STAGES = [
@@ -90,7 +90,25 @@ export default function OrderTrackerPage() {
   useEffect(() => {
     refreshDbOrders();
 
-    const codeParam = searchParams.get('kode') || searchParams.get('id') || searchParams.get('no');
+    const codeParam = searchParams.get('kode') || searchParams.get('id') || searchParams.get('no') || searchParams.get('ticket');
+    const dataParam = searchParams.get('d') || searchParams.get('data');
+
+    // Cross-device sync: If order is encoded in URL from WhatsApp, load & auto-register to this device
+    if (dataParam) {
+      const decoded = decodeOrderFromUrlParam(dataParam);
+      if (decoded && decoded.id) {
+        const existing = findOrderByQuery(decoded.id);
+        if (!existing) {
+          createOrder(decoded);
+          refreshDbOrders();
+        }
+        setSearchInput(decoded.id);
+        setActiveOrder(existing || decoded);
+        setSearchStatus('found');
+        return;
+      }
+    }
+
     if (codeParam) {
       setSearchInput(codeParam);
       executeSearch(codeParam);
@@ -115,7 +133,7 @@ export default function OrderTrackerPage() {
       window.removeEventListener('storage', handleStorageSync);
       window.removeEventListener('aksara_orders_updated', handleStorageSync);
     };
-  }, [searchParams, activeOrder]);
+  }, [searchParams]);
 
   // Execute lookup logic strictly from unified central database
   const executeSearch = (rawQuery) => {
