@@ -251,6 +251,41 @@ export function getOrderDevOps(order) {
 }
 
 /**
+ * Calculate comprehensive financial breakdown and change request impacts
+ * Provides complete transparency: Base + Initial Addons + Change Requests = Final Total, DP paid, and Settlement due.
+ */
+export function calculateOrderFinancials(order) {
+  const basePrice = Number(order?.packagePrice) || Number(order?.totalInvestment) || 0;
+  const initialAddons = Array.isArray(order?.addons) ? order.addons : [];
+  const initialAddonsTotal = initialAddons.reduce((sum, a) => sum + (Number(a.price || a.minPrice) || 0), 0);
+  const changeRequests = Array.isArray(order?.changeRequests) ? order.changeRequests : [];
+  const crTotal = changeRequests.reduce((sum, cr) => sum + (Number(cr.price) || 0), 0);
+  const finalTotal = basePrice + initialAddonsTotal + crTotal;
+  
+  // Calculate DP already paid
+  const isDpPaid = order?.dpStatus?.includes('LUNAS');
+  const dpPaid = isDpPaid 
+    ? (Number(order.dpAmount) || Math.round((basePrice + initialAddonsTotal) * 0.5)) 
+    : 0;
+
+  // Sisa pelunasan
+  const isCompleted = order?.dpStatus === 'LUNAS 100% (SELESAI)' || Number(order?.currentStageNumber) === 5;
+  const remainingBalance = isCompleted ? 0 : Math.max(0, finalTotal - dpPaid);
+
+  return {
+    basePrice,
+    initialAddons,
+    initialAddonsTotal,
+    changeRequests,
+    crTotal,
+    finalTotal,
+    dpPaid,
+    remainingBalance,
+    isCompleted
+  };
+}
+
+/**
  * Get all orders from localStorage, fallback to INITIAL_ORDERS only on very first visit
  */
 export function getAllOrders() {

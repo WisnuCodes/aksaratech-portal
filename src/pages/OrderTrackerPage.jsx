@@ -26,7 +26,7 @@ import {
 import PageHeader from '../components/molecules/PageHeader';
 import DevOpsTelemetryConsole from '../components/organisms/DevOpsTelemetryConsole';
 import { formatRupiah } from '../utils/documentEngine';
-import { findOrderByQuery, getAllOrders } from '../utils/orderStorage';
+import { findOrderByQuery, getAllOrders, calculateOrderFinancials } from '../utils/orderStorage';
 
 // Standard 5-Step SOP Pipeline definition
 const SOP_STAGES = [
@@ -519,6 +519,196 @@ export default function OrderTrackerPage() {
               </div>
 
             </div>
+
+            {/* Transparansi Finansial, Add-On & Change Request Dossier */}
+            {(() => {
+              const fin = calculateOrderFinancials(activeOrder);
+              const hasChangeRequests = Array.isArray(activeOrder.changeRequests) && activeOrder.changeRequests.length > 0;
+              const hasInitialAddons = Array.isArray(activeOrder.addons) && activeOrder.addons.length > 0;
+
+              return (
+                <div style={{
+                  background: '#FFFFFF',
+                  border: '1.5px solid #CBD5E1',
+                  borderRadius: '12px',
+                  padding: '24px',
+                  boxSizing: 'border-box'
+                }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px', marginBottom: '18px' }}>
+                    <div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                        <span style={{
+                          fontSize: '0.68rem',
+                          fontWeight: '800',
+                          background: hasChangeRequests ? '#FEF3C7' : '#F1F5F9',
+                          color: hasChangeRequests ? '#92400E' : '#334155',
+                          border: hasChangeRequests ? '1px solid #FDE68A' : '1px solid #CBD5E1',
+                          padding: '2px 8px',
+                          borderRadius: '4px',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.04em'
+                        }}>
+                          {hasChangeRequests ? 'Change Request Aktif' : 'Biaya Terkunci (Zero Hidden Fees)'}
+                        </span>
+                        <span style={{ fontSize: '0.78rem', color: '#64748B' }}>
+                          • Sesuai SOP &amp; Kesepakatan
+                        </span>
+                      </div>
+                      <h4 style={{ fontSize: '1.15rem', fontWeight: '900', color: '#0F172A', margin: 0 }}>
+                        Transparansi Rincian Biaya &amp; Fitur Tambahan
+                      </h4>
+                    </div>
+
+                    <div style={{ textAlign: 'right' }}>
+                      <span style={{ fontSize: '0.76rem', color: '#64748B', display: 'block', fontWeight: '700' }}>
+                        Total Tagihan Akhir:
+                      </span>
+                      <span style={{ fontSize: '1.3rem', fontWeight: '900', color: '#0F172A' }}>
+                        {formatRupiah(fin.finalTotal)}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Line Items Breakdown Table */}
+                  <div style={{
+                    background: '#F8FAFC',
+                    border: '1.5px solid #E2E8F0',
+                    borderRadius: '8px',
+                    overflow: 'hidden',
+                    marginBottom: '16px'
+                  }}>
+                    {/* Item 1: Base Package */}
+                    <div style={{
+                      padding: '12px 16px',
+                      borderBottom: (hasInitialAddons || hasChangeRequests) ? '1px solid #E2E8F0' : 'none',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      flexWrap: 'wrap',
+                      gap: '8px'
+                    }}>
+                      <div>
+                        <div style={{ fontSize: '0.88rem', fontWeight: '800', color: '#0F172A' }}>
+                          Paket Dasar: {activeOrder.packageName || 'Layanan Kustom'}
+                        </div>
+                        <div style={{ fontSize: '0.76rem', color: '#64748B' }}>
+                          Spesifikasi utama sistem &bull; Kategori: {activeOrder.category || 'Standar'}
+                        </div>
+                      </div>
+                      <div style={{ fontSize: '0.92rem', fontWeight: '800', color: '#0F172A' }}>
+                        {formatRupiah(fin.basePrice)}
+                      </div>
+                    </div>
+
+                    {/* Item 2: Initial Addons (if any) */}
+                    {hasInitialAddons && activeOrder.addons.map((addon, aIdx) => (
+                      <div key={aIdx} style={{
+                        padding: '12px 16px',
+                        borderBottom: (hasChangeRequests || aIdx < activeOrder.addons.length - 1) ? '1px solid #E2E8F0' : 'none',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        flexWrap: 'wrap',
+                        gap: '8px'
+                      }}>
+                        <div>
+                          <div style={{ fontSize: '0.88rem', fontWeight: '700', color: '#0F172A' }}>
+                            Add-On Awal: {addon.name}
+                          </div>
+                          <div style={{ fontSize: '0.76rem', color: '#64748B' }}>
+                            Dipilih sejak pengajuan brief awal
+                          </div>
+                        </div>
+                        <div style={{ fontSize: '0.92rem', fontWeight: '700', color: '#0F172A' }}>
+                          +{formatRupiah(addon.price || addon.minPrice)}
+                        </div>
+                      </div>
+                    ))}
+
+                    {/* Item 3: Change Requests (Mid-project Add-ons) */}
+                    {hasChangeRequests && activeOrder.changeRequests.map((cr, cIdx) => (
+                      <div key={cIdx} style={{
+                        padding: '12px 16px',
+                        borderBottom: cIdx === activeOrder.changeRequests.length - 1 ? 'none' : '1px solid #E2E8F0',
+                        background: '#FFFBEB',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        flexWrap: 'wrap',
+                        gap: '8px'
+                      }}>
+                        <div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <strong style={{ fontSize: '0.88rem', color: '#92400E' }}>
+                              {cr.name}
+                            </strong>
+                            <span style={{
+                              fontSize: '0.66rem',
+                              fontWeight: '800',
+                              background: '#FEF3C7',
+                              color: '#92400E',
+                              border: '1px solid #FDE68A',
+                              padding: '1px 6px',
+                              borderRadius: '4px'
+                            }}>
+                              {cr.category || 'Fitur Tambahan'}
+                            </span>
+                          </div>
+                          <div style={{ fontSize: '0.76rem', color: '#78350F', marginTop: '2px' }}>
+                            Disetujui pada {cr.date} {cr.notes ? `• ${cr.notes}` : ''}
+                          </div>
+                        </div>
+                        <div style={{ fontSize: '0.92rem', fontWeight: '800', color: '#B45309' }}>
+                          +{formatRupiah(cr.price)}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Settlement & Down Payment Transparency Grid */}
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+                    gap: '12px',
+                    background: '#F1F5F9',
+                    padding: '16px',
+                    borderRadius: '8px'
+                  }}>
+                    <div>
+                      <span style={{ fontSize: '0.74rem', color: '#64748B', fontWeight: '800', textTransform: 'uppercase', display: 'block' }}>
+                        Termin 1: Uang Muka (DP 50% Awal)
+                      </span>
+                      <span style={{ fontSize: '1rem', fontWeight: '800', color: '#0F172A', marginTop: '2px', display: 'block' }}>
+                        {formatRupiah(fin.dpPaid)}
+                      </span>
+                      <span style={{ fontSize: '0.74rem', color: activeOrder.dpStatus.includes('LUNAS') ? '#16A34A' : '#D97706', fontWeight: '700' }}>
+                        Status: {activeOrder.dpStatus}
+                      </span>
+                    </div>
+
+                    <div>
+                      <span style={{ fontSize: '0.74rem', color: '#64748B', fontWeight: '800', textTransform: 'uppercase', display: 'block' }}>
+                        Termin 2: Sisa Tagihan Pelunasan (Tahap 5)
+                      </span>
+                      <span style={{ fontSize: '1.1rem', fontWeight: '900', color: fin.remainingBalance > 0 ? '#1D63FF' : '#16A34A', marginTop: '2px', display: 'block' }}>
+                        {fin.remainingBalance > 0 ? formatRupiah(fin.remainingBalance) : 'LUNAS 100% (Rp 0)'}
+                      </span>
+                      <span style={{ fontSize: '0.74rem', color: '#64748B', display: 'block' }}>
+                        {fin.remainingBalance > 0 ? 'Ditransfer pasca review demo live sebelum serah terima master code' : 'Seluruh kewajiban pembayaran telah selesai'}
+                      </span>
+                    </div>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                      <span style={{ fontSize: '0.74rem', color: '#64748B', lineHeight: '1.4' }}>
+                        {hasChangeRequests 
+                          ? `Termasuk ${activeOrder.changeRequests.length} item add-on/revisi berjalan (+${formatRupiah(fin.crTotal)}) yang otomatis menyesuaikan nilai pelunasan akhir.`
+                          : 'Biaya terkunci tanpa biaya tak terduga. Penambahan fitur baru di luar kuota dapat dikoordinasikan via WhatsApp.'}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
 
             {/* Stepline 5-Stage SOP Milestone Pipeline */}
             <div style={{

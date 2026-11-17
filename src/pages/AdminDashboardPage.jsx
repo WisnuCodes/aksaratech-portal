@@ -69,10 +69,11 @@ import {
   syncOrderToSheet,
   syncDeleteOrderFromSheet,
   syncAllOrdersToSheet,
-  getOrderDevOps
+  getOrderDevOps,
+  calculateOrderFinancials
 } from '../utils/orderStorage';
 import { PACKAGES } from '../data/catalogData';
-import { formatRupiah, generateInquiryId } from '../utils/documentEngine';
+import { formatRupiah, generateInquiryId, createChangeRequestWhatsAppPayload } from '../utils/documentEngine';
 import { getGitHubToken, saveGitHubToken } from '../utils/githubService';
 import ExecutiveConfirmModal from '../components/molecules/ExecutiveConfirmModal';
 
@@ -250,6 +251,79 @@ export default function AdminDashboardPage() {
 
   const closeConfirmModal = () => {
     setConfirmModal(prev => ({ ...prev, isOpen: false, isLoading: false }));
+  };
+
+  // Custom Change Request Inline Form State in Edit Modal
+  const [customCrForm, setCustomCrForm] = useState({
+    show: false,
+    name: '',
+    category: 'Fitur Tambahan',
+    price: 100000,
+    notes: '',
+    affectsRevisionQuota: 0
+  });
+
+  // Add Preset or Custom Change Request to editingOrder
+  const handleAddChangeRequest = (preset) => {
+    if (!editingOrder) return;
+    const currentCrs = Array.isArray(editingOrder.changeRequests) ? editingOrder.changeRequests : [];
+    const today = new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
+    const newCr = {
+      id: `CR-${Date.now().toString().slice(-4)}`,
+      name: preset.name,
+      category: preset.category || 'Fitur Tambahan',
+      price: Number(preset.price) || 0,
+      date: today,
+      notes: preset.notes || '',
+      affectsRevisionQuota: preset.affectsRevisionQuota || 0
+    };
+
+    const updatedCrs = [...currentCrs, newCr];
+    
+    // Recalculate total investment
+    const basePrice = Number(editingOrder.packagePrice) || Number(editingOrder.totalInvestment) || 0;
+    const initialAddonsTotal = (editingOrder.addons || []).reduce((sum, a) => sum + (Number(a.price || a.minPrice) || 0), 0);
+    const newCrTotal = updatedCrs.reduce((sum, c) => sum + Number(c.price), 0);
+    const newTotal = basePrice + initialAddonsTotal + newCrTotal;
+
+    // Recalculate revision quota if affects revision
+    const totalExtraRevs = updatedCrs.reduce((sum, c) => sum + (Number(c.affectsRevisionQuota) || 0), 0);
+    const newRevQuota = 3 + totalExtraRevs;
+
+    setEditingOrder({
+      ...editingOrder,
+      packagePrice: basePrice,
+      changeRequests: updatedCrs,
+      totalInvestment: newTotal,
+      revisionQuotaTotal: newRevQuota
+    });
+    triggerSuccess(`Item Change Request "${preset.name}" (+${formatRupiah(preset.price)}) berhasil ditambahkan!`);
+  };
+
+  const handleRemoveChangeRequest = (crId) => {
+    if (!editingOrder) return;
+    const currentCrs = Array.isArray(editingOrder.changeRequests) ? editingOrder.changeRequests : [];
+    const removedItem = currentCrs.find(c => c.id === crId);
+    const updatedCrs = currentCrs.filter(c => c.id !== crId);
+
+    const basePrice = Number(editingOrder.packagePrice) || Number(editingOrder.totalInvestment) || 0;
+    const initialAddonsTotal = (editingOrder.addons || []).reduce((sum, a) => sum + (Number(a.price || a.minPrice) || 0), 0);
+    const newCrTotal = updatedCrs.reduce((sum, c) => sum + Number(c.price), 0);
+    const newTotal = basePrice + initialAddonsTotal + newCrTotal;
+
+    const totalExtraRevs = updatedCrs.reduce((sum, c) => sum + (Number(c.affectsRevisionQuota) || 0), 0);
+    const newRevQuota = 3 + totalExtraRevs;
+
+    setEditingOrder({
+      ...editingOrder,
+      packagePrice: basePrice,
+      changeRequests: updatedCrs,
+      totalInvestment: newTotal,
+      revisionQuotaTotal: newRevQuota
+    });
+    if (removedItem) {
+      triggerSuccess(`Item Change Request "${removedItem.name}" berhasil dihapus dari tagihan.`);
+    }
   };
 
   const handleSaveGitHubToken = (e) => {
@@ -2878,40 +2952,68 @@ function doPost(e) {
 
                 <Divider sx={{ borderColor: '#F1F5F9', borderBottomWidth: '1.5px' }} />
 
-                {/* SECTION 3: PARAMETER FINANSIAL */}
+                {/* SECTION 3: PARAMETER FINANSIAL & CHANGE REQUEST BUILDER */}
                 <Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
-                    <Calendar size={15} color="#0F172A" />
-                    <Typography variant="caption" sx={{ fontSize: '0.8rem', fontWeight: 800, color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                      3. Nilai Investasi &amp; Status Pembayaran
-                    </Typography>
-                  </Box>
-                  <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2, mb: 2 }}>
-                    <Box>
-                      <Typography variant="caption" sx={{ fontSize: '0.8rem', fontWeight: 700, color: '#0F172A', display: 'block', mb: 0.75 }}>
-                        Total Biaya Investasi (Rp)
+                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1.5, flexWrap: 'wrap', gap: 1 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Calendar size={15} color="#0F172A" />
+                      <Typography variant="caption" sx={{ fontSize: '0.8rem', fontWeight: 800, color: '#0F172A', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                        3. Nilai Investasi, Add-On &amp; Change Request
                       </Typography>
-                      <TextField
-                        fullWidth
+                    </Box>
+                    <Box sx={{ display: 'flex', gap: 1 }}>
+                      <Button
+                        type="button"
                         size="small"
-                        type="number"
-                        value={editingOrder.totalInvestment}
-                        onChange={(e) => setEditingOrder({ ...editingOrder, totalInvestment: Number(e.target.value) })}
-                        inputProps={{
-                          style: { fontSize: '0.9rem', fontWeight: 800, color: '#1D63FF', padding: '10px 12px' }
-                        }}
-                        sx={{
-                          bgcolor: '#FFFFFF',
-                          '& .MuiOutlinedInput-root': {
-                            border: '1.5px solid #CBD5E1',
-                            borderRadius: '6px',
-                            '& fieldset': { border: 'none' },
-                            '&:hover': { borderColor: '#0F172A' },
-                            '&.Mui-focused': { borderColor: '#1D63FF' }
+                        onClick={() => {
+                          const rawUrl = createChangeRequestWhatsAppPayload(editingOrder);
+                          const textParam = new URL(rawUrl).searchParams.get('text');
+                          if (navigator?.clipboard && textParam) {
+                            navigator.clipboard.writeText(textParam);
+                            triggerSuccess('Rincian tagihan Change Request berhasil disalin ke clipboard!');
                           }
                         }}
-                      />
+                        startIcon={<Copy size={13} />}
+                        sx={{
+                          bgcolor: '#F8FAFC',
+                          color: '#0F172A',
+                          border: '1.5px solid #CBD5E1',
+                          borderRadius: '6px',
+                          px: 1.25,
+                          py: 0.4,
+                          fontSize: '0.76rem',
+                          fontWeight: 700,
+                          '&:hover': { bgcolor: '#F1F5F9' }
+                        }}
+                      >
+                        Salin Rekap WA
+                      </Button>
+                      <Button
+                        type="button"
+                        size="small"
+                        component="a"
+                        href={createChangeRequestWhatsAppPayload(editingOrder)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        startIcon={<ExternalLink size={13} />}
+                        sx={{
+                          bgcolor: '#0F172A',
+                          color: '#FFFFFF',
+                          borderRadius: '6px',
+                          px: 1.25,
+                          py: 0.4,
+                          fontSize: '0.76rem',
+                          fontWeight: 700,
+                          '&:hover': { bgcolor: '#1E293B' }
+                        }}
+                      >
+                        Kirim WA
+                      </Button>
                     </Box>
+                  </Box>
+
+                  {/* Financial Status Controls */}
+                  <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2, mb: 2 }}>
                     <Box>
                       <Typography variant="caption" sx={{ fontSize: '0.8rem', fontWeight: 700, color: '#0F172A', display: 'block', mb: 0.75 }}>
                         Status Pembayaran DP
@@ -2938,31 +3040,389 @@ function doPost(e) {
                         </Select>
                       </FormControl>
                     </Box>
+                    <Box>
+                      <Typography variant="caption" sx={{ fontSize: '0.8rem', fontWeight: 700, color: '#0F172A', display: 'block', mb: 0.75 }}>
+                        Target Tanggal Selesai
+                      </Typography>
+                      <TextField
+                        fullWidth
+                        size="small"
+                        placeholder="Contoh: 15 November 2026"
+                        value={editingOrder.estimatedCompletion || ''}
+                        onChange={(e) => setEditingOrder({ ...editingOrder, estimatedCompletion: e.target.value })}
+                        inputProps={{
+                          style: { fontSize: '0.88rem', color: '#0F172A', padding: '10px 12px' }
+                        }}
+                        sx={{
+                          bgcolor: '#FFFFFF',
+                          '& .MuiOutlinedInput-root': {
+                            border: '1.5px solid #CBD5E1',
+                            borderRadius: '6px',
+                            '& fieldset': { border: 'none' },
+                            '&:hover': { borderColor: '#0F172A' },
+                            '&.Mui-focused': { borderColor: '#1D63FF' }
+                          }
+                        }}
+                      />
+                    </Box>
                   </Box>
-                  <Box>
-                    <Typography variant="caption" sx={{ fontSize: '0.8rem', fontWeight: 700, color: '#0F172A', display: 'block', mb: 0.75 }}>
-                      Target Tanggal Selesai
-                    </Typography>
-                    <TextField
-                      fullWidth
-                      size="small"
-                      placeholder="Contoh: 15 November 2026"
-                      value={editingOrder.estimatedCompletion || ''}
-                      onChange={(e) => setEditingOrder({ ...editingOrder, estimatedCompletion: e.target.value })}
-                      inputProps={{
-                        style: { fontSize: '0.88rem', color: '#0F172A', padding: '10px 12px' }
-                      }}
-                      sx={{
-                        bgcolor: '#FFFFFF',
-                        '& .MuiOutlinedInput-root': {
+
+                  {/* CHANGE REQUEST & ADD-ON BUILDER INTERFACE */}
+                  <Box sx={{ bgcolor: '#F8FAFC', border: '1.5px solid #CBD5E1', borderRadius: '8px', p: 2, mb: 2 }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1.5, flexWrap: 'wrap', gap: 1 }}>
+                      <div>
+                        <Typography variant="subtitle2" sx={{ fontSize: '0.88rem', fontWeight: 800, color: '#0F172A' }}>
+                          Add-On &amp; Change Request Berjalan (Fitur Tambahan di Tengah Jalan)
+                        </Typography>
+                        <Typography variant="caption" sx={{ fontSize: '0.78rem', color: '#64748B' }}>
+                          Penambahan modul, integrasi payment gateway, atau sesi revisi ekstra di luar brief awal.
+                        </Typography>
+                      </div>
+                      <Button
+                        type="button"
+                        size="small"
+                        onClick={() => setCustomCrForm(prev => ({ ...prev, show: !prev.show }))}
+                        startIcon={<Plus size={14} />}
+                        sx={{
+                          bgcolor: customCrForm.show ? '#F1F5F9' : '#0F172A',
+                          color: customCrForm.show ? '#0F172A' : '#FFFFFF',
                           border: '1.5px solid #CBD5E1',
                           borderRadius: '6px',
-                          '& fieldset': { border: 'none' },
-                          '&:hover': { borderColor: '#0F172A' },
-                          '&.Mui-focused': { borderColor: '#1D63FF' }
-                        }
-                      }}
-                    />
+                          px: 1.5,
+                          py: 0.5,
+                          fontSize: '0.78rem',
+                          fontWeight: 700,
+                          '&:hover': { bgcolor: customCrForm.show ? '#E2E8F0' : '#1E293B' }
+                        }}
+                      >
+                        {customCrForm.show ? 'Tutup Form Kustom' : '+ Tambah Fitur Kustom'}
+                      </Button>
+                    </Box>
+
+                    {/* Quick-Add Presets Chips */}
+                    <Box sx={{ mb: 2 }}>
+                      <Typography variant="caption" sx={{ fontSize: '0.75rem', fontWeight: 700, color: '#475569', display: 'block', mb: 1 }}>
+                        Pilihan Cepat Add-on Standar (Sekali Klik):
+                      </Typography>
+                      <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                        <Button
+                          type="button"
+                          size="small"
+                          onClick={() => handleAddChangeRequest({
+                            name: 'Sesi Revisi Ekstra (+1 Sesi SOP)',
+                            category: 'Sesi Revisi Tambahan',
+                            price: 75000,
+                            notes: 'Penambahan 1 kuota sesi revisi SOP ekstra di luar kuota standar 3x.',
+                            affectsRevisionQuota: 1
+                          })}
+                          startIcon={<Plus size={12} />}
+                          sx={{
+                            bgcolor: '#FFFFFF',
+                            color: '#0F172A',
+                            border: '1.5px solid #CBD5E1',
+                            borderRadius: '6px',
+                            px: 1.25,
+                            py: 0.45,
+                            fontSize: '0.76rem',
+                            fontWeight: 700,
+                            '&:hover': { bgcolor: '#F1F5F9', borderColor: '#0F172A' }
+                          }}
+                        >
+                          + Sesi Revisi Ekstra (+Rp 75.000 / +1 SOP)
+                        </Button>
+                        <Button
+                          type="button"
+                          size="small"
+                          onClick={() => handleAddChangeRequest({
+                            name: 'Integrasi Payment Gateway Midtrans',
+                            category: 'Fitur Tambahan',
+                            price: 350000,
+                            notes: 'Integrasi pembayaran otomatis QRIS & Virtual Account (Snap Pop-Up).'
+                          })}
+                          startIcon={<Plus size={12} />}
+                          sx={{
+                            bgcolor: '#FFFFFF',
+                            color: '#0F172A',
+                            border: '1.5px solid #CBD5E1',
+                            borderRadius: '6px',
+                            px: 1.25,
+                            py: 0.45,
+                            fontSize: '0.76rem',
+                            fontWeight: 700,
+                            '&:hover': { bgcolor: '#F1F5F9', borderColor: '#0F172A' }
+                          }}
+                        >
+                          + Payment Gateway Midtrans (+Rp 350.000)
+                        </Button>
+                        <Button
+                          type="button"
+                          size="small"
+                          onClick={() => handleAddChangeRequest({
+                            name: 'Setup Domain & Server Deployment',
+                            category: 'Infrastruktur & Server',
+                            price: 150000,
+                            notes: 'Konfigurasi DNS custom domain dan deployment ke server/hosting klien.'
+                          })}
+                          startIcon={<Plus size={12} />}
+                          sx={{
+                            bgcolor: '#FFFFFF',
+                            color: '#0F172A',
+                            border: '1.5px solid #CBD5E1',
+                            borderRadius: '6px',
+                            px: 1.25,
+                            py: 0.45,
+                            fontSize: '0.76rem',
+                            fontWeight: 700,
+                            '&:hover': { bgcolor: '#F1F5F9', borderColor: '#0F172A' }
+                          }}
+                        >
+                          + Setup Domain &amp; Server (+Rp 150.000)
+                        </Button>
+                        <Button
+                          type="button"
+                          size="small"
+                          onClick={() => handleAddChangeRequest({
+                            name: 'Integrasi WhatsApp Gateway Notifikasi',
+                            category: 'Fitur Tambahan',
+                            price: 200000,
+                            notes: 'Notifikasi otomatis pesan WhatsApp API untuk transaksi dan status order.'
+                          })}
+                          startIcon={<Plus size={12} />}
+                          sx={{
+                            bgcolor: '#FFFFFF',
+                            color: '#0F172A',
+                            border: '1.5px solid #CBD5E1',
+                            borderRadius: '6px',
+                            px: 1.25,
+                            py: 0.45,
+                            fontSize: '0.76rem',
+                            fontWeight: 700,
+                            '&:hover': { bgcolor: '#F1F5F9', borderColor: '#0F172A' }
+                          }}
+                        >
+                          + WhatsApp API (+Rp 200.000)
+                        </Button>
+                      </Box>
+                    </Box>
+
+                    {/* Inline Form for Custom Change Request */}
+                    {customCrForm.show && (
+                      <Box sx={{ bgcolor: '#FFFFFF', border: '1.5px solid #CBD5E1', borderRadius: '8px', p: 2, mb: 2 }}>
+                        <Typography variant="caption" sx={{ fontSize: '0.78rem', fontWeight: 800, color: '#0F172A', display: 'block', mb: 1 }}>
+                          Tambah Fitur Kustom Baru ke Tagihan:
+                        </Typography>
+                        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '2fr 1fr 1fr' }, gap: 1.5, mb: 1.5 }}>
+                          <TextField
+                            size="small"
+                            placeholder="Nama Fitur (Contoh: Fitur Ekspor Excel)"
+                            value={customCrForm.name}
+                            onChange={(e) => setCustomCrForm({ ...customCrForm, name: e.target.value })}
+                            inputProps={{ style: { fontSize: '0.84rem' } }}
+                          />
+                          <FormControl size="small">
+                            <Select
+                              value={customCrForm.category}
+                              onChange={(e) => setCustomCrForm({ ...customCrForm, category: e.target.value })}
+                              sx={{ fontSize: '0.84rem' }}
+                            >
+                              <MenuItem value="Fitur Tambahan">Fitur Tambahan</MenuItem>
+                              <MenuItem value="Sesi Revisi Tambahan">Sesi Revisi Tambahan</MenuItem>
+                              <MenuItem value="Infrastruktur & Server">Infrastruktur &amp; Server</MenuItem>
+                              <MenuItem value="Lainnya">Lainnya</MenuItem>
+                            </Select>
+                          </FormControl>
+                          <TextField
+                            size="small"
+                            type="number"
+                            placeholder="Biaya (Rp)"
+                            value={customCrForm.price}
+                            onChange={(e) => setCustomCrForm({ ...customCrForm, price: Number(e.target.value) })}
+                            inputProps={{ style: { fontSize: '0.84rem', fontWeight: 700 } }}
+                          />
+                        </Box>
+                        <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
+                          <TextField
+                            fullWidth
+                            size="small"
+                            placeholder="Catatan teknis / ruang lingkup modul..."
+                            value={customCrForm.notes}
+                            onChange={(e) => setCustomCrForm({ ...customCrForm, notes: e.target.value })}
+                            inputProps={{ style: { fontSize: '0.84rem' } }}
+                          />
+                          <Button
+                            type="button"
+                            size="small"
+                            disabled={!customCrForm.name.trim()}
+                            onClick={() => {
+                              handleAddChangeRequest({
+                                name: customCrForm.name.trim(),
+                                category: customCrForm.category,
+                                price: Number(customCrForm.price) || 0,
+                                notes: customCrForm.notes.trim(),
+                                affectsRevisionQuota: customCrForm.category === 'Sesi Revisi Tambahan' ? 1 : 0
+                              });
+                              setCustomCrForm({ show: false, name: '', category: 'Fitur Tambahan', price: 100000, notes: '', affectsRevisionQuota: 0 });
+                            }}
+                            sx={{
+                              bgcolor: '#0F172A',
+                              color: '#FFFFFF',
+                              borderRadius: '6px',
+                              px: 2,
+                              py: 0.8,
+                              fontSize: '0.82rem',
+                              fontWeight: 700,
+                              whiteSpace: 'nowrap',
+                              '&:hover': { bgcolor: '#1E293B' }
+                            }}
+                          >
+                            Tambah Item
+                          </Button>
+                        </Box>
+                      </Box>
+                    )}
+
+                    {/* Active Change Requests List */}
+                    <Box sx={{ mb: 2 }}>
+                      <Typography variant="caption" sx={{ fontSize: '0.75rem', fontWeight: 700, color: '#475569', display: 'block', mb: 1 }}>
+                        Daftar Item Change Request Aktif ({editingOrder.changeRequests?.length || 0} item):
+                      </Typography>
+                      {(!editingOrder.changeRequests || editingOrder.changeRequests.length === 0) ? (
+                        <Box sx={{ bgcolor: '#FFFFFF', border: '1.5px dashed #CBD5E1', borderRadius: '6px', p: 2, textAlign: 'center' }}>
+                          <Typography variant="caption" sx={{ fontSize: '0.82rem', color: '#64748B' }}>
+                            Belum ada penambahan item fitur / revisi di luar brief awal. Gunakan tombol preset di atas jika ada permintaan fitur baru dari klien.
+                          </Typography>
+                        </Box>
+                      ) : (
+                        <Stack spacing={1}>
+                          {editingOrder.changeRequests.map((cr) => (
+                            <Box
+                              key={cr.id}
+                              sx={{
+                                bgcolor: '#FFFFFF',
+                                border: '1.5px solid #CBD5E1',
+                                borderRadius: '6px',
+                                p: 1.5,
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                gap: 1.5
+                              }}
+                            >
+                              <Box>
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                  <Typography variant="subtitle2" sx={{ fontSize: '0.86rem', fontWeight: 800, color: '#0F172A' }}>
+                                    {cr.name}
+                                  </Typography>
+                                  <Box
+                                    component="span"
+                                    sx={{
+                                      fontSize: '0.68rem',
+                                      fontWeight: 800,
+                                      bgcolor: '#F1F5F9',
+                                      color: '#334155',
+                                      border: '1px solid #CBD5E1',
+                                      borderRadius: '4px',
+                                      px: 0.75,
+                                      py: 0.15
+                                    }}
+                                  >
+                                    {cr.category}
+                                  </Box>
+                                  {cr.affectsRevisionQuota > 0 && (
+                                    <Box
+                                      component="span"
+                                      sx={{
+                                        fontSize: '0.68rem',
+                                        fontWeight: 800,
+                                        bgcolor: '#FEF3C7',
+                                        color: '#92400E',
+                                        border: '1px solid #FDE68A',
+                                        borderRadius: '4px',
+                                        px: 0.75,
+                                        py: 0.15
+                                      }}
+                                    >
+                                      +{cr.affectsRevisionQuota} Kuota Revisi SOP
+                                    </Box>
+                                  )}
+                                </Box>
+                                <Typography variant="caption" sx={{ fontSize: '0.76rem', color: '#64748B', display: 'block', mt: 0.25 }}>
+                                  Ditambahkan pada {cr.date} {cr.notes ? `• ${cr.notes}` : ''}
+                                </Typography>
+                              </Box>
+
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, flexShrink: 0 }}>
+                                <Typography variant="body2" sx={{ fontSize: '0.92rem', fontWeight: 800, color: '#0F172A' }}>
+                                  +{formatRupiah(cr.price)}
+                                </Typography>
+                                <IconButton
+                                  size="small"
+                                  onClick={() => handleRemoveChangeRequest(cr.id)}
+                                  title="Hapus item change request ini"
+                                  sx={{
+                                    color: '#DC2626',
+                                    p: 0.5,
+                                    borderRadius: '4px',
+                                    '&:hover': { bgcolor: '#FEE2E2' }
+                                  }}
+                                >
+                                  <Trash2 size={15} />
+                                </IconButton>
+                              </Box>
+                            </Box>
+                          ))}
+                        </Stack>
+                      )}
+                    </Box>
+
+                    {/* LIVE FINANCIAL TRANSPARENCY CALCULATION BOX */}
+                    {(() => {
+                      const fin = calculateOrderFinancials(editingOrder);
+                      return (
+                        <Box sx={{ bgcolor: '#0F172A', color: '#FFFFFF', borderRadius: '8px', p: 2 }}>
+                          <Typography variant="caption" sx={{ fontSize: '0.74rem', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', mb: 1 }}>
+                            Transparansi Kalkulasi Finansial Real-time
+                          </Typography>
+                          
+                          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(3, 1fr)' }, gap: 2, mb: 1.5, pb: 1.5, borderBottom: '1px solid #1E293B' }}>
+                            <Box>
+                              <Typography variant="caption" sx={{ fontSize: '0.74rem', color: '#94A3B8', display: 'block' }}>Paket Dasar + Add-on Awal:</Typography>
+                              <Typography variant="body2" sx={{ fontSize: '0.92rem', fontWeight: 800, color: '#F8FAFC' }}>
+                                {formatRupiah(fin.basePrice + fin.initialAddonsTotal)}
+                              </Typography>
+                            </Box>
+                            <Box>
+                              <Typography variant="caption" sx={{ fontSize: '0.74rem', color: '#94A3B8', display: 'block' }}>Subtotal Change Request:</Typography>
+                              <Typography variant="body2" sx={{ fontSize: '0.92rem', fontWeight: 800, color: '#34D399' }}>
+                                +{formatRupiah(fin.crTotal)}
+                              </Typography>
+                            </Box>
+                            <Box>
+                              <Typography variant="caption" sx={{ fontSize: '0.74rem', color: '#94A3B8', display: 'block' }}>Total Investasi Akhir:</Typography>
+                              <Typography variant="body2" sx={{ fontSize: '1.05rem', fontWeight: 900, color: '#FFFFFF' }}>
+                                {formatRupiah(fin.finalTotal)}
+                              </Typography>
+                            </Box>
+                          </Box>
+
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 1 }}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                              <Typography variant="caption" sx={{ fontSize: '0.78rem', color: '#CBD5E1' }}>
+                                DP 50% Awal: <strong>{formatRupiah(fin.dpPaid)}</strong> ({editingOrder.dpStatus})
+                              </Typography>
+                            </Box>
+                            <Box sx={{ textAlign: 'right' }}>
+                              <Typography variant="caption" sx={{ fontSize: '0.74rem', color: '#94A3B8', display: 'block' }}>
+                                Sisa Tagihan Pelunasan (Tahap 5):
+                              </Typography>
+                              <Typography variant="body1" sx={{ fontSize: '1.05rem', fontWeight: 900, color: fin.remainingBalance > 0 ? '#FBBF24' : '#34D399' }}>
+                                {fin.remainingBalance > 0 ? formatRupiah(fin.remainingBalance) : 'LUNAS (Rp 0)'}
+                              </Typography>
+                            </Box>
+                          </Box>
+                        </Box>
+                      );
+                    })()}
                   </Box>
                 </Box>
 

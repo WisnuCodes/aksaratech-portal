@@ -167,3 +167,62 @@ _Mohon konfirmasi ketersediaan antrean dan penerbitan invoice resmi untuk pembay
 
   return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
 }
+
+// Generate structured Change Request Addendum message for WhatsApp
+export function createChangeRequestWhatsAppPayload(order) {
+  const rawPhone = (order.clientPhone || '').replace(/[\s-]/g, '');
+  const digitsOnly = rawPhone.replace(/^(?:\+62|62|0)/, '');
+  const targetPhone = digitsOnly ? `62${digitsOnly}` : '6285600386692';
+
+  const basePrice = Number(order.packagePrice) || Number(order.totalInvestment) || 0;
+  const initialAddons = order.addons || [];
+  const initialAddonsTotal = initialAddons.reduce((sum, a) => sum + (Number(a.price || a.minPrice) || 0), 0);
+  const changeRequests = order.changeRequests || [];
+  const crTotal = changeRequests.reduce((sum, cr) => sum + (Number(cr.price) || 0), 0);
+  const finalTotal = basePrice + initialAddonsTotal + crTotal;
+  const dpPaid = order.dpStatus?.includes('LUNAS') ? (order.dpAmount || Math.round(basePrice * 0.5)) : 0;
+  const remaining = Math.max(0, finalTotal - dpPaid);
+
+  let crItemsText = '  • Tidak ada item tambahan berjalan';
+  if (changeRequests.length > 0) {
+    crItemsText = changeRequests.map(cr => `  • ${cr.name} (${cr.category || 'Fitur'}): ${formatRupiah(cr.price)}${cr.notes ? `\n    Catatan: ${cr.notes}` : ''}`).join('\n');
+  }
+
+  const baseUrl = (typeof window !== 'undefined' && window.location && window.location.origin)
+    ? window.location.origin
+    : 'https://aksaratech.id';
+  const trackingUrl = `${baseUrl}/lacak?kode=${order.id}`;
+
+  const message = 
+`*PEMBERITAHUAN PERUBAHAN FITUR (CHANGE REQUEST) - AKSARA TECH*
+*Transparansi Biaya & Rekapitulasi Investasi Proyek*
+════════════════════════════════════════
+*ID Tiket Proyek :* ${order.id}
+*Nomor Order     :* ${order.orderNumber || '-'}
+*Nama Proyek     :* ${order.projectTitle}
+*Paket Utama     :* ${order.packageName || 'Kustom'} (${formatRupiah(basePrice)})
+
+*RINCIAN ITEM PERUBAHAN / ADD-ON TAMBAHAN:*
+${crItemsText}
+
+Subtotal Change Request : ${formatRupiah(crTotal)}
+────────────────────────────────────────
+*STRUKTUR TRANSPARANSI BIAYA AKHIR:*
+• Biaya Paket Dasar      : ${formatRupiah(basePrice)}
+${initialAddons.length > 0 ? `• Add-on Awal (Brief)     : ${formatRupiah(initialAddonsTotal)}\n` : ''}• Tambahan Change Request : ${formatRupiah(crTotal)}
+────────────────────────────────────────
+*TOTAL INVESTASI AKHIR   : ${formatRupiah(finalTotal)}*
+_Terbilang : ${terbilangRupiah(finalTotal)}_
+
+*STATUS TERMIN PEMBAYARAN:*
+• Termin 1 (DP 50% Awal) : ${formatRupiah(dpPaid)} [${order.dpStatus || 'TERCATAT'}]
+• *SISA PELUNASAN TAHAP 5 : ${formatRupiah(remaining)}*
+────────────────────────────────────────
+
+Seluruh catatan tahapan koding, repositori Git, dan rincian biaya dapat Anda pantau secara transparan melalui tautan resmi pelacak:
+${trackingUrl}
+
+_Aksara Tech berkomitmen menjunjung tinggi transparansi arsitektur dan akuntabilitas biaya tanpa biaya tersembunyi._`;
+
+  return `https://wa.me/${targetPhone}?text=${encodeURIComponent(message)}`;
+}
