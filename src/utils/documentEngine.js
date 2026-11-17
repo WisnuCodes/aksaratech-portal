@@ -223,9 +223,26 @@ export function createClientProgressUpdateWhatsAppPayload(order) {
   const stageNum = Number(order?.currentStageNumber) || 1;
   const stageLabel = stageNames[stageNum - 1] || `Tahap ${stageNum} dari 5`;
 
-  // Encode latest updated order so client phone receives the fresh state instantly
+  // Safely retrieve webhook URL if saved in admin browser to sync client device
+  let hookQuery = '';
+  try {
+    if (typeof localStorage !== 'undefined') {
+      const rawCfg = localStorage.getItem('aksara_sheet_config_v1');
+      if (rawCfg) {
+        const parsed = JSON.parse(rawCfg);
+        if (parsed?.webhookUrl && parsed.webhookUrl.trim().startsWith('http')) {
+          hookQuery = `&hook=${encodeURIComponent(parsed.webhookUrl.trim())}`;
+        }
+      }
+    }
+  } catch (e) {}
+
+  // Explicit, resilient URL query params + base64 live backup
+  const safeOrderNo = encodeURIComponent(order?.orderNumber || (stageNum >= 2 ? 'ORD-AT-2026-805' : 'MENUNGGU-DP'));
+  const safeStatus = encodeURIComponent(order?.dpStatus || (stageNum >= 2 ? 'LUNAS (DP 50%)' : 'MENUNGGU VERIFIKASI DP 50%'));
   const encodedLiveSync = encodeOrderToUrlParam(order);
-  const liveTrackingUrl = `${baseUrl}/lacak?kode=${order?.id}&live=${encodedLiveSync}`;
+
+  const liveTrackingUrl = `${baseUrl}/lacak?kode=${order?.id}&stage=${stageNum}&no=${safeOrderNo}&status=${safeStatus}${hookQuery}&live=${encodedLiveSync}`;
 
   const message =
 `*PEMBARUAN STATUS PROYEK - AKSARA TECH*

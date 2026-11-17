@@ -101,32 +101,74 @@ export default function OrderTrackerPage() {
 
     const codeParam = searchParams.get('kode') || searchParams.get('id') || searchParams.get('no') || searchParams.get('ticket');
     const dataParam = searchParams.get('live') || searchParams.get('sync') || searchParams.get('d') || searchParams.get('data');
+    const stageParam = searchParams.get('stage') || searchParams.get('tahap');
+    const orderNoParam = searchParams.get('order_no') || searchParams.get('no');
+    const statusParam = searchParams.get('status');
+    const hookParam = searchParams.get('hook');
 
-    // Cross-device sync: If order is encoded in URL, load & save latest state to this device
+    // Auto-save Google Sheet Webhook URL if delivered via link
+    if (hookParam && hookParam.trim().startsWith('http')) {
+      try {
+        const existingCfg = getSheetConfig();
+        if (!existingCfg?.webhookUrl) {
+          saveSheetConfig({ ...existingCfg, webhookUrl: hookParam.trim() });
+        }
+      } catch (e) {}
+    }
+
     let initialTargetId = codeParam || '';
+    let targetOrder = null;
+
     if (dataParam) {
       const decoded = decodeOrderFromUrlParam(dataParam);
       if (decoded && decoded.id) {
+        targetOrder = decoded;
         initialTargetId = decoded.id;
-        const existing = findOrderByQuery(decoded.id);
-        // Only update if incoming has higher or newer stage/order number
-        const incomingStage = Number(decoded.currentStageNumber) || 1;
-        const currentStage = Number(existing?.currentStageNumber) || 1;
-        if (!existing || incomingStage >= currentStage || (decoded.orderNumber && decoded.orderNumber !== 'MENUNGGU-DP' && existing.orderNumber === 'MENUNGGU-DP')) {
-          createOrder(decoded);
-          refreshDbOrders();
-          setActiveOrder(decoded);
-        } else {
-          setActiveOrder(existing);
-        }
-        setSearchInput(decoded.id);
-        setSearchStatus('found');
       }
     }
 
+    // Explicit stage override from URL (e.g. ?kode=...&stage=2)
+    const forcedStage = stageParam ? parseInt(stageParam, 10) : null;
+
     if (initialTargetId) {
+      const existing = findOrderByQuery(initialTargetId);
+      const incomingStage = targetOrder ? (Number(targetOrder.currentStageNumber) || 1) : (forcedStage || 1);
+      const currentStage = Number(existing?.currentStageNumber) || 1;
+      const effectiveStage = forcedStage ? forcedStage : Math.max(incomingStage, currentStage);
+
+      const defaultNotes = {
+        1: 'Formulir brief teknis diajukan via website. Menunggu verifikasi DP termin 1 (50%).',
+        2: 'Pembayaran DP 50% telah diverifikasi secara resmi. Perancangan basis data dan koding arsitektur sistem resmi dimulai.',
+        3: 'Pengembangan logika backend dan komponen antarmuka responsif sedang dikoding aktif di repositori Git.',
+        4: 'Kompilasi build berhasil. Tautan pratinjau demo live telah aktif untuk pengujian mandiri dan sesi revisi SOP.',
+        5: 'Proyek tuntas 100%. Pelunasan termin 2 diterima, master source code (.zip) dan repositori final resmi diserahterimakan.'
+      };
+
+      if (targetOrder || forcedStage) {
+        const merged = {
+          ...(existing || {}),
+          ...(targetOrder || {}),
+          id: initialTargetId,
+          currentStageNumber: effectiveStage,
+          orderNumber: (orderNoParam && orderNoParam !== 'MENUNGGU-DP') ? orderNoParam : (targetOrder?.orderNumber || existing?.orderNumber || (effectiveStage >= 2 ? 'ORD-AT-2026-805' : 'MENUNGGU-DP')),
+          statusType: effectiveStage >= 2 ? 'FIX_ORDER' : (targetOrder?.statusType || existing?.statusType || 'INQUIRY'),
+          dpStatus: statusParam ? decodeURIComponent(statusParam) : (effectiveStage === 5 ? 'LUNAS 100% (SELESAI)' : (effectiveStage >= 2 ? 'LUNAS (DP 50%)' : (targetOrder?.dpStatus || existing?.dpStatus || 'MENUNGGU VERIFIKASI DP 50%'))),
+          developerNotes: (targetOrder?.developerNotes || existing?.developerNotes) || defaultNotes[effectiveStage]
+        };
+
+        createOrder(merged);
+        refreshDbOrders();
+        setActiveOrder(merged);
+        setSearchInput(initialTargetId);
+        setSearchStatus('found');
+      } else if (existing) {
+        setActiveOrder(existing);
+        setSearchInput(initialTargetId);
+        setSearchStatus('found');
+      }
+
       setSearchInput(initialTargetId);
-      executeSearch(initialTargetId);
+      executeSearch(initialTargetId, forcedStage);
     }
 
     const handleStorageSync = () => {
@@ -151,13 +193,23 @@ export default function OrderTrackerPage() {
   }, [searchParams]);
 
   // Execute lookup logic: instant local display + real-time cloud background sync
-  const executeSearch = async (rawQuery) => {
+  const executeSearch = async (rawQuery, forcedStage = null) => {
     const query = (rawQuery || searchInput || '').trim();
     if (!query) return;
 
     // 1. Optimistic lookup from local device database
-    const localMatch = findOrderByQuery(query);
+    let localMatch = findOrderByQuery(query);
     if (localMatch) {
+      if (forcedStage && Number(localMatch.currentStageNumber) < forcedStage) {
+        localMatch = {
+          ...localMatch,
+          currentStageNumber: forcedStage,
+          statusType: forcedStage >= 2 ? 'FIX_ORDER' : localMatch.statusType,
+          dpStatus: forcedStage >= 2 ? 'LUNAS (DP 50%)' : localMatch.dpStatus
+        };
+        createOrder(localMatch);
+        refreshDbOrders();
+      }
       setActiveOrder(localMatch);
       setSearchStatus('found');
     }
@@ -516,10 +568,10 @@ export default function OrderTrackerPage() {
                       Status Pengerjaan:
                     </div>
                     <div style={{ fontSize: '1.25rem', fontWeight: '900', color: 'var(--prussian-blue)', marginTop: '2px' }}>
-                      Tahap {activeOrder.currentStageNumber} dari 5
+                      Tahap {Number(activeOrder.currentStageNumber) || 1} dari 5
                     </div>
                     <div style={{ fontSize: '0.8rem', color: '#475569', fontWeight: '700' }}>
-                      {calculateProgress(activeOrder.currentStageNumber)}% Selesai Sesuai SOP
+                      {calculateProgress(Number(activeOrder.currentStageNumber) || 1)}% Selesai Sesuai SOP
                     </div>
                   </div>
                 </div>
@@ -534,7 +586,7 @@ export default function OrderTrackerPage() {
                   marginBottom: '22px'
                 }}>
                   <div style={{
-                    width: `${calculateProgress(activeOrder.currentStageNumber)}%`,
+                    width: `${calculateProgress(Number(activeOrder.currentStageNumber) || 1)}%`,
                     height: '100%',
                     background: 'var(--prussian-blue)',
                     borderRadius: '4px',
@@ -785,16 +837,17 @@ export default function OrderTrackerPage() {
                   </p>
                 </div>
                 <div style={{ fontSize: '0.84rem', fontWeight: '800', color: 'var(--prussian-blue)' }}>
-                  Tahap Saat Ini: Tahap {activeOrder.currentStageNumber} dari 5
+                  Tahap Saat Ini: Tahap {Number(activeOrder.currentStageNumber) || 1} dari 5
                 </div>
               </div>
 
               {/* Milestone Pipeline Cards */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 {SOP_STAGES.map((stg) => {
-                  const isCompleted = activeOrder.currentStageNumber > stg.step;
-                  const isCurrent = activeOrder.currentStageNumber === stg.step;
-                  const isPending = activeOrder.currentStageNumber < stg.step;
+                  const stageNumVal = Number(activeOrder.currentStageNumber) || 1;
+                  const isCompleted = stageNumVal > stg.step;
+                  const isCurrent = stageNumVal === stg.step;
+                  const isPending = stageNumVal < stg.step;
 
                   return (
                     <div 
