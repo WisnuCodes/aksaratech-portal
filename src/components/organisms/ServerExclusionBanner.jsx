@@ -7,7 +7,7 @@ export default function ServerExclusionBanner() {
   return (
     <section id="eksklusi-server" className="section-padding" style={{ paddingTop: '40px', paddingBottom: '60px', background: '#FFFFFF' }}>
       <div className="container">
-        <div style={{
+        <div className="reveal-scale" style={{
           background: '#F8FAFC',
           border: '1px solid var(--border-subtle)',
           borderRadius: 'var(--radius-md)',
@@ -36,7 +36,7 @@ export default function ServerExclusionBanner() {
           </p>
 
           {/* Grid of Exclusions */}
-          <div style={{
+          <div className="reveal-stagger" style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
             gap: '16px',
@@ -67,7 +67,7 @@ export default function ServerExclusionBanner() {
           </div>
 
           {/* Scope Comparison Strip */}
-          <div style={{
+          <div className="reveal-scale" style={{
             background: '#FFFFFF', border: '1px solid var(--border-subtle)',
             borderRadius: '6px',
             padding: '20px 24px',

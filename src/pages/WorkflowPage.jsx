@@ -214,7 +214,7 @@ export default function WorkflowPage() {
             </div>
 
             {/* 4 Rules Grid */}
-            <div className="hub-rules-grid">
+            <div className="hub-rules-grid reveal-stagger">
               {revisionRules.map((rule, rIdx) => (
                 <div key={rIdx} className="hub-rule-card">
                   <div className="rule-card-header">

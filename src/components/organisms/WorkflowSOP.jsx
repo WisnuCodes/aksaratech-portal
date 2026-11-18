@@ -45,7 +45,7 @@ export default function WorkflowSOP() {
       <div className="container">
         
         {/* Section Header */}
-        <div className="section-header">
+        <div className="section-header reveal-on-scroll">
           <h2 className="section-title">
             Alur Pengerjaan Proyek yang <span style={{ color: 'var(--prussian-blue)' }}>Terstruktur &amp; Disiplin</span>
           </h2>
@@ -73,7 +73,7 @@ export default function WorkflowSOP() {
         </div>
 
         {/* Steps Grid (Desktop: 4 Cards in Row, Mobile: Interactive Step Card) */}
-        <div className="sop-steps-grid">
+        <div className="sop-steps-grid reveal-stagger">
           {detailedSteps.map((step, idx) => {
             const Icon = step.icon;
             const isMobileActive = activeStepIdx === idx;
@@ -138,7 +138,7 @@ export default function WorkflowSOP() {
         </div>
 
         {/* SOP Callout Card */}
-        <div className="sop-callout-card neo-card">
+        <div className="sop-callout-card neo-card reveal-scale">
           <div className="callout-left">
             <h3 className="callout-title">
               Pemberlakuan Kuota Maksimal 3x Revisi Resmi

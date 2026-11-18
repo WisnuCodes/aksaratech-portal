@@ -304,12 +304,12 @@ export default function HeroSection() {
         </div>
 
         {/* 4 PILLARS OF ENGINEERING QUALITY (TIGHT, COMPACT, & FULLY VISIBLE IN FOLD) */}
-        <div className="hero-pillars-wrapper">
+        <div className="hero-pillars-wrapper reveal-on-scroll">
           <div className="hero-pillars-header">
             <h2 className="pillars-title">4 Pilar Jaminan Mutu Rekayasa</h2>
           </div>
 
-          <div className="hero-pillars-grid">
+          <div className="hero-pillars-grid reveal-stagger">
             {pillars.map((item) => {
               const Icon = item.icon;
               return (

@@ -70,7 +70,7 @@ export default function PackageShowcase({ onSelectPackage }) {
       <div className="container">
         
         {/* Section Header */}
-        <div className="package-section-header">
+        <div className="package-section-header reveal-on-scroll">
           <div>
             
             <h2 className="section-title" style={{ marginBottom: '8px' }}>
@@ -116,7 +116,7 @@ export default function PackageShowcase({ onSelectPackage }) {
         <div 
           ref={trackRef}
           onScroll={handleScroll}
-          className="package-display-track"
+          className="package-display-track reveal-stagger"
         >
           {PACKAGES.map((pkg, idx) => {
             const isExpanded = !!expandedIds[pkg.id];

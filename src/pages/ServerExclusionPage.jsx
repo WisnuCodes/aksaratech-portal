@@ -119,7 +119,7 @@ export default function ServerExclusionPage() {
               <h2 className="ex-section-title">Pemetaan Ruang Lingkup Kerja</h2>
             </div>
 
-            <div className="ex-scope-grid">
+            <div className="ex-scope-grid reveal-stagger">
               {/* Box KIRI: Termasuk */}
               <div className="neo-card ex-scope-card scope-included">
                 <div className="scope-card-head">
@@ -170,7 +170,7 @@ export default function ServerExclusionPage() {
               <h2 className="ex-section-title">4 Batasan Ruang Lingkup Mutlak</h2>
             </div>
 
-            <div className="ex-cards-grid">
+            <div className="ex-cards-grid reveal-stagger">
               {exclusions.map((item, idx) => {
                 const Icon = item.icon;
                 return (

@@ -15,7 +15,7 @@ export default function FAQSection() {
       <div className="container">
         
         {/* Section Header */}
-        <div className="section-header">
+        <div className="section-header reveal-on-scroll">
           <h2 className="section-title">
             Pertanyaan yang <span style={{ color: 'var(--prussian-blue)' }}>Sering Diajukan</span> Calon Klien
           </h2>
@@ -25,7 +25,7 @@ export default function FAQSection() {
         </div>
 
         {/* FAQ Accordion List */}
-        <div className="faq-list-container">
+        <div className="faq-list-container reveal-stagger">
           {FAQS.slice(0, 5).map((faq, idx) => {
             const isOpen = openIndex === idx;
 
@@ -76,7 +76,7 @@ export default function FAQSection() {
         </div>
 
         {/* View All FAQs CTA Banner */}
-        <div className="faq-bottom-cta">
+        <div className="faq-bottom-cta reveal-scale">
           <div className="faq-bottom-cta-text">
             <div className="faq-bottom-cta-icon-wrap">
               <HelpCircle size={20} />

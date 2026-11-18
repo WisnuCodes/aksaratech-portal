@@ -4,6 +4,8 @@ import Navbar from './components/organisms/Navbar';
 import Footer from './components/organisms/Footer';
 import HomePage from './pages/HomePage';
 import ErrorBoundary from './components/common/ErrorBoundary';
+import ScrollEnhancements from './components/common/ScrollEnhancements';
+import { useScrollAnimation } from './hooks/useScrollAnimation';
 import { SYSTEM_CONFIG } from './constants/systemConfig';
 import './App.css';
 
@@ -74,6 +76,9 @@ function AppContent() {
   const [selectedPackageId, setSelectedPackageId] = useState('umkm-katalog');
   const location = useLocation();
 
+  // Initialize smooth scroll reveal observer across all pages
+  useScrollAnimation();
+
   const handleSelectPackage = (packageId) => {
     setSelectedPackageId(packageId);
   };
@@ -111,6 +116,9 @@ function AppContent() {
 
   return (
     <div className="app-layout" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      {/* Dynamic Scroll Enhancements: Top Progress Line + Floating Back-to-Top */}
+      {!isErrorPage && <ScrollEnhancements />}
+
       {/* Full-width sticky Navbar - only rendered for standard portal pages */}
       {!isErrorPage && !isAdminPage && <Navbar />}
 

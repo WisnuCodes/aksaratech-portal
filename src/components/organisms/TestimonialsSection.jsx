@@ -69,7 +69,7 @@ export default function TestimonialsSection() {
       <div className="container">
         
         {/* Section Header */}
-        <div className="section-header">
+        <div className="section-header reveal-on-scroll">
           
           <h2 className="section-title">
             Kepuasan Nyata dari <span style={{ color: 'var(--prussian-blue)' }}>Klien Aksara Tech</span>
@@ -80,7 +80,7 @@ export default function TestimonialsSection() {
         </div>
 
         {/* Category Filters */}
-        <div className="testi-filter-bar">
+        <div className="testi-filter-bar reveal-on-scroll">
           {categories.map(cat => {
             const isActive = activeCategory === cat;
             return (
@@ -97,7 +97,7 @@ export default function TestimonialsSection() {
         </div>
 
         {/* Testimonial Showcase Box */}
-        <div className="testi-stage-container">
+        <div className="testi-stage-container reveal-scale">
           
           {/* Carousel Track */}
           <div 

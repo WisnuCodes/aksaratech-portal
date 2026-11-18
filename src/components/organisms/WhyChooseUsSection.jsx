@@ -114,7 +114,7 @@ export default function WhyChooseUsSection() {
       <div className="container">
         
         {/* Section Header */}
-        <div className="section-header">
+        <div className="section-header reveal-on-scroll">
           
           <h2 className="section-title">
             Mengapa Memilih <span style={{ color: 'var(--prussian-blue)' }}>Aksara Tech</span>?
@@ -125,7 +125,7 @@ export default function WhyChooseUsSection() {
         </div>
 
         {/* Mobile Horizontal Pill Selector (Kanan-Kiri Swiper) */}
-        <div className="why-mobile-pills-bar">
+        <div className="why-mobile-pills-bar reveal-on-scroll">
           <div className="why-pills-track">
             {pillars.map((item, idx) => (
               <button
@@ -141,7 +141,7 @@ export default function WhyChooseUsSection() {
         </div>
 
         {/* Interactive Split-Screen Showcase (Kanan-Kiri Desktop Layout) */}
-        <div className="why-split-container">
+        <div className="why-split-container reveal-scale">
           
           {/* Left Column: Interactive Pillar Navigator */}
           <div className="why-left-nav">
@@ -263,7 +263,7 @@ export default function WhyChooseUsSection() {
         </div>
 
         {/* Quick Route Teaser Strip */}
-        <div className="why-route-strip">
+        <div className="why-route-strip reveal-stagger">
           <Link to="/paket" className="neo-card why-route-card">
             <div>
               <div className="route-card-title">Katalog 6 Paket Layanan</div>

@@ -41,7 +41,7 @@ export default function HomePage({ onSelectPackage }) {
       {/* 9. Conversion Banner Section */}
       <section className="section-padding" style={{ paddingTop: '40px', paddingBottom: '96px', background: '#FFFFFF', borderTop: '1px solid var(--border-subtle)' }}>
         <div className="container">
-          <div style={{
+          <div className="reveal-scale" style={{
             background: '#F8FAFC',
             border: '1px solid var(--border-subtle)',
             borderRadius: 'var(--radius-md)',

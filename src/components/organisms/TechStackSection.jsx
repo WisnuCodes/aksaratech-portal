@@ -38,7 +38,7 @@ export default function TechStackSection() {
       <div className="container">
         
         {/* Section Header */}
-        <div className="section-header">
+        <div className="section-header reveal-on-scroll">
           <h2 className="section-title">
             Teknologi Modern Berstandar <span style={{ color: 'var(--prussian-blue)' }}>Industri &amp; Akademik</span>
           </h2>
@@ -64,7 +64,7 @@ export default function TechStackSection() {
         </div>
 
         {/* Categories Grid (Desktop: 4 Cards, Mobile: Interactive Selected Card) */}
-        <div className="tech-cards-grid">
+        <div className="tech-cards-grid reveal-stagger">
           {categories.map((cat, idx) => {
             const Icon = cat.icon;
             const isMobileActive = activeCategoryIdx === idx;

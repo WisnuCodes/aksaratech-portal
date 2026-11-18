@@ -234,7 +234,7 @@ export default function PackagesPage({ onSelectPackage }) {
 
           {/* Main Packages Section: Grid vs List */}
           {viewMode === 'grid' ? (
-            <div className="pkg-cards-grid">
+            <div className="pkg-cards-grid reveal-stagger">
               {filteredPackages.map((pkg) => (
                 <div
                   key={pkg.id}
