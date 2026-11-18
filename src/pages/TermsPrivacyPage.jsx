@@ -303,7 +303,7 @@ export default function TermsPrivacyPage() {
         <div className="container terms-container">
           
           {/* Executive Document Dispatch & Action Bar */}
-          <div className="terms-dispatch-bar">
+          <div className="terms-dispatch-bar reveal-on-scroll">
             <div className="terms-dispatch-info">
               <div className="terms-dispatch-icon">
                 <Scale size={20} />
@@ -372,7 +372,7 @@ export default function TermsPrivacyPage() {
           </nav>
 
           {/* Articles List */}
-          <div className="terms-articles-stack">
+          <div className="terms-articles-stack reveal-stagger">
             {filteredSections.map((sec) => (
               <article
                 key={sec.id}
@@ -400,7 +400,7 @@ export default function TermsPrivacyPage() {
           </div>
 
           {/* Legal Acceptance & WhatsApp Consultation Card */}
-          <div className="terms-acceptance-card">
+          <div className="terms-acceptance-card reveal-scale">
             <div className="terms-acceptance-head">
               <div className="terms-acceptance-icon">
                 <CheckCheck size={22} />

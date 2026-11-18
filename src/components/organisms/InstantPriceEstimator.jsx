@@ -173,7 +173,7 @@ Halo Tim Aksara Tech, saya ingin konsultasi terkait simulasi ini dan memastikan 
       <div className="estimator-container">
         
         {/* Section Headline */}
-        <div className="estimator-header">
+        <div className="estimator-header reveal-on-scroll">
           <h2 className="estimator-title">
             Kalkulator Biaya &amp; Estimasi Pengerjaan Instan
           </h2>
@@ -183,7 +183,7 @@ Halo Tim Aksara Tech, saya ingin konsultasi terkait simulasi ini dan memastikan 
         </div>
 
         {/* Main Grid: Left Controls (Selection) vs Right Panel (Sticky Summary) */}
-        <div className="estimator-layout">
+        <div className="estimator-layout reveal-scale">
           
           {/* LEFT COLUMN: Controls */}
           <div className="estimator-controls">

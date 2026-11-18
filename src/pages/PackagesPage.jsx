@@ -499,7 +499,7 @@ export default function PackagesPage({ onSelectPackage }) {
           </div>
 
           {/* 10 Add-on Section */}
-          <div className="pkg-addons-section">
+          <div className="pkg-addons-section reveal-on-scroll">
             <div className="pkg-addons-header">
               <div>
                 <h2 className="pkg-addons-title">
@@ -528,7 +528,7 @@ export default function PackagesPage({ onSelectPackage }) {
               </div>
             </div>
 
-            <div className="pkg-addons-grid">
+            <div className="pkg-addons-grid reveal-stagger">
               {filteredAddons.map((addon) => (
                 <div key={addon.id} className="neo-card pkg-addon-card">
                   <div className="addon-top-row">

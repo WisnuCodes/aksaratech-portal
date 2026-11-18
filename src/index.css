@@ -577,18 +577,21 @@ code, pre {
    SCROLL REVEAL & INTERACTIVE MOTION SYSTEM (TASTE-SKILL & GEMINI.MD COMPLIANT)
    ========================================================================== */
 
-/* 1. Base Reveal on Scroll (Fade Up 24px) */
+/* 1. Base Reveal on Scroll (Optical Defocus to Crisp Focus) */
 .reveal-on-scroll {
   opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), 
-              transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: opacity, transform;
+  transform: translateY(22px) scale(0.985);
+  filter: blur(4px);
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), 
+              transform 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform, filter;
 }
 
 .reveal-on-scroll.is-revealed {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
+  filter: blur(0);
 }
 
 /* 2. Pure Fade Reveal */
@@ -605,41 +608,77 @@ code, pre {
 /* 3. Subtle Scale-In Reveal (For highlight cards, split panels, & banners) */
 .reveal-scale {
   opacity: 0;
-  transform: scale(0.97) translateY(18px);
-  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: opacity, transform;
+  transform: scale(0.96) translateY(20px);
+  filter: blur(4px);
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform, filter;
 }
 
 .reveal-scale.is-revealed {
   opacity: 1;
   transform: scale(1) translateY(0);
+  filter: blur(0);
 }
 
 /* 4. Staggered Grid Reveal for Card Groups */
 .reveal-stagger > * {
   opacity: 0;
-  transform: translateY(22px);
-  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: opacity, transform;
+  transform: translateY(24px) scale(0.985);
+  filter: blur(4px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform, filter;
 }
 
 .reveal-stagger.is-revealed > * {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
+  filter: blur(0);
 }
 
-.reveal-stagger.is-revealed > *:nth-child(1) { transition-delay: 0.04s; }
-.reveal-stagger.is-revealed > *:nth-child(2) { transition-delay: 0.10s; }
-.reveal-stagger.is-revealed > *:nth-child(3) { transition-delay: 0.16s; }
-.reveal-stagger.is-revealed > *:nth-child(4) { transition-delay: 0.22s; }
-.reveal-stagger.is-revealed > *:nth-child(5) { transition-delay: 0.28s; }
-.reveal-stagger.is-revealed > *:nth-child(6) { transition-delay: 0.34s; }
-.reveal-stagger.is-revealed > *:nth-child(7) { transition-delay: 0.40s; }
-.reveal-stagger.is-revealed > *:nth-child(8) { transition-delay: 0.46s; }
+.reveal-stagger.is-revealed > *:nth-child(1) { transition-delay: 0.05s; }
+.reveal-stagger.is-revealed > *:nth-child(2) { transition-delay: 0.12s; }
+.reveal-stagger.is-revealed > *:nth-child(3) { transition-delay: 0.19s; }
+.reveal-stagger.is-revealed > *:nth-child(4) { transition-delay: 0.26s; }
+.reveal-stagger.is-revealed > *:nth-child(5) { transition-delay: 0.33s; }
+.reveal-stagger.is-revealed > *:nth-child(6) { transition-delay: 0.40s; }
+.reveal-stagger.is-revealed > *:nth-child(7) { transition-delay: 0.47s; }
+.reveal-stagger.is-revealed > *:nth-child(8) { transition-delay: 0.54s; }
 
-/* 5. Scroll Progress Line (Top Viewport Edge) */
+/* 5. Kinetic Numbers & Tabular Numeric */
+.counter-tick {
+  font-variant-numeric: tabular-nums;
+  display: inline-block;
+}
+
+/* 6. Card Interactive Micro-Physics */
+.neo-card,
+.hero-pillar-card,
+.package-card-item,
+.sop-step-card {
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.22s ease;
+}
+
+.neo-card:hover,
+.hero-pillar-card:hover,
+.package-card-item:hover,
+.sop-step-card:hover {
+  transform: translateY(-3px);
+  border-color: #0F172A;
+}
+
+.hero-pillar-card:hover .pillar-icon-box svg,
+.package-card-item:hover .pricing-icon-wrap svg,
+.sop-step-card:hover .sop-icon-wrap svg {
+  transform: scale(1.12);
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* 7. Scroll Progress Line (Top Viewport Edge) */
 .scroll-progress-line {
   position: fixed;
   top: 0;
@@ -653,49 +692,117 @@ code, pre {
   will-change: transform;
 }
 
-/* 6. Floating Back-to-Top Button */
-.back-to-top-btn {
+/* 8. Floating Circular Progress & Back-to-Top Control */
+.back-to-top-control {
   position: fixed;
   bottom: 24px;
   right: 24px;
   z-index: 900;
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: 10px;
   background: #FFFFFF;
   color: #0F172A;
   border: 1.5px solid #CBD5E1;
   border-radius: 9999px;
-  padding: 9px 15px;
-  font-family: var(--font-heading);
-  font-size: 0.82rem;
-  font-weight: 800;
+  padding: 5px 13px 5px 5px;
   cursor: pointer;
   opacity: 0;
   visibility: hidden;
-  transform: translateY(14px) scale(0.92);
-  transition: opacity 0.25s ease,
-              visibility 0.25s ease,
+  transform: translateY(16px) scale(0.92);
+  transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              visibility 0.25s cubic-bezier(0.16, 1, 0.3, 1),
               transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
               border-color 0.2s ease,
               background-color 0.2s ease;
   user-select: none;
 }
 
-.back-to-top-btn.is-visible {
+.back-to-top-control.is-visible {
   opacity: 1;
   visibility: visible;
   transform: translateY(0) scale(1);
 }
 
-.back-to-top-btn:hover {
-  transform: translateY(-2px) scale(1);
+.back-to-top-control:hover {
+  transform: translateY(-2px) scale(1.02);
   border-color: #0F172A;
   background-color: #F8FAFC;
 }
 
-.back-to-top-btn:active {
-  transform: translateY(0) scale(1);
+.back-to-top-control:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.back-to-top-ring-wrap {
+  position: relative;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.progress-ring-svg {
+  transform: rotate(-90deg);
+  display: block;
+}
+
+.progress-ring-track {
+  opacity: 0.85;
+}
+
+.progress-ring-fill {
+  transition: stroke-dashoffset 0.12s linear;
+}
+
+.progress-ring-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.back-to-top-control:hover .progress-ring-icon {
+  transform: translate(-50%, -60%);
+}
+
+.back-to-top-label {
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: #0F172A;
+}
+
+.back-to-top-percentage {
+  font-family: var(--font-body);
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: var(--prussian-blue);
+  background: #EFF6FF;
+  padding: 2px 7px;
+  border-radius: 9999px;
+  border: 1px solid #DBEAFE;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 640px) {
+  .back-to-top-control {
+    bottom: 20px;
+    right: 16px;
+    padding: 5px;
+  }
+  .back-to-top-label,
+  .back-to-top-percentage {
+    display: none;
+  }
 }
 
 /* Accessibility: Reduced Motion Override */
@@ -706,6 +813,7 @@ code, pre {
   .reveal-stagger > * {
     opacity: 1 !important;
     transform: none !important;
+    filter: none !important;
     transition: none !important;
   }
   .scroll-progress-line {

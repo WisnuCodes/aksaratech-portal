@@ -119,7 +119,7 @@ export default function FAQPage() {
         <div className="container" style={{ maxWidth: '960px' }}>
           
           {/* Search Bar & Instant Actions */}
-          <div style={{ marginBottom: '28px' }}>
+          <div className="reveal-on-scroll" style={{ marginBottom: '28px' }}>
             <div style={{ position: 'relative', width: '100%', marginBottom: '18px' }}>
               <Search 
                 size={18} 
@@ -213,7 +213,7 @@ export default function FAQPage() {
           </div>
 
           {/* FAQ Accordion List */}
-          <div className="faq-accordion-list">
+          <div className="faq-accordion-list reveal-stagger">
             {filteredFaqs.length === 0 ? (
               <div className="faq-empty-state">
                 <div className="faq-empty-icon-wrap">

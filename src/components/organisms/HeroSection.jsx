@@ -282,15 +282,15 @@ export default function HeroSection() {
               </div>
               <div className="trust-chip">
                 <CheckCircle2 size={13} className="trust-icon" />
-                <span>Kuota Revisi 3x Mutlak</span>
+                <span>Kuota Revisi <strong className="counter-tick" data-target="3" data-suffix="x">3x</strong> Mutlak</span>
               </div>
               <div className="trust-chip">
                 <CheckCircle2 size={13} className="trust-icon" />
-                <span>Garansi Bug 1 Minggu</span>
+                <span>Garansi Bug <strong className="counter-tick" data-target="7" data-suffix=" Hari">7 Hari</strong></span>
               </div>
               <div className="trust-chip">
                 <CheckCircle2 size={13} className="trust-icon" />
-                <span>Tarif Mulai Rp 100.000</span>
+                <span>Tarif Mulai <strong className="counter-tick" data-target="100000" data-prefix="Rp " data-format="currency">Rp 100.000</strong></span>
               </div>
             </div>
 
