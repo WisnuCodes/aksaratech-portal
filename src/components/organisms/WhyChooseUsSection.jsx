@@ -40,16 +40,16 @@ export default function WhyChooseUsSection() {
       id: 3,
       icon: Zap,
       tag: 'Kepastian Finansial',
-      title: 'Plafon Transparan Maks Rp 650.000',
+      title: 'Plafon Transparan Maks Rp 500.000',
       shortDesc: 'Tidak ada biaya siluman di tengah jalan. Batasan tarif resmi tertera jelas di katalog.',
-      fullDesc: 'Salah satu komitmen etis Aksara Tech adalah transparansi biaya 100%. Tarif paket kami dibatasi secara ketat dengan plafon tertinggi resmi Rp 650.000 (Paket 5 Tugas Akhir). Anda tidak akan pernah dikejutkan oleh tagihan tak terduga di tengah masa pengerjaan.',
+      fullDesc: 'Salah satu komitmen etis Aksara Tech adalah transparansi biaya 100%. Tarif paket kami dibatasi secara ketat dengan plafon tertinggi resmi Rp 500.000 (Paket 5 Tugas Akhir). Anda tidak akan pernah dikejutkan oleh tagihan tak terduga di tengah masa pengerjaan.',
       guarantees: [
         'Plafon tarif maksimal mengikat di Surat Penawaran resmi',
         'Skema pembayaran 2 termin transparan (DP 50% & Pelunasan 50%)',
         'Rincian modul tertuang jelas sebelum pembayaran pertama',
         'Kompensasi add-on berbayar hanya atas permintaan Klien sendiri'
       ],
-      techChips: ['Plafon Rp 650rb', 'No Hidden Fees', 'Surat Penawaran Resmi', 'DP 50% Termin']
+      techChips: ['Plafon Rp 500rb', 'No Hidden Fees', 'Surat Penawaran Resmi', 'DP 50% Termin']
     },
     {
       id: 4,

@@ -199,7 +199,7 @@ export default function OrderBriefForm({ preselectedPackageId, hideHeader = fals
                   Langkah 2: Pilih Paket Layanan Utama
                 </h3>
                 <p style={{ fontSize: '0.9rem', color: '#475569', marginBottom: '20px' }}>
-                  Pilih salah satu dari 5 paket standar resmi Aksara Tech. Plafon maksimal resmi Rp 650.000 (Paket 5).
+                  Pilih salah satu dari 6 paket standar resmi Aksara Tech. Plafon maksimal resmi Rp 500.000 (Paket 5).
                 </p>
 
                 <div className="selection-grid" style={{ marginBottom: '20px' }}>

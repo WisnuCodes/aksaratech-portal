@@ -28,16 +28,16 @@ import PhoneInTalkRoundedIcon from '@mui/icons-material/PhoneInTalkRounded';
 
 import { BUSINESS_INFO } from '../../data/catalogData';
 
-// Brand Typography Theme for Material UI Components
+// Brand Typography Theme for Material UI Components (Geist & Inter)
 const muiBrandTheme = createTheme({
   typography: {
-    fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif",
+    fontFamily: "'Geist', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
     allVariants: {
-      fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif",
+      fontFamily: "'Geist', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
     },
     button: {
-      fontFamily: "'Space Grotesk', 'Plus Jakarta Sans', sans-serif",
-      fontWeight: 800,
+      fontFamily: "'Geist', 'Space Grotesk', sans-serif",
+      fontWeight: 700,
     },
   },
 });
@@ -723,10 +723,11 @@ export default function Navbar() {
         }
 
         .studio-status-dot {
-          width: 6.5px;
-          height: 6.5px;
+          width: 7px;
+          height: 7px;
           border-radius: 50%;
-          background: #10B981;
+          background: #FFCE32;
+          border: 1px solid #D97706;
           flex-shrink: 0;
         }
 

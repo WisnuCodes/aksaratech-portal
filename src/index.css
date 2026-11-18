@@ -1,14 +1,15 @@
 :root {
-  --font-heading: 'Space Grotesk', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-heading: 'Geist', 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: 'Geist', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-code: 'JetBrains Mono', monospace; /* taste-skill-ignore */
 
-  /* Executive Brand Colors */
+  /* Executive Brand Colors (Aksara Logo Matched) */
   --prussian-blue: #1D63FF;
   --prussian-blue-dark: #1551D6;
   --prussian-blue-light: #EFF6FF;
   --prussian-blue-tonal: rgba(29, 99, 255, 0.08);
 
+  --accent-canary: #FFCE32;
   --accent-amber: #D97706;
   --accent-amber-light: #FEF3C7;
   --accent-amber-dark: #B45309;
