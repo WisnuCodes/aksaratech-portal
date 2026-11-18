@@ -594,9 +594,9 @@ export default function HeroSection() {
         }
 
         .metric-divider {
-          width: 1px;
-          height: 28px;
-          background: #D8D2C4;
+          width: 2px;
+          height: 32px;
+          background: #0F172A;
         }
 
         /* Primary Canary Yellow & Outline WA Buttons */
@@ -614,7 +614,7 @@ export default function HeroSection() {
           gap: 10px;
           background: #FFCE32;
           color: #0F172A !important;
-          border: 1.5px solid #0F172A;
+          border: 2px solid #0F172A;
           border-radius: 4px;
           padding: 13px 26px;
           font-family: var(--font-heading);
@@ -642,7 +642,7 @@ export default function HeroSection() {
           gap: 8px;
           background: #FFFFFF;
           color: #0F172A !important;
-          border: 1.5px solid #D8D2C4;
+          border: 2px solid #0F172A;
           border-radius: 4px;
           padding: 13px 22px;
           font-family: var(--font-heading);
@@ -653,7 +653,6 @@ export default function HeroSection() {
         }
 
         .hero-btn-outline:hover {
-          border-color: #0F172A;
           background: #F4F0EA;
           transform: translateY(-1px);
         }
@@ -663,11 +662,12 @@ export default function HeroSection() {
           width: 100%;
           max-width: 520px;
           background: #0F172A;
-          border: 2px solid #0F172A;
+          border: 2.5px solid #0F172A;
           border-radius: 12px;
           padding: 14px 14px 20px 14px;
           box-sizing: border-box;
           position: relative;
+        }
         }
 
         .kiosk-top-bezel {
@@ -736,8 +736,8 @@ export default function HeroSection() {
           margin-top: 44px;
           margin-bottom: 40px;
           background: #FFFFFF;
-          border-top: 1px solid #D8D2C4; /* taste-skill-ignore */
-          border-bottom: 1px solid #D8D2C4; /* taste-skill-ignore */
+          border-top: 2px solid #0F172A; /* taste-skill-ignore */
+          border-bottom: 2px solid #0F172A; /* taste-skill-ignore */
           border-radius: 6px;
           padding: 16px 0 18px 0;
           overflow: hidden;
@@ -749,7 +749,7 @@ export default function HeroSection() {
           align-items: center;
           justify-content: space-between;
           padding: 0 24px 14px 24px;
-          border-bottom: 1px solid #EFECE6; /* taste-skill-ignore */
+          border-bottom: 2px solid #0F172A; /* taste-skill-ignore */
           margin-bottom: 14px;
         }
 
@@ -814,7 +814,7 @@ export default function HeroSection() {
           align-items: center;
           gap: 8px;
           background: #F4F0EA;
-          border: 1.5px solid #D8D2C4;
+          border: 2px solid #0F172A;
           border-radius: 4px;
           padding: 7px 14px;
           margin-right: 12px;
@@ -907,7 +907,7 @@ export default function HeroSection() {
             align-items: flex-start;
             text-align: left;
             padding-right: 32px;
-            border-right: 1px solid #D8D2C4; /* taste-skill-ignore */
+            border-right: 2px solid #0F172A; /* taste-skill-ignore */
           }
 
           .hero-right-visual {
@@ -1279,7 +1279,7 @@ export default function HeroSection() {
           gap: 12px;
           align-items: flex-start;
           background: #FFFFFF;
-          border: 1.5px solid #CBD5E1;
+          border: 2px solid #0F172A;
           border-radius: var(--radius-md);
           transition: transform 0.2s ease, border-color 0.2s ease;
         }
@@ -1290,7 +1290,7 @@ export default function HeroSection() {
         }
 
         .pillar-icon-box {
-          border: 1.5px solid #CBD5E1;
+          border: 2px solid #0F172A;
           padding: 8px;
           border-radius: 6px;
           flex-shrink: 0;

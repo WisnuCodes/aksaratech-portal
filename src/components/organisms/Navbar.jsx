@@ -636,26 +636,26 @@ export default function Navbar() {
           right: 0;
           z-index: 1000;
           background: #F4F0EA;
-          border-bottom: 1px solid #D8D2C4; /* taste-skill-ignore */
+          border-bottom: 2px solid #0F172A; /* taste-skill-ignore */
           width: 100%;
           transition: background-color 0.2s ease, border-color 0.2s ease;
         }
 
         .nav-container.is-scrolled {
           background: #EFECE6;
-          border-bottom-color: #CBD5E1;
+          border-bottom-color: #0F172A;
         }
 
         /* Top Utility Bar (Brass Hands Header Strip) */
         .nav-utility-bar {
-          background: #F9F7F4;
-          border-bottom: 1px solid #D8D2C4; /* taste-skill-ignore */
-          height: 32px;
+          background: #FFFFFF;
+          border-bottom: 2px solid #0F172A; /* taste-skill-ignore */
+          height: 34px;
           display: flex;
           align-items: center;
           font-family: var(--font-heading);
           font-size: 0.72rem;
-          color: #475569;
+          color: #0F172A;
         }
 
         .nav-utility-inner {
@@ -680,16 +680,16 @@ export default function Navbar() {
           color: #FFFFFF;
           font-size: 0.62rem;
           font-weight: 800;
-          padding: 1px 6px;
+          padding: 2px 7px;
           border-radius: 2px;
-          letter-spacing: 0.06em;
+          letter-spacing: 0.08em;
           text-transform: uppercase;
           flex-shrink: 0;
         }
 
         .ticker-text {
-          font-weight: 600;
-          color: #334155;
+          font-weight: 700;
+          color: #0F172A;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
@@ -698,34 +698,34 @@ export default function Navbar() {
         .nav-utility-cells {
           display: flex;
           align-items: center;
-          gap: 12px;
+          gap: 14px;
           flex-shrink: 0;
         }
 
         .nav-utility-cell {
           display: flex;
           align-items: center;
-          gap: 6px;
-          font-weight: 700;
-          letter-spacing: 0.04em;
-          font-size: 0.68rem;
-          color: #334155;
+          gap: 7px;
+          font-weight: 800;
+          letter-spacing: 0.06em;
+          font-size: 0.7rem;
+          color: #0F172A;
           text-transform: uppercase;
         }
 
         .nav-utility-live-dot {
-          width: 6.5px;
-          height: 6.5px;
+          width: 7px;
+          height: 7px;
           border-radius: 50%;
           background: #10B981;
-          border: 1px solid #059669;
+          border: 1.5px solid #059669;
           flex-shrink: 0;
         }
 
         .nav-utility-divider {
-          width: 1px;
-          height: 14px;
-          background: #D8D2C4;
+          width: 2px;
+          height: 16px;
+          background: #0F172A;
         }
 
         .nav-bar-inner {
@@ -735,8 +735,11 @@ export default function Navbar() {
         .brand-group-desktop {
           display: flex;
           align-items: center;
-          gap: 14px;
+          gap: 16px;
           flex-shrink: 0;
+          padding-right: 28px;
+          border-right: 2px solid #0F172A;
+          height: 100%;
         }
 
         .brand-link {
@@ -833,11 +836,11 @@ export default function Navbar() {
         .desktop-nav-dock {
           display: inline-flex;
           align-items: center;
-          gap: 24px;
+          gap: 28px;
           background: transparent;
           border: none;
           padding: 0;
-          height: 38px;
+          height: 100%;
           box-sizing: border-box;
         }
 
@@ -847,11 +850,11 @@ export default function Navbar() {
           align-items: center;
           gap: 6px;
           font-family: var(--font-heading);
-          font-size: 0.78rem;
-          font-weight: 700;
+          font-size: 0.8rem;
+          font-weight: 800;
           letter-spacing: 0.08em;
           text-transform: uppercase;
-          color: #334155;
+          color: #0F172A;
           text-decoration: none;
           padding: 6px 2px;
           white-space: nowrap;
@@ -865,25 +868,25 @@ export default function Navbar() {
 
         .desktop-dock-link.is-active {
           color: #0F172A;
-          font-weight: 800;
+          font-weight: 900;
         }
 
         .desktop-dock-link.is-active::after {
           content: '';
           position: absolute;
-          bottom: 0;
+          bottom: -4px;
           left: 0;
           right: 0;
-          height: 2px;
+          height: 3px;
           background: #0F172A;
         }
 
         .dock-link-pill {
           font-size: 0.65rem;
-          font-weight: 800;
-          color: var(--prussian-blue);
-          background: #EFF6FF;
-          border: 1px solid #DBEAFE;
+          font-weight: 900;
+          color: #0F172A;
+          background: #FFCE32;
+          border: 1.5px solid #0F172A;
           border-radius: 3px;
           padding: 1px 6px;
           line-height: 1.2;
@@ -896,10 +899,10 @@ export default function Navbar() {
           align-items: center;
           gap: 9px;
           background: #FFFFFF;
-          border: 1.5px solid #D8D2C4;
+          border: 2px solid #0F172A;
           border-radius: 4px;
-          padding: 0 12px;
-          height: 38px;
+          padding: 0 14px;
+          height: 40px;
           box-sizing: border-box;
           text-decoration: none;
           color: #0F172A;
@@ -907,7 +910,6 @@ export default function Navbar() {
         }
 
         .desktop-wa-consult-btn:hover {
-          border-color: #0F172A;
           background-color: #F8FAFC;
           transform: translateY(-1px);
         }
@@ -921,7 +923,7 @@ export default function Navbar() {
           height: 24px;
           border-radius: 4px;
           background: #ECFDF5;
-          border: 1px solid #A7F3D0;
+          border: 1.5px solid #059669;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -946,8 +948,8 @@ export default function Navbar() {
         .wa-consult-meta {
           font-family: var(--font-body);
           font-size: 0.68rem;
-          font-weight: 600;
-          color: #64748B;
+          font-weight: 700;
+          color: #0F172A;
         }
 
         /* Desktop Brass Hands Box Primary Button */
@@ -957,14 +959,14 @@ export default function Navbar() {
           justify-content: center;
           background: #0F172A;
           color: #FFFFFF !important;
-          border: 1.5px solid #0F172A;
+          border: 2px solid #0F172A;
           border-radius: 4px;
-          padding: 0 20px;
-          height: 38px;
+          padding: 0 22px;
+          height: 40px;
           box-sizing: border-box;
           font-family: var(--font-heading);
-          font-size: 0.78rem;
-          font-weight: 800;
+          font-size: 0.8rem;
+          font-weight: 900;
           letter-spacing: 0.08em;
           text-transform: uppercase;
           text-decoration: none;
@@ -994,18 +996,21 @@ export default function Navbar() {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            height: 64px;
+            height: 68px;
           }
 
           .nav-container.is-scrolled .nav-bar-inner {
-            height: 58px;
+            height: 60px;
           }
 
           .nav-actions {
             display: flex;
             align-items: center;
-            gap: 10px !important;
+            gap: 12px !important;
             flex-shrink: 0;
+            padding-left: 24px;
+            border-left: 2px solid #0F172A;
+            height: 100%;
           }
         }
 
@@ -1013,17 +1018,25 @@ export default function Navbar() {
            MOBILE & TABLET VIEW (Breakpoints: < 1024px)
            ======================================================= */
         @media (max-width: 1023px) {
+          .nav-container {
+            border-bottom: 2px solid #0F172A;
+          }
+
           .nav-bar-inner {
             width: 100%;
             padding: 0 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            height: 60px;
+            height: 62px;
           }
 
           .nav-container.is-scrolled .nav-bar-inner {
-            height: 60px;
+            height: 62px;
+          }
+
+          .mobile-header-mui-btn {
+            border: 1.5px solid #0F172A !important;
           }
 
           .nav-utility-bar,
