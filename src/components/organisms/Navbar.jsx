@@ -130,97 +130,110 @@ export default function Navbar() {
       <header className={`nav-container ${isScrolled ? 'is-scrolled' : ''}`}>
       <div className="nav-bar-inner">
         
-        {/* Brand Logo */}
-        <Link 
-          to="/" 
-          className="brand-link" 
-          aria-label="Aksara Tech Beranda"
-          onClick={() => handleNavClick('/')}
-        >
-          <div className="brand-icon-box">
-            <img 
-              src="/brand-icon.png" 
-              alt="Aksara Tech Logo" 
-              className="brand-logo-mark"
-              width="60"
-              height="34"
-            />
-          </div>
-          <div className="brand-info">
-            <div className="brand-title-wrap">
-              <span className="brand-title-aksara">AKSARA</span>
-              <span className="brand-title-tech">TECH</span>
+        {/* Brand Logo & Studio Identity */}
+        <div className="brand-group-desktop">
+          <Link 
+            to="/" 
+            className="brand-link" 
+            aria-label="Aksara Tech Beranda"
+            onClick={() => handleNavClick('/')}
+          >
+            <div className="brand-icon-box">
+              <img 
+                src="/brand-icon.png" 
+                alt="Aksara Tech Logo" 
+                className="brand-logo-mark"
+                width="60"
+                height="34"
+              />
             </div>
-            <div className="brand-subtitle">
-              Digital Solutions
+            <div className="brand-info">
+              <div className="brand-title-wrap">
+                <span className="brand-title-aksara">AKSARA</span>
+                <span className="brand-title-tech">TECH</span>
+              </div>
+              <div className="brand-subtitle">
+                Software Engineering
+              </div>
             </div>
-          </div>
-        </Link>
+          </Link>
 
-        {/* Desktop Nav Links (Hidden on Mobile) */}
-        <nav className="desktop-nav">
+          {/* Desktop Studio Status Chip */}
+          <div className="studio-status-badge-desktop" title="Studio Rekayasa Aktif &amp; Terjadwal">
+            <span className="studio-status-dot" aria-hidden="true" />
+            <span className="studio-status-label">Studio Aktif</span>
+          </div>
+        </div>
+
+        {/* Desktop Precision Dock Navigation */}
+        <nav className="desktop-nav-dock" aria-label="Navigasi Utama Desktop">
           <NavLink 
             to="/paket" 
-            className={({ isActive }) => `desktop-nav-link ${isActive ? 'is-active' : ''}`}
+            className={({ isActive }) => `desktop-dock-link ${isActive ? 'is-active' : ''}`}
             onClick={() => handleNavClick('/paket')}
           >
-            Paket &amp; Harga
+            <span>Paket Layanan</span>
+            <span className="dock-link-pill">6 Paket</span>
           </NavLink>
           <NavLink 
             to="/eksklusi-server" 
-            className={({ isActive }) => `desktop-nav-link ${isActive ? 'is-active' : ''}`}
+            className={({ isActive }) => `desktop-dock-link ${isActive ? 'is-active' : ''}`}
             onClick={() => handleNavClick('/eksklusi-server')}
           >
-            <ShieldRoundedIcon sx={{ fontSize: 16, color: 'var(--prussian-blue)', mr: 0.5 }} />
+            <ShieldRoundedIcon sx={{ fontSize: 15, color: '#334155' }} />
             <span>Eksklusi Server</span>
           </NavLink>
           <NavLink 
             to="/alur-sop" 
-            className={({ isActive }) => `desktop-nav-link ${isActive ? 'is-active' : ''}`}
+            className={({ isActive }) => `desktop-dock-link ${isActive ? 'is-active' : ''}`}
             onClick={() => handleNavClick('/alur-sop')}
           >
-            Alur SOP
+            <span>Alur SOP</span>
           </NavLink>
           <NavLink 
             to="/faq" 
-            className={({ isActive }) => `desktop-nav-link ${isActive ? 'is-active' : ''}`}
+            className={({ isActive }) => `desktop-dock-link ${isActive ? 'is-active' : ''}`}
             onClick={() => handleNavClick('/faq')}
           >
-            FAQ
+            <span>FAQ</span>
           </NavLink>
           <NavLink 
             to="/ketentuan" 
-            className={({ isActive }) => `desktop-nav-link ${isActive ? 'is-active' : ''}`}
+            className={({ isActive }) => `desktop-dock-link ${isActive ? 'is-active' : ''}`}
             onClick={() => handleNavClick('/ketentuan')}
           >
-            <DescriptionRoundedIcon sx={{ fontSize: 16, color: 'var(--prussian-blue)', mr: 0.5 }} />
-            <span>Ketentuan &amp; Privasi</span>
+            <DescriptionRoundedIcon sx={{ fontSize: 15, color: '#334155' }} />
+            <span>Ketentuan</span>
           </NavLink>
         </nav>
 
         {/* Desktop & Mobile Action Buttons */}
         <div className="nav-actions">
-          {/* Desktop WhatsApp Button */}
+          {/* Desktop WhatsApp Corporate Consultation Trigger */}
           <a 
             href={`https://wa.me/${BUSINESS_INFO.waNumber}?text=Halo%20Aksara%20Tech,%20saya%20ingin%20berkonsultasi%20mengenai%20layanan%20rekayasa%20website.`}
             target="_blank" 
             rel="noopener noreferrer" 
-            className="btn btn-wa btn-sm wa-btn-desktop"
-            title="Hubungi WhatsApp Korporat Resmi"
+            className="desktop-wa-consult-btn"
+            title="Hubungi WhatsApp Studio Resmi (0856-0038-6692)"
           >
-            <WhatsAppIcon sx={{ fontSize: 18 }} />
-            <span className="wa-btn-text">WA Korporat</span>
-            <span className="wa-pulse-dot" />
+            <div className="wa-consult-icon-wrap" aria-hidden="true">
+              <WhatsAppIcon sx={{ fontSize: 16 }} />
+            </div>
+            <div className="wa-consult-text-group">
+              <span className="wa-consult-title">Konsultasi WA</span>
+              <span className="wa-consult-meta">{BUSINESS_INFO.phoneDisplay}</span>
+            </div>
           </a>
 
-          {/* Desktop Order Button */}
+          {/* Desktop Order Button: Deep Obsidian Primary CTA */}
           <Link 
             to="/pesan" 
-            className="btn btn-primary btn-sm" 
+            className="desktop-order-cta-btn" 
             id="order-btn-desktop"
             onClick={() => handleNavClick('/pesan')}
           >
-            <span>Pesan Proyek</span>
+            <span>Isi Brief Proyek</span>
           </Link>
 
           {/* Mobile WA Quick Button via Material UI IconButton */}
@@ -616,9 +629,8 @@ export default function Navbar() {
           right: 0;
           z-index: 1000;
           background: #FFFFFF;
-          /* border separated by tone */
           width: 100%;
-          transition: background-color 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+          transition: background-color 0.2s ease;
         }
 
         .nav-container.is-scrolled {
@@ -628,7 +640,14 @@ export default function Navbar() {
         }
 
         .nav-bar-inner {
-          transition: height 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+          transition: height 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .brand-group-desktop {
+          display: flex;
+          align-items: center;
+          gap: 14px;
+          flex-shrink: 0;
         }
 
         .brand-link {
@@ -653,7 +672,6 @@ export default function Navbar() {
           max-width: 65px;
           object-fit: contain;
           display: block;
-          
           transition: transform 0.15s ease;
         }
 
@@ -692,64 +710,170 @@ export default function Navbar() {
           margin-top: 3px;
         }
 
-        /* Desktop Nav Link Items */
-        .desktop-nav {
-          display: flex;
+        /* Desktop Studio Status Chip */
+        .studio-status-badge-desktop {
+          display: inline-flex;
           align-items: center;
-          gap: 4px;
-          margin: 0 16px;
+          gap: 6px;
+          background: #F8FAFC;
+          border: 1px solid #E2E8F0;
+          border-radius: 9999px;
+          padding: 4px 10px;
+          user-select: none;
         }
 
-        .desktop-nav-link {
+        .studio-status-dot {
+          width: 6.5px;
+          height: 6.5px;
+          border-radius: 50%;
+          background: #10B981;
+          flex-shrink: 0;
+        }
+
+        .studio-status-label {
+          font-family: var(--font-heading);
+          font-size: 0.72rem;
+          font-weight: 700;
+          letter-spacing: 0.02em;
+          color: #334155;
+          text-transform: uppercase;
+        }
+
+        /* Desktop Precision Dock Navigation */
+        .desktop-nav-dock {
+          display: flex;
+          align-items: center;
+          gap: 3px;
+          background: #F8FAFC;
+          border: 1px solid #E2E8F0;
+          border-radius: 9999px;
+          padding: 4px 5px;
+        }
+
+        .desktop-dock-link {
           position: relative;
           display: inline-flex;
           align-items: center;
-          gap: 4px;
-          font-size: 0.88rem;
+          gap: 6px;
+          font-family: var(--font-body);
+          font-size: 0.84rem;
           font-weight: 600;
           color: #475569;
           text-decoration: none;
-          padding: 8px 12px;
-          border-radius: 6px;
+          padding: 6px 13px;
+          border-radius: 9999px;
+          border: 1px solid transparent;
           white-space: nowrap;
-          transition: color 0.15s ease, background-color 0.15s ease;
+          transition: color 0.16s ease, background-color 0.16s ease, border-color 0.16s ease, transform 0.16s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .desktop-nav-link:hover {
+        .desktop-dock-link:hover {
           color: #0F172A;
-          background: #F1F5F9;
+          background-color: #EDF2F7;
         }
 
-        .desktop-nav-link.is-active {
+        .desktop-dock-link.is-active {
           color: #0F172A;
           font-weight: 800;
-          background: #F8FAFC;
+          background-color: #FFFFFF;
+          border-color: #CBD5E1;
         }
 
-        .desktop-nav-link.is-active::after {
-          content: '';
-          position: absolute;
-          bottom: 2px;
-          left: 12px;
-          right: 12px;
-          height: 2px;
-          background: var(--prussian-blue);
+        .dock-link-pill {
+          font-size: 0.68rem;
+          font-weight: 700;
+          color: var(--prussian-blue);
+          background: #EFF6FF;
+          border: 1px solid #DBEAFE;
           border-radius: 9999px;
+          padding: 1px 7px;
+          line-height: 1.2;
         }
 
-        .wa-btn-desktop {
+        /* Desktop WhatsApp Corporate Consultation Trigger */
+        .desktop-wa-consult-btn {
           display: inline-flex;
           align-items: center;
-          gap: 8px;
-          position: relative;
+          gap: 9px;
+          background: #FFFFFF;
+          border: 1.5px solid #CBD5E1;
+          border-radius: 8px;
+          padding: 5px 12px;
+          text-decoration: none;
+          color: #0F172A;
+          transition: border-color 0.18s ease, background-color 0.18s ease, transform 0.18s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .wa-pulse-dot {
-          width: 7px;
-          height: 7px;
-          border-radius: 50%;
-          background: #34D399;
-          display: inline-block;
+        .desktop-wa-consult-btn:hover {
+          border-color: #0F172A;
+          background-color: #F8FAFC;
+          transform: translateY(-1px);
+        }
+
+        .desktop-wa-consult-btn:active {
+          transform: translateY(0);
+        }
+
+        .wa-consult-icon-wrap {
+          width: 26px;
+          height: 26px;
+          border-radius: 6px;
+          background: #ECFDF5;
+          border: 1px solid #A7F3D0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #059669;
+          flex-shrink: 0;
+        }
+
+        .wa-consult-text-group {
+          display: flex;
+          flex-direction: column;
+          text-align: left;
+          line-height: 1.15;
+        }
+
+        .wa-consult-title {
+          font-family: var(--font-heading);
+          font-size: 0.78rem;
+          font-weight: 800;
+          color: #0F172A;
+        }
+
+        .wa-consult-meta {
+          font-family: var(--font-body);
+          font-size: 0.68rem;
+          font-weight: 600;
+          color: #64748B;
+        }
+
+        /* Desktop Primary Brief Order Button */
+        .desktop-order-cta-btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          background: #0F172A;
+          color: #FFFFFF !important;
+          border: 1.5px solid #0F172A;
+          border-radius: 8px;
+          padding: 8px 18px;
+          font-family: var(--font-heading);
+          font-size: 0.85rem;
+          font-weight: 800;
+          text-decoration: none;
+          letter-spacing: -0.01em;
+          transition: background-color 0.18s ease, border-color 0.18s ease, transform 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .desktop-order-cta-btn:hover {
+          background-color: #1E293B;
+          border-color: #1E293B;
+          transform: translateY(-1px);
+        }
+
+        .desktop-order-cta-btn:active {
+          transform: translateY(0);
         }
 
         /* =======================================================
@@ -771,48 +895,11 @@ export default function Navbar() {
             height: 66px;
           }
 
-          .desktop-nav {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            margin: 0 16px;
-          }
-
           .nav-actions {
             display: flex;
             align-items: center;
-            gap: 14px !important;
+            gap: 12px !important;
             flex-shrink: 0;
-          }
-
-          #order-btn-desktop {
-            display: inline-flex !important;
-            padding: 9px 20px !important;
-            font-size: 0.88rem !important;
-            transition: transform 0.15s ease, background-color 0.15s ease !important;
-          }
-
-          #order-btn-desktop:hover {
-            transform: translate(-1px, -1px);
-          }
-
-          #order-btn-desktop:active {
-            transform: translate(1px, 1px);
-          }
-
-          .wa-btn-desktop {
-            display: inline-flex !important;
-            padding: 9px 16px !important;
-            font-size: 0.88rem !important;
-            transition: transform 0.15s ease, background-color 0.15s ease !important;
-          }
-
-          .wa-btn-desktop:hover {
-            transform: translate(-1px, -1px);
-          }
-
-          .wa-btn-desktop:active {
-            transform: translate(1px, 1px);
           }
         }
 
@@ -833,9 +920,10 @@ export default function Navbar() {
             height: 60px;
           }
 
-          .desktop-nav,
-          #order-btn-desktop,
-          .wa-btn-desktop,
+          .desktop-nav-dock,
+          .studio-status-badge-desktop,
+          .desktop-wa-consult-btn,
+          .desktop-order-cta-btn,
           .brand-subtitle {
             display: none !important;
           }
