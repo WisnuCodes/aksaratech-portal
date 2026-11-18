@@ -176,19 +176,18 @@ export default function Navbar() {
             <span className="dock-link-pill">6 Paket</span>
           </NavLink>
           <NavLink 
-            to="/eksklusi-server" 
-            className={({ isActive }) => `desktop-dock-link ${isActive ? 'is-active' : ''}`}
-            onClick={() => handleNavClick('/eksklusi-server')}
-          >
-            <ShieldRoundedIcon sx={{ fontSize: 15, color: '#334155' }} />
-            <span>Eksklusi Server</span>
-          </NavLink>
-          <NavLink 
             to="/alur-sop" 
             className={({ isActive }) => `desktop-dock-link ${isActive ? 'is-active' : ''}`}
             onClick={() => handleNavClick('/alur-sop')}
           >
             <span>Alur SOP</span>
+          </NavLink>
+          <NavLink 
+            to="/eksklusi-server" 
+            className={({ isActive }) => `desktop-dock-link ${isActive ? 'is-active' : ''}`}
+            onClick={() => handleNavClick('/eksklusi-server')}
+          >
+            <span>Eksklusi Server</span>
           </NavLink>
           <NavLink 
             to="/faq" 
@@ -202,7 +201,6 @@ export default function Navbar() {
             className={({ isActive }) => `desktop-dock-link ${isActive ? 'is-active' : ''}`}
             onClick={() => handleNavClick('/ketentuan')}
           >
-            <DescriptionRoundedIcon sx={{ fontSize: 15, color: '#334155' }} />
             <span>Ketentuan</span>
           </NavLink>
         </nav>
@@ -398,28 +396,25 @@ export default function Navbar() {
                     selected={isActive}
                     onClick={() => handleNavClick(item.to)}
                     sx={{
-                      borderRadius: '10px',
-                      py: 0.7,
+                      borderRadius: '8px',
+                      py: 0.8,
                       px: 1.2,
                       gap: 1.2,
-                      border: '1.5px solid',
-                      borderColor: isActive ? 'var(--prussian-blue)' : 'transparent',
-                      bgcolor: isActive ? '#EEF4FF' : 'transparent',
+                      border: '1px solid',
+                      borderColor: isActive ? '#0F172A' : 'transparent',
+                      bgcolor: isActive ? '#F8FAFC' : 'transparent',
                       boxShadow: 'none',
-                      transition: 'all 0.15s cubic-bezier(0.2, 0, 0, 1)',
+                      transition: 'background-color 0.15s ease, border-color 0.15s ease',
                       '&.Mui-selected': {
-                        bgcolor: '#EEF4FF',
+                        bgcolor: '#F8FAFC',
+                        borderColor: '#0F172A',
                         '&:hover': {
-                          bgcolor: '#E0EAFF',
+                          bgcolor: '#F1F5F9',
                         }
                       },
                       '&:hover': {
                         bgcolor: '#F8FAFC',
-                        transform: 'translateX(2px)',
-                        borderColor: isActive ? 'var(--prussian-blue)' : '#E2E8F0'
-                      },
-                      '&:active': {
-                        transform: 'scale(0.99)'
+                        borderColor: '#CBD5E1'
                       }
                     }}
                   >
@@ -430,21 +425,19 @@ export default function Navbar() {
                           width: 34,
                           height: 34,
                           borderRadius: '8px',
-                          bgcolor: isActive ? 'var(--prussian-blue)' : '#EEF4FF',
-                          color: isActive ? '#FFFFFF' : 'var(--prussian-blue)',
+                          bgcolor: isActive ? '#0F172A' : '#F1F5F9',
+                          color: isActive ? '#FFFFFF' : '#0F172A',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
-                          border: '1.5px solid',
-                          borderColor: isActive ? '#0F172A' : 'rgba(29, 99, 255, 0.25)',
+                          border: '1px solid',
+                          borderColor: isActive ? '#0F172A' : '#E2E8F0',
                           boxShadow: 'none',
-                          transition: 'all 0.15s cubic-bezier(0.2, 0, 0, 1)',
+                          transition: 'background-color 0.15s ease, color 0.15s ease',
                           '.MuiListItemButton-root:hover &': {
-                            transform: 'scale(1.05)',
-                            bgcolor: 'var(--prussian-blue)',
+                            bgcolor: '#0F172A',
                             color: '#FFFFFF',
                             borderColor: '#0F172A',
-                            
                           }
                         }}
                       >
@@ -456,16 +449,16 @@ export default function Navbar() {
                       primary={item.label}
                       secondary={item.desc}
                       primaryTypographyProps={{
-                        fontFamily: "'Space Grotesk', 'Plus Jakarta Sans', sans-serif",
+                        fontFamily: 'var(--font-heading)',
                         fontWeight: isActive ? 800 : 700,
-                        fontSize: '0.84rem',
-                        color: isActive ? 'var(--prussian-blue)' : '#0F172A',
+                        fontSize: '0.86rem',
+                        color: '#0F172A',
                         lineHeight: 1.25,
                         letterSpacing: '-0.015em'
                       }}
                       secondaryTypographyProps={{
-                        fontFamily: "'Plus Jakarta Sans', sans-serif",
-                        fontSize: '0.68rem',
+                        fontFamily: 'var(--font-body)',
+                        fontSize: '0.7rem',
                         color: isActive ? '#334155' : '#64748B',
                         lineHeight: 1.2,
                         mt: 0.1,
@@ -475,13 +468,13 @@ export default function Navbar() {
 
                     <ChevronRightRoundedIcon 
                       sx={{ 
-                        color: isActive ? 'var(--prussian-blue)' : '#CBD5E1', 
+                        color: isActive ? '#0F172A' : '#CBD5E1', 
                         fontSize: 17,
                         flexShrink: 0,
                         transition: 'transform 0.15s ease, color 0.15s ease',
                         '.MuiListItemButton-root:hover &': {
                           transform: 'translateX(2px)',
-                          color: 'var(--prussian-blue)'
+                          color: '#0F172A'
                         }
                       }} 
                     />
@@ -500,25 +493,25 @@ export default function Navbar() {
               variant="contained"
               fullWidth
               sx={{
-                bgcolor: 'var(--prussian-blue)',
+                bgcolor: '#0F172A',
                 color: '#FFFFFF',
                 fontFamily: 'var(--font-heading)',
-                fontWeight: 800,
+                fontWeight: 700,
                 fontSize: '0.86rem',
                 textTransform: 'none',
-                py: 1.1,
+                py: 1,
                 px: 2,
                 borderRadius: '8px',
                 border: '1.5px solid #0F172A',
                 boxShadow: 'none',
-                transition: 'all 0.15s cubic-bezier(0.2, 0, 0, 1)',
+                transition: 'background-color 0.15s ease, border-color 0.15s ease',
                 '&:hover': {
-                  bgcolor: 'var(--prussian-blue-dark)',
-                  transform: 'translate(-1px, -1px)',
+                  bgcolor: '#1E293B',
+                  borderColor: '#1E293B',
                   boxShadow: 'none'
                 },
                 '&:active': {
-                  transform: 'translate(1px, 1px)',
+                  transform: 'translateY(0)',
                   boxShadow: 'none'
                 }
               }}
@@ -543,24 +536,18 @@ export default function Navbar() {
               alignItems: 'center',
               justifyContent: 'space-between',
               gap: 1.2,
-              bgcolor: '#F0FDF4',
+              bgcolor: '#FFFFFF',
               color: '#0F172A',
-              border: '1px solid #CBD5E1',
+              border: '1.5px solid #CBD5E1',
               borderRadius: '8px',
               py: 0.8,
               px: 1.5,
-              
               textTransform: 'none',
               textAlign: 'left',
-              transition: 'all 0.15s cubic-bezier(0.2, 0, 0, 1)',
+              transition: 'border-color 0.15s ease, background-color 0.15s ease',
               '&:hover': {
-                bgcolor: '#DCFCE7',
-                transform: 'translate(-1px, -1px)',
-                
-              },
-              '&:active': {
-                transform: 'translate(1px, 1px)',
-                
+                bgcolor: '#F8FAFC',
+                borderColor: '#0F172A'
               }
             }}
           >
@@ -570,8 +557,8 @@ export default function Navbar() {
                   width: 28,
                   height: 28,
                   borderRadius: '6px',
-                  bgcolor: '#FFFFFF',
-                  border: '1.2px solid #0F172A',
+                  bgcolor: '#ECFDF5',
+                  border: '1px solid #A7F3D0',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -585,24 +572,24 @@ export default function Navbar() {
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.6 }}>
                   <Box 
                     sx={{
-                      width: 6,
-                      height: 6,
+                      width: 6.5,
+                      height: 6.5,
                       borderRadius: '50%',
-                      bgcolor: '#10B981',
-                      
+                      bgcolor: '#FFCE32',
+                      border: '1px solid #D97706',
                       flexShrink: 0
                     }}
                   />
-                  <Typography sx={{ fontFamily: "'Space Grotesk', 'Plus Jakarta Sans', sans-serif", fontSize: '0.76rem', fontWeight: 800, color: '#065F46', lineHeight: 1.2 }}>
-                    Konsultasi WhatsApp Aktif
+                  <Typography sx={{ fontFamily: 'var(--font-heading)', fontSize: '0.78rem', fontWeight: 800, color: '#0F172A', lineHeight: 1.2 }}>
+                    Konsultasi WhatsApp Studio
                   </Typography>
                 </Box>
-                <Typography sx={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: '0.68rem', color: '#047857', fontWeight: 600, lineHeight: 1.2, mt: 0.1 }}>
+                <Typography sx={{ fontFamily: 'var(--font-body)', fontSize: '0.68rem', color: '#64748B', fontWeight: 600, lineHeight: 1.2, mt: 0.1 }}>
                   {BUSINESS_INFO.phoneDisplay} &bull; Plafon Max Rp 500.000
                 </Typography>
               </Box>
             </Box>
-            <ChevronRightRoundedIcon sx={{ color: '#065F46', fontSize: 17, flexShrink: 0 }} />
+            <ChevronRightRoundedIcon sx={{ color: '#94A3B8', fontSize: 17, flexShrink: 0 }} />
           </MuiButton>
 
           </Box>
@@ -742,13 +729,15 @@ export default function Navbar() {
 
         /* Desktop Precision Dock Navigation */
         .desktop-nav-dock {
-          display: flex;
+          display: inline-flex;
           align-items: center;
-          gap: 3px;
+          gap: 2px;
           background: #F8FAFC;
           border: 1px solid #E2E8F0;
           border-radius: 9999px;
-          padding: 4px 5px;
+          padding: 3px 5px;
+          height: 38px;
+          box-sizing: border-box;
         }
 
         .desktop-dock-link {
@@ -761,10 +750,12 @@ export default function Navbar() {
           font-weight: 600;
           color: #475569;
           text-decoration: none;
-          padding: 6px 13px;
+          padding: 0 13px;
+          height: 30px;
           border-radius: 9999px;
           border: 1px solid transparent;
           white-space: nowrap;
+          box-sizing: border-box;
           transition: color 0.16s ease, background-color 0.16s ease, border-color 0.16s ease, transform 0.16s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
@@ -799,10 +790,12 @@ export default function Navbar() {
           background: #FFFFFF;
           border: 1.5px solid #CBD5E1;
           border-radius: 8px;
-          padding: 5px 12px;
+          padding: 0 12px;
+          height: 38px;
+          box-sizing: border-box;
           text-decoration: none;
           color: #0F172A;
-          transition: border-color 0.18s ease, background-color 0.18s ease, transform 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+          transition: border-color 0.16s ease, background-color 0.16s ease, transform 0.16s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .desktop-wa-consult-btn:hover {
@@ -816,8 +809,8 @@ export default function Navbar() {
         }
 
         .wa-consult-icon-wrap {
-          width: 26px;
-          height: 26px;
+          width: 24px;
+          height: 24px;
           border-radius: 6px;
           background: #ECFDF5;
           border: 1px solid #A7F3D0;
@@ -858,13 +851,15 @@ export default function Navbar() {
           color: #FFFFFF !important;
           border: 1.5px solid #0F172A;
           border-radius: 8px;
-          padding: 8px 18px;
+          padding: 0 18px;
+          height: 38px;
+          box-sizing: border-box;
           font-family: var(--font-heading);
-          font-size: 0.85rem;
-          font-weight: 800;
+          font-size: 0.84rem;
+          font-weight: 700;
           text-decoration: none;
           letter-spacing: -0.01em;
-          transition: background-color 0.18s ease, border-color 0.18s ease, transform 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+          transition: background-color 0.16s ease, border-color 0.16s ease, transform 0.16s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .desktop-order-cta-btn:hover {
@@ -889,17 +884,17 @@ export default function Navbar() {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            height: 74px;
+            height: 64px;
           }
 
           .nav-container.is-scrolled .nav-bar-inner {
-            height: 66px;
+            height: 58px;
           }
 
           .nav-actions {
             display: flex;
             align-items: center;
-            gap: 12px !important;
+            gap: 10px !important;
             flex-shrink: 0;
           }
         }
