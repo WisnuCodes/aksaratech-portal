@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Clock, 
@@ -216,7 +216,95 @@ function WorkspaceIllustration() {
   );
 }
 
+const TECH_PROTOCOLS_ROW1 = [
+  { name: 'REACT', tag: 'UI Library' },
+  { name: 'NEXT.JS', tag: 'Fullstack SSR' },
+  { name: 'NODE.JS', tag: 'Runtime Engine' },
+  { name: 'TYPESCRIPT', tag: 'Type-Safe 100%' },
+  { name: 'POSTGRESQL', tag: 'Relational DB' },
+  { name: 'TAILWIND', tag: 'CSS Architecture' },
+  { name: 'DOCKER', tag: 'Container Isolation' },
+  { name: 'CLOUDFLARE', tag: 'Edge Security' },
+  { name: 'GITHUB', tag: 'CI/CD Pipelines' },
+  { name: 'VERCEL', tag: 'Serverless Cloud' },
+];
+
+const TECH_PROTOCOLS_ROW2 = [
+  { name: 'VERCEL', tag: 'Edge Production' },
+  { name: 'GITHUB', tag: 'Version Control' },
+  { name: 'CLOUDFLARE', tag: 'DDoS Protection' },
+  { name: 'DOCKER', tag: 'Sandbox Environment' },
+  { name: 'TAILWIND', tag: 'Design Tokens' },
+  { name: 'POSTGRESQL', tag: 'ACID Transactions' },
+  { name: 'TYPESCRIPT', tag: 'Strict Contract' },
+  { name: 'NODE.JS', tag: 'High-Throughput' },
+  { name: 'NEXT.JS', tag: 'App Router' },
+  { name: 'REACT', tag: 'Virtual DOM' },
+];
+
 export default function HeroSection() {
+  const trackLeftRef = useRef(null);
+  const trackRightRef = useRef(null);
+
+  // Kinetic dual-direction scroll velocity loop
+  useEffect(() => {
+    let animId;
+    let lastScrollY = typeof window !== 'undefined' ? window.scrollY : 0;
+    let currentXLeft = 0;
+    let currentXRight = -1200;
+    let scrollVelocity = 0;
+
+    const handleScroll = () => {
+      const newScrollY = window.scrollY;
+      const delta = newScrollY - lastScrollY;
+      lastScrollY = newScrollY;
+      const clampedDelta = Math.max(-45, Math.min(45, delta));
+      scrollVelocity += clampedDelta * 0.45;
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    const loop = () => {
+      scrollVelocity *= 0.92;
+      const baseSpeed = 0.55;
+
+      // Track 1 moves leftward on scroll down
+      currentXLeft -= (baseSpeed + scrollVelocity);
+
+      // Track 2 moves rightward on scroll down
+      currentXRight += (baseSpeed + scrollVelocity);
+
+      if (trackLeftRef.current) {
+        const fullWidth = trackLeftRef.current.scrollWidth;
+        const setWidth = fullWidth / 3;
+        if (setWidth > 0) {
+          while (currentXLeft <= -setWidth) currentXLeft += setWidth;
+          while (currentXLeft > 0) currentXLeft -= setWidth;
+          trackLeftRef.current.style.transform = `translate3d(${currentXLeft}px, 0, 0)`;
+        }
+      }
+
+      if (trackRightRef.current) {
+        const fullWidth = trackRightRef.current.scrollWidth;
+        const setWidth = fullWidth / 3;
+        if (setWidth > 0) {
+          while (currentXRight >= 0) currentXRight -= setWidth;
+          while (currentXRight < -setWidth) currentXRight += setWidth;
+          trackRightRef.current.style.transform = `translate3d(${currentXRight}px, 0, 0)`;
+        }
+      }
+
+      animId = requestAnimationFrame(loop);
+    };
+
+    animId = requestAnimationFrame(loop);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      cancelAnimationFrame(animId);
+    };
+  }, []);
+
   const pillars = [
     {
       id: 'srs',
@@ -337,20 +425,44 @@ export default function HeroSection() {
 
         </div>
 
-        {/* BOTTOM PARTNER & TECH STACK BAND (Brass Hands Monochrome Strip) */}
-        <div className="hero-partner-strip">
-          <div className="partner-strip-label">STACK REKAYASA &amp; PROTOKOL RESMI:</div>
-          <div className="partner-logos-track">
-            <span className="partner-logo-item">REACT</span>
-            <span className="partner-logo-item">NEXT.JS</span>
-            <span className="partner-logo-item">NODE.JS</span>
-            <span className="partner-logo-item">TYPESCRIPT</span>
-            <span className="partner-logo-item">POSTGRESQL</span>
-            <span className="partner-logo-item">TAILWIND</span>
-            <span className="partner-logo-item">DOCKER</span>
-            <span className="partner-logo-item">CLOUDFLARE</span>
-            <span className="partner-logo-item">GITHUB</span>
-            <span className="partner-logo-item">VERCEL</span>
+        {/* DUAL-TRACK SCROLL-LINKED KINETIC TECH MARQUEE */}
+        <div className="hero-scroll-marquee-section">
+          <div className="marquee-header-bar">
+            <div className="marquee-badge-tag">
+              <span className="marquee-status-dot" aria-hidden="true" />
+              <span>STACK REKAYASA &amp; PROTOKOL RESMI</span>
+            </div>
+            <div className="marquee-scroll-indicator">
+              <span>GERAKAN KINETIK KIRI &amp; KANAN PADA SCROLL</span>
+            </div>
+          </div>
+
+          <div className="marquee-viewport-mask">
+            {/* Track 1: Glides Leftward on scroll down */}
+            <div className="marquee-track-row marquee-row-1">
+              <div className="marquee-track" ref={trackLeftRef}>
+                {[...TECH_PROTOCOLS_ROW1, ...TECH_PROTOCOLS_ROW1, ...TECH_PROTOCOLS_ROW1].map((tech, idx) => (
+                  <div key={`tech-r1-${idx}`} className="marquee-tech-chip">
+                    <span className="chip-code-name">{tech.name}</span>
+                    <span className="chip-tag-spec">{tech.tag}</span>
+                    <span className="chip-separator" aria-hidden="true" />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Track 2: Glides Rightward on scroll down */}
+            <div className="marquee-track-row marquee-row-2">
+              <div className="marquee-track" ref={trackRightRef}>
+                {[...TECH_PROTOCOLS_ROW2, ...TECH_PROTOCOLS_ROW2, ...TECH_PROTOCOLS_ROW2].map((tech, idx) => (
+                  <div key={`tech-r2-${idx}`} className="marquee-tech-chip">
+                    <span className="chip-code-name">{tech.name}</span>
+                    <span className="chip-tag-spec">{tech.tag}</span>
+                    <span className="chip-separator" aria-hidden="true" />
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
 
@@ -617,50 +729,164 @@ export default function HeroSection() {
           border-radius: 0 0 3px 3px;
         }
 
-        /* Monochrome Partner / Tech Stack Strip */
-        .hero-partner-strip {
-          margin-top: 48px;
+        /* =======================================================
+           DUAL-TRACK KINETIC SCROLL MARQUEE (Brass Hands Style)
+           ======================================================= */
+        .hero-scroll-marquee-section {
+          margin-top: 44px;
           margin-bottom: 40px;
           background: #FFFFFF;
           border-top: 1px solid #D8D2C4; /* taste-skill-ignore */
           border-bottom: 1px solid #D8D2C4; /* taste-skill-ignore */
-          padding: 16px 24px;
+          border-radius: 6px;
+          padding: 16px 0 18px 0;
+          overflow: hidden;
+          position: relative;
+        }
+
+        .marquee-header-bar {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          gap: 24px;
-          overflow-x: auto;
-          -webkit-overflow-scrolling: touch;
-          border-radius: 4px;
+          padding: 0 24px 14px 24px;
+          border-bottom: 1px solid #EFECE6; /* taste-skill-ignore */
+          margin-bottom: 14px;
         }
 
-        .partner-strip-label {
-          font-family: var(--font-heading);
-          font-size: 0.68rem;
-          font-weight: 800;
-          letter-spacing: 0.1em;
-          color: #64748B;
-          white-space: nowrap;
-        }
-
-        .partner-logos-track {
+        .marquee-badge-tag {
           display: flex;
           align-items: center;
-          gap: 28px;
+          gap: 7px;
+          font-family: var(--font-heading);
+          font-size: 0.72rem;
+          font-weight: 800;
+          letter-spacing: 0.1em;
+          color: #0F172A;
+          text-transform: uppercase;
+        }
+
+        .marquee-status-dot {
+          width: 7px;
+          height: 7px;
+          border-radius: 50%;
+          background: #FFCE32;
+          border: 1px solid #D97706;
           flex-shrink: 0;
         }
 
-        .partner-logo-item {
+        .marquee-scroll-indicator {
+          font-family: var(--font-heading);
+          font-size: 0.65rem;
+          font-weight: 700;
+          letter-spacing: 0.08em;
+          color: #64748B;
+          text-transform: uppercase;
+        }
+
+        .marquee-viewport-mask {
+          position: relative;
+          width: 100%;
+          overflow: hidden;
+          -webkit-mask-image: linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%); /* taste-skill-ignore */
+          mask-image: linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%); /* taste-skill-ignore */
+        }
+
+        .marquee-track-row {
+          width: 100%;
+          overflow: hidden;
+          display: flex;
+          white-space: nowrap;
+        }
+
+        .marquee-row-1 {
+          margin-bottom: 10px;
+        }
+
+        .marquee-track {
+          display: inline-flex;
+          align-items: center;
+          will-change: transform;
+          flex-shrink: 0;
+        }
+
+        .marquee-tech-chip {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          background: #F4F0EA;
+          border: 1.5px solid #D8D2C4;
+          border-radius: 4px;
+          padding: 7px 14px;
+          margin-right: 12px;
+          user-select: none;
+          transition: background-color 0.16s ease, border-color 0.16s ease, transform 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .marquee-tech-chip:hover {
+          background: #FFCE32;
+          border-color: #0F172A;
+          transform: translateY(-1px);
+        }
+
+        .chip-code-name {
           font-family: var(--font-heading);
           font-size: 0.8rem;
           font-weight: 800;
-          letter-spacing: 0.08em;
-          color: #334155;
-          transition: color 0.16s ease;
+          letter-spacing: 0.06em;
+          color: #0F172A;
+          text-transform: uppercase;
         }
 
-        .partner-logo-item:hover {
+        .chip-tag-spec {
+          font-family: var(--font-body);
+          font-size: 0.64rem;
+          font-weight: 600;
+          color: #64748B;
+          text-transform: uppercase;
+          letter-spacing: 0.02em;
+        }
+
+        .chip-separator {
+          width: 4px;
+          height: 4px;
+          border-radius: 50%;
+          background: #CBD5E1;
+          margin-left: 4px;
+        }
+
+        .marquee-tech-chip:hover .chip-code-name,
+        .marquee-tech-chip:hover .chip-tag-spec {
           color: #0F172A;
+        }
+
+        .marquee-tech-chip:hover .chip-separator {
+          background: #0F172A;
+        }
+
+        @media (max-width: 768px) {
+          .marquee-header-bar {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 6px;
+            padding: 0 16px 10px 16px;
+          }
+
+          .marquee-scroll-indicator {
+            font-size: 0.6rem;
+          }
+
+          .marquee-tech-chip {
+            padding: 6px 11px;
+            margin-right: 8px;
+          }
+
+          .chip-code-name {
+            font-size: 0.74rem;
+          }
+
+          .chip-tag-spec {
+            font-size: 0.6rem;
+          }
         }
 
         /* =======================================================
@@ -749,10 +975,9 @@ export default function HeroSection() {
             justify-content: center;
           }
 
-          .hero-partner-strip {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 12px;
+          .hero-scroll-marquee-section {
+            margin-top: 28px;
+            margin-bottom: 24px;
           }
         }
 
