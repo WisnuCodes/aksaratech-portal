@@ -128,7 +128,27 @@ export default function Navbar() {
   return (
     <ThemeProvider theme={muiBrandTheme}>
       <header className={`nav-container ${isScrolled ? 'is-scrolled' : ''}`}>
-      <div className="nav-bar-inner">
+        {/* Brass Hands Style Top Utility Bar */}
+        <div className="nav-utility-bar">
+          <div className="nav-utility-inner">
+            <div className="nav-utility-ticker">
+              <span className="ticker-badge">STUDIO RESMI</span>
+              <span className="ticker-text">Layanan Rekayasa Software &amp; Dokumen SRS/SDD &bull; Plafon Maksimal Resmi Rp 500.000</span>
+            </div>
+            <div className="nav-utility-cells">
+              <div className="nav-utility-cell">
+                <span className="nav-utility-live-dot" aria-hidden="true" />
+                <span>STUDIO REKAYASA AKTIF</span>
+              </div>
+              <div className="nav-utility-divider" />
+              <div className="nav-utility-cell">
+                <span>Bandung &amp; Jakarta, ID</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="nav-bar-inner">
         
         {/* Brand Logo & Studio Identity */}
         <div className="brand-group-desktop">
@@ -224,14 +244,14 @@ export default function Navbar() {
             </div>
           </a>
 
-          {/* Desktop Order Button: Deep Obsidian Primary CTA */}
+          {/* Desktop Order Button: Brass Hands Box Primary CTA */}
           <Link 
             to="/pesan" 
             className="desktop-order-cta-btn" 
             id="order-btn-desktop"
             onClick={() => handleNavClick('/pesan')}
           >
-            <span>Isi Brief Proyek</span>
+            <span>Mulai Proyek</span>
           </Link>
 
           {/* Mobile WA Quick Button via Material UI IconButton */}
@@ -607,7 +627,7 @@ export default function Navbar() {
       {/* Embedded CSS for Desktop Base & Backdrop */}
       <style>{`
         /* =======================================================
-           COMMON HEADER BASE
+           COMMON HEADER BASE (Brass Hands Editorial Style)
            ======================================================= */
         .nav-container {
           position: sticky;
@@ -615,15 +635,97 @@ export default function Navbar() {
           left: 0;
           right: 0;
           z-index: 1000;
-          background: #FFFFFF;
+          background: #F4F0EA;
+          border-bottom: 1px solid #D8D2C4; /* taste-skill-ignore */
           width: 100%;
-          transition: background-color 0.2s ease;
+          transition: background-color 0.2s ease, border-color 0.2s ease;
         }
 
         .nav-container.is-scrolled {
-          background: rgba(255, 255, 255, 0.96);
-          backdrop-filter: blur(12px);
-          -webkit-backdrop-filter: blur(12px);
+          background: #EFECE6;
+          border-bottom-color: #CBD5E1;
+        }
+
+        /* Top Utility Bar (Brass Hands Header Strip) */
+        .nav-utility-bar {
+          background: #F9F7F4;
+          border-bottom: 1px solid #D8D2C4; /* taste-skill-ignore */
+          height: 32px;
+          display: flex;
+          align-items: center;
+          font-family: var(--font-heading);
+          font-size: 0.72rem;
+          color: #475569;
+        }
+
+        .nav-utility-inner {
+          width: 100%;
+          max-width: 1360px;
+          margin: 0 auto;
+          padding: 0 clamp(20px, 3.5vw, 48px);
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+
+        .nav-utility-ticker {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          min-width: 0;
+        }
+
+        .ticker-badge {
+          background: #0F172A;
+          color: #FFFFFF;
+          font-size: 0.62rem;
+          font-weight: 800;
+          padding: 1px 6px;
+          border-radius: 2px;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+          flex-shrink: 0;
+        }
+
+        .ticker-text {
+          font-weight: 600;
+          color: #334155;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .nav-utility-cells {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          flex-shrink: 0;
+        }
+
+        .nav-utility-cell {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          font-weight: 700;
+          letter-spacing: 0.04em;
+          font-size: 0.68rem;
+          color: #334155;
+          text-transform: uppercase;
+        }
+
+        .nav-utility-live-dot {
+          width: 6.5px;
+          height: 6.5px;
+          border-radius: 50%;
+          background: #10B981;
+          border: 1px solid #059669;
+          flex-shrink: 0;
+        }
+
+        .nav-utility-divider {
+          width: 1px;
+          height: 14px;
+          background: #D8D2C4;
         }
 
         .nav-bar-inner {
@@ -702,10 +804,10 @@ export default function Navbar() {
           display: inline-flex;
           align-items: center;
           gap: 6px;
-          background: #F8FAFC;
-          border: 1px solid #E2E8F0;
-          border-radius: 9999px;
-          padding: 4px 10px;
+          background: #FFFFFF;
+          border: 1px solid #D8D2C4;
+          border-radius: 4px;
+          padding: 4px 9px;
           user-select: none;
         }
 
@@ -722,20 +824,19 @@ export default function Navbar() {
           font-family: var(--font-heading);
           font-size: 0.72rem;
           font-weight: 700;
-          letter-spacing: 0.02em;
+          letter-spacing: 0.04em;
           color: #334155;
           text-transform: uppercase;
         }
 
-        /* Desktop Precision Dock Navigation */
+        /* Desktop Brass Hands Tracked Navigation */
         .desktop-nav-dock {
           display: inline-flex;
           align-items: center;
-          gap: 2px;
-          background: #F8FAFC;
-          border: 1px solid #E2E8F0;
-          border-radius: 9999px;
-          padding: 3px 5px;
+          gap: 24px;
+          background: transparent;
+          border: none;
+          padding: 0;
           height: 38px;
           box-sizing: border-box;
         }
@@ -745,41 +846,48 @@ export default function Navbar() {
           display: inline-flex;
           align-items: center;
           gap: 6px;
-          font-family: var(--font-body);
-          font-size: 0.84rem;
-          font-weight: 600;
-          color: #475569;
+          font-family: var(--font-heading);
+          font-size: 0.78rem;
+          font-weight: 700;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          color: #334155;
           text-decoration: none;
-          padding: 0 13px;
-          height: 30px;
-          border-radius: 9999px;
-          border: 1px solid transparent;
+          padding: 6px 2px;
           white-space: nowrap;
           box-sizing: border-box;
-          transition: color 0.16s ease, background-color 0.16s ease, border-color 0.16s ease, transform 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+          transition: color 0.16s ease;
         }
 
         .desktop-dock-link:hover {
-          color: #0F172A;
-          background-color: #EDF2F7;
+          color: var(--prussian-blue);
         }
 
         .desktop-dock-link.is-active {
           color: #0F172A;
           font-weight: 800;
-          background-color: #FFFFFF;
-          border-color: #CBD5E1;
+        }
+
+        .desktop-dock-link.is-active::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          height: 2px;
+          background: #0F172A;
         }
 
         .dock-link-pill {
-          font-size: 0.68rem;
-          font-weight: 700;
+          font-size: 0.65rem;
+          font-weight: 800;
           color: var(--prussian-blue);
           background: #EFF6FF;
           border: 1px solid #DBEAFE;
-          border-radius: 9999px;
-          padding: 1px 7px;
+          border-radius: 3px;
+          padding: 1px 6px;
           line-height: 1.2;
+          letter-spacing: 0.02em;
         }
 
         /* Desktop WhatsApp Corporate Consultation Trigger */
@@ -788,8 +896,8 @@ export default function Navbar() {
           align-items: center;
           gap: 9px;
           background: #FFFFFF;
-          border: 1.5px solid #CBD5E1;
-          border-radius: 8px;
+          border: 1.5px solid #D8D2C4;
+          border-radius: 4px;
           padding: 0 12px;
           height: 38px;
           box-sizing: border-box;
@@ -811,7 +919,7 @@ export default function Navbar() {
         .wa-consult-icon-wrap {
           width: 24px;
           height: 24px;
-          border-radius: 6px;
+          border-radius: 4px;
           background: #ECFDF5;
           border: 1px solid #A7F3D0;
           display: flex;
@@ -842,7 +950,7 @@ export default function Navbar() {
           color: #64748B;
         }
 
-        /* Desktop Primary Brief Order Button */
+        /* Desktop Brass Hands Box Primary Button */
         .desktop-order-cta-btn {
           display: inline-flex;
           align-items: center;
@@ -850,21 +958,23 @@ export default function Navbar() {
           background: #0F172A;
           color: #FFFFFF !important;
           border: 1.5px solid #0F172A;
-          border-radius: 8px;
-          padding: 0 18px;
+          border-radius: 4px;
+          padding: 0 20px;
           height: 38px;
           box-sizing: border-box;
           font-family: var(--font-heading);
-          font-size: 0.84rem;
-          font-weight: 700;
+          font-size: 0.78rem;
+          font-weight: 800;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
           text-decoration: none;
-          letter-spacing: -0.01em;
-          transition: background-color 0.16s ease, border-color 0.16s ease, transform 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+          transition: background-color 0.16s ease, color 0.16s ease, border-color 0.16s ease, transform 0.16s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .desktop-order-cta-btn:hover {
-          background-color: #1E293B;
-          border-color: #1E293B;
+          background-color: #FFCE32;
+          color: #0F172A !important;
+          border-color: #0F172A;
           transform: translateY(-1px);
         }
 
@@ -916,6 +1026,7 @@ export default function Navbar() {
             height: 60px;
           }
 
+          .nav-utility-bar,
           .desktop-nav-dock,
           .studio-status-badge-desktop,
           .desktop-wa-consult-btn,

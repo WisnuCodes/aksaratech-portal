@@ -1,4 +1,5 @@
 :root {
+  --font-serif: 'Instrument Serif', Georgia, serif;
   --font-heading: 'Geist', 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-body: 'Geist', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-code: 'JetBrains Mono', monospace; /* taste-skill-ignore */
@@ -10,24 +11,26 @@
   --prussian-blue-tonal: rgba(29, 99, 255, 0.08);
 
   --accent-canary: #FFCE32;
+  --accent-canary-hover: #F5C026;
   --accent-amber: #D97706;
   --accent-amber-light: #FEF3C7;
   --accent-amber-dark: #B45309;
 
-  /* Refined Light Surfaces */
-  --bg-page: #F8FAFC;
-  --bg-darkest: #F8FAFC;
+  /* Brass Hands Editorial Canvas Surfaces */
+  --bg-page: #F4F0EA;
+  --bg-darkest: #EFECE6;
   --bg-primary: #FFFFFF;
   --bg-surface: #FFFFFF;
-  --bg-surface-elevated: #F1F5F9;
+  --bg-surface-elevated: #EFECE6;
   --bg-card: #FFFFFF;
-  --bg-subtle: #F1F5F9;
+  --bg-subtle: #EFECE6;
+  --bg-warm-sand: #F4F0EA;
   --bg-tint-blue: #F0F5FF;
 
-  /* Human-Crafted Editorial Borders (No Heavy Neobrutalism) */
+  /* Human-Crafted Editorial Borders */
   --ink: #0F172A;
-  --border-color: #E2E8F0;
-  --border-subtle: #E2E8F0;
+  --border-color: #D8D2C4;
+  --border-subtle: #E2DDD0;
   --border-main: #CBD5E1;
   --border-strong: #94A3B8;
   --border-width: 1px;

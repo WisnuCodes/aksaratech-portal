@@ -250,60 +250,111 @@ export default function HeroSection() {
         
         <div className="hero-split-grid">
           
-          {/* LEFT COLUMN: Authority Headline, Value Proposition, & Symmetrical 2x2 Trust Chips */}
+          {/* LEFT COLUMN: Brass Hands Editorial Column */}
           <div className="hero-left-content">
             
-            <h1 className="hero-headline">
-              Rekayasa Perangkat Lunak <span className="hero-highlight">&amp; Solusi Web Enterprise</span>
-            </h1>
-
-            <p className="hero-subtitle">
-              Aksara Tech melayani rekayasa software fungsional, arsitektur basis data relasional, dan dokumen rekayasa formal (SRS &amp; SDD). Transparan, terstruktur, serta dilengkapi kuota revisi 3x mutlak demi kepastian target rilis Anda.
-            </p>
-
-            <div className="hero-cta-group">
-              <Link to="/pesan" className="btn btn-primary hero-btn hero-btn-main">
-                <span>Isi Brief Kebutuhan Proyek</span>
-              </Link>
-              <Link to="/paket" className="btn btn-secondary hero-btn hero-btn-sub">
-                <Code2 size={18} style={{ color: '#0F172A' }} />
-                <span>Katalog 6 Paket &amp; Tarif Resmi</span>
-              </Link>
+            <div className="hero-disciplines-track">
+              REKAYASA, DOKUMENTASI, MAINTENANCE
             </div>
 
-            {/* Symmetrical 2x2 Trust Chips (Never Wraps Unevenly) */}
-            <div className="hero-trust-chips-wrap">
-              <div className="trust-chip trust-chip-status">
-                <span className="status-ping-wrap" aria-hidden="true">
-                  <span className="status-ping-ring" />
-                  <span className="status-ping-dot" />
-                </span>
-                <span>Kapasitas Pengerjaan Aktif</span>
+            <h1 className="hero-editorial-headline">
+              <span className="headline-serif-line">Rekayasa software</span>
+              <span className="headline-serif-line">dan solusi sistem</span>
+              <span className="headline-grotesk-line">bebas sewa server</span>
+            </h1>
+
+            <p className="hero-editorial-subtitle">
+              Aksara Tech melayani rekayasa software fungsional, arsitektur basis data relasional, dan dokumen spesifikasi formal (SRS &amp; SDD). Transparan, tanpa beban sewa server berkala, serta bergaransi resmi dengan kuota revisi 3x mutlak.
+            </p>
+
+            {/* Brass Hands Metrics Strip with Vertical Dividers */}
+            <div className="hero-metrics-strip">
+              <div className="metric-item">
+                <span className="metric-number">100%</span>
+                <span className="metric-label">Hak Milik<br />Source Code</span>
               </div>
-              <div className="trust-chip">
-                <CheckCircle2 size={13} className="trust-icon" />
-                <span>Kuota Revisi <strong className="counter-tick" data-target="3" data-suffix="x">3x</strong> Mutlak</span>
+              <div className="metric-divider" aria-hidden="true" />
+              <div className="metric-item">
+                <span className="metric-number">Rp 500rb</span>
+                <span className="metric-label">Plafon Maksimal<br />Tarif Resmi</span>
               </div>
-              <div className="trust-chip">
-                <CheckCircle2 size={13} className="trust-icon" />
-                <span>Garansi Bug <strong className="counter-tick" data-target="7" data-suffix=" Hari">7 Hari</strong></span>
+              <div className="metric-divider" aria-hidden="true" />
+              <div className="metric-item">
+                <span className="metric-number">3x</span>
+                <span className="metric-label">Kuota Revisi<br />SOP Mutlak</span>
               </div>
-              <div className="trust-chip">
-                <CheckCircle2 size={13} className="trust-icon" />
-                <span>Tarif Mulai <strong className="counter-tick" data-target="100000" data-prefix="Rp " data-format="currency">Rp 100.000</strong></span>
+              <div className="metric-divider" aria-hidden="true" />
+              <div className="metric-item">
+                <span className="metric-number">7 Hari</span>
+                <span className="metric-label">Garansi Bug<br />Pasca Rilis</span>
               </div>
+            </div>
+
+            {/* CTA Group with Canary Yellow Button & WA Outline Button */}
+            <div className="hero-cta-group">
+              <Link to="/pesan" className="hero-btn-canary">
+                <span>Isi Brief Kebutuhan Proyek</span>
+                <span className="cta-arrow" aria-hidden="true">&rarr;</span>
+              </Link>
+              <a 
+                href="https://wa.me/6285600386692?text=Halo%20Aksara%20Tech,%20saya%20ingin%20berkonsultasi%20mengenai%20layanan%20rekayasa%20website."
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hero-btn-outline"
+              >
+                <span>Konsultasi WA Resmi</span>
+              </a>
             </div>
 
           </div>
 
-          {/* RIGHT COLUMN: Enhanced Animated Workspace Illustration */}
+          {/* RIGHT COLUMN: Industrial Subway Billboard Kiosk Frame */}
           <div className="hero-right-visual">
-            <WorkspaceIllustration />
+            <div className="subway-billboard-kiosk">
+              {/* Kiosk Bezel Header */}
+              <div className="kiosk-top-bezel">
+                <div className="kiosk-brand-tag">
+                  <span className="kiosk-dot" aria-hidden="true" />
+                  <span>AKSARA TECH &bull; WORKSPACE PRODUCTION</span>
+                </div>
+                <div className="kiosk-meta-tag">
+                  <span>STANDBY &bull; 09:30 WIB</span>
+                </div>
+              </div>
+
+              {/* Kiosk Screen Frame */}
+              <div className="kiosk-screen-display">
+                <WorkspaceIllustration />
+              </div>
+
+              {/* Kiosk Legs / Pedestal */}
+              <div className="kiosk-pedestal">
+                <div className="kiosk-leg kiosk-leg-left" />
+                <div className="kiosk-leg kiosk-leg-right" />
+              </div>
+            </div>
           </div>
 
         </div>
 
-        {/* 4 PILLARS OF ENGINEERING QUALITY (TIGHT, COMPACT, & FULLY VISIBLE IN FOLD) */}
+        {/* BOTTOM PARTNER & TECH STACK BAND (Brass Hands Monochrome Strip) */}
+        <div className="hero-partner-strip">
+          <div className="partner-strip-label">STACK REKAYASA &amp; PROTOKOL RESMI:</div>
+          <div className="partner-logos-track">
+            <span className="partner-logo-item">REACT</span>
+            <span className="partner-logo-item">NEXT.JS</span>
+            <span className="partner-logo-item">NODE.JS</span>
+            <span className="partner-logo-item">TYPESCRIPT</span>
+            <span className="partner-logo-item">POSTGRESQL</span>
+            <span className="partner-logo-item">TAILWIND</span>
+            <span className="partner-logo-item">DOCKER</span>
+            <span className="partner-logo-item">CLOUDFLARE</span>
+            <span className="partner-logo-item">GITHUB</span>
+            <span className="partner-logo-item">VERCEL</span>
+          </div>
+        </div>
+
+        {/* 4 PILLARS OF ENGINEERING QUALITY */}
         <div className="hero-pillars-wrapper reveal-on-scroll">
           <div className="hero-pillars-header">
             <h2 className="pillars-title">4 Pilar Jaminan Mutu Rekayasa</h2>
@@ -335,12 +386,12 @@ export default function HeroSection() {
 
       <style>{`
         /* =======================================================
-           HERO SECTION BASE (TIGHT & BALANCED VERTICAL RHYTHM)
+           HERO SECTION BASE (Brass Hands Editorial Style)
            ======================================================= */
         .hero-section {
           position: relative;
           overflow: hidden;
-          padding-top: 24px;
+          padding-top: 36px;
           padding-bottom: 48px;
           background: transparent;
         }
@@ -350,14 +401,276 @@ export default function HeroSection() {
           z-index: 1;
         }
 
+        .hero-disciplines-track {
+          font-family: var(--font-heading);
+          font-size: 0.74rem;
+          font-weight: 700;
+          letter-spacing: 0.16em;
+          text-transform: uppercase;
+          color: #475569;
+          margin-bottom: 20px;
+        }
+
+        .hero-editorial-headline {
+          margin: 0 0 20px 0;
+          text-align: left;
+        }
+
+        .headline-serif-line {
+          display: block;
+          font-family: var(--font-serif), 'Instrument Serif', Georgia, serif;
+          font-style: normal;
+          font-weight: 400;
+          font-size: clamp(2.8rem, 5.2vw, 4.8rem);
+          line-height: 1.04;
+          letter-spacing: -0.015em;
+          color: #0F172A;
+        }
+
+        .headline-grotesk-line {
+          display: block;
+          font-family: var(--font-heading), 'Space Grotesk', -apple-system, sans-serif;
+          font-weight: 900;
+          font-size: clamp(2.5rem, 4.8vw, 4.3rem);
+          line-height: 1.05;
+          letter-spacing: -0.03em;
+          color: #0F172A;
+          margin-top: 4px;
+        }
+
+        .hero-editorial-subtitle {
+          font-family: var(--font-body);
+          font-size: 1.02rem;
+          color: #334155;
+          line-height: 1.65;
+          max-width: 580px;
+          margin: 0 0 24px 0;
+          font-weight: 500;
+          text-align: left;
+        }
+
+        /* Brass Hands Metrics Strip */
+        .hero-metrics-strip {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          margin-bottom: 28px;
+          flex-wrap: wrap;
+        }
+
+        .metric-item {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+
+        .metric-number {
+          font-family: var(--font-heading);
+          font-size: clamp(1.4rem, 2.2vw, 1.85rem);
+          font-weight: 800;
+          color: #0F172A;
+          line-height: 1;
+          letter-spacing: -0.02em;
+        }
+
+        .metric-label {
+          font-family: var(--font-body);
+          font-size: 0.72rem;
+          line-height: 1.25;
+          color: #475569;
+          font-weight: 600;
+        }
+
+        .metric-divider {
+          width: 1px;
+          height: 28px;
+          background: #D8D2C4;
+        }
+
+        /* Primary Canary Yellow & Outline WA Buttons */
+        .hero-cta-group {
+          display: flex;
+          align-items: center;
+          gap: 14px;
+          flex-wrap: wrap;
+          margin-bottom: 24px;
+        }
+
+        .hero-btn-canary {
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          background: #FFCE32;
+          color: #0F172A !important;
+          border: 1.5px solid #0F172A;
+          border-radius: 4px;
+          padding: 13px 26px;
+          font-family: var(--font-heading);
+          font-size: 0.94rem;
+          font-weight: 800;
+          text-decoration: none;
+          letter-spacing: -0.01em;
+          transition: background-color 0.18s ease, transform 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+          user-select: none;
+        }
+
+        .hero-btn-canary:hover {
+          background: #F5C026;
+          transform: translateY(-1px);
+        }
+
+        .cta-arrow {
+          font-size: 1.1rem;
+          line-height: 1;
+        }
+
+        .hero-btn-outline {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          background: #FFFFFF;
+          color: #0F172A !important;
+          border: 1.5px solid #D8D2C4;
+          border-radius: 4px;
+          padding: 13px 22px;
+          font-family: var(--font-heading);
+          font-size: 0.88rem;
+          font-weight: 700;
+          text-decoration: none;
+          transition: border-color 0.18s ease, background-color 0.18s ease, transform 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .hero-btn-outline:hover {
+          border-color: #0F172A;
+          background: #F4F0EA;
+          transform: translateY(-1px);
+        }
+
+        /* Subway Billboard Kiosk Frame */
+        .subway-billboard-kiosk {
+          width: 100%;
+          max-width: 520px;
+          background: #0F172A;
+          border: 2px solid #0F172A;
+          border-radius: 12px;
+          padding: 14px 14px 20px 14px;
+          box-sizing: border-box;
+          position: relative;
+        }
+
+        .kiosk-top-bezel {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding-bottom: 10px;
+          margin-bottom: 12px;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.12); /* taste-skill-ignore */
+        }
+
+        .kiosk-brand-tag {
+          display: flex;
+          align-items: center;
+          gap: 7px;
+          font-family: var(--font-heading);
+          font-size: 0.68rem;
+          font-weight: 800;
+          letter-spacing: 0.08em;
+          color: #F8FAFC;
+          text-transform: uppercase;
+        }
+
+        .kiosk-dot {
+          width: 7px;
+          height: 7px;
+          border-radius: 50%;
+          background: #10B981;
+          border: 1px solid #059669;
+        }
+
+        .kiosk-meta-tag {
+          font-family: var(--font-heading);
+          font-size: 0.65rem;
+          font-weight: 700;
+          letter-spacing: 0.06em;
+          color: #94A3B8;
+        }
+
+        .kiosk-screen-display {
+          background: #FFFFFF;
+          border-radius: 8px;
+          overflow: hidden;
+          border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .kiosk-pedestal {
+          display: flex;
+          justify-content: space-between;
+          padding: 0 48px;
+          margin-top: 0;
+          position: relative;
+        }
+
+        .kiosk-leg {
+          width: 16px;
+          height: 28px;
+          background: #0F172A;
+          border-radius: 0 0 3px 3px;
+        }
+
+        /* Monochrome Partner / Tech Stack Strip */
+        .hero-partner-strip {
+          margin-top: 48px;
+          margin-bottom: 40px;
+          background: #FFFFFF;
+          border-top: 1px solid #D8D2C4; /* taste-skill-ignore */
+          border-bottom: 1px solid #D8D2C4; /* taste-skill-ignore */
+          padding: 16px 24px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 24px;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+          border-radius: 4px;
+        }
+
+        .partner-strip-label {
+          font-family: var(--font-heading);
+          font-size: 0.68rem;
+          font-weight: 800;
+          letter-spacing: 0.1em;
+          color: #64748B;
+          white-space: nowrap;
+        }
+
+        .partner-logos-track {
+          display: flex;
+          align-items: center;
+          gap: 28px;
+          flex-shrink: 0;
+        }
+
+        .partner-logo-item {
+          font-family: var(--font-heading);
+          font-size: 0.8rem;
+          font-weight: 800;
+          letter-spacing: 0.08em;
+          color: #334155;
+          transition: color 0.16s ease;
+        }
+
+        .partner-logo-item:hover {
+          color: #0F172A;
+        }
+
         /* =======================================================
            DESKTOP SPLIT GRID (>= 1024px)
            ======================================================= */
         @media (min-width: 1024px) {
           .hero-split-grid {
             display: grid;
-            grid-template-columns: 1.05fr 0.95fr;
-            gap: 36px;
+            grid-template-columns: 1.12fr 0.88fr;
+            gap: 40px;
             align-items: center;
             margin-bottom: 28px;
           }
@@ -367,43 +680,8 @@ export default function HeroSection() {
             flex-direction: column;
             align-items: flex-start;
             text-align: left;
-          }
-
-          .hero-headline {
-            font-size: clamp(2.2rem, 3.4vw, 3.2rem);
-            font-weight: 800;
-            line-height: 1.15;
-            margin: 0 0 16px 0;
-            letter-spacing: -0.03em;
-            color: var(--ink);
-            text-align: left;
-            text-wrap: balance;
-          }
-
-          .hero-subtitle {
-            font-size: 1.02rem;
-            color: #334155;
-            max-width: 560px;
-            margin: 0 0 24px 0;
-            line-height: 1.65;
-            font-weight: 500;
-            text-align: left;
-          }
-
-          .hero-cta-group {
-            display: flex;
-            justify-content: flex-start;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 14px;
-            margin-bottom: 20px;
-            width: 100%;
-          }
-
-          .hero-trust-chips-wrap {
-            display: inline-grid;
-            grid-template-columns: auto auto;
-            gap: 8px 10px;
+            padding-right: 32px;
+            border-right: 1px solid #D8D2C4; /* taste-skill-ignore */
           }
 
           .hero-right-visual {
@@ -432,88 +710,67 @@ export default function HeroSection() {
             flex-direction: column;
             align-items: center;
             text-align: center;
+            border-right: none;
+            padding-right: 0;
           }
 
-          .hero-headline {
-            font-size: clamp(1.85rem, 5vw, 2.3rem);
-            font-weight: 900;
-            line-height: 1.18;
-            margin: 0 auto 14px auto;
-            letter-spacing: -0.03em;
-            color: #0F172A;
+          .hero-editorial-headline {
             text-align: center;
-            text-wrap: balance;
           }
 
-          .hero-subtitle {
+          .headline-serif-line {
+            font-size: clamp(2.1rem, 7vw, 2.9rem);
+          }
+
+          .headline-grotesk-line {
+            font-size: clamp(1.9rem, 6.2vw, 2.6rem);
+          }
+
+          .hero-editorial-subtitle {
+            text-align: center;
             font-size: 0.95rem;
-            color: #334155;
             max-width: 620px;
-            margin: 0 auto 20px auto;
-            line-height: 1.6;
-            font-weight: 500;
-            text-align: center;
+          }
+
+          .hero-metrics-strip {
+            justify-content: center;
           }
 
           .hero-cta-group {
-            display: flex;
             justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-bottom: 18px;
-            width: 100%;
-          }
-
-          .hero-trust-chips-wrap {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 8px;
           }
 
           .hero-right-visual {
             position: relative;
             width: 100%;
-            max-width: 440px;
+            max-width: 460px;
             display: flex;
             align-items: center;
             justify-content: center;
+          }
+
+          .hero-partner-strip {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
           }
         }
 
         @media (max-width: 640px) {
           .hero-section {
-            padding-top: 14px;
+            padding-top: 18px;
             padding-bottom: 28px;
           }
 
-          .hero-split-grid {
-            gap: 16px;
-            margin-bottom: 20px;
+          .headline-serif-line {
+            font-size: clamp(1.8rem, 7.8vw, 2.2rem) !important;
           }
 
-          .hero-headline {
-            font-size: clamp(1.52rem, 6.2vw, 1.92rem) !important;
-            line-height: 1.2 !important;
-            letter-spacing: -0.025em !important;
-            margin: 0 auto 12px auto !important;
-            max-width: 380px;
+          .headline-grotesk-line {
+            font-size: clamp(1.6rem, 7vw, 2rem) !important;
           }
 
-          .hero-subtitle {
-            font-size: 0.88rem !important;
-            line-height: 1.55 !important;
-            color: #475569 !important;
-            margin: 0 auto 16px auto !important;
-            max-width: 380px;
-            padding: 0 4px;
-          }
-
-          /* Full-width, cohesive dual CTAs on mobile */
           .hero-cta-group {
-            display: flex;
             flex-direction: column;
             width: 100%;
             max-width: 360px;
@@ -521,61 +778,20 @@ export default function HeroSection() {
             gap: 10px;
           }
 
-          .hero-btn {
+          .hero-btn-canary,
+          .hero-btn-outline {
             width: 100% !important;
-            display: flex !important;
-            align-items: center !important;
             justify-content: center !important;
-            text-align: center !important;
             padding: 13px 20px !important;
-            font-size: 0.94rem !important;
-            border-radius: 8px !important;
-            min-height: 48px !important; /* 48px touch target */
+            min-height: 48px !important;
           }
 
-          /* Symmetrical 2x2 Trust Matrix on mobile (Never stacks into 4 giant lines) */
-          .hero-trust-chips-wrap {
-            display: grid !important;
-            grid-template-columns: repeat(2, 1fr) !important;
-            gap: 8px !important;
-            width: 100% !important;
-            max-width: 360px !important;
-            margin: 0 auto !important;
+          .hero-metrics-strip {
+            gap: 12px;
           }
 
-          .trust-chip {
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            gap: 6px !important;
-            padding: 8px 6px !important;
-            min-height: 40px !important;
-            font-size: 0.72rem !important;
-            font-weight: 700 !important;
-            border-radius: 8px !important;
-            text-align: center !important;
-            white-space: normal !important;
-            line-height: 1.25 !important;
-            background: #FFFFFF !important;
-            border: 1.5px solid #CBD5E1 !important;
-          }
-
-          .hero-right-visual {
-            width: 100% !important;
-            max-width: 320px !important;
-            margin: 8px auto 0 auto !important;
-          }
-
-          .hero-illustration {
-            max-height: 240px !important;
-          }
-        }
-
-        @media (max-width: 480px) {
-          .hero-headline {
-            font-size: clamp(1.48rem, 6.4vw, 1.82rem) !important;
-            line-height: 1.2 !important;
-            letter-spacing: -0.025em !important;
+          .metric-number {
+            font-size: 1.35rem;
           }
         }
 

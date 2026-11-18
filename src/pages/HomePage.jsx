@@ -13,7 +13,7 @@ import { BUSINESS_INFO } from '../data/catalogData';
 
 export default function HomePage({ onSelectPackage }) {
   return (
-    <div className="home-page" style={{ background: '#F8FAFC' }}>
+    <div className="home-page" style={{ background: 'var(--bg-page)' }}>
       {/* 1. Hero Section with Key Metrics */}
       <HeroSection />
 
