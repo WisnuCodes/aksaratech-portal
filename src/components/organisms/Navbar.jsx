@@ -177,12 +177,6 @@ export default function Navbar() {
               </div>
             </div>
           </Link>
-
-          {/* Desktop Studio Status Chip */}
-          <div className="studio-status-badge-desktop" title="Studio Rekayasa Aktif &amp; Terjadwal">
-            <span className="studio-status-dot" aria-hidden="true" />
-            <span className="studio-status-label">Studio Aktif</span>
-          </div>
         </div>
 
         {/* Desktop Precision Dock Navigation */}
@@ -193,7 +187,6 @@ export default function Navbar() {
             onClick={() => handleNavClick('/paket')}
           >
             <span>Paket Layanan</span>
-            <span className="dock-link-pill">6 Paket</span>
           </NavLink>
           <NavLink 
             to="/alur-sop" 
@@ -235,13 +228,8 @@ export default function Navbar() {
             className="desktop-wa-consult-btn"
             title="Hubungi WhatsApp Studio Resmi (0856-0038-6692)"
           >
-            <div className="wa-consult-icon-wrap" aria-hidden="true">
-              <WhatsAppIcon sx={{ fontSize: 16 }} />
-            </div>
-            <div className="wa-consult-text-group">
-              <span className="wa-consult-title">Konsultasi WA</span>
-              <span className="wa-consult-meta">{BUSINESS_INFO.phoneDisplay}</span>
-            </div>
+            <WhatsAppIcon sx={{ fontSize: 17, color: '#16A34A' }} />
+            <span>Konsultasi WA</span>
           </a>
 
           {/* Desktop Order Button: Brass Hands Box Primary CTA */}
@@ -737,9 +725,6 @@ export default function Navbar() {
           align-items: center;
           gap: 16px;
           flex-shrink: 0;
-          padding-right: 28px;
-          border-right: 2px solid #0F172A;
-          height: 100%;
         }
 
         .brand-link {
@@ -802,45 +787,15 @@ export default function Navbar() {
           margin-top: 3px;
         }
 
-        /* Desktop Studio Status Chip */
-        .studio-status-badge-desktop {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          background: #FFFFFF;
-          border: 1px solid #D8D2C4;
-          border-radius: 4px;
-          padding: 4px 9px;
-          user-select: none;
-        }
-
-        .studio-status-dot {
-          width: 7px;
-          height: 7px;
-          border-radius: 50%;
-          background: #FFCE32;
-          border: 1px solid #D97706;
-          flex-shrink: 0;
-        }
-
-        .studio-status-label {
-          font-family: var(--font-heading);
-          font-size: 0.72rem;
-          font-weight: 700;
-          letter-spacing: 0.04em;
-          color: #334155;
-          text-transform: uppercase;
-        }
-
-        /* Desktop Brass Hands Tracked Navigation */
+        /* Desktop Brass Hands Tracked Navigation (Relaxed & Spacious) */
         .desktop-nav-dock {
-          display: inline-flex;
+          display: flex;
           align-items: center;
-          gap: 28px;
+          justify-content: center;
+          gap: clamp(28px, 2.5vw, 44px);
           background: transparent;
           border: none;
-          padding: 0;
-          height: 100%;
+          padding: 0 16px;
           box-sizing: border-box;
         }
 
@@ -848,15 +803,14 @@ export default function Navbar() {
           position: relative;
           display: inline-flex;
           align-items: center;
-          gap: 6px;
           font-family: var(--font-heading);
-          font-size: 0.8rem;
+          font-size: 0.8125rem;
           font-weight: 800;
           letter-spacing: 0.08em;
           text-transform: uppercase;
           color: #0F172A;
           text-decoration: none;
-          padding: 6px 2px;
+          padding: 8px 6px;
           white-space: nowrap;
           box-sizing: border-box;
           transition: color 0.16s ease;
@@ -874,39 +828,32 @@ export default function Navbar() {
         .desktop-dock-link.is-active::after {
           content: '';
           position: absolute;
-          bottom: -4px;
-          left: 0;
-          right: 0;
-          height: 3px;
+          bottom: 0;
+          left: 6px;
+          right: 6px;
+          height: 2.5px;
           background: #0F172A;
-        }
-
-        .dock-link-pill {
-          font-size: 0.65rem;
-          font-weight: 900;
-          color: #0F172A;
-          background: #FFCE32;
-          border: 1.5px solid #0F172A;
-          border-radius: 3px;
-          padding: 1px 6px;
-          line-height: 1.2;
-          letter-spacing: 0.02em;
         }
 
         /* Desktop WhatsApp Corporate Consultation Trigger */
         .desktop-wa-consult-btn {
           display: inline-flex;
           align-items: center;
-          gap: 9px;
+          gap: 8px;
           background: #FFFFFF;
-          border: 2px solid #0F172A;
+          border: 2px solid #0F172A; /* taste-skill-ignore */
           border-radius: 4px;
-          padding: 0 14px;
-          height: 40px;
+          padding: 0 16px;
+          height: 42px;
           box-sizing: border-box;
           text-decoration: none;
           color: #0F172A;
-          transition: border-color 0.16s ease, background-color 0.16s ease, transform 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+          font-family: var(--font-heading);
+          font-size: 0.8125rem;
+          font-weight: 800;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+          transition: background-color 0.16s ease, transform 0.16s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .desktop-wa-consult-btn:hover {
@@ -918,40 +865,6 @@ export default function Navbar() {
           transform: translateY(0);
         }
 
-        .wa-consult-icon-wrap {
-          width: 24px;
-          height: 24px;
-          border-radius: 4px;
-          background: #ECFDF5;
-          border: 1.5px solid #059669;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: #059669;
-          flex-shrink: 0;
-        }
-
-        .wa-consult-text-group {
-          display: flex;
-          flex-direction: column;
-          text-align: left;
-          line-height: 1.15;
-        }
-
-        .wa-consult-title {
-          font-family: var(--font-heading);
-          font-size: 0.78rem;
-          font-weight: 800;
-          color: #0F172A;
-        }
-
-        .wa-consult-meta {
-          font-family: var(--font-body);
-          font-size: 0.68rem;
-          font-weight: 700;
-          color: #0F172A;
-        }
-
         /* Desktop Brass Hands Box Primary Button */
         .desktop-order-cta-btn {
           display: inline-flex;
@@ -959,13 +872,13 @@ export default function Navbar() {
           justify-content: center;
           background: #0F172A;
           color: #FFFFFF !important;
-          border: 2px solid #0F172A;
+          border: 2px solid #0F172A; /* taste-skill-ignore */
           border-radius: 4px;
-          padding: 0 22px;
-          height: 40px;
+          padding: 0 24px;
+          height: 42px;
           box-sizing: border-box;
           font-family: var(--font-heading);
-          font-size: 0.8rem;
+          font-size: 0.8125rem;
           font-weight: 900;
           letter-spacing: 0.08em;
           text-transform: uppercase;
@@ -992,15 +905,15 @@ export default function Navbar() {
             width: 100%;
             max-width: 1360px;
             margin: 0 auto;
-            padding: 0 clamp(24px, 3.5vw, 48px);
+            padding: 0 clamp(20px, 3.5vw, 48px);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            height: 68px;
+            height: 74px;
           }
 
           .nav-container.is-scrolled .nav-bar-inner {
-            height: 60px;
+            height: 64px;
           }
 
           .nav-actions {
@@ -1008,9 +921,6 @@ export default function Navbar() {
             align-items: center;
             gap: 12px !important;
             flex-shrink: 0;
-            padding-left: 24px;
-            border-left: 2px solid #0F172A;
-            height: 100%;
           }
         }
 
